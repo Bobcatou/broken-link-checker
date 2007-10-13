@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: Broken Link Checker
-Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
-Description: Checks your posts for broken links in background and notifies you on the dashboard if any are found.
-Version: 0.1
+Plugin URI: http://wordpress.org/extend/plugins/broken-link-checker/
+Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
+Version: 0.2
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
 
 /*
-Copyright 2007 Janis Elsts (email : whiteshadow@w-shadow.com) 
+Created by Janis Elsts (email : whiteshadow@w-shadow.com) 
 */
 
 if (!class_exists('ws_broken_link_checker')) {
@@ -19,7 +19,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.1';
+	var $version='0.2';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -135,18 +135,21 @@ class ws_broken_link_checker {
 			update_option($this->options_name, $this->options);
 		};
 		
-		if($wpdb->get_var("show tables like '".($this->postdata_name)."'") != $this->postdata_name) {
+		require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
+		
+		if (($wpdb->get_var("show tables like '".($this->postdata_name)."'") != $this->postdata_name)
+		     || ($this->options['version'] != $this->version ) ) {
 			$sql="CREATE TABLE ".$this->postdata_name." (
 					post_id BIGINT( 20 ) NOT NULL ,
 					last_check DATETIME NOT NULL ,
 					UNIQUE KEY post_id (post_id)
 				);";
 			
-			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
       		dbDelta($sql);
 		}
 		
-		if($wpdb->get_var("show tables like '".($this->linkdata_name)."'") != $this->linkdata_name) {
+		if (($wpdb->get_var("show tables like '".($this->linkdata_name)."'") != $this->linkdata_name) 
+		     || ($this->options['version'] != $this->version ) ) {
 			$sql="CREATE TABLE ".$this->linkdata_name." (
 					id BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 					post_id BIGINT( 20 ) NOT NULL ,
@@ -154,11 +157,10 @@ class ws_broken_link_checker {
 					link_text VARCHAR( 50 ) NOT NULL ,
 					broken TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL,
 					last_check DATETIME NOT NULL ,
-					hidden TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL, 
+					check_count TINYINT( 2 ) UNSIGNED DEFAULT '0' NOT NULL, 
 					PRIMARY KEY id (id)
 				);";
 			
-			require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
       		dbDelta($sql);
 		}
 		
