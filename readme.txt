@@ -8,13 +8,16 @@ Stable tag: 0.2
 This plugin will check your posts for broken links and missing images in background and notify you on the dashboard if any are found. 
 
 == Description ==
+This plugin is will monitor your blog looking for broken links and let you know if any are found.
 
-Sometimes, links get broken. A page is deleted, a subdirectory forgotten, a site moved to a different domain. Most likely some of your blog posts contain links. It is almost inevitable that over time some of them will start giving the 404 Not Found error. Obviously you don't want your readers to be annoyed by clicking a link that leads nowhere.  You can check the links yourself but that might be quite a task if you have a lot of posts. You could use your webserver's stats but that only works for local links. 
+* Checks your posts (and pages) in the background.
+* Detects links that don't work and missing images.
+* Notifies you on the Dashboard if any are found.
+* Link checking intervals can be configured.
+* New/modified posts are checked ASAP.
 
-This plugin will check your posts (and pages) in the background, looking for broken links, and let you know if any are found. Starting with version 0.2, it will also check posts for missing images.
-
-**Usage**
-The broken links, if any are found, will show up in a new tab of WP admin panel - Manage -> Broken Links. A notification will also show up on the Dashboard. 
+**How To Use It**
+The broken links, if any are found, will show up in a new tab of WP admin panel - Manage -> Broken Links. A notification will also appear on the Dashboard. 
 
 There are several buttons for each broken link - "View" and "Edit Post" do exactly what they say and "Discard" will remove the message about a broken link, but not the link itself (so it will show up again later unless you fix it). If references to missing images are found, they will be listed along with the links, with "[image]" in place of link text.
 
