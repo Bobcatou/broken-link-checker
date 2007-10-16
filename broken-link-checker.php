@@ -164,6 +164,9 @@ class ws_broken_link_checker {
       		dbDelta($sql);
 		}
 		
+		$this->options['version']=$this->version;
+		update_option($this->options_name, $this->options);
+		
 		$this->sync_posts_to_db();
 	}
 	
