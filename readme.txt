@@ -30,7 +30,7 @@ To do a new installation of the plugin, please follow these steps
 
 1. Download the broken-link-checker.zip file to your local machine.
 1. Unzip the file 
-1. Upload `broken-link-checker` folder to the `/wp-content/plugins/` directory
+1. Upload "broken-link-checker" folder to the "/wp-content/plugins/" directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 That's it.
