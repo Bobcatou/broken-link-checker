@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://wordpress.org/extend/plugins/broken-link-checker/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.2.2
+Version: 0.2.2.1
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -203,6 +203,10 @@ class ws_broken_link_checker {
 		echo $reminder;
 		?>
 		<div class="wrap"><h2>Broken Link Checker Options</h2>
+		<?php if(!function_exists('curl_init')){ ?>
+		<strong>Error: <a href='http://curl.haxx.se/libcurl/php/'>CURL library</a>
+		 is not installed. This plugin won't work.</strong><br/>
+		<?php }; ?>
 		<form name="link_checker_options" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;updated=true"> 
 		<p class="submit"><input type="submit" name="Submit" value="Update Options &raquo;" /></p>
 		

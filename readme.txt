@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance
 Requires at least: 2.0.2
 Tested up to: 2.3
-Stable tag: 0.2.2
+Stable tag: 0.2.2.1
 
 This plugin will check your posts for broken links and missing images in background and notify you on the dashboard if any are found. 
 
@@ -30,7 +30,7 @@ To do a new installation of the plugin, please follow these steps
 
 1. Download the broken-link-checker.zip file to your local machine.
 1. Unzip the file 
-1. Upload "broken-link-checker" folder to the "/wp-content/plugins/" directory
+1. Upload `broken-link-checker` folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 That's it.
