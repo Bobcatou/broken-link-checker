@@ -3,13 +3,14 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://wordpress.org/extend/plugins/broken-link-checker/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.2.2.1
+Version: 0.2.3
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
 
 /*
 Created by Janis Elsts (email : whiteshadow@w-shadow.com) 
+MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 */
 
 if (!class_exists('ws_broken_link_checker')) {
@@ -19,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.2';
+	var $version='0.2.3';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -109,6 +110,8 @@ class ws_broken_link_checker {
 	function sync_posts_to_db(){
 		global $wpdb;
 		
+		/* JHS: This query does not work on mySQL 4.0 (4.0 does not support subqueries). 
+		// However, this one is faster, so I'll leave it here (forward compatibility)
 		$sql="INSERT INTO ".$this->postdata_name."( post_id, last_check )
 				SELECT id, '00-00-0000 00:00:00'
 				FROM $wpdb->posts b
@@ -116,8 +119,31 @@ class ws_broken_link_checker {
 					SELECT post_id
 					FROM ".$this->postdata_name." a
 					WHERE a.post_id = b.id
-				)";
+				)";  */
+		//JHS: This one also works on mySQL 4.0:	
+		$sql="INSERT INTO ".$this->postdata_name."(post_id, last_check) 
+				SELECT ".$wpdb->posts.".id, '00-00-0000 00:00:00' FROM ".$wpdb->posts."
+  			LEFT JOIN ".$this->postdata_name." ON ".$wpdb->posts.".id=".$this->postdata_name.".post_id
+  			WHERE ".$this->postdata_name.".post_id IS NULL";
 		$wpdb->query($sql);
+	}
+	
+	//JHS: Clears all blc tables and initiates a new fresh recheck
+	function recheck_all_posts(){
+		global $wpdb;
+		
+		//Empty blc_linkdata		
+		$sql="TRUNCATE TABLE ".$this->linkdata_name; 
+		$wpdb->query($sql);
+		
+		//Empty table [aggressive approach]
+		$sql="TRUNCATE TABLE ".$this->postdata_name; 
+		//Reset all dates to zero [less aggressive approach, I like the above one better, it's cleaner ;)]
+		//$sql="UPDATE $this->postdata_name SET last_check='00-00-0000 00:00:00' WHERE 1"; 
+		
+		$wpdb->query($sql);
+		
+		$this->sync_posts_to_db();
 	}
 	
 	function activation(){
@@ -183,6 +209,10 @@ class ws_broken_link_checker {
 		
 		$this->options = get_option('wsblc_options');
 		$reminder = '';
+		//JHS: recheck all posts if asked for:
+		if (isset($_GET['recheck']) && ($_GET['recheck'] == 'true')) {
+			$this->recheck_all_posts();
+		}
 		if (isset($_GET['updated']) && ($_GET['updated'] == 'true')) {
 			if(isset($_POST['Submit'])) {
 				
@@ -228,7 +258,9 @@ class ws_broken_link_checker {
 				frequency: 10,
 				decay: 2
 			});
-		</script>		
+		</script>
+		<?php //JHS: Recheck all posts link: ?>
+		<p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;recheck=true')" /></p>
 		</td> 
 		</tr> 
 		
