@@ -5,7 +5,7 @@
 	require_once("../../../wp-config.php");
 	require_once("../../../wp-includes/wp-db.php");
 	
-	error_reporting(E_ALL);
+	//error_reporting(E_ALL);
 	
 	$execution_start_time=microtime(true);
 
@@ -14,8 +14,10 @@
 		return microtime(true)-$execution_start_time;
 	}
 	
-	@set_time_limit(0);
-	@ignore_user_abort(true);
+	
+	if(!is_object($ws_link_checker)) {
+		die('Fatal error : undefined object; plugin may not be active.');
+	};
 	
 	$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
 	
@@ -25,6 +27,18 @@
 	$options=$ws_link_checker->options; //get_option('wsblc_options');
 	$siteurl=get_option('siteurl');
 	$max_execution_time=isset($options['max_work_session'])?intval($options['max_work_session']):27;
+	
+	// Check for safe mode
+	if( ini_get('safe_mode') ){
+	    // Do it the safe mode way
+	    $t=ini_get('max_execution_time');
+	    if ($t && ($t < $max_execution_time)) 
+	    	$max_execution_time = $t-1;
+	} else {
+	    // Do it the regular way
+	    @set_time_limit(0);
+	}
+	@ignore_user_abort(true);
 	
 	$check_treshold=date('Y-m-d H:i:s', strtotime('-'.$options['check_treshold'].' hours'));
 	$recheck_treshold=date('Y-m-d H:i:s', strtotime('-20 minutes'));
@@ -226,17 +240,26 @@
 		curl_setopt($ch, CURLOPT_TIMEOUT, 25);
 		
 		curl_setopt($ch, CURLOPT_FAILONERROR, false);
-		
+
+		$nobody=false;		
 		if($parts['scheme']=='https'){
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		} else {
+			$nobody=true;
 			curl_setopt($ch, CURLOPT_NOBODY, true);
 		}
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		
 		$response = curl_exec($ch);
 		$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		
+		if ( (($code<200) || ($code>=400)) && $nobody) {
+			curl_setopt($ch, CURLOPT_NOBODY, false);
+			curl_setopt($ch, CURLOPT_HTTPGET, true);
+			$response = curl_exec($ch);
+			$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		}
 		
 		curl_close($ch);
 		
