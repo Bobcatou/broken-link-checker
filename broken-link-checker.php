@@ -20,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.2.4';
+	var $version='0.2.5';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -344,7 +344,7 @@ class ws_broken_link_checker {
 
 				<td>$link->link_text</td>
 				<td><a href='$link->url'>".$this->mytruncate($link->url)."</a></td>
-				<td><a href='".get_option('siteurl')."?p=$link->post_id' class='edit'>View</a></td>
+				<td><a href='".get_option('siteurl')."?p=".($link->post_id)."' class='edit'>View</a></td>
 
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>
 				<td><a href='javascript:void(0);' class='delete' 
