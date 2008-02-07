@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Broken Link Checker
-Plugin URI: http://wordpress.org/extend/plugins/broken-link-checker/
+Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.2.4
+Version: 0.2.5
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
