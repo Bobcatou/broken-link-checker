@@ -14,18 +14,21 @@
 		return microtime(true)-$execution_start_time;
 	}
 	
+	if (!current_user_can('read')) {
+		die("Error: You can't do that. Access denied.");
+	}
 	
 	if(!is_object($ws_link_checker)) {
 		die('Fatal error : undefined object; plugin may not be active.');
 	};
 	
 	$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+	$url_to_replace = '';
 	
 	$postdata_name=$wpdb->prefix . "blc_postdata";
 	$linkdata_name=$wpdb->prefix . "blc_linkdata";
 	
 	$options=$ws_link_checker->options; //get_option('wsblc_options');
-	$siteurl=get_option('siteurl');
 	$max_execution_time=isset($options['max_work_session'])?intval($options['max_work_session']):27;
 	
 	// Check for safe mode
@@ -117,7 +120,7 @@
 			//some unchecked links found
 			echo "<!-- checking links (rand : ".rand(1,1000).") -->";
 			foreach ($links as $link) {
-				if(page_exists_simple($link->url)){
+				if( $ws_link_checker->is_excluded($link->url) || page_exists_simple($link->url) ){
 					//link OK, remove from queue
 					$wpdb->query("DELETE FROM $linkdata_name WHERE id=$link->id");
 				} else {
@@ -135,31 +138,45 @@
 		die('<!-- /run_check -->');
 		
 	} else if ($action=='discard_link'){
+		if (!current_user_can('edit_posts')) {
+			die("Error: You can't do that. Access denied.");
+		}
 		$id=intval($_GET['id']);
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
+		
+	} else if ($action=='remove_link'){
+		
+		//actually deletes the link from the post
+		if (!current_user_can('edit_posts')) {
+			die("Error: You can't do that. Access denied.");
+		}
+		
+		$id=intval($_GET['id']);
+		$sql="SELECT * FROM $linkdata_name WHERE id = $id LIMIT 1";
+		$the_link=$wpdb->get_row($sql, OBJECT, 0);
+		if (!$the_link){
+			die('<!-- link not found -->');
+		}
+		$the_post = get_post($the_link->post_id, ARRAY_A);
+		if (!$the_post){
+			die('<!-- post not found -->');
+		}
+		
+		$new_content = unlink_the_link($the_post['post_content'], $the_link->url);
+		$new_content = $wpdb->escape($new_content);
+		$wpdb->query("UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id");
+		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
+		die('<!-- link deleted -->');
 	};
 	
-	
 	function parse_link($matches, $post_id){
-		global $wpdb, $siteurl, $linkdata_name;
+		global $wpdb, $linkdata_name, $ws_link_checker;
 		
 		$url=$matches[2];
 		
-		$parts=@parse_url($url);
-		
-		if(!$parts) return false;
-		
-		$url=preg_replace(
-	    	array('/([\?&]PHPSESSID=\w+)$/i','/(#[^\/]*)$/i', '/&amp;/','/^(javascript:.*)/i','/([\?&]sid=\w+)$/i'),
-	    	array('','','&','',''),
-	    	$url);
-
-	    $url=trim($url);
-	    if($url=='') return false;
+		$url = $ws_link_checker->normalize_url($url);
+		if (!$url) return false;
 	    
-        // turn relative URLs into absolute URLs
-        $url = relative2absolute($siteurl, $url);    
-        
         if(strlen($url)>5){
 	        $wpdb->query(
 	        	"INSERT INTO $linkdata_name(post_id, url, link_text) 
@@ -171,25 +188,12 @@
 	}
 	
 	function parse_image($matches, $post_id){
-		global $wpdb, $siteurl, $linkdata_name;
+		global $wpdb, $linkdata_name, $ws_link_checker;
 		
 		$url=$matches[2];
+		$url = $ws_link_checker->normalize_url($url);
+		if(!$url) return false;
 		
-		$parts=@parse_url($url);
-		
-		if(!$parts) return false;
-		
-		$url=preg_replace(
-	    	array('/([\?&]PHPSESSID=\w+)$/i','/(#[^\/]*)$/i', '/&amp;/','/^(javascript:.*)/i','/([\?&]sid=\w+)$/i'),
-	    	array('','','&','',''),
-	    	$url);
-
-	    $url=trim($url);
-	    if($url=='') return false;
-	    
-        // turn relative URLs into absolute URLs
-        $url = relative2absolute($siteurl, $url);    
-        
         if(strlen($url)>3){
 	        $wpdb->query(
 	        	"INSERT INTO $linkdata_name(post_id, url, link_text) 
@@ -202,7 +206,7 @@
 	
 	function gather_and_save_links($content, $post_id){
 		//gather links (<a href=...>)
-		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		global $url_pattern;
 		
 		if(preg_match_all($url_pattern, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $link){
@@ -211,9 +215,9 @@
 		};
 		
 		//gather images (<img src=...>)
-		$url_pattern='/(<img[\s]+[^>]*src\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)/i';
+		$img_pattern='/(<img[\s]+[^>]*src\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)/i';
 		
-		if(preg_match_all($url_pattern, $content, $matches, PREG_SET_ORDER)){
+		if(preg_match_all($img_pattern, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $img){
 				parse_image($img, $post_id);
 			}
@@ -257,6 +261,7 @@
 		if ( (($code<200) || ($code>=400)) && $nobody) {
 			curl_setopt($ch, CURLOPT_NOBODY, false);
 			curl_setopt($ch, CURLOPT_HTTPGET, true);
+			curl_setopt($ch, CURLOPT_RANGE, '0-1023');
 			$response = curl_exec($ch);
 			$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 		}
@@ -266,59 +271,26 @@
 		return (($code>=200) && ($code<400));	
 	}
 	
-	function relative2absolute($absolute, $relative) {
-        $p = @parse_url($relative);
-        if(!$p) {
-	        //WTF? $relative is a seriously malformed URL
-	        return false;
-        }
-        if(isset($p["scheme"])) return $relative;
-        
-        $parts=(parse_url($absolute));
-        
-        if(substr($relative,0,1)=='/') {
-            $cparts = (explode("/", $relative));
-            array_shift($cparts);
-        } else {
-	        if(isset($parts['path'])){
-	        	$aparts=explode('/',$parts['path']);
-        		array_pop($aparts);
-        		$aparts=array_filter($aparts);
-    		} else {
-	    		$aparts=array();
-    		}
-            
-        	$rparts = (explode("/", $relative));
-            
-            $cparts = array_merge($aparts, $rparts);
-            foreach($cparts as $i => $part) {
-                if($part == '.') {
-                    unset($cparts[$i]);
-                } else if($part == '..') {
-                    unset($cparts[$i]);
-                    unset($cparts[$i-1]);
-                }
-            }
-        }
-        $path = implode("/", $cparts);
-        
-        $url = '';
-        if($parts['scheme']) {
-            $url = "$parts[scheme]://";
-        }
-        if(isset($parts['user'])) {
-            $url .= $parts['user'];
-            if(isset($parts['pass'])) {
-                $url .= ":".$parts['pass'];
-            }
-            $url .= "@";
-        }
-        if(isset($parts['host'])) {
-            $url .= $parts['host']."/";
-        }
-        $url .= $path;
-        
-        return $url;
+	function unlink_the_link($content, $url){
+		global $url_pattern, $url_to_replace;
+		$url_to_replace = $url;
+		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		$content = preg_replace_callback($url_pattern, unlink_link_callback, $content);
+		return $content;
 	}
 	
+	function unlink_link_callback($matches){
+		global $url_to_replace;
+		$url = $ws_link_checker->normalize_url($matches[2]);
+		$text = $matches[4];
+		
+		//echo "$url || $url_to_replace\n";
+		if ($url == $url_to_replace){
+			//echo "Removed '$text' - '$url'\n";
+			return $text;
+			//return "<span class='broken_link'>$text</span>";
+		} else {
+			return $matches[0];
+		}
+	}	
 ?>
