@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.2.5
+Version: 0.3
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,10 +20,11 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.2.5';
+	var $version='0.3';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
+	var $siteurl;
 	
 
 	function ws_broken_link_checker() {
@@ -32,6 +33,7 @@ class ws_broken_link_checker {
 		$this->postdata_name=$wpdb->prefix . "blc_postdata";
 		$this->linkdata_name=$wpdb->prefix . "blc_linkdata";
 		$this->options=get_option($this->options_name);
+		$this->siteurl = get_option('siteurl');
 		
 		$my_file = str_replace('\\', '/',__FILE__);
 		$my_file = preg_replace('/^.*wp-content[\\\\\/]plugins[\\\\\/]/', '', $my_file);
@@ -47,6 +49,13 @@ class ws_broken_link_checker {
 		add_action('admin_footer', array(&$this,'admin_footer'));
 		add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
 		add_action('activity_box_end', array(&$this,'activity_box'));
+		
+		if ($this->options['mark_broken_links']){
+			add_filter('the_content', array(&$this,'the_content'));
+			if (!empty($this->options['broken_link_css'])){
+				add_action('wp_head', array(&$this,'header_css'));
+			}
+		}
 	}
 	
 	function admin_footer(){
@@ -64,6 +73,126 @@ class ws_broken_link_checker {
 		</script>		
 		<!-- /wsblc admin footer -->
 		<?php
+	}
+	
+	function header_css(){
+		echo '<style>',$this->options['broken_link_css'],'</style>';
+	}
+	
+	function the_content($content){
+		global $post, $wpdb;
+		if (empty($post)) return $content;
+		
+		$sql="SELECT url from $this->linkdata_name WHERE post_id = $post->ID AND broken<>0";
+		$rows=$wpdb->get_results($sql, ARRAY_A);
+		if($rows && (count($rows)>0)){
+			//some rows found
+			$this->links_to_remove = array_map(
+				create_function('$elem', 'return $elem["url"];'),
+			    $rows);
+			$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*)(>)((?sU).*)(<\/a>)/i';
+			$content = preg_replace_callback($url_pattern, array(&$this,'mark_broken_links'), $content);
+		};
+		
+		//print_r($post);
+		return $content;
+	}
+	
+	function mark_broken_links($matches){
+		$url = $this->normalize_url(html_entity_decode($matches[2])) ;
+		if(in_array($url, $this->links_to_remove)){
+			return $matches[1].$matches[2].$matches[3].' class="broken_link"'.$matches[4].
+				$matches[5].$matches[6];	
+		} else {
+			return $matches[0];
+		}
+	}
+	
+	function normalize_url($url){
+		$parts=@parse_url($url);
+		if(!$parts) return false;
+		
+		$url = html_entity_decode($url);
+		$url=preg_replace(
+	    	array('/([\?&]PHPSESSID=\w+)$/i', 
+				  '/(#[^\/]*)$/', 
+				  '/&amp;/',
+				  '/^(javascript:.*)/i',
+				  '/([\?&]sid=\w+)$/i'
+				  ),
+	    	array('','','&','',''),
+	    	$url);
+
+	    $url=trim($url);
+	    if($url=='') return false;
+	    
+        // turn relative URLs into absolute URLs
+        $url = $this->relative2absolute($this->siteurl, $url);
+        return $url;
+	}
+	
+	function relative2absolute($absolute, $relative) {
+        $p = @parse_url($relative);
+        if(!$p) {
+	        //WTF? $relative is a seriously malformed URL
+	        return false;
+        }
+        if(isset($p["scheme"])) return $relative;
+        
+        $parts=(parse_url($absolute));
+        
+        if(substr($relative,0,1)=='/') {
+            $cparts = (explode("/", $relative));
+            array_shift($cparts);
+        } else {
+	        if(isset($parts['path'])){
+	        	$aparts=explode('/',$parts['path']);
+        		array_pop($aparts);
+        		$aparts=array_filter($aparts);
+    		} else {
+	    		$aparts=array();
+    		}
+            
+        	$rparts = (explode("/", $relative));
+            
+            $cparts = array_merge($aparts, $rparts);
+            foreach($cparts as $i => $part) {
+                if($part == '.') {
+                    unset($cparts[$i]);
+                } else if($part == '..') {
+                    unset($cparts[$i]);
+                    unset($cparts[$i-1]);
+                }
+            }
+        }
+        $path = implode("/", $cparts);
+        
+        $url = '';
+        if($parts['scheme']) {
+            $url = "$parts[scheme]://";
+        }
+        if(isset($parts['user'])) {
+            $url .= $parts['user'];
+            if(isset($parts['pass'])) {
+                $url .= ":".$parts['pass'];
+            }
+            $url .= "@";
+        }
+        if(isset($parts['host'])) {
+            $url .= $parts['host']."/";
+        }
+        $url .= $path;
+        
+        return $url;
+	}
+	
+	function is_excluded($url){
+		foreach($this->options['exclusion_list'] as $excluded_word){
+			if (stristr($url, $excluded_word)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	function activity_box(){
@@ -149,17 +278,21 @@ class ws_broken_link_checker {
 	function activation(){
 		global $wpdb;
 		
+		//set default options
+		$defaults = array(
+			'version' => $this->version,
+			'max_work_session' => 27,
+			'check_treshold' => 72,
+			'mark_broken_links' => true,
+			'broken_link_css' => ".broken_link, a.broken_link {\n\ttext-decoration: line-through;\n}",
+			'exclusion_list' => array(),
+		);
+		
 		if(!is_array($this->options)){
-			
-			//set default options
-			$this->options=array(
-				'version' => $this->version,
-				'max_work_session' => 27,
-				'check_treshold' => 72
-			);	
-			
-			update_option($this->options_name, $this->options);
+			$this->options = array();				
 		};
+		$this->options = array_merge($defaults, $this->options);
+		update_option($this->options_name, $this->options);
 		
 		require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
 		
@@ -226,6 +359,14 @@ class ws_broken_link_checker {
 					$this->options['check_treshold']=$new_check_treshold;
 				}
 				
+				$new_broken_link_css = trim($_POST['broken_link_css']);
+				$this->options['broken_link_css'] = $new_broken_link_css;
+				
+				$this->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
+				
+				$this->options['exclusion_list']=array_filter(preg_split('/[\s,\r\n]+/', 
+					$_POST['exclusion_list']));
+				
 				update_option($this->options_name,$this->options);
 			}
 			
@@ -278,6 +419,31 @@ class ws_broken_link_checker {
 		</tr> 
 		
 		<tr valign="top"> 
+		<th scope="row">Broken Link CSS:</th> 
+		<td>
+		<input type="checkbox" name="mark_broken_links" id="mark_broken_links" 
+			<?php if ($this->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
+			<label for='mark_broken_links'>Apply <em>class="broken_link"</em> to broken links</label><br/>
+		<textarea type="text" name="broken_link_css" id="broken_link_css" cols='40' rows='4'/><?php
+			if( isset($this->options['broken_link_css']) ) 
+				echo $this->options['broken_link_css']; 
+		?></textarea>	
+
+		</td> 
+		</tr>
+		
+		<tr valign="top"> 
+		<th scope="row">Exclusion list:</th> 
+		<td>Don't check links where the URL contains any of these words (one per line):<br/> 
+		<textarea type="text" name="exclusion_list" id="exclusion_list" cols='40' rows='4'/><?php
+			if( isset($this->options['exclusion_list']) ) 
+				echo implode("\n", $this->options['exclusion_list']); 
+		?></textarea>	
+
+		</td> 
+		</tr>
+		
+		<tr valign="top"> 
 		<th scope="row">Work Session Length:</th> 
 		<td>
 		
@@ -326,9 +492,7 @@ class ws_broken_link_checker {
 				<th scope="col">Link Text</th>
 				<th scope="col">URL</th>
 			
-				<th scope="col"></th>
-				<th scope="col"></th>
-				<th scope="col"></th>
+				<th scope="col" colspan='4'>Action</th>
 			
 				</tr>
 				</thead>
@@ -349,6 +513,9 @@ class ws_broken_link_checker {
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>
 				<td><a href='javascript:void(0);' class='delete' 
 				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
+				
+				<td><a href='javascript:void(0);' class='delete' 
+				onclick='removeLinkFromPost($link->id);return false;' );' title='Remove the link from the post'>Unlink</a></td>
 				</tr>";
 				
 			}
@@ -362,6 +529,13 @@ class ws_broken_link_checker {
 		new Ajax.Request('<?php
 		echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?'; 
 		?>action=discard_link&id='+link_id, 
+						{ method:'get' });
+		$('link-'+link_id).hide();
+	}
+	function removeLinkFromPost(link_id){
+		new Ajax.Request('<?php
+		echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?'; 
+		?>action=remove_link&id='+link_id, 
 						{ method:'get' });
 		$('link-'+link_id).hide();
 	}
