@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.3
+Version: 0.3.1
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.3';
+	var $version='0.3.1';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -477,7 +477,7 @@ class ws_broken_link_checker {
 ?></h2>
 <br style="clear:both;" />
 <?php
-		$sql="SELECT b.post_title, a.* FROM $this->linkdata_name a, $wpdb->posts b
+		$sql="SELECT b.post_title, a.*, b.guid FROM $this->linkdata_name a, $wpdb->posts b
 			 WHERE a.post_id=b.id AND a.broken=1 ORDER BY a.last_check DESC";
 		$links=$wpdb->get_results($sql, OBJECT);
 		if($links && (count($links)>0)){
@@ -508,7 +508,7 @@ class ws_broken_link_checker {
 
 				<td>$link->link_text</td>
 				<td><a href='$link->url'>".$this->mytruncate($link->url)."</a></td>
-				<td><a href='".get_option('siteurl')."?p=".($link->post_id)."' class='edit'>View</a></td>
+				<td><a href='".($link->guid)."' class='edit'>View</a></td>
 
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>
 				<td><a href='javascript:void(0);' class='delete' 

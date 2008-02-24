@@ -256,14 +256,18 @@
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		
 		$response = curl_exec($ch);
+		//echo 'Response 1 : <pre>',$response,'</pre>';
 		$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+		//echo "Code 1 : $code<br/>";
 		
 		if ( (($code<200) || ($code>=400)) && $nobody) {
 			curl_setopt($ch, CURLOPT_NOBODY, false);
 			curl_setopt($ch, CURLOPT_HTTPGET, true);
 			curl_setopt($ch, CURLOPT_RANGE, '0-1023');
 			$response = curl_exec($ch);
+			//echo 'Response 2 : <pre>',$response,'</pre>';
 			$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+			//echo "Code 2 : $code<br/>";
 		}
 		
 		curl_close($ch);
