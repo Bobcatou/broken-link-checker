@@ -143,6 +143,10 @@
 		}
 		$id=intval($_GET['id']);
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
+		if($wpdb->rows_affected<1){
+			die('Error: Couldn\'t remove the link record (DB error).');
+		}
+		die('OK: Link discarded');
 		
 	} else if ($action=='remove_link'){
 		

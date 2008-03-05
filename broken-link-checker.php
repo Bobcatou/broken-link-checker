@@ -512,7 +512,7 @@ class ws_broken_link_checker {
 				<td><a href='".($link->guid)."' class='edit'>View</a></td>
 
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>
-				<td><a href='javascript:void(0);' class='delete' 
+				<td><a href='javascript:void(0);' class='delete' id='discard_button-$link->id' 
 				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
 				
 				<td><a href='javascript:void(0);' class='delete' id='unlink_button-$link->id'
@@ -527,11 +527,25 @@ class ws_broken_link_checker {
 
 <script type='text/javascript'>
 	function discardLinkMessage(link_id){
+		$('discard_button-'+link_id).innerHTML = 'Wait...';
 		new Ajax.Request('<?php
 		echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?'; 
 		?>action=discard_link&id='+link_id, 
-						{ method:'get' });
-		$('link-'+link_id).hide();
+			{ 
+				method:'get',
+				onSuccess: function(transport){
+					var re = /OK:.*/i
+      				var response = transport.responseText || "";
+      				if (re.test(response)){
+	      				$('link-'+link_id).hide();
+      				} else {
+	      				$('discard_button-'+link_id).innerHTML = 'Discard';
+	      				alert(response);
+      				}
+    			}
+			}
+		);
+		
 	}
 	function removeLinkFromPost(link_id){
 		$('unlink_button-'+link_id).innerHTML = 'Wait...';
@@ -551,7 +565,7 @@ class ws_broken_link_checker {
 	      				$('unlink_button-'+link_id).innerHTML = 'Unlink';
 	      				alert(response);
       				}
-    			},
+    			}
 			}
 		);
 	}
