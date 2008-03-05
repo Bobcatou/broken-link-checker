@@ -92,7 +92,7 @@
 		echo "<!-- run_check  -->";
 		
 		$sql="SELECT b.* FROM $postdata_name a, $wpdb->posts b 
-			  WHERE a.last_check<'$check_treshold' AND a.post_id=b.id ORDER BY a.last_check ASC LIMIT 60";
+			  WHERE a.last_check<'$check_treshold' AND a.post_id=b.id ORDER BY a.last_check ASC LIMIT 40";
 		
 		$rows=$wpdb->get_results($sql, OBJECT);
 		if($rows && (count($rows)>0)){
