@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.3.1
+Version: 0.3.2
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.3.1';
+	var $version='0.3.2';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -76,7 +76,7 @@ class ws_broken_link_checker {
 	}
 	
 	function header_css(){
-		echo '<style>',$this->options['broken_link_css'],'</style>';
+		echo '<style type="text/css">',$this->options['broken_link_css'],'</style>';
 	}
 	
 	function the_content($content){
@@ -187,6 +187,7 @@ class ws_broken_link_checker {
 	}
 	
 	function is_excluded($url){
+		if (!is_array($this->options['exclusion_list'])) return false;
 		foreach($this->options['exclusion_list'] as $excluded_word){
 			if (stristr($url, $excluded_word)){
 				return true;
@@ -514,7 +515,7 @@ class ws_broken_link_checker {
 				<td><a href='javascript:void(0);' class='delete' 
 				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
 				
-				<td><a href='javascript:void(0);' class='delete' 
+				<td><a href='javascript:void(0);' class='delete' id='unlink_button-$link->id'
 				onclick='removeLinkFromPost($link->id);return false;' );' title='Remove the link from the post'>Unlink</a></td>
 				</tr>";
 				
@@ -533,11 +534,26 @@ class ws_broken_link_checker {
 		$('link-'+link_id).hide();
 	}
 	function removeLinkFromPost(link_id){
-		new Ajax.Request('<?php
+		$('unlink_button-'+link_id).innerHTML = 'Wait...';
+		
+		new Ajax.Request(			
+			'<?php
 		echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?'; 
 		?>action=remove_link&id='+link_id, 
-						{ method:'get' });
-		$('link-'+link_id).hide();
+			{ 
+				method:'get',
+				onSuccess: function(transport){
+					var re = /OK:.*/i
+      				var response = transport.responseText || "";
+      				if (re.test(response)){
+	      				$('link-'+link_id).hide();
+      				} else {
+	      				$('unlink_button-'+link_id).innerHTML = 'Unlink';
+	      				alert(response);
+      				}
+    			},
+			}
+		);
 	}
 </script>
 </div>

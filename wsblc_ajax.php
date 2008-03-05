@@ -92,7 +92,7 @@
 		echo "<!-- run_check  -->";
 		
 		$sql="SELECT b.* FROM $postdata_name a, $wpdb->posts b 
-			  WHERE a.last_check<'$check_treshold' AND a.post_id=b.id ORDER BY a.last_check ASC LIMIT 20";
+			  WHERE a.last_check<'$check_treshold' AND a.post_id=b.id ORDER BY a.last_check ASC LIMIT 60";
 		
 		$rows=$wpdb->get_results($sql, OBJECT);
 		if($rows && (count($rows)>0)){
@@ -155,18 +155,25 @@
 		$sql="SELECT * FROM $linkdata_name WHERE id = $id LIMIT 1";
 		$the_link=$wpdb->get_row($sql, OBJECT, 0);
 		if (!$the_link){
-			die('<!-- link not found -->');
+			die('Error: Link not found');
 		}
 		$the_post = get_post($the_link->post_id, ARRAY_A);
 		if (!$the_post){
-			die('<!-- post not found -->');
+			die('Error: Post not found');
 		}
 		
 		$new_content = unlink_the_link($the_post['post_content'], $the_link->url);
 		$new_content = $wpdb->escape($new_content);
 		$wpdb->query("UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id");
+		if($wpdb->rows_affected<1){
+			die('Error: Couldn\'t update the post (DB error).');
+		}
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
-		die('<!-- link deleted -->');
+		if($wpdb->rows_affected<1){
+			die('Error: Couldn\'t remove the link record (DB error).');
+		}
+
+		die('OK: Link deleted');
 	};
 	
 	function parse_link($matches, $post_id){
@@ -240,8 +247,8 @@
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
 		
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 25);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 25);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 35);
 		
 		curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
@@ -251,7 +258,8 @@
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		} else {
 			$nobody=true;
-			curl_setopt($ch, CURLOPT_NOBODY, true);
+			//curl_setopt($ch, CURLOPT_NOBODY, true);
+			curl_setopt($ch, CURLOPT_RANGE, '0-1023');
 		}
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		
@@ -263,7 +271,7 @@
 		if ( (($code<200) || ($code>=400)) && $nobody) {
 			curl_setopt($ch, CURLOPT_NOBODY, false);
 			curl_setopt($ch, CURLOPT_HTTPGET, true);
-			curl_setopt($ch, CURLOPT_RANGE, '0-1023');
+			curl_setopt($ch, CURLOPT_RANGE, '0-4095');
 			$response = curl_exec($ch);
 			//echo 'Response 2 : <pre>',$response,'</pre>';
 			$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
@@ -284,7 +292,7 @@
 	}
 	
 	function unlink_link_callback($matches){
-		global $url_to_replace;
+		global $url_to_replace, $ws_link_checker;
 		$url = $ws_link_checker->normalize_url($matches[2]);
 		$text = $matches[4];
 		
