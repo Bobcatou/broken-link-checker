@@ -238,6 +238,7 @@
 	}
 	
 	function page_exists_simple($url){
+		//echo "Checking $url...<br/>";
 		$parts=parse_url($url);
 		if(!$parts) return false;
 		
@@ -246,24 +247,25 @@
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+		//curl_setopt($ch, CURLOPT_USERAGENT, 'WordPress/Broken Link Checker (bot)');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 	
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
 		
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 25);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 35);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 		
 		curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
 		$nobody=false;		
 		if($parts['scheme']=='https'){
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		} else {
 			$nobody=true;
-			//curl_setopt($ch, CURLOPT_NOBODY, true);
-			curl_setopt($ch, CURLOPT_RANGE, '0-1023');
+			curl_setopt($ch, CURLOPT_NOBODY, true);
+			//curl_setopt($ch, CURLOPT_RANGE, '0-1023');
 		}
 		curl_setopt($ch, CURLOPT_HEADER, true);
 		
@@ -275,7 +277,7 @@
 		if ( (($code<200) || ($code>=400)) && $nobody) {
 			curl_setopt($ch, CURLOPT_NOBODY, false);
 			curl_setopt($ch, CURLOPT_HTTPGET, true);
-			curl_setopt($ch, CURLOPT_RANGE, '0-4095');
+			curl_setopt($ch, CURLOPT_RANGE, '0-2047');
 			$response = curl_exec($ch);
 			//echo 'Response 2 : <pre>',$response,'</pre>';
 			$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
