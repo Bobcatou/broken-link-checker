@@ -219,6 +219,9 @@
 		//gather links (<a href=...>)
 		global $url_pattern;
 		
+		//remove all <code></code> blocks first
+		$content = preg_replace('/<code>.+?<\/code>/i', ' ', $content);
+		
 		if(preg_match_all($url_pattern, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $link){
 				parse_link($link, $post_id);
