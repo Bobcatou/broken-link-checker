@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.3.4
+Version: 0.3.5
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,19 +20,36 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.3.4';
+	var $version='0.3.5';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
 	var $siteurl;
+	var $defaults;
 	
-
 	function ws_broken_link_checker() {
 		global $wpdb;
 		
+		//set default options
+		$this->defaults = array(
+			'version' => $this->version,
+			'max_work_session' => 27,
+			'check_treshold' => 72,
+			'mark_broken_links' => true,
+			'broken_link_css' => ".broken_link, a.broken_link {\n\ttext-decoration: line-through;\n}",
+			'exclusion_list' => array(),
+			'delete_post_button' => false
+		);
+		//load options
+		$this->options=get_option($this->options_name);
+		if(!is_array($this->options)){
+			$this->options = $this->defaults;				
+		} else {
+			$this->options = array_merge($this->defaults, $this->options);
+		}
+		
 		$this->postdata_name=$wpdb->prefix . "blc_postdata";
 		$this->linkdata_name=$wpdb->prefix . "blc_linkdata";
-		$this->options=get_option($this->options_name);
 		$this->siteurl = get_option('siteurl');
 		
 		$my_file = str_replace('\\', '/',__FILE__);
@@ -280,20 +297,7 @@ class ws_broken_link_checker {
 	function activation(){
 		global $wpdb;
 		
-		//set default options
-		$defaults = array(
-			'version' => $this->version,
-			'max_work_session' => 27,
-			'check_treshold' => 72,
-			'mark_broken_links' => true,
-			'broken_link_css' => ".broken_link, a.broken_link {\n\ttext-decoration: line-through;\n}",
-			'exclusion_list' => array(),
-		);
-		
-		if(!is_array($this->options)){
-			$this->options = array();				
-		};
-		$this->options = array_merge($defaults, $this->options);
+		//option default were already set in the constructor
 		update_option($this->options_name, $this->options);
 		
 		require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
@@ -365,6 +369,8 @@ class ws_broken_link_checker {
 				$this->options['broken_link_css'] = $new_broken_link_css;
 				
 				$this->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
+				
+				$this->options['delete_post_button'] = !empty($_POST['delete_post_button']);
 				
 				$this->options['exclusion_list']=array_filter(preg_split('/[\s,\r\n]+/', 
 					$_POST['exclusion_list']));
@@ -459,6 +465,19 @@ class ws_broken_link_checker {
 		</td> 
 		</tr> 
 		
+		<tr valign="top"> 
+		<th scope="row">"Delete Post" option:</th> 
+		<td>
+		
+		<input type="checkbox" name="delete_post_button" id="delete_post_button" 
+		<?php if ($this->options['delete_post_button']) echo " checked='checked'"; ?>/> 
+		<label for='delete_post_button'>
+		Display a "Delete Post" link in every row at the broken link list 
+		(<em>Manage -&gt; Broken Links</em>). Not recommended.</label>
+
+		</td> 
+		</tr> 
+		
 		</table> 
 		
 		<p class="submit"><input type="submit" name="Submit" value="Update Options &raquo;" /></p>
@@ -494,7 +513,7 @@ class ws_broken_link_checker {
 				<th scope="col">Link Text</th>
 				<th scope="col">URL</th>
 			
-				<th scope="col" colspan='4'>Action</th>
+				<th scope="col" colspan='<?php echo ($this->options['delete_post_button'])?'5':'4';x ?>'>Action</th>
 			
 				</tr>
 				</thead>
@@ -512,8 +531,16 @@ class ws_broken_link_checker {
 				<td><a href='$link->url'>".$this->mytruncate($link->url)."</a></td>
 				<td><a href='".($link->guid)."' class='edit'>View</a></td>
 
-				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>
-				<td><a href='javascript:void(0);' class='delete' id='discard_button-$link->id' 
+				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>";
+				
+				//the ""Delete Post"" button - optional
+				if ($this->options['delete_post_button']){
+					$deletion_url = "post.php?action=delete&post=$link->post_id";
+					$deletion_url = wp_nonce_url($deletion_url, "delete-post_$link->post_id");
+					echo "<td><a href='$deletion_url'>Delete Post</a></td>";
+				}
+				
+				echo "<td><a href='javascript:void(0);' class='delete' id='discard_button-$link->id' 
 				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
 				
 				<td><a href='javascript:void(0);' class='delete' id='unlink_button-$link->id'
