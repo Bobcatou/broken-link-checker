@@ -170,7 +170,7 @@
 		$new_content = $wpdb->escape($new_content);
 		$wpdb->query("UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id");
 		if($wpdb->rows_affected<1){
-			die('Error: Couldn\'t update the post (DB error).');
+			die('Error: Couldn\'t update the post ('.mysql_error().').');
 		}
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
 		if($wpdb->rows_affected<1){
