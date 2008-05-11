@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.3.7
+Version: 0.3.8
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.3.7';
+	var $version='0.3.8';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -494,7 +494,8 @@ class ws_broken_link_checker {
 		?>
 <div class="wrap">
 <h2><?php
-	echo ($broken_links>0)?"$broken_links Broken Links":"No broken links found";
+	echo ($broken_links>0)?"<span id='broken_link_count'>$broken_links</span> Broken Links":
+			"No broken links found";
 ?></h2>
 <br style="clear:both;" />
 <?php
@@ -528,7 +529,14 @@ class ws_broken_link_checker {
 				<td>$link->post_title</td>
 
 				<td>$link->link_text</td>
-				<td><a href='$link->url'>".$this->mytruncate($link->url)."</a></td>
+				<td>
+					<a href='$link->url'>".$this->mytruncate($link->url)."</a>
+					| <a href='javascript:editBrokenLink($link->id, \"$link->url\")' 
+					id='link-editor-button-$link->id'>Edit</a>
+					<br />
+					<input type='text' size='50' id='link-editor-$link->id' value='$link->url' 
+						class='link-editor' style='display:none' />
+				</td>
 				<td><a href='".($link->guid)."' class='edit'>View</a></td>
 
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>";
@@ -552,8 +560,19 @@ class ws_broken_link_checker {
 			echo '</tbody></table>';
 		};
 ?>
+<style type='text/css'>
+.link-editor {
+	font-size: 1em;
+}
+</style>
 
 <script type='text/javascript'>
+	function alterLinkCounter(factor){
+		cnt = parseInt($('broken_link_count').innerHTML);
+		cnt = cnt + factor;
+		$('broken_link_count').innerHTML = cnt;
+	}
+	
 	function discardLinkMessage(link_id){
 		$('discard_button-'+link_id).innerHTML = 'Wait...';
 		new Ajax.Request('<?php
@@ -566,6 +585,7 @@ class ws_broken_link_checker {
       				var response = transport.responseText || "";
       				if (re.test(response)){
 	      				$('link-'+link_id).hide();
+	      				alterLinkCounter(-1);
       				} else {
 	      				$('discard_button-'+link_id).innerHTML = 'Discard';
 	      				alert(response);
@@ -589,6 +609,7 @@ class ws_broken_link_checker {
       				var response = transport.responseText || "";
       				if (re.test(response)){
 	      				$('link-'+link_id).hide();
+	      				alterLinkCounter(-1);
       				} else {
 	      				$('unlink_button-'+link_id).innerHTML = 'Unlink';
 	      				alert(response);
@@ -596,6 +617,40 @@ class ws_broken_link_checker {
     			}
 			}
 		);
+	}
+	
+	function editBrokenLink(link_id, orig_link){
+		if ($('link-editor-button-'+link_id).innerHTML == 'Edit'){
+			$('link-editor-'+link_id).show();
+			$('link-editor-button-'+link_id).innerHTML = 'Save';
+		} else {
+			$('link-editor-'+link_id).hide();
+			new_url = $('link-editor-'+link_id).value;
+			if (new_url != orig_link){
+				//Save the changed link
+				new Ajax.Request(			
+					'<?php
+				echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?'; 
+				?>action=edit_link&id='+link_id+'&new_url='+escape(new_url), 
+					{ 
+						method:'post',
+						onSuccess: function(transport){
+							var re = /OK:.*/i
+		      				var response = transport.responseText || "";
+		      				if (re.test(response)){
+			      				$('link-'+link_id).hide();
+			      				alterLinkCounter(-1);
+			      				//alert(response);
+		      				} else {
+			      				alert(response);
+		      				}
+		    			}
+					}
+				);
+				
+			}
+			$('link-editor-button-'+link_id).innerHTML = 'Edit';
+		}
 	}
 </script>
 </div>

@@ -2,8 +2,8 @@
 Contributors: whiteshadow
 Tags: links, broken, maintenance
 Requires at least: 2.0.2
-Tested up to: 2.5
-Stable tag: 0.3.7
+Tested up to: 2.5.1
+Stable tag: 0.3.8
 
 This plugin will check your posts for broken links and missing images in background and notify you on the dashboard if any are found. 
 
@@ -16,6 +16,7 @@ This plugin is will monitor your blog looking for broken links and let you know 
 * Makes broken links display differently in posts (optional).
 * Link checking intervals can be configured.
 * New/modified posts are checked ASAP.
+* You can unlink or edit broken links in the *Manage -> Broken Links* tab (experimental). 
 
 **How To Use It**
 The broken links, if any are found, will show up in a new tab of WP admin panel - Manage -> Broken Links. A notification will also appear on the Dashboard. 
