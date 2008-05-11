@@ -46,7 +46,11 @@
 	$check_treshold=date('Y-m-d H:i:s', strtotime('-'.$options['check_treshold'].' hours'));
 	$recheck_treshold=date('Y-m-d H:i:s', strtotime('-20 minutes'));
 	
-	$action=isset($_GET['action'])?$_GET['action']:'run_check';
+	if (!empty($_POST['action'])){
+		$action = $_POST['action'];
+	} else {
+		$action=isset($_GET['action'])?$_GET['action']:'run_check';
+	}
 	
 	if($action=='dashboard_status'){
 		/* displays a notification if broken links have been found */
@@ -178,6 +182,44 @@
 		}
 
 		die('OK: Link deleted');
+		
+	} else if ($action == 'edit_link'){
+		//edits the link's URL inside the post
+		if (!current_user_can('edit_posts')) {
+			die("Error: You can't do that. Access denied.");
+		}
+		
+		$id = intval($_GET['id']);
+		$new_url = $_GET['new_url'];
+		
+		$sql="SELECT * FROM $linkdata_name WHERE id = $id LIMIT 1";
+		$the_link=$wpdb->get_row($sql, OBJECT, 0);
+		if (!$the_link){
+			die('Error: Link not found');
+		}
+		$the_post = get_post($the_link->post_id, ARRAY_A);
+		if (!$the_post){
+			die('Error: Post not found');
+		}
+		
+		$new_content = edit_the_link($the_post['post_content'], $the_link->url, $new_url);
+		if (function_exists('mysql_real_escape_string')){
+			$new_content = mysql_real_escape_string($new_content);
+		} else {		
+			$new_content = $wpdb->escape($new_content);
+		}
+		$q = "UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id";
+		//@file_put_contents('q.txt', $q);
+		$wpdb->query($q);
+		if($wpdb->rows_affected<1){
+			die('Error: Couldn\'t update the post ('.mysql_error().').');
+		}
+		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
+		if($wpdb->rows_affected<1){
+			die('Error: Couldn\'t remove the link record (DB error).');
+		}
+
+		die('OK: Link changed and deleted from the list of broken links.');
 	};
 	
 	function parse_link($matches, $post_id){
@@ -310,6 +352,29 @@
 			//echo "Removed '$text' - '$url'\n";
 			return $text;
 			//return "<span class='broken_link'>$text</span>";
+		} else {
+			return $matches[0];
+		}
+	}	
+	
+	function edit_the_link($content, $url, $newurl){
+		global $url_pattern, $url_to_replace, $new_url;
+		$url_to_replace = $url;
+		$new_url = $newurl;
+		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		$content = preg_replace_callback($url_pattern, edit_link_callback, $content);
+		return $content;
+	}
+	
+	function edit_link_callback($matches){
+		global $url_to_replace, $new_url, $ws_link_checker;
+		$url = $ws_link_checker->normalize_url($matches[2]);
+		$text = $matches[4];
+		
+		//echo "$url || $url_to_replace\n";
+		if ($url == $url_to_replace){
+			//return $text;
+			return $matches[1].$new_url.$matches[3].$text.$matches[5];
 		} else {
 			return $matches[0];
 		}
