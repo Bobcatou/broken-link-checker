@@ -1,0 +1,231 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Broken Link Checker 0.3.9\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-28 12:29+0300\n"
+"PO-Revision-Date: 2008-06-28 12:30+0300\n"
+"Last-Translator: Anna Ozeritskaya <ozeritskaya@ftad.ru>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: D:\\Projects\\wp-projects\\broken-link-checker\n"
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:343
+msgid "Link Checker Settings"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:343
+msgid "Link Checker"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:345
+msgid "View Broken Links"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:345
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:502
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:61
+msgid "Broken Links"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:391
+msgid "Broken Link Checker Options"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:393
+msgid ""
+"Error: <a href=\"http://curl.haxx.se/libcurl/php/\">CURL library</a>\n"
+"\t\t is not installed. This plugin won&rsquo;t work."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:401
+msgid "Status:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:418
+msgid "Re-check all pages"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:423
+msgid "Check Every Post:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:426
+msgid "Every"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:428
+msgid "hours"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:430
+msgid "Links in old posts will be re-checked this often. New posts will be usually checked ASAP."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:436
+msgid "Broken Link CSS:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:440
+msgid "Apply <em>class=\"broken_link\"</em> to broken links"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:450
+msgid "Exclusion list:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:451
+msgid "Don&rsquo;t check links where the URL contains any of these words (one per line):"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:461
+msgid "Work Session Length:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:466
+msgid "seconds"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:468
+msgid "The link checker does its work in short \"sessions\" while any page of the WP admin panel is open. Typically you won&rsquo;t need to change this value."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:474
+msgid "\"Delete Post\" option:"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:480
+msgid "Display a \"Delete Post\" link in every row at the broken link list"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:481
+msgid "\"Delete Post\" link will be displayed at <em>Manage -&gt; Broken Links</em>. Not recommended."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:488
+msgid "Update Options &raquo;"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:503
+msgid "No broken links found"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:516
+msgid "#"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:518
+msgid "Post"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:519
+msgid "Link Text"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:520
+msgid "URL"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:522
+msgid "Action"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:540
+msgid "Edit"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:545
+msgid "View"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:547
+msgid "Edit Post"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:553
+msgid "Delete Post"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:557
+msgid "Discard This Message"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:557
+msgid "Discard"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:560
+msgid "Remove the link from the post"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/broken-link-checker.php:560
+msgid "Unlink"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:18
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:146
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:159
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:189
+msgid "Error: You can't do that. Access denied."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:22
+msgid "Fatal error : undefined object; plugin may not be active."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:46
+msgid " hours"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:47
+msgid "-20 minutes"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:63
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:80
+msgid "View broken links"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:82
+msgid "No broken links found."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:90
+msgid "The work queue is empty."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:151
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:181
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:219
+msgid "Error: Couldn't remove the link record (DB error)."
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:153
+msgid "OK: Link discarded"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:166
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:198
+msgid "Error: Link not found"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:170
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:202
+msgid "Error: Post not found"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:177
+msgid "Error: Couldn't update the post"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:184
+msgid "OK: Link deleted"
+msgstr ""
+
+#: D:\Projects\wp-projects\broken-link-checker/wsblc_ajax.php:222
+msgid "OK: Link changed and deleted from the list of broken links."
+msgstr ""
+

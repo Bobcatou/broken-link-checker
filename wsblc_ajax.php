@@ -15,11 +15,11 @@
 	}
 	
 	if (!current_user_can('read')) {
-		die("Error: You can't do that. Access denied.");
+		die(__("Error: You can't do that. Access denied.", "broken-link-checker"));
 	}
 	
 	if(!is_object($ws_link_checker)) {
-		die('Fatal error : undefined object; plugin may not be active.');
+		die(__('Fatal error : undefined object; plugin may not be active.', 'broken-link-checker'));
 	};
 	
 	$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
@@ -58,9 +58,9 @@
 		$broken_links=$wpdb->get_var($sql);
 		if($broken_links>0){
 			echo "<div>
-				<h3>Broken Links</h3>
+				<h3>".__("Broken Links", "broken-link-checker")."</h3>
 				<p><a href='".get_option('siteurl')."/wp-admin/edit.php?page=".
-				$ws_link_checker->mybasename."' title='View broken links'>Found $broken_links broken links</a></p>
+				$ws_link_checker->mybasename."' title='".__("View broken links", "broken-link-checker")."'>".__("Found $broken_links broken links", "broken-link-checker")."</a></p>
 			</div>";
 		};
 		
@@ -77,17 +77,17 @@
 		
 		if($broken_links>0){
 			echo "<a href='".get_option('siteurl')."/wp-admin/edit.php?page=".
-				$ws_link_checker->mybasename."' title='View broken links'><strong>Found $broken_links broken links</strong></a>";
+				$ws_link_checker->mybasename."' title='".__("View broken links", "broken-link-checker")."'><strong>".__("Found $broken_links broken links", "broken-link-checker")."</strong></a>";
 		} else {
-			echo "No broken links found.";
+			echo __("No broken links found.", "broken-link-checker");
 		}
 		
 		echo "<br/>";
 		
 		if($posts_unchecked || $links_unchecked) {
-			echo "$posts_unchecked posts and $links_unchecked links in the work queue.";
+			echo __("$posts_unchecked posts and $links_unchecked links in the work queue.", "broken-link-checker");
 		} else {
-			echo "The work queue is empty.";
+			echo __("The work queue is empty.", "broken-link-checker");
 		}
 
 		
@@ -143,50 +143,50 @@
 		
 	} else if ($action=='discard_link'){
 		if (!current_user_can('edit_posts')) {
-			die("Error: You can't do that. Access denied.");
+			die(__("Error: You can't do that. Access denied.", "broken-link-checker"));
 		}
 		$id=intval($_GET['id']);
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
 		if($wpdb->rows_affected<1){
-			die('Error: Couldn\'t remove the link record (DB error).');
+			die(__('Error: Couldn\'t remove the link record (DB error).', 'broken-link-checker'));
 		}
-		die('OK: Link discarded');
+		die(__('OK: Link discarded', 'broken-link-checker'));
 		
 	} else if ($action=='remove_link'){
 		
 		//actually deletes the link from the post
 		if (!current_user_can('edit_posts')) {
-			die("Error: You can't do that. Access denied.");
+			die(__("Error: You can't do that. Access denied.", 'broken-link-checker'));
 		}
 		
 		$id=intval($_GET['id']);
 		$sql="SELECT * FROM $linkdata_name WHERE id = $id LIMIT 1";
 		$the_link=$wpdb->get_row($sql, OBJECT, 0);
 		if (!$the_link){
-			die('Error: Link not found');
+			die(__('Error: Link not found', 'broken-link-checker'));
 		}
 		$the_post = get_post($the_link->post_id, ARRAY_A);
 		if (!$the_post){
-			die('Error: Post not found');
+			die(__('Error: Post not found', 'broken-link-checker'));
 		}
 		
 		$new_content = unlink_the_link($the_post['post_content'], $the_link->url);
 		$new_content = $wpdb->escape($new_content);
 		$wpdb->query("UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id");
 		if($wpdb->rows_affected<1){
-			die('Error: Couldn\'t update the post ('.mysql_error().').');
+			die(__('Error: Couldn\'t update the post', 'broken-link-checker').' ('.mysql_error().').');
 		}
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
 		if($wpdb->rows_affected<1){
-			die('Error: Couldn\'t remove the link record (DB error).');
+			die(__('Error: Couldn\'t remove the link record (DB error).', 'broken-link-checker'));
 		}
 
-		die('OK: Link deleted');
+		die(__('OK: Link deleted', 'broken-link-checker'));
 		
 	} else if ($action == 'edit_link'){
 		//edits the link's URL inside the post
 		if (!current_user_can('edit_posts')) {
-			die("Error: You can't do that. Access denied.");
+			die(__("Error: You can't do that. Access denied.", "broken-link-checker"));
 		}
 		
 		$id = intval($_GET['id']);
@@ -195,11 +195,11 @@
 		$sql="SELECT * FROM $linkdata_name WHERE id = $id LIMIT 1";
 		$the_link=$wpdb->get_row($sql, OBJECT, 0);
 		if (!$the_link){
-			die('Error: Link not found');
+			die(__('Error: Link not found', 'broken-link-checker'));
 		}
 		$the_post = get_post($the_link->post_id, ARRAY_A);
 		if (!$the_post){
-			die('Error: Post not found');
+			die(__('Error: Post not found', 'broken-link-checker'));
 		}
 		
 		$new_content = edit_the_link($the_post['post_content'], $the_link->url, $new_url);
@@ -216,10 +216,10 @@
 		}
 		$wpdb->query("DELETE FROM $linkdata_name WHERE id=$id LIMIT 1");
 		if($wpdb->rows_affected<1){
-			die('Error: Couldn\'t remove the link record (DB error).');
+			die(__('Error: Couldn\'t remove the link record (DB error).', 'broken-link-checker'));
 		}
 
-		die('OK: Link changed and deleted from the list of broken links.');
+		die(__('OK: Link changed and deleted from the list of broken links.', 'broken-link-checker'));
 	};
 	
 	function parse_link($matches, $post_id){
