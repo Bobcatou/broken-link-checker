@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.3.9
+Version: 0.4
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -13,6 +13,13 @@ Created by Janis Elsts (email : whiteshadow@w-shadow.com)
 MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 */
 
+### Create text domain for translations
+add_action('init', 'linkchecker_textdomain');
+function linkchecker_textdomain() {
+	load_plugin_textdomain('broken-link-checker', 'wp-content/plugins/broken-link-checker');
+}
+
+
 if (!class_exists('ws_broken_link_checker')) {
 
 class ws_broken_link_checker {
@@ -20,7 +27,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.3.9';
+	var $version='0.4';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -333,9 +340,9 @@ class ws_broken_link_checker {
 	}
 	
 	function options_menu(){
-		add_options_page('Link Checker Settings', 'Link Checker', 'manage_options',
+		add_options_page(__('Link Checker Settings', 'broken-link-checker'), __('Link Checker', 'broken-link-checker'), 'manage_options',
 			__FILE__,array(&$this, 'options_page'));
-		add_management_page('View Broken Links', 'Broken Links', 'manage_options',
+		add_management_page(__('View Broken Links', 'broken-link-checker'), __('Broken Links', 'broken-link-checker'), 'manage_options',
 			__FILE__,array(&$this, 'broken_links_page'));	
 	}
 	
@@ -381,18 +388,17 @@ class ws_broken_link_checker {
 		}
 		echo $reminder;
 		?>
-		<div class="wrap"><h2>Broken Link Checker Options</h2>
+		<div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		<?php if(!function_exists('curl_init')){ ?>
-		<strong>Error: <a href='http://curl.haxx.se/libcurl/php/'>CURL library</a>
-		 is not installed. This plugin won't work.</strong><br/>
+		<strong><?php _e('Error: <a href="http://curl.haxx.se/libcurl/php/">CURL library</a>
+		 is not installed. This plugin won&rsquo;t work.', 'broken-link-checker'); ?></strong><br/>
 		<?php }; ?>
 		<form name="link_checker_options" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;updated=true"> 
-		<p class="submit"><input type="submit" name="Submit" value="Update Options &raquo;" /></p>
-		
-		<table class="optiontable"> 
+		<br/>
+		<table class="optiontable" cellpadding="10"> 
 		
 		<tr valign="top"> 
-		<th scope="row">Status:</th> 
+		<th scope="row" align="right"><?php _e('Status:', 'broken-link-checker'); ?></th> 
 		<td>
 		
 		
@@ -409,29 +415,29 @@ class ws_broken_link_checker {
 			});
 		</script>
 		<?php //JHS: Recheck all posts link: ?>
-		<p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;recheck=true')" /></p>
+		<p><input class="button" type="button" name="recheckbutton" value="<?php _e('Re-check all pages', 'broken-link-checker'); ?>" onclick="location.replace('<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;recheck=true')" /></p>
 		</td> 
 		</tr> 
 		
 		<tr valign="top"> 
-		<th scope="row">Check Every Post:</th> 
+		<th scope="row" align="right"><?php _e('Check Every Post:', 'broken-link-checker'); ?></th> 
 		<td>
 		
-		Every <input type="text" name="check_treshold" id="check_treshold" 
+		<?php _e('Every', 'broken-link-checker'); ?> <input type="text" name="check_treshold" id="check_treshold" 
 			value="<?php echo $this->options['check_treshold']; ?>" size='5' maxlength='3'/> 
-		hours
+		<?php _e('hours', 'broken-link-checker'); ?>
 		<br/>
-		Links in old posts will be re-checked this often. New posts will be usually checked ASAP.
+		<small><?php _e('Links in old posts will be re-checked this often. New posts will be usually checked ASAP.', 'broken-link-checker'); ?></small>
 
 		</td> 
 		</tr> 
 		
 		<tr valign="top"> 
-		<th scope="row">Broken Link CSS:</th> 
+		<th scope="row" align="right"><?php _e('Broken Link CSS:', 'broken-link-checker'); ?></th> 
 		<td>
 		<input type="checkbox" name="mark_broken_links" id="mark_broken_links" 
 			<?php if ($this->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
-			<label for='mark_broken_links'>Apply <em>class="broken_link"</em> to broken links</label><br/>
+			<label for='mark_broken_links'><?php _e('Apply <em>class="broken_link"</em> to broken links', 'broken-link-checker'); ?></label><br/>
 		<textarea type="text" name="broken_link_css" id="broken_link_css" cols='40' rows='4'/><?php
 			if( isset($this->options['broken_link_css']) ) 
 				echo $this->options['broken_link_css']; 
@@ -441,8 +447,8 @@ class ws_broken_link_checker {
 		</tr>
 		
 		<tr valign="top"> 
-		<th scope="row">Exclusion list:</th> 
-		<td>Don't check links where the URL contains any of these words (one per line):<br/> 
+		<th scope="row" align="right"><?php _e('Exclusion list:', 'broken-link-checker'); ?></th> 
+		<td><?php _e('Don&rsquo;t check links where the URL contains any of these words (one per line):', 'broken-link-checker'); ?><br/> 
 		<textarea type="text" name="exclusion_list" id="exclusion_list" cols='40' rows='4'/><?php
 			if( isset($this->options['exclusion_list']) ) 
 				echo implode("\n", $this->options['exclusion_list']); 
@@ -452,35 +458,34 @@ class ws_broken_link_checker {
 		</tr>
 		
 		<tr valign="top"> 
-		<th scope="row">Work Session Length:</th> 
+		<th scope="row" align="right"><?php _e('Work Session Length:', 'broken-link-checker'); ?></th> 
 		<td>
 		
 		<input type="text" name="max_work_session" id="max_work_session" 
 			value="<?php echo $this->options['max_work_session']; ?>" size='5' maxlength='3'/> 
-		seconds
+		<?php _e('seconds', 'broken-link-checker'); ?>
 		<br/>
-		The link checker does its work in short "sessions" while any page of the WP admin panel is open.
-		Typically you won't need to change this value.
+		<small><?php _e('The link checker does its work in short "sessions" while any page of the WP admin panel is open. Typically you won&rsquo;t need to change this value.', 'broken-link-checker'); ?></small>
 
 		</td> 
 		</tr> 
 		
-		<tr valign="top"> 
-		<th scope="row">"Delete Post" option:</th> 
+		<tr valign="top">
+		<th scope="row" align="right"><?php _e('"Delete Post" option:', 'broken-link-checker'); ?></th> 
 		<td>
 		
 		<input type="checkbox" name="delete_post_button" id="delete_post_button" 
 		<?php if ($this->options['delete_post_button']) echo " checked='checked'"; ?>/> 
 		<label for='delete_post_button'>
-		Display a "Delete Post" link in every row at the broken link list 
-		(<em>Manage -&gt; Broken Links</em>). Not recommended.</label>
+		<?php _e('Display a "Delete Post" link in every row at the broken link list', 'broken-link-checker'); ?><br/>
+		<small><?php _e('"Delete Post" link will be displayed at <em>Manage -&gt; Broken Links</em>. Not recommended.', 'broken-link-checker'); ?></small></label>
 
 		</td> 
 		</tr> 
 		
 		</table> 
 		
-		<p class="submit"><input type="submit" name="Submit" value="Update Options &raquo;" /></p>
+		<p class="submit"><input type="submit" name="Submit" value="<?php _e('Update Options &raquo;', 'broken-link-checker'); ?>" /></p>
 		</form>
 		</div>
 		<?php 
@@ -494,8 +499,8 @@ class ws_broken_link_checker {
 		?>
 <div class="wrap">
 <h2><?php
-	echo ($broken_links>0)?"<span id='broken_link_count'>$broken_links</span> Broken Links":
-			"No broken links found";
+	echo ($broken_links>0)?"<span id='broken_link_count'>$broken_links</span> ".__("Broken Links", "broken-link-checker"):
+			__("No broken links found", "broken-link-checker");
 ?></h2>
 <br style="clear:both;" />
 <?php
@@ -508,13 +513,13 @@ class ws_broken_link_checker {
 				<thead>
 				<tr>
 			
-				<th scope="col"><div style="text-align: center">#</div></th>
+				<th scope="col"><div style="text-align: center"><?php _e('#', 'broken-link-checker'); ?></div></th>
 			
-				<th scope="col">Post</th>
-				<th scope="col">Link Text</th>
-				<th scope="col">URL</th>
+				<th scope="col"><?php _e('Post', 'broken-link-checker'); ?></th>
+				<th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
+				<th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 			
-				<th scope="col" colspan='<?php echo ($this->options['delete_post_button'])?'5':'4';x ?>'>Action</th>
+				<th scope="col" colspan='<?php echo ($this->options['delete_post_button'])?'5':'4';x ?>'><?php _e('Action', 'broken-link-checker'); ?></th>
 			
 				</tr>
 				</thead>
@@ -532,27 +537,27 @@ class ws_broken_link_checker {
 				<td>
 					<a href='$link->url'>".$this->mytruncate($link->url)."</a>
 					| <a href='javascript:editBrokenLink($link->id, \"$link->url\")' 
-					id='link-editor-button-$link->id'>Edit</a>
+					id='link-editor-button-$link->id'>".__("Edit", "broken-link-checker")."</a>
 					<br />
 					<input type='text' size='50' id='link-editor-$link->id' value='$link->url' 
 						class='link-editor' style='display:none' />
 				</td>
-				<td><a href='".(get_permalink($link->post_id))."' class='edit'>View</a></td>
+				<td><a href='".(get_permalink($link->post_id))."' class='edit'>".__("View", "broken-link-checker")."</a></td>
 
-				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>";
+				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>".__("Edit Post", "broken-link-checker")."</a></td>";
 				
 				//the ""Delete Post"" button - optional
 				if ($this->options['delete_post_button']){
 					$deletion_url = "post.php?action=delete&post=$link->post_id";
 					$deletion_url = wp_nonce_url($deletion_url, "delete-post_$link->post_id");
-					echo "<td><a href='$deletion_url'>Delete Post</a></td>";
+					echo "<td><a href='$deletion_url'>".__("Delete Post", "broken-link-checker")."</a></td>";
 				}
 				
 				echo "<td><a href='javascript:void(0);' class='delete' id='discard_button-$link->id' 
-				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
+				onclick='discardLinkMessage($link->id);return false;' );' title='".__("Discard This Message", "broken-link-checker")."'>".__("Discard", "broken-link-checker")."</a></td>
 				
 				<td><a href='javascript:void(0);' class='delete' id='unlink_button-$link->id'
-				onclick='removeLinkFromPost($link->id);return false;' );' title='Remove the link from the post'>Unlink</a></td>
+				onclick='removeLinkFromPost($link->id);return false;' );' title='".__("Remove the link from the post", "broken-link-checker")."'>".__("Unlink", "broken-link-checker")."</a></td>
 				</tr>";
 				
 			}
@@ -611,7 +616,7 @@ class ws_broken_link_checker {
 	      				$('link-'+link_id).hide();
 	      				alterLinkCounter(-1);
       				} else {
-	      				$('unlink_button-'+link_id).innerHTML = 'Unlink';
+	      				$('unlink_button-'+link_id).innerHTML = __('Unlink', 'broken-link-checker');
 	      				alert(response);
       				}
     			}
