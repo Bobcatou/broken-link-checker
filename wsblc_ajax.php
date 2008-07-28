@@ -333,7 +333,10 @@
 		
 		curl_close($ch);
 		
-		return (($code>=200) && ($code<400));	
+		/*"Good" response codes are anything in the 2XX range (e.g "200 OK") and redirects  - the 3XX range.
+		  HTTP 401 Unauthorized is a special case that is considered OK as well. Other errors - the 4XX range
+		  are treated as "page doesn't exist'". */
+		return (($code>=200) && ($code<400)) || ($code == 401);
 	}
 	
 	function unlink_the_link($content, $url){
