@@ -22,7 +22,8 @@
 		die('Fatal error : undefined object; plugin may not be active.');
 	};
 	
-	$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+	//Regexp for HTML links
+	$url_pattern='/<a[\s]+[^>]*href\s*=\s*([\"\']+)([^\'\" >]+)\1[^<>]*>((?sU).*)<\/a>/i';
 	$url_to_replace = '';
 	
 	$postdata_name=$wpdb->prefix . "blc_postdata";
@@ -124,16 +125,31 @@
 		$links=$wpdb->get_results($sql, OBJECT);
 		if($links && (count($links)>0)){
 			//some unchecked links found
-			echo "<!-- checking links (rand : ".rand(1,1000).") -->";
+			echo "<!-- checking ".count($links)." links (rand : ".rand(1,1000).") -->";
 			foreach ($links as $link) {
+				/*
+				Check for problematic (though not necessarily "broken") links.
+				If a link has been checked multiple times and still hasn't been marked as broken
+				or removed from the queue then probably the checking algorithm is having problems
+				with that link. Mark it as broken and hope the user sorts it out.
+				*/
+				if ($link->check_count >=5){
+					$wpdb->query("UPDATE $linkdata_name SET broken=1 WHERE id=$link->id");
+					//can afford to skip the $max_execution_time check here, the above op. should be very fast.
+					continue;  
+				}
+				
+				//Update the check_count & last_check fields before actually performing the check.
+				//Useful if something goes terribly wrong in page_exists_simple() with this particular URL.
+				$wpdb->query("UPDATE $linkdata_name SET last_check=NOW(), check_count=check_count+1
+							  WHERE id=$link->id");
+				
 				if( $ws_link_checker->is_excluded($link->url) || page_exists_simple($link->url) ){
 					//link OK, remove from queue
 					$wpdb->query("DELETE FROM $linkdata_name WHERE id=$link->id");
 				} else {
-					$wpdb->query("UPDATE $linkdata_name SET broken=1, ".
-								" last_check=NOW(), check_count=check_count+1 WHERE id=$link->id");
+					$wpdb->query("UPDATE $linkdata_name SET broken=1 WHERE id=$link->id");
 				};
-				
 				
 				if(execution_time()>$max_execution_time){
 					die('<!-- url loop timeout -->');
@@ -227,7 +243,8 @@
 	function parse_link($matches, $post_id){
 		global $wpdb, $linkdata_name, $ws_link_checker;
 		
-		$url=$matches[2];
+		$url = $matches[2];
+		$text = $matches[3];
 		
 		$url = $ws_link_checker->normalize_url($url);
 		if (!$url) return false;
@@ -235,7 +252,7 @@
         if(strlen($url)>5){
 	        $wpdb->query(
 	        	"INSERT INTO $linkdata_name(post_id, url, link_text) 
-	        	VALUES($post_id, '".$wpdb->escape($url)."', '".$wpdb->escape(strip_tags($matches[4]))."')"
+	        	VALUES($post_id, '".$wpdb->escape($url)."', '".$wpdb->escape(strip_tags($text))."')"
 	        	);
     	};
         
@@ -363,7 +380,7 @@
 	}	
 	
 	function edit_the_link($content, $url, $newurl){
-		global $url_pattern, $url_to_replace, $new_url;
+		global /*$url_pattern, */$url_to_replace, $new_url;
 		$url_to_replace = $url;
 		$new_url = $newurl;
 		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
