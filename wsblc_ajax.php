@@ -3,7 +3,9 @@
 	The AJAX-y part of the link checker.
 */
 	require_once("../../../wp-config.php");
-	require_once("../../../wp-includes/wp-db.php");
+	if(!isset($wpdb)) {
+		require_once("../../../wp-includes/wp-db.php");
+	}
 	
 	//error_reporting(E_ALL);
 	
