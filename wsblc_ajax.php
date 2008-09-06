@@ -308,7 +308,14 @@
 		$parts=parse_url($url);
 		if(!$parts) return false;
 		
-		if(!isset($parts['scheme'])) $url='http://'.$url;
+		if(!isset($parts['scheme'])) {
+			$url='http://'.$url;
+			$parts['scheme'] = 'http';
+		}
+		
+		//Only HTTP links are checked. All others are automatically considered okay.
+		if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') ) 
+			return true;
 		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
