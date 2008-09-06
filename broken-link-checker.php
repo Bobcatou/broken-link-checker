@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.4.6
+Version: 0.4.7
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -20,7 +20,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.4.6';
+	var $version='0.4.7';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -539,7 +539,7 @@ class ws_broken_link_checker {
 
 				<td>$link->link_text</td>
 				<td>
-					<a href='$link->url'>".$this->mytruncate($link->url)."</a>
+					<a href='$link->url' target='_blank'>".$this->mytruncate($link->url)."</a>
 					| <a href='javascript:editBrokenLink($link->id, \"$link->url\")' 
 					id='link-editor-button-$link->id'>Edit</a>
 					<br />
@@ -631,6 +631,8 @@ class ws_broken_link_checker {
 	function editBrokenLink(link_id, orig_link){
 		if ($('link-editor-button-'+link_id).innerHTML == 'Edit'){
 			$('link-editor-'+link_id).show();
+			$('link-editor-'+link_id).focus();
+			$('link-editor-'+link_id).select();
 			$('link-editor-button-'+link_id).innerHTML = 'Save';
 		} else {
 			$('link-editor-'+link_id).hide();
