@@ -25,7 +25,12 @@
 	};
 	
 	//Regexp for HTML links
-	$url_pattern='/<a[\s]+[^>]*href\s*=\s*([\"\']+)([^\'\" >]+)\1[^<>]*>((?sU).*)<\/a>/i';
+	//				\1                       \2      \3            \4       \5       \6
+	$url_pattern='/(<a[\s]+[^>]*href\s*=\s*)([\"\']+)([^\'\">]+)\2([^<>]*>)((?sU).*)(<\/a>)/i';
+	//Regexp for IMG tags
+	//             \1                         \2       \3           \4 
+	$img_pattern='/(<img[\s]+[^>]*src\s*=\s*)([\"\']?)([^\'\">]+)\2([^<>]*>)/i';
+	
 	$url_to_replace = '';
 	
 	$postdata_name=$wpdb->prefix . "blc_postdata";
@@ -129,29 +134,7 @@
 			//some unchecked links found
 			echo "<!-- checking ".count($links)." links (rand : ".rand(1,1000).") -->";
 			foreach ($links as $link) {
-				/*
-				Check for problematic (though not necessarily "broken") links.
-				If a link has been checked multiple times and still hasn't been marked as broken
-				or removed from the queue then probably the checking algorithm is having problems
-				with that link. Mark it as broken and hope the user sorts it out.
-				*/
-				if ($link->check_count >=5){
-					$wpdb->query("UPDATE $linkdata_name SET broken=1 WHERE id=$link->id");
-					//can afford to skip the $max_execution_time check here, the above op. should be very fast.
-					continue;  
-				}
-				
-				//Update the check_count & last_check fields before actually performing the check.
-				//Useful if something goes terribly wrong in page_exists_simple() with this particular URL.
-				$wpdb->query("UPDATE $linkdata_name SET last_check=NOW(), check_count=check_count+1
-							  WHERE id=$link->id");
-				
-				if( $ws_link_checker->is_excluded($link->url) || page_exists_simple($link->url) ){
-					//link OK, remove from queue
-					$wpdb->query("DELETE FROM $linkdata_name WHERE id=$link->id");
-				} else {
-					$wpdb->query("UPDATE $linkdata_name SET broken=1 WHERE id=$link->id");
-				};
+				$ws_link_checker->check_link($link);
 				
 				if(execution_time()>$max_execution_time){
 					die('<!-- url loop timeout -->');
@@ -190,7 +173,13 @@
 			die('Error: Post not found');
 		}
 		
-		$new_content = unlink_the_link($the_post['post_content'], $the_link->url);
+		//Remove a link or an image from the post HTML
+		if ($the_link->type == 'link')
+			$new_content = unlink_the_link($the_post['post_content'], $the_link->url);
+		elseif ($the_link->type == 'image')
+			$new_content = unlink_image($the_post['post_content'], $the_link->url);
+		
+		//Update database
 		$new_content = $wpdb->escape($new_content);
 		$wpdb->query("UPDATE $wpdb->posts SET post_content = '$new_content' WHERE id = $the_link->post_id");
 		if($wpdb->rows_affected<1){
@@ -222,7 +211,12 @@
 			die('Error: Post not found');
 		}
 		
-		$new_content = edit_the_link($the_post['post_content'], $the_link->url, $new_url);
+		if ($the_link->type == 'link')
+			$new_content = edit_the_link($the_post['post_content'], $the_link->url, $new_url);
+		elseif ($the_link->type == 'image')
+			$new_content = edit_image($the_post['post_content'], $the_link->url, $new_url);
+		
+		
 		if (function_exists('mysql_real_escape_string')){
 			$new_content = mysql_real_escape_string($new_content);
 		} else {		
@@ -245,16 +239,18 @@
 	function parse_link($matches, $post_id){
 		global $wpdb, $linkdata_name, $ws_link_checker;
 		
-		$url = $matches[2];
-		$text = $matches[3];
+		$url = $matches[3];
+		$text = $matches[5];
 		
 		$url = $ws_link_checker->normalize_url($url);
 		if (!$url) return false;
 	    
         if(strlen($url)>5){
 	        $wpdb->query(
-	        	"INSERT INTO $linkdata_name(post_id, url, link_text) 
-	        	VALUES($post_id, '".$wpdb->escape($url)."', '".$wpdb->escape(strip_tags($text))."')"
+	        	"INSERT INTO $linkdata_name(post_id, url, link_text, type, final_url) 
+	        	VALUES($post_id, '".$wpdb->escape($url)."', 
+						'".$wpdb->escape(strip_tags($text))."', 'link',
+						'".$wpdb->escape($url)."')"
 	        	);
     	};
         
@@ -264,14 +260,14 @@
 	function parse_image($matches, $post_id){
 		global $wpdb, $linkdata_name, $ws_link_checker;
 		
-		$url=$matches[2];
+		$url=$matches[3];
 		$url = $ws_link_checker->normalize_url($url);
 		if(!$url) return false;
 		
         if(strlen($url)>3){
 	        $wpdb->query(
-	        	"INSERT INTO $linkdata_name(post_id, url, link_text) 
-	        	VALUES($post_id, '".$wpdb->escape($url)."', '[image]')"
+	        	"INSERT INTO $linkdata_name(post_id, url, link_text, type, final_url) 
+	        	VALUES($post_id, '".$wpdb->escape($url)."', '[image]', 'image','".$wpdb->escape($url)."')"
 	        	);
     	};
         
@@ -280,20 +276,21 @@
 	
 	function gather_and_save_links($content, $post_id){
 		//gather links (<a href=...>)
-		global $url_pattern;
+		global $url_pattern, $img_pattern;
 		
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code>.+?<\/code>/i', ' ', $content);
 		
+		//echo "Analyzing post $post_id<br>Content = ".htmlspecialchars($content)."<br>";
+		
 		if(preg_match_all($url_pattern, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $link){
+				//echo "Found link : ".print_r($link,true)."<br>";
 				parse_link($link, $post_id);
 			}
 		};
 		
 		//gather images (<img src=...>)
-		$img_pattern='/(<img[\s]+[^>]*src\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)/i';
-		
 		if(preg_match_all($img_pattern, $content, $matches, PREG_SET_ORDER)){
 			foreach($matches as $img){
 				parse_image($img, $post_id);
@@ -305,6 +302,7 @@
 	
 	function page_exists_simple($url){
 		//echo "Checking $url...<br/>";
+				
 		$parts=parse_url($url);
 		if(!$parts) return false;
 		
@@ -365,18 +363,37 @@
 		return (($code>=200) && ($code<400)) || ($code == 401);
 	}
 	
+	function unlink_image($content, $url){
+		global $img_pattern, $url_to_replace;
+		$url_to_replace = $url;
+		//$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\">]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		$content = preg_replace_callback($img_pattern, unlink_image_callback, $content);
+		return $content;
+	}
+	
+	function unlink_image_callback($matches){
+		global $url_to_replace, $ws_link_checker;
+		$url = $ws_link_checker->normalize_url($matches[3]);
+		
+		if ($url == $url_to_replace){
+			return ''; //completely remove the IMG tag
+		} else {
+			return $matches[0];
+		}
+	}
+	
 	function unlink_the_link($content, $url){
 		global $url_pattern, $url_to_replace;
 		$url_to_replace = $url;
-		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		//$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\">]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
 		$content = preg_replace_callback($url_pattern, unlink_link_callback, $content);
 		return $content;
 	}
 	
 	function unlink_link_callback($matches){
 		global $url_to_replace, $ws_link_checker;
-		$url = $ws_link_checker->normalize_url($matches[2]);
-		$text = $matches[4];
+		$url = $ws_link_checker->normalize_url($matches[3]);
+		$text = $matches[5];
 		
 		//echo "$url || $url_to_replace\n";
 		if ($url == $url_to_replace){
@@ -389,23 +406,44 @@
 	}	
 	
 	function edit_the_link($content, $url, $newurl){
-		global /*$url_pattern, */$url_to_replace, $new_url;
+		global $url_pattern, $url_to_replace, $new_url;
 		$url_to_replace = $url;
 		$new_url = $newurl;
-		$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)([\'\"]+[^<>]*>)((?sU).*)(<\/a>)/i';
+		//$url_pattern='/(<a[\s]+[^>]*href\s*=\s*[\"\']?)([^\'\" >]+)\2([^<>]*>)((?sU).*)(<\/a>)/i';
 		$content = preg_replace_callback($url_pattern, edit_link_callback, $content);
 		return $content;
 	}
 	
 	function edit_link_callback($matches){
 		global $url_to_replace, $new_url, $ws_link_checker;
-		$url = $ws_link_checker->normalize_url($matches[2]);
-		$text = $matches[4];
+		$url = $ws_link_checker->normalize_url($matches[3]);
+		$text = $matches[5];
 		
 		//echo "$url || $url_to_replace\n";
 		if ($url == $url_to_replace){
 			//return $text;
-			return $matches[1].$new_url.$matches[3].$text.$matches[5];
+			//     \<a..       \",'                 \",'       \...>              \</a>  
+			return $matches[1].$matches[2].$new_url.$matches[2].$matches[4].$text.$matches[6];
+		} else {
+			return $matches[0];
+		}
+	}
+	
+	function edit_image($content, $url, $newurl){
+		global $img_pattern, $url_to_replace, $new_url;
+		$url_to_replace = $url;
+		$new_url = $newurl;
+		$content = preg_replace_callback($img_pattern, edit_link_callback, $content);
+		return $content;
+	}
+	
+	function edit_image_callback($matches){
+		global $url_to_replace, $new_url, $ws_link_checker;
+		$url = $ws_link_checker->normalize_url($matches[3]);
+		
+		if ($url == $url_to_replace){
+			//     \<img...    \",'        \url     \",'       \...>  
+			return $matches[1].$matches[2].$new_url.$matches[3].$matches[4];
 		} else {
 			return $matches[0];
 		}
