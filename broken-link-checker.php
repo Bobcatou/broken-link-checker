@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.4.7
+Version: 0.4.8
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -13,6 +13,9 @@ Created by Janis Elsts (email : whiteshadow@w-shadow.com)
 MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 */
 
+//The plugin will use Snoopy in case CURL is not available
+if (!class_exists('Snoopy')) require_once(ABSPATH.'/wp-includes/class-snoopy.php');
+	
 if (!class_exists('ws_broken_link_checker')) {
 
 class ws_broken_link_checker {
@@ -20,7 +23,7 @@ class ws_broken_link_checker {
 	var $options_name='wsblc_options';
 	var $postdata_name;
 	var $linkdata_name;
-	var $version='0.4.7';
+	var $version='0.4.8';
 	var $myfile='';
 	var $myfolder='';
 	var $mybasename='';
@@ -125,12 +128,25 @@ class ws_broken_link_checker {
 		}
 	}
 	
+  /**
+   * ws_broken_link_checker::normalize_url()
+   * 
+   *
+   * @param string $url
+   * @return string or FALSE for invalid/unsupported URLs
+   */
 	function normalize_url($url){
 		$parts=@parse_url($url);
 		if(!$parts) return false;
 		
+		if(isset($parts['scheme'])) {
+			//Only HTTP(S) links are checked. Other protocols are not supported. 
+			if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') ) 
+				return false;
+		}
+			
 		$url = html_entity_decode($url);
-		$url=preg_replace(
+		$url = preg_replace(
 	    	array('/([\?&]PHPSESSID=\w+)$/i', 
 				  '/(#[^\/]*)$/', 
 				  '/&amp;/',
@@ -141,7 +157,6 @@ class ws_broken_link_checker {
 	    	$url);
 	    $url=trim($url);
 	    
-	    if (strpos($url, 'mailto:')!==false) return false;
 	    if($url=='') return false;
 	    
         // turn relative URLs into absolute URLs
@@ -202,6 +217,180 @@ class ws_broken_link_checker {
         $url .= $path;
         
         return $url;
+	}
+	
+	function page_exists($url){
+		//echo "Checking $url...<br/>";
+		$result = array('final_url'=>$url, 'log'=>'', 'http_code'=>'', 'okay' => false); 
+				
+		$parts=parse_url($url);
+		if(!$parts) {
+			$result['log'] .= "Invalid link URL (doesn't parse).";
+			return $result;
+		}
+		
+		if(!isset($parts['scheme'])) {
+			$url='http://'.$url;
+			$parts['scheme'] = 'http';
+			$result['log'] .= "Protocol not specified, assuming HTTP.\n";
+		}
+		
+		//Only HTTP links are checked. All others are automatically considered okay.
+		if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') ) {
+			$result['log'] .= "URL protocol ($parts[scheme]) is not HTTP. This link won't be checked.\n"; 
+			return $result;
+		}
+		
+		//******* Use CURL if available ***********
+		if (function_exists('curl_init')) {
+		
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+				//curl_setopt($ch, CURLOPT_USERAGENT, 'WordPress/Broken Link Checker (bot)');
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+			
+				@curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+				curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+				
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+				
+				curl_setopt($ch, CURLOPT_FAILONERROR, false);
+		
+				$nobody=false;		
+				if($parts['scheme']=='https'){
+					curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
+					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				} else {
+					$nobody=true;
+					curl_setopt($ch, CURLOPT_NOBODY, true);
+					//curl_setopt($ch, CURLOPT_RANGE, '0-1023');
+				}
+				curl_setopt($ch, CURLOPT_HEADER, true);
+				
+				$response = curl_exec($ch);
+				//echo 'Response 1 : <pre>',$response,'</pre>';
+				$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+				//echo "Code 1 : $code<br/>";
+				
+				$header = '';
+				if (preg_match('/(.+?)\r\n\r\n/s', $response, $matches)){
+					$header = $matches[1];
+				}
+				
+				$result['log'] .= "=== First try : ".($response?"$code ===\n$header":"No response. ===")."\n\n";
+				
+				if ( (($code<200) || ($code>=400)) && $nobody) {
+					$result['log'] .= "Trying a second time with different settings...\n";
+					curl_setopt($ch, CURLOPT_NOBODY, false);
+					curl_setopt($ch, CURLOPT_HTTPGET, true);
+					curl_setopt($ch, CURLOPT_RANGE, '0-2047');
+					$response = curl_exec($ch);
+					//echo 'Response 2 : <pre>',$response,'</pre>';
+					$code=intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
+					//echo "Code 2 : $code<br/>";
+					if (preg_match('/(.+?)\r\n\r\n/s', $response, $matches)){
+						$header = $matches[1];
+					}	
+					
+					$result['log'] .= "=== Second try : ".($response?"$code ===\n$header":"No response. ===")."\n\n";
+				}
+				
+				$result['final_url'] = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+				
+				curl_close($ch);
+			
+		} elseif (class_exists('Snoopy')) {
+			//******** Use Snoopy if CURL is not available *********
+			//Note : Snoopy doesn't work too well with HTTPS URLs.
+			$result['log'] .= "<em>(Using Snoopy)</em>\n";
+			
+			$snoopy = new Snoopy;
+			$snoopy->read_timeout = 60; //read timeout in seconds
+			$snoopy->fetch($url);
+			
+			$code = $snoopy->status; //HTTP status code
+			
+			if ($snoopy->error)
+				$result['log'] .= $snoopy->error."\n";
+			if ($snoopy->timed_out)
+				$result['log'] .= "Request timed out.\n";
+				
+			$result['log'] .= join("", $snoopy->headers)."\n"; //those headers already contain newlines
+				
+			//$result['log'] .= print_r($snoopy, true);
+			
+			if ($snoopy->lastredirectaddr)
+				$result['final_url'] = $snoopy->lastredirectaddr; 	
+		}
+		
+		$result['http_code'] = $code;
+		
+		/*"Good" response codes are anything in the 2XX range (e.g "200 OK") and redirects  - the 3XX range.
+		  HTTP 401 Unauthorized is a special case that is considered OK as well. Other errors - the 4XX range -
+		  are treated as "page doesn't exist'". */
+		$result['okay'] = (($code>=200) && ($code<400)) || ($code == 401);
+		$result['log'] .= "Link is ".($result['okay']?'valid':'broken').".";
+		  
+		return $result;
+	}
+	
+  /**
+   * ws_broken_link_checker::check_link()
+   * Checks the link described by the object $link and udpates the DB accordingly.
+   *
+   * @param object $link
+   * @return boolean
+   */
+	function check_link($link){
+		global $wpdb;
+		
+		/*
+		Check for problematic (though not necessarily "broken") links.
+		If a link has been checked multiple times and still hasn't been marked as broken
+		or removed from the queue then probably the checking algorithm is having problems
+		with that link. Mark it as broken and hope the user sorts it out.
+		*/
+		if ($link->check_count >=5){
+			$wpdb->query("UPDATE {$this->linkdata_name} 
+						  SET broken=1, log=CONCAT(log, '\nProblematic link, checking times out.') 
+						  WHERE id={$link->id}");
+			//can afford to skip the $max_execution_time check here, the above op. should be very fast.
+			return false;  
+		}
+		
+		//Update the check_count & last_check fields before actually performing the check.
+		//Useful if something goes terribly wrong in page_exists() with this particular URL.
+		$wpdb->query("UPDATE $this->linkdata_name SET last_check=NOW(), check_count=check_count+1
+					  WHERE id=$link->id");
+		
+		//Verify that the link should be checked
+		if ( !$this->is_excluded($link->url) ){
+			$rez = $this->page_exists($link->url);
+			
+			if ( $rez['okay'] ) {
+				//Link is fine; remove it from the queue.
+				$wpdb->query("DELETE FROM $this->linkdata_name WHERE id=$link->id");
+				return true;
+			} else {
+				//Link is broken.
+				$wpdb->query(
+					"UPDATE $this->linkdata_name 
+					SET broken=1, http_code=$rez[http_code], log='".$wpdb->escape($rez['log'])."',
+						final_url = '".$wpdb->escape($rez['final_url'])."'
+					WHERE id=$link->id"
+				 );
+				
+				return false;
+			}
+			 
+		} else {
+			//This link doesn't need to be checked because it is excluded.
+			$wpdb->query("DELETE FROM $this->linkdata_name WHERE id=$link->id");
+			return true;
+		}
+		
 	}
 	
 	function is_excluded($url){
@@ -306,9 +495,6 @@ class ws_broken_link_checker {
 	function activation(){
 		global $wpdb;
 		
-		//option default were already set in the constructor
-		update_option($this->options_name, $this->options);
-		
 		require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
 		
 		if (($wpdb->get_var("show tables like '".($this->postdata_name)."'") != $this->postdata_name)
@@ -328,24 +514,54 @@ class ws_broken_link_checker {
 					id BIGINT( 20 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 					post_id BIGINT( 20 ) NOT NULL ,
 					url TEXT NOT NULL ,
+					final_url TEXT NOT NULL,
 					link_text VARCHAR( 50 ) NOT NULL ,
 					broken TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL,
 					last_check DATETIME NOT NULL ,
-					check_count TINYINT( 2 ) UNSIGNED DEFAULT '0' NOT NULL, 
+					check_count TINYINT( 2 ) UNSIGNED DEFAULT '0' NOT NULL,
+					type ENUM('link', 'image') DEFAULT 'link' NOT NULL,
+					log TEXT NOT NULL,
+					http_code SMALLINT NOT NULL, 
 					PRIMARY KEY id (id)
 				);";
 			
       		dbDelta($sql);
+      		
+      		//upgrade to 0.4.8
+      		$wpdb->query("UPDATE ".$this->linkdata_name." SET type='image' WHERE link_text='[image]'");
+			$wpdb->query("UPDATE ".$this->linkdata_name." SET final_url=url WHERE final_url=''");
 		}
 		
 		$this->sync_posts_to_db();
+		
+		//Update the options
+		$this->options['version'] = $this->version;
+		update_option($this->options_name,$this->options);
 	}
 	
 	function options_menu(){
 		add_options_page('Link Checker Settings', 'Link Checker', 'manage_options',
 			__FILE__,array(&$this, 'options_page'));
+		if (current_user_can('manage_options')) 
+			add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
+			
 		add_management_page('View Broken Links', 'Broken Links', 'manage_options',
 			__FILE__,array(&$this, 'broken_links_page'));	
+	}
+	
+	/**
+   * plugin_action_links()
+   * Handler for the 'plugin_action_links' hook. Adds a "Settings" link to this plugin's entry
+   * on the plugin list.
+   *
+   * @param array $links
+   * @param string $file
+   * @return array 
+   */
+	function plugin_action_links($links, $file) {
+		if ($file == $this->mybasename)
+			$links[] = "<a href='options-general.php?page=broken-link-checker/broken-link-checker.php'>" . __('Settings') . "</a>";
+		return $links;
 	}
 	
 	function mytruncate($str, $max_length=50){
@@ -391,10 +607,15 @@ class ws_broken_link_checker {
 		echo $reminder;
 		?>
 		<div class="wrap"><h2>Broken Link Checker Options</h2>
-		<?php if(!function_exists('curl_init')){ ?>
+		<?php
+		//This check isn't required anymore. Can now use Snoopy when CURL is not available.
+		/* 
+		if(!function_exists('curl_init')){ ?>
 		<strong>Error: <a href='http://curl.haxx.se/libcurl/php/'>CURL library</a>
 		 is not installed. This plugin won't work.</strong><br/>
-		<?php }; ?>
+		<?php };
+		*/ 
+		?>
 		<form name="link_checker_options" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo plugin_basename(__FILE__); ?>&amp;updated=true"> 
 		<p class="submit"><input type="submit" name="Submit" value="Update Options &raquo;" /></p>
 		
@@ -535,7 +756,7 @@ class ws_broken_link_checker {
 				$rownumber++;
 				echo "<tr id='link-$link->id' class='alternate'>
 				<th scope='row' style='text-align: center'>$rownumber</th>
-				<td>$link->post_title</td>
+				<td><a href='".(get_permalink($link->post_id))."' title='View post'>$link->post_title</a></td>
 
 				<td>$link->link_text</td>
 				<td>
@@ -546,7 +767,7 @@ class ws_broken_link_checker {
 					<input type='text' size='50' id='link-editor-$link->id' value='$link->url' 
 						class='link-editor' style='display:none' />
 				</td>
-				<td><a href='".(get_permalink($link->post_id))."' class='edit'>View</a></td>
+				<td><a href='javascript:void(0);' onclick='toggleLinkDetails($link->id);return false;' class='edit'>Details</a></td>
 
 				<td><a href='post.php?action=edit&amp;post=$link->post_id' class='edit'>Edit Post</a></td>";
 				
@@ -558,11 +779,20 @@ class ws_broken_link_checker {
 				}
 				
 				echo "<td><a href='javascript:void(0);' class='delete' id='discard_button-$link->id' 
-				onclick='discardLinkMessage($link->id);return false;' );' title='Discard This Message'>Discard</a></td>
+				onclick='discardLinkMessage($link->id);return false;' title='Discard This Message'>Discard</a></td>
 				
 				<td><a href='javascript:void(0);' class='delete' id='unlink_button-$link->id'
-				onclick='removeLinkFromPost($link->id);return false;' );' title='Remove the link from the post'>Unlink</a></td>
+				onclick='removeLinkFromPost($link->id);return false;' title='Remove the link from the post'>Unlink</a></td>
 				</tr>";
+				
+				//Link details
+				echo "
+				<tr id='link-details-$link->id' style='display:none;'><td colspan='8'>
+					<strong>Last checked :</strong> $link->last_check <br />
+					<strong>Final URL : </strong> $link->final_url <br />
+					<strong>HTTP code : </strong> $link->http_code<br />
+					<strong>Log : <br /> </strong> ".nl2br($link->log)."<br />
+				</td></tr>";
 				
 			}
 			
@@ -594,6 +824,7 @@ class ws_broken_link_checker {
       				var response = transport.responseText || "";
       				if (re.test(response)){
 	      				$('link-'+link_id).hide();
+	      				$('link-details-'+link_id).hide();
 	      				alterLinkCounter(-1);
       				} else {
 	      				$('discard_button-'+link_id).innerHTML = 'Discard';
@@ -618,6 +849,7 @@ class ws_broken_link_checker {
       				var response = transport.responseText || "";
       				if (re.test(response)){
 	      				$('link-'+link_id).hide();
+	      				$('link-details-'+link_id).hide();
 	      				alterLinkCounter(-1);
       				} else {
 	      				$('unlink_button-'+link_id).innerHTML = 'Unlink';
@@ -650,6 +882,7 @@ class ws_broken_link_checker {
 		      				var response = transport.responseText || "";
 		      				if (re.test(response)){
 			      				$('link-'+link_id).hide();
+			      				$('link-details-'+link_id).hide();
 			      				alterLinkCounter(-1);
 			      				//alert(response);
 		      				} else {
@@ -662,6 +895,11 @@ class ws_broken_link_checker {
 			}
 			$('link-editor-button-'+link_id).innerHTML = 'Edit';
 		}
+	}
+	
+	function toggleLinkDetails(link_id){
+		//alert('showlinkdetails '+link_id);
+		$('link-details-'+link_id).toggle();
 	}
 </script>
 </div>

@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance
 Requires at least: 2.0.2
 Tested up to: 2.6.1
-Stable tag: 0.4.7
+Stable tag: 0.4.8
 
 This plugin will check your posts for broken links and missing images in background and notify you on the dashboard if any are found. 
 
@@ -16,12 +16,12 @@ This plugin is will monitor your blog looking for broken links and let you know 
 * Makes broken links display differently in posts (optional).
 * Link checking intervals can be configured.
 * New/modified posts are checked ASAP.
-* You can unlink or edit broken links in the *Manage -> Broken Links* tab (experimental). 
+* You can unlink or edit broken links in the *Manage -> Broken Links* tab. 
 
 **How To Use It**
 The broken links, if any are found, will show up in a new tab of WP admin panel - Manage -> Broken Links. A notification will also appear on the Dashboard. 
 
-There are several buttons for each broken link - "View" and "Edit Post" do exactly what they say and "Discard" will remove the message about a broken link, but not the link itself (so it will show up again later unless you fix it). Use "Unlink" to actually remove the link from the post. If references to missing images are found, they will be listed along with the links, with "[image]" in place of link text.
+There are several buttons for each broken link - "Details" shows more info about why the link is considered "broken", "Edit Post" does exactly what it says and "Discard" will remove the message about a broken link, but not the link itself (so it will show up again later unless you fix it). Use "Unlink" to actually remove the link from the post. If references to missing images are found, they will be listed along with the links, with "[image]" in place of link text. 
 
 You can modify the available options at Options -> Link Checker. You can also see the current checking status there - e.g. how many posts need to be checked and how many links are in the queue. The plugin runs while you have any page of the WordPress admin panel open.
 
