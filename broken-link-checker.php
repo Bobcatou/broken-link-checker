@@ -23,7 +23,7 @@ class ws_broken_link_checker {
     var $options_name='wsblc_options';
     var $postdata_name;
     var $linkdata_name;
-    var $version='0.4.8';
+    var $version='0.4.9';
     var $myfile='';
     var $myfolder='';
     var $mybasename='';
@@ -1092,4 +1092,3 @@ class ws_broken_link_checker {
 $ws_link_checker = new ws_broken_link_checker();
 
 ?>
-
