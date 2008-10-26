@@ -145,7 +145,7 @@
 		die('<!-- /run_check -->');
 		
 	} else if ($action=='discard_link'){
-		if (!current_user_can('edit_posts')) {
+		if (!current_user_can('edit_others_posts')) {
 			die("Error: You can't do that. Access denied.");
 		}
 		$id=intval($_GET['id']);
@@ -158,7 +158,7 @@
 	} else if ($action=='remove_link'){
 		
 		//actually deletes the link from the post
-		if (!current_user_can('edit_posts')) {
+		if (!current_user_can('edit_others_posts')) {
 			die("Error: You can't do that. Access denied.");
 		}
 		
@@ -194,7 +194,7 @@
 		
 	} else if ($action == 'edit_link'){
 		//edits the link's URL inside the post
-		if (!current_user_can('edit_posts')) {
+		if (!current_user_can('edit_others_posts')) {
 			die("Error: You can't do that. Access denied.");
 		}
 		
