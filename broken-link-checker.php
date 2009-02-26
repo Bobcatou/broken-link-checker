@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.4.10
+Version: 0.4.12
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -23,7 +23,7 @@ class ws_broken_link_checker {
     var $options_name='wsblc_options';
     var $postdata_name;
     var $linkdata_name;
-    var $version='0.4.11';
+    var $version='0.4.12';
     var $myfile='';
     var $myfolder='';
     var $mybasename='';
@@ -425,7 +425,7 @@ class ws_broken_link_checker {
 
     function post_deleted($post_id){
         global $wpdb;
-        $sql="DELETE FROM ".$this->linksdata_name." WHERE post_id=$post_id";
+        $sql="DELETE FROM ".$this->linkdata_name." WHERE post_id=$post_id";
         $wpdb->query($sql);
         $sql="DELETE FROM ".$this->postdata_name." WHERE post_id=$post_id";
         $wpdb->query($sql);

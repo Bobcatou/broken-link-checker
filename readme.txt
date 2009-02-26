@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance
 Requires at least: 2.0.2
 Tested up to: 2.7.1
-Stable tag: 0.4.11
+Stable tag: 0.4.12
 
 This plugin will check your posts for broken links and missing images in background and notify you on the dashboard if any are found. 
 
