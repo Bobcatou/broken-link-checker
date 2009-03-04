@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.4.13
+Version: 0.4.14
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -23,7 +23,7 @@ class ws_broken_link_checker {
     var $options_name='wsblc_options';
     var $postdata_name;
     var $linkdata_name;
-    var $version='0.4.13';
+    var $version='0.4.14';
     var $myfile='';
     var $myfolder='';
     var $mybasename='';
@@ -240,7 +240,13 @@ class ws_broken_link_checker {
             $result['log'] .= "URL protocol ($parts[scheme]) is not HTTP. This link won't be checked.\n";
             return $result;
         }
-
+        
+        //Kill the #anchor if it's present
+        $anchor_start = strpos($url, '#');
+        if ( $anchor_start !== false ){
+			$url = substr($url, 0, $anchor_start);
+		}
+        
         //******* Use CURL if available ***********
         if (function_exists('curl_init')) {
 
