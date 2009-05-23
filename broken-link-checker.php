@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5
+Version: 0.5.1
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -445,7 +445,7 @@ class ws_broken_link_checker {
 		 
 		//Create the instance table if it doesn't exist yet.
 		$wpdb->query(
-			"CREATE TABLE IF NOT EXISTS wp_blc_instances (
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_instances (
 				instance_id int(10) unsigned NOT NULL auto_increment,
 				link_id int(10) unsigned NOT NULL,
 				source_id int(10) unsigned NOT NULL,
