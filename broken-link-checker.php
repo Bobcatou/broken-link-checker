@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.2
+Version: 0.5.3
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -57,14 +57,14 @@ if (!class_exists('ws_broken_link_checker')) {
 class ws_broken_link_checker {
     var $options;
     var $options_name='wsblc_options';
-    var $myfile='';
-    var $myfolder='';
-    var $mybasename='';
-    var $siteurl;
+    var $myfile='';		//should be removed
+    var $myfolder='';	//should be removed
+    var $mybasename='';	//should be removed
+    var $siteurl; 		//should be removed
     var $defaults;
     
-    var $execution_start_time;
-    var $lockfile_handle = null;
+    var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
+    var $lockfile_handle = null; 
 
     function ws_broken_link_checker() {
         global $wpdb;
@@ -78,14 +78,14 @@ class ws_broken_link_checker {
             'exclusion_list' => array(), 	//Links that contain a substring listed in this array won't be checked. 
             'recheck_count' => 3, 			//[Internal] How many times a broken link should be re-checked (slightly buggy)
 			
-			//These are currently ignored. Everything is checked by default.
+			//These three are currently ignored. Everything is checked by default.
 			'check_posts' => true, 
             'check_custom_fields' => true,
             'check_blogroll' => true,
             
             'custom_fields' => array(),		//List of custom fields that can contain URLs and should be checked.
             
-            'autoexpand_widget' => true, 
+            'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 			
 			'need_resynch' => false,  		//[Internal flag] 
 			
@@ -149,13 +149,16 @@ class ws_broken_link_checker {
 					{
 						'action' : 'blc_work'
 					},
-					function (data, textStatus){}
+					function (data, textStatus){
+						
+					}
 				);
 			}
 			//Call it the first time
 			blcDoWork();
-			//...and every max_execution_time seconds
-			setInterval(blcDoWork, <?php echo ($this->options['max_execution_time'] + 1 )*1000; ?>);
+			
+			//Then call it periodically every X seconds 
+			setInterval(blcDoWork, <?php echo (intval($this->options['max_execution_time']) + 1 )*1000; ?>);
 			
 		})(jQuery);
         </script>
@@ -233,7 +236,7 @@ class ws_broken_link_checker {
 							'action' : 'blc_dashboard_status'
 						},
 						function (data, textStatus){
-							if ( typeof(data['text']) != 'undefined'){
+							if ( data && ( typeof(data.text) != 'undefined' ) ) {
 								$('#wsblc_activity_box').html(data.text); 
 								<?php if ( $this->options['autoexpand_widget'] ) { ?>
 								//Expand the widget if there are broken links.
@@ -251,6 +254,7 @@ class ws_broken_link_checker {
 						}
 					);
 				}
+				
 				blcDashboardStatus();//Call it the first time
 			
 			});
@@ -562,7 +566,7 @@ class ws_broken_link_checker {
         ?>
         <div class="wrap"><h2>Broken Link Checker Options</h2>
 
-        <form name="link_checker_options" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=link-checker-settings&amp;updated=true">
+        <form name="link_checker_options" method="post" action="<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;updated=true">
 
         <table class="form-table">
 
@@ -584,7 +588,7 @@ class ws_broken_link_checker {
 							'action' : 'blc_full_status'
 						},
 						function (data, textStatus){
-							if ( typeof(data['text']) != 'undefined'){
+							if ( data && ( typeof(data['text']) != 'undefined' ) ){
 								$('#wsblc_full_status').html(data.text);
 							} else {
 								$('#wsblc_full_status').html('[ Network error ]');
@@ -599,7 +603,7 @@ class ws_broken_link_checker {
 			})(jQuery);
         </script>
         <?php //JHS: Recheck all posts link: ?>
-        <p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo $_SERVER['PHP_SELF']; ?>?page=link-checker-settings&amp;recheck=true')" /></p>
+        <p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;recheck=true')" /></p>
         </td>
         </tr>
 
@@ -1094,7 +1098,7 @@ jQuery(function($){
 					function (data, textStatus){
 						var display_url = '';
 						
-						if ( typeof(data['error']) != 'undefined'){
+						if ( data && (typeof(data['error']) != 'undefined') ){
 							//data.error is an error message
 							alert(data.error);
 							display_url = orig_url;
@@ -1179,7 +1183,7 @@ jQuery(function($){
 			function (data, textStatus){
 				eval('data = ' + data);
 				 
-				if ( typeof(data['ok']) != 'undefined'){
+				if ( data && ( typeof(data['ok']) != 'undefined') ){
 					//Hide the details 
 					master.next('.blc-link-details').hide();
 					//Flash the main row green to indicate success, then hide it.
@@ -1216,7 +1220,7 @@ jQuery(function($){
 			function (data, textStatus){
 				eval('data = ' + data);
 				 
-				if ( typeof(data['ok']) != 'undefined'){
+				if ( data && ( typeof(data['ok']) != 'undefined' ) ){
 					
 					if ( 'broken' == blc_current_filter ){
 						//Flash the row green to indicate success, then hide it.
@@ -1243,32 +1247,6 @@ jQuery(function($){
 	
 });
 
-    function removeLinkFromPost(link_id){
-    	if (!confirm('Do you really want to remove this link from all posts, custom fields and the blogroll?')) return;
-    	
-        $('unlink_button-'+link_id).innerHTML = 'Wait...';
-
-        new Ajax.Request(
-            '<?php
-        echo get_option( "siteurl" ).'/wp-content/plugins/'.$this->myfolder.'/wsblc_ajax.php?';
-        ?>action=remove_link&id='+link_id,
-            {
-                method:'get',
-                onSuccess: function(transport){
-                    var re = /OK:.*/i
-                    var response = transport.responseText || "";
-                    if (re.test(response)){
-                        $('link-'+link_id).hide();
-                        $('link-details-'+link_id).hide();
-                        alterLinkCounter(-1);
-                    } else {
-                        $('unlink_button-'+link_id).innerHTML = 'Unlink';
-                        alert(response);
-                    }
-                }
-            }
-        );
-    }
 </script>
 		<?php
 	}
@@ -1398,10 +1376,10 @@ jQuery(function($){
 	
 	function load_options(){
         $this->options = get_option($this->options_name);
-        if(!is_array($this->options)){
+        if( !is_array( $this->options ) ){
             $this->options = $this->defaults;
         } else {
-            $this->options = array_merge($this->defaults, $this->options);
+            $this->options = array_merge( $this->defaults, $this->options );
         }
 	}
 	
@@ -1763,6 +1741,13 @@ jQuery(function($){
 		die();
 	}
 	
+  /**
+   * ws_broken_link_checker::status_text()
+   * Generates a status message based on the status info in $status
+   *
+   * @param array $status
+   * @return string
+   */
 	function status_text( $status ){
 		$text = '';
 	
@@ -1825,6 +1810,18 @@ jQuery(function($){
 		*/
 	}
 	
+  /**
+   * ws_broken_link_checker::get_status()
+   * Returns an array with various status information about the plugin. Array key reference: 
+   *	check_threshold 	- date/time; links checked before this threshold should be checked again.
+   *	recheck_threshold 	- date/time; broken links checked before this threshold should be re-checked.
+   *	known_links 		- the number of detected unique URLs (a misleading name, yes).
+   *	known_instances 	- the number of detected link instances, i.e. actual link elements in posts and other places.
+   *	broken_links		- the number of detected broken links.	
+   *	unchecked_links		- the number of URLs that need to be checked ASAP; based on check_threshold and recheck_threshold.
+   *
+   * @return array
+   */
 	function get_status(){
 		global $wpdb;
 		
@@ -1996,7 +1993,7 @@ jQuery(function($){
 			die('Error : link ID not specified');
 		}
 		
-		//Load the link. link_details_rwo needs it as an array, so 
+		//Load the link. link_details_row needs it as an array, so 
 		//we'll have to do this the long way.
 		$q = "SELECT 
 				 links.*, 

@@ -143,7 +143,7 @@ class blcLink {
 		}
         
         //******* Use CURL if available ***********
-        if (function_exists('curl_init')) {
+        if ( function_exists('curl_init') ) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             //Masquerade as Internet explorer
@@ -211,7 +211,7 @@ class blcLink {
 
             curl_close($ch);
 
-        } elseif (class_exists('Snoopy')) {
+        } elseif ( class_exists('Snoopy') ) {
             //******** Use Snoopy if CURL is not available *********
             //Note : Snoopy doesn't work too well with HTTPS URLs.
             $this->log .= "<em>(Using Snoopy)</em>\n";
@@ -220,11 +220,16 @@ class blcLink {
 			
             $snoopy = new Snoopy;
             $snoopy->read_timeout = 60; //read timeout in seconds
+            $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
             $snoopy->fetch($url);
             
-            $this->request_duration = $start_time - microtime_float(true);
+            $this->request_duration = microtime_float(true) - $start_time;
 
-            $this->http_code = $snoopy->status; //HTTP status code
+            $this->http_code = $snoopy->status; //HTTP status code (note : Snoopy returns -100 on timeout)
+            if ( $this->http_code == -100 ){
+				$this->http_code = 0;
+				$this->timeout = true;
+			}
 
             if ($snoopy->error)
                 $this->log .= $snoopy->error."\n";
@@ -234,10 +239,13 @@ class blcLink {
 			if ( is_array($snoopy->headers) )
             	$this->log .= implode("", $snoopy->headers)."\n"; //those headers already contain newlines
 
-            if ($snoopy->lastredirectaddr) {
+			//Redirected? 
+            if ( $snoopy->lastredirectaddr ) {
                 $this->final_url = $snoopy->lastredirectaddr;
                 $this->redirect_count = $snoopy->_redirectdepth;
-            }
+            } else {
+				$this->final_url = $this->url;
+			}
         }
 
         /*"Good" response codes are anything in the 2XX range (e.g "200 OK") and redirects  - the 3XX range.
@@ -251,7 +259,7 @@ class blcLink {
         	return true;
         } else {
 			$this->log .= "Link is broken.";
-			if ($this->http_code == 0){
+			if ( $this->http_code == 0 ){
 				//This is probably a timeout
 				$this->timeout = true;
 				$this->log .= "\r\n(Most likely the connection timed out)";
