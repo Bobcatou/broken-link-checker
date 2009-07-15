@@ -7,16 +7,17 @@
  * The terrifying uninstallation script.
  */
 
-if( !defined( 'ABSPATH') && !defined('WP_UNINSTALL_PLUGIN') && !current_user_can('delete_plugins') )
-    exit();
-    
-if( !isset($wpdb) ) 
-	exit();
+if( defined( 'ABSPATH') && defined('WP_UNINSTALL_PLUGIN') ) {
 
-//Remove the plugin's settings
-delete_option('wsblc_options');
+	//Remove the plugin's settings
+	delete_option('wsblc_options');
 
-//EXTERMINATE!
-$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}blc_linkdata, {$wpdb->prefix}blc_postdata, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_synch" );
+	//Remove the database tables
+	$mywpdb = $GLOBALS['wpdb'];    
+	if( isset($mywpdb) ) { 
+		//EXTERMINATE!
+		$mywpdb->query( "DROP TABLE IF EXISTS {$mywpdb->prefix}blc_linkdata, {$mywpdb->prefix}blc_postdata, {$mywpdb->prefix}blc_instances, {$mywpdb->prefix}blc_links, {$mywpdb->prefix}blc_synch" );
+	}
+}
 
 ?>

@@ -153,7 +153,7 @@ class blcLink {
             
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 
-            @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
 
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
@@ -269,7 +269,6 @@ class blcLink {
 	}
 	
 	function read_header($ch, $header){
-		//extracting example data: filename from header field Content-Disposition
 		$this->last_headers .= $header;
 		return strlen($header);
 	}
