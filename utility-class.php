@@ -12,7 +12,7 @@ if (!function_exists('json_encode')){
 		require 'JSON.php';
 	}
 	
-	//Backwards fompatible json_encode.
+	//Backwards compatible json_encode.
 	function json_encode($data) {
 	    $json = new Services_JSON();
 	    return( $json->encode($data) );
@@ -26,13 +26,13 @@ class blcUtility {
     //A regxp for images
     function img_pattern(){
 	    //        \1                        \2       \3 URL       \4
-	    return '/(<img[\s]+[^>]*src\s*=\s*)([\"\']?)([^\'\">]+)\2([^<>]*>)/i';
+	    return '/(<img[\s]+[^>]*src\s*=\s*)([\"\'])([^\2>]+?)\2([^<>]*>)/i';
 	}
 	
 	//A regexp for links
 	function link_pattern(){
 	    //	      \1                       \2      \3 URL        \4       \5 Text  \6
-	    return '/(<a[\s]+[^>]*href\s*=\s*)([\"\']+)([^\'\">]+)\2([^<>]*>)((?sU).*)(<\/a>)/i';
+	    return '/(<a[\s]+[^>]*href\s*=\s*)([\"\'])([^\2>]+?)\2([^<>]*>)((?sU).*)(<\/a>)/i';
 	}	
 	
   /**
@@ -131,6 +131,22 @@ class blcUtility {
 	    $url .= $path;
 	
 	    return $url;
+	}
+	
+	
+  /**
+   * blcUtility::urlencodefix()
+   * Takes an URL and replaces spaces and some other non-alphanumeric characters with their urlencoded equivalents.
+   *
+   * @param string $str
+   * @return string
+   */
+	function urlencodefix($url){
+		return preg_replace_callback(
+			'|[^a-z0-9\+\-\/\\#:.=?&%@]|i', 
+			create_function('$str','return rawurlencode($str[0]);'), 
+			$url
+		 );
 	}
 
 }//class
