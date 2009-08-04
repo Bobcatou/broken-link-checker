@@ -39,9 +39,10 @@ class blcUtility {
    * blcUtility::normalize_url()
    *
    * @param string $url
+   * @params string $base_url (Optional) The base URL is used to convert a relative URL to a fully-qualified one
    * @return string A normalized URL or FALSE if the URL is invalid
    */
-	function normalize_url($url){
+	function normalize_url($url, $base_url = ''){
 	    $parts=@parse_url($url);
 	    if(!$parts) return false;
 	
@@ -64,9 +65,10 @@ class blcUtility {
 	    $url=trim($url);
 	
 	    if($url=='') return false;
-		
+	    
 	    // turn relative URLs into absolute URLs
-	    $url = blcUtility::relative2absolute( get_option('siteurl'), $url);
+	    if ( empty($base_url) ) $base_url = get_option('siteurl');
+	    $url = blcUtility::relative2absolute( $base_url, $url);
 	    return $url;
 	}
 	

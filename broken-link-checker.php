@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.5
+Version: 0.5.6
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -1398,6 +1398,7 @@ jQuery(function($){
 	function parse_post($content, $post_id){
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code>.+?<\/code>/i', ' ', $content);
+		$permalink = get_permalink( $post_id );
 		
 		//Find links
 		if(preg_match_all(blcUtility::link_pattern(), $content, $matches, PREG_SET_ORDER)){
@@ -1406,7 +1407,7 @@ jQuery(function($){
 				$text = strip_tags( $link[5] );
 				//FB::log($url, "Found link");
 				
-				$url = blcUtility::normalize_url($url);
+				$url = blcUtility::normalize_url($url, $permalink);
 				//Skip invalid links
 				if ( !$url || (strlen($url)<6) ) continue; 
 			    
@@ -1423,7 +1424,7 @@ jQuery(function($){
 				$url = $img[3];
 				//FB::log($url, "Found image");
 				
-				$url = blcUtility::normalize_url($url);
+				$url = blcUtility::normalize_url($url, $permalink);
 				if ( !$url || (strlen($url)<6) ) continue; //skip invalid URLs
 				
 		        //Create or load the link
