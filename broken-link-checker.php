@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.6
+Version: 0.5.7
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -224,7 +224,7 @@ class ws_broken_link_checker {
 
     function dashboard_widget(){
         ?>
-        <div id='wsblc_activity_box' style="line-height : 140%">Loading...</div>
+        <p id='wsblc_activity_box'>Loading...</p>
         <script type='text/javascript'>
         	jQuery(function($){
         		var blc_was_autoexpanded = false;
