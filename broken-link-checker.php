@@ -3,7 +3,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.7
+Version: 0.5.8
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -36,6 +36,9 @@ if ( ! defined( 'WP_PLUGIN_URL' ) )
 	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
 if ( ! defined( 'WP_PLUGIN_DIR' ) )
 	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+	
+define('BLC_CHECKING', 1);
+define('BLC_TIMEOUT', 1);
 
 /*
 //FirePHP for debugging
@@ -688,7 +691,7 @@ class ws_broken_link_checker {
 		//Available filters by link type + the appropriate WHERE expressions
 		$filters = array(
 			'broken' => array(
-				'where_expr' => '( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( check_count > 0 )',
+				'where_expr' => '( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( check_count > 0 ) AND ( http_code <> ' . BLC_CHECKING . ')',
 				'name' => 'Broken',
 				'heading' => 'Broken Links',
 				'heading_zero' => 'No broken links found'
@@ -1398,6 +1401,9 @@ jQuery(function($){
 	function parse_post($content, $post_id){
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code>.+?<\/code>/i', ' ', $content);
+		//remove all <pre></pre> blocks as well
+		$content = preg_replace('/<pre>.+?<\/pre>/i', ' ', $content);
+		//Get the post permalink - it's used to resolve relative URLs
 		$permalink = get_permalink( $post_id );
 		
 		//Find links
@@ -1836,7 +1842,7 @@ jQuery(function($){
 		$known_instances = $wpdb->get_var($q);
 		
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links 
-			  WHERE check_count > 0 AND ( http_code < 200 OR http_code >= 400 OR timeout = 1 )";
+			  WHERE check_count > 0 AND ( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( http_code <> ".BLC_CHECKING." )";
 		$broken_links = $wpdb->get_var($q);
 		
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links

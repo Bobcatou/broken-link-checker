@@ -117,7 +117,7 @@ class blcLink {
         $this->last_check = date('Y-m-d H:i:s');
         $this->log = '';
         $this->final_url = '';
-        $this->http_code = 0;
+        $this->http_code = BLC_CHECKING;
         $this->request_duration = 0;
         $this->timeout = false;
         $this->redirect_count = 0;
@@ -227,7 +227,7 @@ class blcLink {
 
             $this->http_code = $snoopy->status; //HTTP status code (note : Snoopy returns -100 on timeout)
             if ( $this->http_code == -100 ){
-				$this->http_code = 0;
+				$this->http_code = BLC_TIMEOUT;
 				$this->timeout = true;
 			}
 
@@ -259,7 +259,7 @@ class blcLink {
         	return true;
         } else {
 			$this->log .= "Link is broken.";
-			if ( $this->http_code == 0 ){
+			if ( $this->http_code == BLC_TIMEOUT ){
 				//This is probably a timeout
 				$this->timeout = true;
 				$this->log .= "\r\n(Most likely the connection timed out)";
