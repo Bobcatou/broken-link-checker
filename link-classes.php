@@ -158,6 +158,23 @@ class blcLink {
 
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            
+            if (defined('WP_PROXY_HOST')) {
+				curl_setopt($ch, CURLOPT_PROXY, WP_PROXY_HOST);
+			}
+			
+			if (defined('WP_PROXY_PORT')) { 
+				curl_setopt($ch, CURLOPT_PROXYPORT, WP_PROXY_PORT);
+			}
+			
+			if (defined('WP_PROXY_USERNAME')){
+				$auth = WP_PROXY_USERNAME;
+				if (defined('WP_PROXY_PASSWORD')){
+					$auth .= ':' . WP_PROXY_PASSWORD;
+				}
+				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $auth);
+			}
+			
 
             curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
