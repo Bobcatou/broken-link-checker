@@ -6,13 +6,13 @@
  */
  
  
-if (!function_exists('json_encode')){
+if (is_admin() && !function_exists('json_encode')){
 	//Load JSON functions for PHP < 5.2
 	if (!class_exists('Services_JSON')){
 		require 'JSON.php';
 	}
 	
-	//Backwards compatible json_encode.
+	//Backwards compatible "\color{clGray}tell if the user should be accessing a section or not."
 	function json_encode($data) {
 	    $json = new Services_JSON();
 	    return( $json->encode($data) );
