@@ -3,9 +3,9 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin
 Requires at least: 2.7.0
 Tested up to: 2.9
-Stable tag: 0.5.8.1
+Stable tag: 0.5.9
 
-This plugin will check your posts, custom fields and the blogroll for broken links and missing images and notify you on the dashboard if any are found. 
+This plugin will check your posts, custom fields and the blogroll for broken links and missing images and notify you if any are found. 
 
 == Description ==
 This plugin will monitor your blog looking for broken links and let you know if any are found.
@@ -55,3 +55,163 @@ To upgrade your installation
 1. De-activate the plugin
 1. Get and upload the new files (do steps 1. - 3. from "new installation" instructions)
 1. Reactivate the plugin. Your settings should have been retained from the previous version.
+
+== Changelog ==
+
+= 0.5.8.1 =
+* Added partial proxy support when CURL is available. Proxies will be fully supported in a later version.
+
+= 0.5.8 =
+* Fixed links that are currently in the process of being checked showing up in the "Broken links" table.
+* The post parser no longer looks for links inside <pre></pre> blocks.
+
+= 0.5.7 =
+* Slightly changed the dashboard widget's layout/look as per a user's request.
+
+= 0.5.6 =
+* Improved relative URL parsing. The plugin now uses the permalink as the base URL when processing posts.
+
+= 0.5.5 =
+* URLs with spaces (and some other special characters) are now handled better and won't get marked as "broken" all the time.
+* Links that contain quote characters are parsed properly.
+
+= 0.5.4 =
+* Fixed the uninstaller not deleting DB tables.
+* Other uninstallation logic fixes.
+
+= 0.5.3 =
+* Improved timeout detection/handling when using Snoopy.
+* Set the max download size to 5 KB when using Snoopy.
+* Fixed a rare bug where the settings page would redirect to the login screen when saving settings.
+* Removed some stale, unused code (some still remains).
+
+= 0.5.2 =
+* Fixed a SQL query that had the table prefix hard-coded as "wp\_". This would previously make the plugin detect zero links on sites that have a different table prefix.
+
+= 0.5.1 =
+* Fix a bug when the plugin creates a DB table with the wrong prefix.
+
+= 0.5 =
+* This is a near-complete rewrite with a lot of new features. See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
+
+= 0.4.14 =
+* Fix false positives when the URL contains an #anchor
+
+= 0.4.13 =
+* (Hopefully) fix join() failure when Snoopy doesn't return any HTTP headers.
+
+= 0.4.12 =
+* *There are no release notes for this version*
+
+= 0.4.11 =
+* Set the Referer header to blog's home address when checking a link. This should help deal with some bot traps.
+* I know, I know - there haven't been any major updates for a while. But there will be eventually :)
+* Fix SQL error when a post is deleted.
+
+= 0.4.10 =
+* Changed required access caps for "Manage -> Broken Links" from manage\_options to edit\_ohers\_posts. This will allow editor users to access that page and it's functions.
+
+= 0.4.9 =
+* Link sorting, somewhat experimental.
+* JavaScript sorting feature for the broken link list.
+
+= 0.4.8 =
+* CURL isn't required anymore. Snoopy is used when CURL isn't available.
+* Post title in broken link list is now a link to the post (permalink). Consequently, removed "View" button.
+* Added a "Details" link. Clicking it will show/hide more info about the reported link.
+* "Unlink" and "Edit" now work for images, too. "Unlink" simply removes the image.
+* Database modifications to enable the changes described above.
+* Moved the URL checking function from wsblc\_ajax.php to broken-link-checker.php; made it more flexible.
+* New and improved (TM) regexps for finding links and images.
+* A "Settings" link added to plugin's action links.
+* And probably other stuff I forgot!
+
+= 0.4.7 =
+* Autoselect link URL after the user clicks "Edit".
+* Make sure only HTTP and HTTPS links are checked.
+* More substantive improvements will hopefully follow next week.
+
+= 0.4.6 =
+* Minor compatibility enhancement in wsblc\_ajax.php - don't load wpdb if it's already loaded.
+
+= 0.4.5 =
+* Revisions don't get added to the work queue anymore.
+* Workaround for rare cURL timeout bug.
+* Improved WP 2.6 compatibility.
+* Correctly handle URLs containing a single quote '.
+
+= 0.4.4 =
+* Consider a HTTP 401 response OK. Such links won't be marked as broken anymore.
+
+= 0.4.3 =
+* Fix : Don't check links in revisions, only posts/pages.
+
+= 0.4.2 =
+* *There are no release notes for this version*
+
+= 0.4.1 =
+* Split translated version from the previous code. Was causing weird problems.
+
+= 0.4-i8n =
+* *There are no release notes for this version*
+
+= 0.4 =
+* Added localization support (may be buggy).
+
+= 0.3.9 =
+* Fix : Use get\_permalink to get the "View" link. Old behavior was to use the GUID.
+
+= 0.3.8 =
+* Edit broken links @ Manage -> Broken Links (experimental)
+
+= 0.3.7 =
+* Change: A bit more verbose DB error reporting for the "unlink" feature.
+
+= 0.3.6 =
+* Switch from wp\_print\_scripts() to wp\_enqueue\_script()
+* Wp\_enqueue\_script()
+
+= 0.3.5 =
+* New: "Delete Post" option.
+* New: Increase the compatibility number.
+* Change: Default options are now handled in the class constructor.
+
+= 0.3.4 =
+* Ignore mailto: links
+* Ignore links inside <code> blocks
+
+= 0.3.3 =
+* *There are no release notes for this version*
+
+= 0.3.2 =
+* Fix Unlink button not working, some other random fixes
+
+= 0.3.1 =
+* *There are no release notes for this version*
+
+= 0.3 =
+* *There are no release notes for this version*
+
+= 0.2.5 =
+* Applied a small patch @ 347
+* Fix some omissions
+* Lots of new features in version 0.3
+
+= 0.2.4 =
+* Bigfix - use GET when HEAD fails
+
+= 0.2.3 =
+* MySQL 4.0 compatibility + recheck\_all\_posts function
+
+= 0.2.2.1 =
+* *There are no release notes for this version*
+
+= 0.2.2 =
+* *There are no release notes for this version*
+
+= 0.2 =
+* *There are no release notes for this version*
+
+= 0.1 =
+* *There are no release notes for this version*
+

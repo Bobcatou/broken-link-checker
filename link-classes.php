@@ -221,7 +221,7 @@ class blcLink {
             	$this->log .= $this->last_headers."\n";
             }
             
-            $this->http_code = $code;
+            $this->http_code = $code!=0 ? $code : BLC_TIMEOUT;
             $this->final_url = $info['url'];
             $this->request_duration = $info['total_time'];
             $this->redirect_count = $info['redirect_count'];
@@ -279,7 +279,7 @@ class blcLink {
 			if ( $this->http_code == BLC_TIMEOUT ){
 				//This is probably a timeout
 				$this->timeout = true;
-				$this->log .= "\r\n(Most likely the connection timed out)";
+				$this->log .= "\r\n(Most likely the connection timed out or the domain doesn't exist)";
 			}
 			return false;
 		}

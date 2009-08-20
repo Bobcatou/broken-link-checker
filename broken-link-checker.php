@@ -38,7 +38,7 @@ if ( ! defined( 'WP_PLUGIN_DIR' ) )
 	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
 	
 define('BLC_CHECKING', 1);
-define('BLC_TIMEOUT', 1);
+define('BLC_TIMEOUT', 2);
 
 /*
 //FirePHP for debugging
@@ -65,6 +65,7 @@ class ws_broken_link_checker {
     var $mybasename='';	//should be removed
     var $siteurl; 		//should be removed
     var $defaults;
+    var $db_version = 1;
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
@@ -90,8 +91,9 @@ class ws_broken_link_checker {
             
             'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 			
-			'need_resynch' => false,  		//[Internal flag] 
+			'need_resynch' => false,  		//[Internal flag]
 			
+			'current_db_version' => 0,		//The current version of the plugin's tables			
         );
         
         $this->load_options();
@@ -412,10 +414,13 @@ class ws_broken_link_checker {
    * ws_broken_link_checker::upgrade_database()
    * Create and/or upgrade database tables
    *
-   * @return bool
+   * @return void
    */
     function upgrade_database(){
 		global $wpdb;
+		
+		//Do we need to upgrade?
+		if ( $this->db_version == $this->options['current_db_version'] ) return;
 		
 		//Delete tables used by older versions of the plugin
 		$rez = $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}blc_linkdata, {$wpdb->prefix}blc_postdata" );
@@ -481,7 +486,8 @@ class ws_broken_link_checker {
 			)";
 		dbDelta($q);
 		
-		return true;
+		$this->options['current_db_version'] = $this->db_version;
+		$this->save_options();
 	}
 
     function admin_menu(){
@@ -1397,7 +1403,7 @@ jQuery(function($){
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code>.+?<\/code>/i', ' ', $content);
 		//remove all <pre></pre> blocks as well
-		$content = preg_replace('/<pre>.+?<\/pre>/i', ' ', $content);
+		$content = preg_replace('/<pre[^>]*>.+?<\/pre>/i', ' ', $content);
 		//Get the post permalink - it's used to resolve relative URLs
 		$permalink = get_permalink( $post_id );
 		
