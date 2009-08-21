@@ -102,7 +102,7 @@ class blcLink {
 		timed-out or broken then probably the checking algorithm is having problems with 
 		that link. Mark it as timed-out and hope the user sorts it out.
         */
-        if ( ($this->check_count >= 3) && ( !$this->timeout ) && ( !$this->http_code ) ) {
+        if ( ($this->check_count >= 3) && ( !$this->timeout ) && ( $this->http_code == BLC_CHECKING ) ) {
         	$this->timeout = 1;
         	$this->last_check = date('Y-m-d H:i:s');
         	$this->log .= "\r\n[A weird error was detected. This should never happen.]";
