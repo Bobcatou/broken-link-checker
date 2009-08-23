@@ -13,7 +13,7 @@ class blcLinkHighlighter {
 	var $broken_link_css;
 	
 	function blcLinkHighlighter( $broken_link_css = '' ) {
-		if ( !empty($broken_link_css) ){
+		if ( !empty( $broken_link_css ) ){
 			$this->broken_link_css = $broken_link_css;
             add_action( 'wp_head', array(&$this,'hook_wp_head') );
 		}
