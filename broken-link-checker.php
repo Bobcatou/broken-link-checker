@@ -28,7 +28,7 @@ if ( !class_exists('FB') ) {
 //Make sure some useful constants are defined
 if ( ! defined( 'WP_CONTENT_URL' ) )
 	define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
+if ( ! defined( 'WP_CONTENT_DIR' )  )
 	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
 if ( ! defined( 'WP_PLUGIN_URL' ) )
 	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
@@ -56,7 +56,7 @@ $blc_config_manager = new blcConfigurationManager(
         'recheck_count' => 3, 			//[Internal] How many times a broken link should be re-checked (slightly buggy)
 		
 		//These three are currently ignored. Everything is checked by default.
-		'check_posts' => true, 
+	'check_posts' => true, 
         'check_custom_fields' => true,
         'check_blogroll' => true,
         
@@ -64,8 +64,8 @@ $blc_config_manager = new blcConfigurationManager(
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 		
-		'need_resynch' => false,  		//[Internal flag]
-		'current_db_version' => 0,		//The current version of the plugin's tables			
+	'need_resynch' => false,  		//[Internal flag]
+	'current_db_version' => 0,		//The current version of the plugin's tables			
    )
 );
 
