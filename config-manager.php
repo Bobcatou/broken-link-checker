@@ -25,6 +25,8 @@ class blcConfigurationManager {
 		
 		$this->options = $this->defaults;
 		
+		if ( !empty( $this->option_name ) )
+			$this->load_options();		
 	}
 	
 	function set_defaults( $default_settings = null ){
@@ -51,7 +53,7 @@ class blcConfigurationManager {
 		
 		if ( empty($this->option_name) ) return false;
 		
-		$new_options = get_option($this->options_name);
+		$new_options = get_option($this->option_name);
         if( !is_array( $new_options ) ){
             return false;
         } else {
@@ -75,7 +77,7 @@ class blcConfigurationManager {
 		
 		if ( empty($this->option_name) ) return false;
 		
-		update_option( $this->options_name, $this->options );
+		update_option( $this->option_name, $this->options );
 		return true;		
 	}
 }
