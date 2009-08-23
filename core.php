@@ -6,7 +6,7 @@ if (!class_exists('Snoopy')) require_once(ABSPATH.'/wp-includes/class-snoopy.php
 /**
  * Simple function to replicate PHP 5 behaviour
  */
-if ( !function_exists('microtime_float') ) {
+if ( !function_exists( 'microtime_float' ) ) {
 	function microtime_float()
 	{
 	    list($usec, $sec) = explode(" ", microtime());
@@ -55,8 +55,7 @@ class wsBrokenLinkChecker {
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
         
-        //More dashboard hooks
-        add_action('admin_footer', array(&$this,'admin_footer'));
+		//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
         add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
         
         //The dashboard widget
@@ -71,6 +70,19 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_exclude_link', array(&$this,'ajax_exclude_link') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
+        
+        //Check if it's possible to create a lockfile and nag the user about it if not.
+		if ( $this->lockfile_name() ){
+			//Lockfiles work, so it's safe to enable the footer hook that will call the worker 
+			//function via AJAX.  
+        	add_action('admin_footer', array(&$this,'admin_footer'));
+		} else {
+			//No lockfiles, nag nag nag!
+			add_action( 'admin_notices', array( &$this, 'lockfile_warning' ) ); 
+		}
+        
+        
+
     }
 
     function admin_footer(){
@@ -102,49 +114,6 @@ class wsBrokenLinkChecker {
         <!-- /wsblc admin footer -->
         <?php
     }
-
-    function the_content($content){
-        global $post, $wpdb;
-        if ( empty($post) ) return $content;
-        
-        $q = "
-        	SELECT instances.link_text, links.*
-
-			FROM {$wpdb->prefix}blc_instances AS instances, {$wpdb->prefix}blc_links AS links
-			
-			WHERE 
-				instances.source_id = %d
-				AND instances.source_type = 'post'
-				AND instances.instance_type = 'link'
-				
-				AND instances.link_id = links.link_id
-			    AND links.check_count > 0
-			    AND ( links.http_code < 200 OR links.http_code >= 400 OR links.timeout = 1 )
-				AND links.http_code <> " . BLC_CHECKING;
-				
-		$rows = $wpdb->get_results( $wpdb->prepare( $q, $post->ID ), ARRAY_A ); 
-        if( $rows ){
-        	$this->links_to_remove = array();
-        	foreach($rows as $row){
-				$this->links_to_remove[$row['url']] = $row;
-			}
-            $content = preg_replace_callback( blcUtility::link_pattern(), array(&$this,'mark_broken_links'), $content );
-        };
-        
-        return $content;
-    }
-
-    function mark_broken_links($matches){
-    	//TODO:Tooltip-style popups with more info
-        $url = blcUtility::normalize_url( html_entity_decode( $matches[3] ) );
-        if( isset( $this->links_to_remove[$url] ) ){
-            return $matches[1].$matches[2].$matches[3].$matches[2].' class="broken_link" '.$matches[4].
-                   $matches[5].$matches[6];
-        } else {
-            return $matches[0];
-        }
-    }
-
 
     function is_excluded($url){
         if (!is_array($this->conf->options['exclusion_list'])) return false;
@@ -337,6 +306,9 @@ class wsBrokenLinkChecker {
 
         //Save the default options. 
         $this->conf->save_options();
+        
+        //And optimize my DB tables, too (for good measure) 
+        $this->optimize_database();
     }
     
   /**
@@ -417,6 +389,18 @@ class wsBrokenLinkChecker {
 		
 		$this->conf->options['current_db_version'] = $this->db_version;
 		$this->conf->save_options();
+	}
+	
+  /**
+   * wsBrokenLinkChecker::optimize_database()
+   * Optimize the plugin's tables
+   *
+   * @return void
+   */
+	function optimize_database(){
+		global $wpdb;
+		
+		$wpdb->query("OPTIMIZE TABLE {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_synch");
 	}
 
     function admin_menu(){
@@ -2016,8 +2000,9 @@ jQuery(function($){
 				return false;
 			}
 		} else {
-			//Uh oh, can't generate a lockfile name. Locking will be disabled. 
-			return true;
+			//Uh oh, can't generate a lockfile name. This is bad.
+			//FB::error("Can't find a writable directory to use for my lock file!"); 
+			return false;
 		};
 	}
 	
@@ -2051,14 +2036,14 @@ jQuery(function($){
    * @return string A filename or FALSE on error 
    */
 	function lockfile_name(){
-		//Try the plugin's directory first.
-		if ( is_writable( dirname(__FILE__) ) ){
-			return dirname(__FILE__) . '/wp_blc_lock';
+		//Try to find the temp directory.
+		$path = sys_get_temp_dir();
+		if ( $path && is_writable($path)){
+			return trailingslashit($path) . '/wp_blc_lock'; 
 		} else {
-			//Try to find the temp directory.
-			$path = sys_get_temp_dir();
-			if ( $path && is_writable($path)){
-				return trailingslashit($path) . '/wp_blc_lock'; 
+			//Try the plugin's directory.
+			if ( is_writable( dirname(__FILE__) ) ){
+				return dirname(__FILE__) . '/wp_blc_lock';
 			} else {
 				return false;
 			}
@@ -2102,6 +2087,30 @@ jQuery(function($){
 				array( &$this, 'dashboard_widget_control' )
 			 );
 		}
+	}
+	
+	function lockfile_warning(){
+		$my_dir =  '/plugins/' . basename(dirname(__FILE__)) . '/';
+		$settings_page = admin_url( 'options-general.php?page=link-checker-settings#lockfile_directory' );
+		
+		echo sprintf('
+			<div id="blc-lockfile-warning" class="error"><p>
+				<strong>Broken Link Checker can\'t create a lockfile.</strong> 
+				Please make the directory <code>%s</code> writable by plugins.
+				
+				<a href="javascript:void(0)" onclick="jQuery(\'#blc-lockfile-details\').toggle()">Details</a> 
+				</p>
+				
+				<div id="blc-lockfile-details" style="display:none;"><p>
+				The plugin uses a file-based locking mechanism to ensure that only one instance of the
+				resource-heavy link checking algorithm is running at any given time. Unfortunately,  
+				BLC can\'t find a writable directory where it could store the lockfile - it failed to 
+				detect the location of your server\'s temporary directory, and the plugin\'s own directory
+				isn\'t writable by PHP. To fix this problem, please make the plugin\'s directory writable.
+				</p> 
+				</div>
+			</div>',
+			$my_dir, $settings_page);
 	}
 
 }//class ends here
