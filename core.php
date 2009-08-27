@@ -47,7 +47,7 @@ class wsBrokenLinkChecker {
         add_action('admin_menu', array(&$this,'admin_menu'));
 
         //These hooks update the plugin's internal records when posts are added, deleted or modified.
-		add_action('delete_post', array(&$this,'post_deleted'));
+	add_action('delete_post', array(&$this,'post_deleted'));
         add_action('save_post', array(&$this,'post_saved'));
         
         //These do the same for (blogroll) links.
@@ -55,7 +55,7 @@ class wsBrokenLinkChecker {
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
         
-		//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
+	//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
         add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
         
         //The dashboard widget
@@ -72,17 +72,15 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         
         //Check if it's possible to create a lockfile and nag the user about it if not.
-		if ( $this->lockfile_name() ){
-			//Lockfiles work, so it's safe to enable the footer hook that will call the worker 
-			//function via AJAX.  
-        	add_action('admin_footer', array(&$this,'admin_footer'));
-		} else {
-			//No lockfiles, nag nag nag!
-			add_action( 'admin_notices', array( &$this, 'lockfile_warning' ) ); 
-		}
+        if ( $this->lockfile_name() ){
+            //Lockfiles work, so it's safe to enable the footer hook that will call the worker
+            //function via AJAX.
+            add_action('admin_footer', array(&$this,'admin_footer'));
+        } else {
+            //No lockfiles, nag nag nag!
+            add_action( 'admin_notices', array( &$this, 'lockfile_warning' ) );
+        }
         
-        
-
     }
 
     function admin_footer(){
