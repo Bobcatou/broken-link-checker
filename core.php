@@ -22,7 +22,7 @@ class wsBrokenLinkChecker {
 	var $loader;
     var $my_basename = '';	
     
-    var $db_version = 1;
+    var $db_version = 2;
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
@@ -332,7 +332,7 @@ class wsBrokenLinkChecker {
 		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 		
 		//Create the link table if it doesn't exist yet.
-		$q = "CREATE TABLE {$wpdb->prefix}blc_links (
+		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_links (
 				link_id int(20) unsigned NOT NULL auto_increment,
 				url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
 				last_check datetime NOT NULL default '0000-00-00 00:00:00',
@@ -350,18 +350,22 @@ class wsBrokenLinkChecker {
 				KEY http_code (http_code),
 				KEY timeout (timeout)
 			)";
-		dbDelta( $q );
+		if ( $wpdb->query( $q ) === false ){
+			//FB::error($wpdb->last_error, "Database error");
+			return false;
+		};
 		
 		//Fix URL fields so that they are collated as case-sensitive (this can't be done via dbDelta)
-		$wpdb->query(
-			"ALTER TABLE {$wpdb->prefix}blc_links 
-			 MODIFY	url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
-			 MODIFY final_url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL"
-		);
-		
+		$q = "ALTER TABLE {$wpdb->prefix}blc_links 
+			  MODIFY	url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
+			  MODIFY final_url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL";
+		if ( $wpdb->query( $q ) === false ){
+			//FB::error($wpdb->last_error, "Database error");
+			return false;
+		};
 		
 		//Create the instance table if it doesn't exist yet.
-		$q = "CREATE TABLE {$wpdb->prefix}blc_instances (
+		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_instances (
 				instance_id int(10) unsigned NOT NULL auto_increment,
 				link_id int(10) unsigned NOT NULL,
 				source_id int(10) unsigned NOT NULL,
@@ -373,10 +377,13 @@ class wsBrokenLinkChecker {
 				KEY link_id (link_id),
 				KEY source_id (source_id,source_type)
 			)"; 
-		$rez = dbDelta($q);
+		if ( $wpdb->query( $q ) === false ){
+			//FB::error($wpdb->last_error, "Database error");
+			return false;
+		};
 		
 		//....
-		$q = "CREATE TABLE {$wpdb->prefix}blc_synch (
+		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_synch (
 			  source_id int(20) unsigned NOT NULL,
 			  source_type enum('post','blogroll') NOT NULL,
 			  synched tinyint(3) unsigned NOT NULL,
@@ -384,10 +391,15 @@ class wsBrokenLinkChecker {
 			  PRIMARY KEY  (source_id, source_type),
 			  KEY synched (synched)
 			)";
-		dbDelta($q);
+		if ( $wpdb->query( $q ) === false ){
+			//FB::error($wpdb->last_error, "Database error");
+			return false;
+		};
 		
 		$this->conf->options['current_db_version'] = $this->db_version;
 		$this->conf->save_options();
+		
+		return true;
 	}
 	
   /**
