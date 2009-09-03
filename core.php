@@ -47,7 +47,7 @@ class wsBrokenLinkChecker {
         add_action('admin_menu', array(&$this,'admin_menu'));
 
         //These hooks update the plugin's internal records when posts are added, deleted or modified.
-	add_action('delete_post', array(&$this,'post_deleted'));
+		add_action('delete_post', array(&$this,'post_deleted'));
         add_action('save_post', array(&$this,'post_saved'));
         
         //These do the same for (blogroll) links.
@@ -55,13 +55,14 @@ class wsBrokenLinkChecker {
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
         
-	//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
+		//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
         add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
         
         //The dashboard widget
         add_action('wp_dashboard_setup', array(&$this, 'hook_wp_dashboard_setup'));
 		
         //AJAXy hooks
+        //TODO: Check nonces in AJAX hooks
         add_action( 'wp_ajax_blc_full_status', array(&$this,'ajax_full_status') );
         add_action( 'wp_ajax_blc_dashboard_status', array(&$this,'ajax_dashboard_status') );
         add_action( 'wp_ajax_blc_work', array(&$this,'ajax_work') );
@@ -432,13 +433,13 @@ class wsBrokenLinkChecker {
     }
 
     function options_page(){
-
         if (isset($_GET['recheck']) && ($_GET['recheck'] == 'true')) {
             $this->initiate_recheck();
         }
         if (isset($_GET['updated']) && ($_GET['updated'] == 'true')) {
             if(isset($_POST['submit'])) {
-
+				check_admin_referer('link-checker-options');
+				
                 $new_execution_time = intval($_POST['max_execution_time']);
                 if( $new_execution_time > 0 ){
                     $this->conf->options['max_execution_time'] = $new_execution_time;
@@ -482,6 +483,9 @@ class wsBrokenLinkChecker {
         <div class="wrap"><h2>Broken Link Checker Options</h2>
 
         <form name="link_checker_options" method="post" action="<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;updated=true">
+        <?php 
+			wp_nonce_field('link-checker-options');
+		?>
 
         <table class="form-table">
 

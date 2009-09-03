@@ -38,14 +38,14 @@ class blcUtility {
 	
     //A regxp for images
     function img_pattern(){
-	    //        \1                        \2       \3 URL       \4
-	    return '/(<img[\s]+[^>]*src\s*=\s*)([\"\'])([^\2>]+?)\2([^<>]*>)/i';
+	    //        \1                        \2      \3 URL    \4
+	    return '/(<img[\s]+[^>]*src\s*=\s*)([\"\'])([^>]+?)\2([^<>]*>)/i';
 	}
 	
 	//A regexp for links
 	function link_pattern(){
-	    //	      \1                       \2      \3 URL        \4       \5 Text  \6
-	    return '/(<a[\s]+[^>]*href\s*=\s*)([\"\'])([^\2>]+?)\2([^<>]*>)((?sU).*)(<\/a>)/i';
+	    //	      \1                       \2      \3 URL    \4       \5 Text  \6
+	    return '/(<a[\s]+[^>]*href\s*=\s*)([\"\'])([^>]+?)\2([^<>]*>)((?sU).*)(<\/a>)/i';
 	}	
 	
   /**
