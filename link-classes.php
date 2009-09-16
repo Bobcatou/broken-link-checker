@@ -96,6 +96,11 @@ class blcLink {
    */
 	function check(){
 		if ( !$this->valid() ) return false;
+		
+		//General note : there is usually no need to save() the result of the check
+		//in this method because it will be typically called from wsBrokenLinkChecker::work() 
+		//that will call the save() method for us.
+		
 		/*
         Check for problematic (though not necessarily "broken") links.
         If a link has been checked multiple times and still hasn't been marked as 
@@ -103,10 +108,10 @@ class blcLink {
 		that link. Mark it as timed-out and hope the user sorts it out.
         */
         if ( ($this->check_count >= 3) && ( !$this->timeout ) && ( $this->http_code == BLC_CHECKING ) ) {
-        	$this->timeout = 1;
+        	$this->timeout = true;
+        	$this->http_code = BLC_TIMEOUT;
         	$this->last_check = date('Y-m-d H:i:s');
         	$this->log .= "\r\n[A weird error was detected. This should never happen.]";
-        	$this->save();
             return false;
         }
         
@@ -132,7 +137,8 @@ class blcLink {
         $parts = parse_url($url);
         //Only HTTP links are checked. All others are automatically considered okay.
         if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') ) {
-            $this->log .= "URL protocol ($parts[scheme]) is not HTTP. This link won't be checked.\n";
+            $this->log .= "URL protocol ($parts[scheme]) is not HTTP(S). This link won't be checked.\n";
+            $this->http_code = 200;
             return true;
         }
         
@@ -174,12 +180,11 @@ class blcLink {
 				}
 				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $auth);
 			}
-			
 
             curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
             $nobody=false;
-            if($parts['scheme']=='https'){
+            if( $parts['scheme'] == 'https' ){
             	//TODO: Redirects don't work with HTTPS
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -189,11 +194,8 @@ class blcLink {
                 //curl_setopt($ch, CURLOPT_RANGE, '0-1023');
             }
             
-            //We definitely want headers.
             curl_setopt($ch, CURLOPT_HEADER, true);
             //register a callback function which will process the headers
-			//this assumes your code is into a class method, and uses $this->readHeader 
-			//as the callback function.
 			curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'read_header'));
 
 			//Execute the request
@@ -221,7 +223,7 @@ class blcLink {
             	$this->log .= $this->last_headers."\n";
             }
             
-            $this->http_code = $code!=0 ? $code : BLC_TIMEOUT;
+            $this->http_code = $code != 0 ? $code : BLC_TIMEOUT;
             $this->final_url = $info['url'];
             $this->request_duration = $info['total_time'];
             $this->redirect_count = $info['redirect_count'];

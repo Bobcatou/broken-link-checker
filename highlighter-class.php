@@ -11,6 +11,7 @@ class blcLinkHighlighter {
 	
 	var $links_to_remove;
 	var $broken_link_css;
+	var $current_permalink;
 	
 	function blcLinkHighlighter( $broken_link_css = '' ) {
 		if ( !empty( $broken_link_css ) ){
@@ -19,11 +20,15 @@ class blcLinkHighlighter {
 		}
 		
 		add_filter( 'the_content', array(&$this,'hook_the_content') );
+		$this->current_permalink = '';
 	}
 	
 	function hook_the_content($content){
         global $post, $wpdb;
         if ( empty($post) ) return $content;
+        
+        //Get the post permalink - it's used to resolve relative URLs
+		$this->current_permalink = get_permalink( $post->ID );
         
         $q = "
         	SELECT instances.link_text, links.*
@@ -54,7 +59,7 @@ class blcLinkHighlighter {
 
     function mark_broken_links($matches){
     	//TODO: Tooltip-style popups with more info
-        $url = blcUtility::normalize_url( html_entity_decode( $matches[3] ) );
+        $url = blcUtility::normalize_url( html_entity_decode( $matches[3], $this->current_permalink ) );
         if( isset( $this->links_to_remove[$url] ) ){
             return $matches[1].$matches[2].$matches[3].$matches[2].' class="broken_link" '.$matches[4].
                    $matches[5].$matches[6];

@@ -56,7 +56,7 @@ $blc_config_manager = new blcConfigurationManager(
         'recheck_count' => 3, 			//[Internal] How many times a broken link should be re-checked (slightly buggy)
 		
 		//These three are currently ignored. Everything is checked by default.
-	'check_posts' => true, 
+		'check_posts' => true, 
         'check_custom_fields' => true,
         'check_blogroll' => true,
         
@@ -72,7 +72,6 @@ $blc_config_manager = new blcConfigurationManager(
 	
 if ( !is_admin() ){
 	//This is user-side request, so the only thing we may need to do is run the broken link highlighter.
-	//Is the highlighter enabled?
 	if ( $blc_config_manager->options['mark_broken_links'] ){
 		//Load some utilities (used by the higlighter) and the highlighter itself
 		require 'utility-class.php';
