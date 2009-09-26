@@ -320,7 +320,8 @@ class wsBrokenLinkChecker {
 		global $wpdb;
 		
 		//Do we need to upgrade?
-		if ( $this->db_version == $this->conf->options['current_db_version'] ) return;
+		//[ Disabled for now, was causing issues when the user manually deletes the plugin ]
+		//if ( $this->db_version == $this->conf->options['current_db_version'] ) return;
 		
 		//Delete tables used by older versions of the plugin
 		$rez = $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}blc_linkdata, {$wpdb->prefix}blc_postdata" );
@@ -2058,7 +2059,11 @@ jQuery(function($){
 			//Try the plugin's directory.
 			if ( is_writable( dirname(__FILE__) ) ){
 				return dirname(__FILE__) . '/wp_blc_lock';
+			//Try the wp-content directory 
+			} else if ( is_writable( WP_CONTENT_DIR ) ){
+				return WP_CONTENT_DIR . '/wp_blc_lock';
 			} else {
+				//Fail.
 				return false;
 			}
 		}

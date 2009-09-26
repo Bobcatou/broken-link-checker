@@ -26,8 +26,8 @@ if ( !function_exists('sys_get_temp_dir')) {
     if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
     $tempfile=tempnam(uniqid(rand(),TRUE),'');
     if (file_exists($tempfile)) {
-    unlink($tempfile);
-    return realpath(dirname($tempfile));
+	    unlink($tempfile);
+	    return realpath(dirname($tempfile));
     }
   }
 }
@@ -56,8 +56,11 @@ class blcUtility {
    * @return string A normalized URL or FALSE if the URL is invalid
    */
 	function normalize_url($url, $base_url = ''){
-	    $parts=@parse_url($url);
-	    if(!$parts) return false;
+		//Sometimes links may contain shortcodes. Parse them.
+		$url = do_shortcode($url);
+		
+	    $parts = @parse_url($url);
+	    if(!$parts) return false; //Invalid URL
 	
 	    if(isset($parts['scheme'])) {
 	        //Only HTTP(S) links are checked. Other protocols are not supported.
@@ -67,17 +70,17 @@ class blcUtility {
 	
 	    $url = html_entity_decode($url);
 	    $url = preg_replace(
-	        array('/([\?&]PHPSESSID=\w+)$/i',
-	              '/(#[^\/]*)$/',
-	              '/&amp;/',
-	              '/^(javascript:.*)/i',
-	              '/([\?&]sid=\w+)$/i'
+	        array('/([\?&]PHPSESSID=\w+)$/i', //remove session ID
+	              '/(#[^\/]*)$/',			  //and anchors/fragments
+	              '/&amp;/',				  //convert improper HTML entities
+	              '/^(javascript:.*)/i',	  //treat links that contain JS as links with an empty URL 	
+	              '/([\?&]sid=\w+)$/i'		  //remove another flavour of session ID
 	              ),
 	        array('','','&','',''),
 	        $url);
-	    $url=trim($url);
+	    $url = trim($url);
 	
-	    if($url=='') return false;
+	    if ( $url=='' ) return false;
 	    
 	    // turn relative URLs into absolute URLs
 	    if ( empty($base_url) ) $base_url = get_option('siteurl');
@@ -99,7 +102,7 @@ class blcUtility {
 	        //WTF? $relative is a seriously malformed URL
 	        return false;
 	    }
-	    if(isset($p["scheme"])) return $relative;
+	    if( isset($p["scheme"]) ) return $relative;
 	
 	    $parts=(parse_url($absolute));
 	
