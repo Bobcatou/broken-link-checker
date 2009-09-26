@@ -1317,8 +1317,6 @@ jQuery(function($){
 	function parse_post($content, $post_id){
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $content);
-		//remove all <pre></pre> blocks as well
-		$content = preg_replace('/<pre[^>]*>.+?<\/pre>/si', ' ', $content);
 		//Get the post permalink - it's used to resolve relative URLs
 		$permalink = get_permalink( $post_id );
 		
