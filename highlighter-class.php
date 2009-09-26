@@ -59,7 +59,7 @@ class blcLinkHighlighter {
 
     function mark_broken_links($matches){
     	//TODO: Tooltip-style popups with more info
-        $url = blcUtility::normalize_url( html_entity_decode( $matches[3], $this->current_permalink ) );
+        $url = blcUtility::normalize_url( html_entity_decode( $matches[3] ), $this->current_permalink );
         if( isset( $this->links_to_remove[$url] ) ){
             return $matches[1].$matches[2].$matches[3].$matches[2].' class="broken_link" '.$matches[4].
                    $matches[5].$matches[6];
