@@ -1,6 +1,7 @@
 <?php
 
 //The plugin will use Snoopy in case CURL is not available
+//TODO: Use WP_HTTP instead of Snoopy
 if (!class_exists('Snoopy')) require_once(ABSPATH.'/wp-includes/class-snoopy.php');
 
 /**

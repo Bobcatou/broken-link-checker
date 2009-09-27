@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.10.1
+Version: 0.5.11
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -41,8 +41,9 @@ if ( ! defined('BLC_CHECKING') )
 if ( ! defined('BLC_TIMEOUT') )	
 	define('BLC_TIMEOUT', 0);  //The code used for links that timed out and didn't return an actual response.
 
-//Load and initialize the plugin's configuration 
-require 'config-manager.php';
+//Load and initialize the plugin's configuration
+$blc_directory = dirname(__FILE__);
+require $blc_directory . '/config-manager.php';
 $blc_config_manager = new blcConfigurationManager(
 	//Save the plugin's configuration into this DB option
 	'wsblc_options', 
@@ -74,16 +75,16 @@ if ( !is_admin() ){
 	//This is user-side request, so the only thing we may need to do is run the broken link highlighter.
 	if ( $blc_config_manager->options['mark_broken_links'] ){
 		//Load some utilities (used by the higlighter) and the highlighter itself
-		require 'utility-class.php';
-		require 'highlighter-class.php';
+		require $blc_directory . '/utility-class.php';
+		require $blc_directory . '/highlighter-class.php';
 		$blc_link_highlighter = new blcLinkHighlighter( $blc_config_manager->options['broken_link_css'] );
 	}
 } else {
 	//Load everything
-	require 'utility-class.php';
-	require 'instance-classes.php';
-	require 'link-classes.php';
-	require 'core.php';
+	require $blc_directory . '/utility-class.php';
+	require $blc_directory . '/instance-classes.php';
+	require $blc_directory . '/link-classes.php';
+	require $blc_directory . '/core.php';
 	
 	$ws_link_checker = new wsBrokenLinkChecker( __FILE__ , $blc_config_manager );	
 }
