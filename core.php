@@ -450,53 +450,56 @@ class wsBrokenLinkChecker {
         if (isset($_GET['recheck']) && ($_GET['recheck'] == 'true')) {
             $this->initiate_recheck();
         }
-        if (isset($_GET['updated']) && ($_GET['updated'] == 'true')) {
-            if(isset($_POST['submit'])) {
-				check_admin_referer('link-checker-options');
-				
-                $new_execution_time = intval($_POST['max_execution_time']);
-                if( $new_execution_time > 0 ){
-                    $this->conf->options['max_execution_time'] = $new_execution_time;
-                }
-
-                $new_check_threshold=intval($_POST['check_threshold']);
-                if( $new_check_threshold > 0 ){
-                    $this->conf->options['check_threshold'] = $new_check_threshold;
-                }
-                
-                $this->conf->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
-                $new_broken_link_css = trim($_POST['broken_link_css']);
-                $this->conf->options['broken_link_css'] = $new_broken_link_css;
-
-                $this->conf->options['exclusion_list']=array_filter( preg_split( '/[\s\r\n]+/',
-                    $_POST['exclusion_list'], -1, PREG_SPLIT_NO_EMPTY ) );
-                //TODO: Maybe update affected links when exclusion list changes (expensive).
-                    
-                
-                $new_custom_fields = array_filter( preg_split( '/[\s\r\n]+/',
-                    $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY ) );
-                $diff1 = array_diff( $new_custom_fields, $this->conf->options['custom_fields'] );
-                $diff2 = array_diff( $this->conf->options['custom_fields'], $new_custom_fields );
-                $this->conf->options['custom_fields'] = $new_custom_fields;
-
-                $this->conf->save_options();
-				
-				/*
-				 If the list of custom fields was modified then we MUST resynchronize or
-				 custom fields linked with existing posts may not be detected. This is somewhat
-				 inefficient.  
-				 */
-				if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-					$this->resynch();
-				}
+        if(isset($_POST['submit'])) {
+			check_admin_referer('link-checker-options');
+			
+            $new_execution_time = intval($_POST['max_execution_time']);
+            if( $new_execution_time > 0 ){
+                $this->conf->options['max_execution_time'] = $new_execution_time;
             }
 
+            $new_check_threshold=intval($_POST['check_threshold']);
+            if( $new_check_threshold > 0 ){
+                $this->conf->options['check_threshold'] = $new_check_threshold;
+            }
+            
+            $this->conf->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
+            $new_broken_link_css = trim($_POST['broken_link_css']);
+            $this->conf->options['broken_link_css'] = $new_broken_link_css;
+
+            $this->conf->options['exclusion_list']=array_filter( preg_split( '/[\s\r\n]+/',
+                $_POST['exclusion_list'], -1, PREG_SPLIT_NO_EMPTY ) );
+            //TODO: Maybe update affected links when exclusion list changes (expensive).
+                
+            $new_custom_fields = array_filter( preg_split( '/[\s\r\n]+/',
+                $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY ) );
+            $diff1 = array_diff( $new_custom_fields, $this->conf->options['custom_fields'] );
+            $diff2 = array_diff( $this->conf->options['custom_fields'], $new_custom_fields );
+            $this->conf->options['custom_fields'] = $new_custom_fields;
+            
+            $this->conf->options['custom_tmp_dir'] = trim(stripslashes(strval($_POST['custom_tmp_dir'])));
+
+            $this->conf->save_options();
+			
+			/*
+			 If the list of custom fields was modified then we MUST resynchronize or
+			 custom fields linked with existing posts may not be detected. This is somewhat
+			 inefficient.  
+			 */
+			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
+				$this->resynch();
+			}
+			
+			$base_url = remove_query_arg( array('_wpnonce', 'noheader', 'updated', 'error', 'action', 'message') );
+			wp_redirect( add_query_arg( array( 'updated' => 1), $base_url ) );
         }
 
         ?>
         <div class="wrap"><h2>Broken Link Checker Options</h2>
-
-        <form name="link_checker_options" method="post" action="<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;updated=true">
+		
+        <form name="link_checker_options" method="post" action="<?php 
+			echo admin_url('options-general.php?page=link-checker-settings&noheader=1'); 
+		?>">
         <?php 
 			wp_nonce_field('link-checker-options');
 		?>
@@ -558,9 +561,12 @@ class wsBrokenLinkChecker {
         <tr valign="top">
         <th scope="row">Broken link CSS</th>
         <td>
-        <input type="checkbox" name="mark_broken_links" id="mark_broken_links"
-            <?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
-            <label for='mark_broken_links'>Apply <em>class="broken_link"</em> to broken links</label><br/>
+        	<label for='mark_broken_links'>
+        		<input type="checkbox" name="mark_broken_links" id="mark_broken_links"
+            	<?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
+            	Apply <em>class="broken_link"</em> to broken links
+			</label>
+			<br/>
         <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
             if( isset($this->conf->options['broken_link_css']) )
                 echo $this->conf->options['broken_link_css'];
@@ -587,6 +593,36 @@ class wsBrokenLinkChecker {
             if( isset($this->conf->options['custom_fields']) )
                 echo implode("\n", $this->conf->options['custom_fields']);
         ?></textarea>
+
+        </td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row">
+			<a name='lockfile_directory'></a>Custom temporary directory (advanced)</th>
+        <td>
+
+        <input type="text" name="custom_tmp_dir" id="custom_tmp_dir"
+            value="<?php echo htmlspecialchars( $this->conf->options['custom_tmp_dir'] ); ?>" size='53' maxlength='500'/>
+            <?php 
+            if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
+				if ( is_dir( $this->conf->options['custom_tmp_dir'] ) ){
+					if ( is_writable( $this->conf->options['custom_tmp_dir'] ) ){
+						echo "<strong>OK</strong>";
+					} else {
+						echo '<span class="error">Error : This directory isn\'t writable by PHP.</span>';
+					}
+				} else {
+					echo '<span class="error">Error : This directory doesn\'t exist.</span>';
+				}
+			}
+			
+			?>
+        <br/>
+        <span class="description">
+        Set this field if you want the plugin to use a custom directory for it's lockfiles. 
+		Otherwise, leave it blank.
+        </span>
 
         </td>
         </tr>
@@ -2050,17 +2086,23 @@ jQuery(function($){
    * @return string A filename or FALSE on error 
    */
 	function lockfile_name(){
-		//Try to find the temp directory.
-		$path = sys_get_temp_dir();
-		if ( $path && is_writable($path)){
-			return trailingslashit($path) . '/wp_blc_lock'; 
+		//Try the user-specified temp. directory first, if any
+		if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
+			if ( is_writable($this->conf->options['custom_tmp_dir']) && is_dir($this->conf->options['custom_tmp_dir']) ) {
+				return trailingslashit($this->conf->options['custom_tmp_dir']) . 'wp_blc_lock';
+			} else {
+				return false;
+			}
+		}
+		
+		//Try the plugin's own directory.
+		if ( is_writable( dirname(__FILE__) ) ){
+			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
-			//Try the plugin's directory.
-			if ( is_writable( dirname(__FILE__) ) ){
-				return dirname(__FILE__) . '/wp_blc_lock';
-			//Try the wp-content directory 
-			} else if ( is_writable( WP_CONTENT_DIR ) ){
-				return WP_CONTENT_DIR . '/wp_blc_lock';
+			//Try the system-wide temp directory
+			$path = sys_get_temp_dir();
+			if ( $path && is_writable($path)){
+				return trailingslashit($path) . 'wp_blc_lock';
 			} else {
 				//Fail.
 				return false;
@@ -2111,11 +2153,24 @@ jQuery(function($){
 		$my_dir =  '/plugins/' . basename(dirname(__FILE__)) . '/';
 		$settings_page = admin_url( 'options-general.php?page=link-checker-settings#lockfile_directory' );
 		
+		//Make the notice customized to the current settings
+		if ( !empty($this->conf->options['custom_tmp_dir']) ){
+			$action_notice = sprintf(
+				'The current temporary directory is not accessible; 
+				please <a href="%s">set a different one</a>.',
+				$settings_page
+			);
+		} else {
+			$action_notice = sprintf(
+				'Please make the directory <code>%s</code> writable by plugins or 
+				 <a href="%s">set a custom temporary directory</a>.',
+				$my_dir, $settings_page
+			);
+		}
+					
 		echo sprintf('
 			<div id="blc-lockfile-warning" class="error"><p>
-				<strong>Broken Link Checker can\'t create a lockfile.</strong> 
-				Please make the directory <code>%s</code> writable by plugins.
-				
+				<strong>Broken Link Checker can\'t create a lockfile.</strong> %s 
 				<a href="javascript:void(0)" onclick="jQuery(\'#blc-lockfile-details\').toggle()">Details</a> 
 				</p>
 				
@@ -2124,11 +2179,12 @@ jQuery(function($){
 				resource-heavy link checking algorithm is running at any given time. Unfortunately,  
 				BLC can\'t find a writable directory where it could store the lockfile - it failed to 
 				detect the location of your server\'s temporary directory, and the plugin\'s own directory
-				isn\'t writable by PHP. To fix this problem, please make the plugin\'s directory writable.
+				isn\'t writable by PHP. To fix this problem, please make the plugin\'s directory writable
+				or enter a specify a custom temporary directory in the plugin\'s settings.
 				</p> 
 				</div>
 			</div>',
-			$my_dir, $settings_page);
+			$action_notice);
 	}
 
 }//class ends here

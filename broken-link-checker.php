@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.11
+Version: 0.5.12
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -65,8 +65,12 @@ $blc_config_manager = new blcConfigurationManager(
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 		
-	'need_resynch' => false,  		//[Internal flag]
-	'current_db_version' => 0,		//The current version of the plugin's tables			
+		'need_resynch' => false,  		//[Internal flag]
+		'current_db_version' => 0,		//The current version of the plugin's tables
+		
+		'custom_tmp_dir' => '',			//The lockfile will be stored in this directory. 
+										//If this option is not set, the plugin's own directory or the 
+										//system-wide /tmp directory will be used instead.    			
    )
 );
 
