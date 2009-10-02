@@ -94,7 +94,7 @@ class wsBrokenLinkChecker {
 				
 			function blcDoWork(){
 				$.post(
-					"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+					"<?php echo admin_url('admin-ajax.php'); ?>",
 					{
 						'action' : 'blc_work'
 					},
@@ -129,12 +129,12 @@ class wsBrokenLinkChecker {
         ?>
         <p id='wsblc_activity_box'>Loading...</p>
         <script type='text/javascript'>
-        	jQuery(function($){
+        	jQuery( function($){
         		var blc_was_autoexpanded = false;
         		
 				function blcDashboardStatus(){
 					$.getJSON(
-						"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+						"<?php echo admin_url('admin-ajax.php'); ?>",
 						{
 							'action' : 'blc_dashboard_status'
 						},
@@ -160,7 +160,7 @@ class wsBrokenLinkChecker {
 				
 				blcDashboardStatus();//Call it the first time
 			
-			});
+			} );
         </script>
         <?php
     }
@@ -247,7 +247,6 @@ class wsBrokenLinkChecker {
     	
     	//Drop all synchronization records
     	$wpdb->query("TRUNCATE {$wpdb->prefix}blc_synch");
-    	
     	
     	//Create new synchronization records for posts 
     	$q = "INSERT INTO {$wpdb->prefix}blc_synch(source_id, source_type, synched)
@@ -519,7 +518,7 @@ class wsBrokenLinkChecker {
 				
 				function blcUpdateStatus(){
 					$.getJSON(
-						"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+						"<?php echo admin_url('admin-ajax.php'); ?>",
 						{
 							'action' : 'blc_full_status'
 						},
@@ -620,7 +619,7 @@ class wsBrokenLinkChecker {
 			?>
         <br/>
         <span class="description">
-        Set this field if you want the plugin to use a custom directory for it's lockfiles. 
+        Set this field if you want the plugin to use a custom directory for its lockfiles. 
 		Otherwise, leave it blank.
         </span>
 
@@ -994,7 +993,7 @@ jQuery(function($){
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
         $.post(
-			"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
 				'action' : 'blc_discard',
 				'link_id' : link_id
@@ -1058,7 +1057,7 @@ jQuery(function($){
                 url_el.html('Saving changes...');
                 
                 $.getJSON(
-					"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+					"<?php echo admin_url('admin-ajax.php'); ?>",
 					{
 						'action' : 'blc_edit',
 						'link_id' : link_id,
@@ -1091,7 +1090,7 @@ jQuery(function($){
 									master.find('.blc-link-id').html(data.new_link_id);
 									//Load up the new link info                     (so sue me)    
 									master.next('.blc-link-details').find('td').html('<center>Loading...</center>').load(
-										"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+										"<?php echo admin_url('admin-ajax.php'); ?>",
 										{
 											'action' : 'blc_link_details',
 											'link_id' : data.new_link_id
@@ -1144,7 +1143,7 @@ jQuery(function($){
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
         $.post(
-			"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
 				'action' : 'blc_unlink',
 				'link_id' : link_id
@@ -1181,7 +1180,7 @@ jQuery(function($){
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
         $.post(
-			"<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin-ajax.php",
+			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
 				'action' : 'blc_exclude_link',
 				'link_id' : link_id
@@ -1332,7 +1331,7 @@ jQuery(function($){
 				AND ( ( {$wpdb->prefix}blc_instances.source_type = 'post' ) OR ( {$wpdb->prefix}blc_instances.source_type = 'custom_field' ) )";
 		$rez = $wpdb->query($q);
 		
-		//Delete all instances that reference non-existant bookmarks
+		//Delete all instances that reference non-existent bookmarks
 		$q = "DELETE FROM {$wpdb->prefix}blc_instances 
 			  USING {$wpdb->prefix}blc_instances LEFT JOIN {$wpdb->links} ON {$wpdb->prefix}blc_instances.source_id = {$wpdb->links}.link_id
 			  WHERE
@@ -1710,8 +1709,8 @@ jQuery(function($){
 		$text = '';
 	
 		if( $status['broken_links'] > 0 ){
-			$text .= sprintf( "<a href='%stools.php?page=view-broken-links' title='View broken links'><strong>Found %d broken link%s</strong></a>",
-			  get_option('wpurl'), $status['broken_links'], ( $status['broken_links'] == 1 )?'':'s' );
+			$text .= sprintf( "<a href='%s' title='View broken links'><strong>Found %d broken link%s</strong></a>",
+			  admin_url('tools.php?page=view-broken-links'), $status['broken_links'], ( $status['broken_links'] == 1 )?'':'s' );
 		} else {
 			$text .= "No broken links found.";
 		}
@@ -1748,24 +1747,7 @@ jQuery(function($){
 	
 	function ajax_dashboard_status(){
 		//Just display the full status.
-		$this->ajax_full_status( false );
-		/*
-		global $wpdb;
-		
-		//displays a notification if broken links have been found 
-		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links 
-			  WHERE check_count > 0 AND ( http_code < 200 OR http_code >= 400 OR timeout = 1 )";
-		$broken_links = $wpdb->get_var($q);
-		
-		
-		if($broken_links>0){
-			printf( "<a href='%stools.php?page=view-broken-links' title='View broken links'><strong>Found %d broken link%s</strong></a>",
-			  get_option('wpurl'), $broken_links, ($broken_links==1)?'':'s' );
-		} else {
-			echo "No broken links found.";
-		}
-		die();
-		*/
+		$this->ajax_full_status( );
 	}
 	
   /**
