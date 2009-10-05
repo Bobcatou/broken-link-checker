@@ -60,6 +60,11 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+== Changelog ==
+
+= 0.5.13 =
+* Fixed the bug where the plugin would ignore FORCE\_ADMIN\_SSL setting and always use plain HTTP for it's forms and AJAX.
+
 = 0.5.12 =
 * Let the user set a custom temporary directory, if the default one is not accessible for some reason.
 
@@ -246,4 +251,3 @@ To upgrade your installation
 
 = 0.1 =
 * *There are no release notes for this version*
-
