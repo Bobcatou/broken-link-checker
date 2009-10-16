@@ -94,7 +94,7 @@ class blcLink {
    *
    * @return bool 
    */
-	function check(){
+	function check( $timeout = 40 ){
 		if ( !$this->valid() ) return false;
 		
 		//General note : there is usually no need to save() the result of the check
@@ -157,14 +157,16 @@ class blcLink {
             //Add a semi-plausible referer header to avoid tripping up some bot traps 
             curl_setopt($ch, CURLOPT_REFERER, get_option('home'));
             
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-
-            @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            //Redirects don't work when safe mode or open_basedir is enabled.
+            if ( !ini_get('safe_mode') && !ini_get('open_basedir') ) {
+	            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            }
             curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             
+            //Set the timeout
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+            
+            //Set the proxy configuration. The user can provide this in wp-config.php 
             if (defined('WP_PROXY_HOST')) {
 				curl_setopt($ch, CURLOPT_PROXY, WP_PROXY_HOST);
 			}
@@ -181,25 +183,25 @@ class blcLink {
 				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $auth);
 			}
 
+			//Is this even necessary?
             curl_setopt($ch, CURLOPT_FAILONERROR, false);
 
-            $nobody=false;
+            $nobody = false;
             if( $parts['scheme'] == 'https' ){
             	//TODO: Redirects don't work with HTTPS
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  0);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
             } else {
-                $nobody=true;
-                curl_setopt($ch, CURLOPT_NOBODY, true);
-                //curl_setopt($ch, CURLOPT_RANGE, '0-1023');
+                $nobody = true;
+                curl_setopt($ch, CURLOPT_NOBODY, true); //Use the HEAD method for non-https URLs 
             }
             
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            //register a callback function which will process the headers
+            //Register a callback function which will process the HTTP header(s).
+			//It can be called multiple times if the remote server performs a redirect. 
 			curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'read_header'));
 
 			//Execute the request
-            $response = curl_exec($ch);
+            curl_exec($ch);
             
 			$info = curl_getinfo($ch);
             $code = intval( $info['http_code'] );
@@ -211,10 +213,12 @@ class blcLink {
                 $this->log .= "Trying a second time with different settings...\n";
                 $this->last_headers = '';
                 
-                curl_setopt($ch, CURLOPT_NOBODY, false);
-                curl_setopt($ch, CURLOPT_HTTPGET, true);
-                curl_setopt($ch, CURLOPT_RANGE, '0-2047');
-                $response = curl_exec($ch);
+                curl_setopt($ch, CURLOPT_NOBODY, false); //Don't send a HEAD request this time 
+                curl_setopt($ch, CURLOPT_HTTPGET, true); //Switch back to GET instead.
+                curl_setopt($ch, CURLOPT_RANGE, '0-2047');//But limit the desired response size, 
+				                                          //we don't want to eat the user's bandwidth. 
+                //Run it again
+                curl_exec($ch);
                 
                 $info = curl_getinfo($ch);
             	$code = intval( $info['http_code'] );
@@ -238,7 +242,7 @@ class blcLink {
 			$start_time = microtime_float(true);
 			
             $snoopy = new Snoopy;
-            $snoopy->read_timeout = 60; //read timeout in seconds
+            $snoopy->read_timeout = $timeout; //read timeout in seconds
             $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
             $snoopy->fetch($url);
             

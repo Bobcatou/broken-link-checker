@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.5.13
+Version: 0.5.14
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 */
@@ -14,10 +14,12 @@ Created by Janis Elsts (email : whiteshadow@w-shadow.com)
 MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 */
 
+define('BLC_DEBUG', false);
+
 /*
 //FirePHP for debugging
 if ( !class_exists('FB') ) {
-	require 'FirePHPCore/fb.php';
+	require_once 'FirePHPCore/fb.php4';
 }
 //FB::setEnabled(false);
 
@@ -70,7 +72,9 @@ $blc_config_manager = new blcConfigurationManager(
 		
 		'custom_tmp_dir' => '',			//The lockfile will be stored in this directory. 
 										//If this option is not set, the plugin's own directory or the 
-										//system-wide /tmp directory will be used instead.    			
+										//system-wide /tmp directory will be used instead.
+										
+		'timeout' => 30,				//Links that take longer than this to respond will be treated as broken.  
    )
 );
 

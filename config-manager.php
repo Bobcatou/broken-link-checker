@@ -5,6 +5,8 @@
  * @copyright 2009
  */
 
+if ( !class_exists('blcConfigurationManager') ){
+
 class blcConfigurationManager {
 	
 	var $option_name;
@@ -82,4 +84,5 @@ class blcConfigurationManager {
 	}
 }
 
+}
 ?>

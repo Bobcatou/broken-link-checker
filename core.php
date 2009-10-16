@@ -2,7 +2,7 @@
 
 //The plugin will use Snoopy in case CURL is not available
 //TODO: Use WP_HTTP instead of Snoopy
-if (!class_exists('Snoopy')) require_once(ABSPATH.'/wp-includes/class-snoopy.php');
+if (!class_exists('Snoopy')) require_once(ABSPATH. WPINC . '/class-snoopy.php');
 
 /**
  * Simple function to replicate PHP 5 behaviour
@@ -15,7 +15,7 @@ if ( !function_exists( 'microtime_float' ) ) {
 	}
 }
 
-if (!class_exists('ws_broken_link_checker')) {
+if (!class_exists('wsBrokenLinkChecker')) {
 
 class wsBrokenLinkChecker {
     var $conf;
@@ -56,7 +56,7 @@ class wsBrokenLinkChecker {
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
         
-		//Load jQuery on Dashboard pages (possibly redundant as WP already does that)
+		//Load jQuery on Dashboard pages (probably redundant as WP already does that)
         add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
         
         //The dashboard widget
@@ -314,9 +314,10 @@ class wsBrokenLinkChecker {
    * ws_broken_link_checker::upgrade_database()
    * Create and/or upgrade database tables
    *
+   * @param bool $die_on_error Whether the function should stop the script and display an error message if a DB error is encountered.  
    * @return void
    */
-    function upgrade_database(){
+    function upgrade_database( $die_on_error = true ){
 		global $wpdb;
 		
 		//Do we need to upgrade?
@@ -330,9 +331,9 @@ class wsBrokenLinkChecker {
 			return false;
 		}
 		
-		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+		//require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 		
-		//Create the link table if it doesn't exist yet.
+		//Create the link table if it doesn't exist yet. 
 		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_links (
 				link_id int(20) unsigned NOT NULL auto_increment,
 				url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
@@ -352,8 +353,8 @@ class wsBrokenLinkChecker {
 				KEY timeout (timeout)
 			)";
 		if ( $wpdb->query( $q ) === false ){
-			//FB::error($wpdb->last_error, "Database error");
-			return false;
+			if ( $die_on_error )
+				die('Database error : ' . $wpdb->last_error);
 		};
 		
 		//Fix URL fields so that they are collated as case-sensitive (this can't be done via dbDelta)
@@ -361,8 +362,8 @@ class wsBrokenLinkChecker {
 			  MODIFY	url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
 			  MODIFY final_url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL";
 		if ( $wpdb->query( $q ) === false ){
-			//FB::error($wpdb->last_error, "Database error");
-			return false;
+			if ( $die_on_error )
+				die('Database error : ' . $wpdb->last_error);
 		};
 		
 		//Create the instance table if it doesn't exist yet.
@@ -379,8 +380,8 @@ class wsBrokenLinkChecker {
 				KEY source_id (source_id,source_type)
 			)"; 
 		if ( $wpdb->query( $q ) === false ){
-			//FB::error($wpdb->last_error, "Database error");
-			return false;
+			if ( $die_on_error )
+				die('Database error : ' . $wpdb->last_error);
 		};
 		
 		//....
@@ -393,8 +394,8 @@ class wsBrokenLinkChecker {
 			  KEY synched (synched)
 			)";
 		if ( $wpdb->query( $q ) === false ){
-			//FB::error($wpdb->last_error, "Database error");
-			return false;
+			if ( $die_on_error )
+				die('Database error : ' . $wpdb->last_error);
 		};
 		
 		$this->conf->options['current_db_version'] = $this->db_version;
@@ -416,8 +417,11 @@ class wsBrokenLinkChecker {
 	}
 
     function admin_menu(){
-        add_options_page('Link Checker Settings', 'Link Checker', 'manage_options',
+        $options_page_hook = add_options_page('Link Checker Settings', 'Link Checker', 'manage_options',
             'link-checker-settings',array(&$this, 'options_page'));
+        //Add the hook that will add the plugin's CSS styles to it's settings page 
+        add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
+            
         if (current_user_can('manage_options'))
             add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
 
@@ -452,11 +456,13 @@ class wsBrokenLinkChecker {
         if(isset($_POST['submit'])) {
 			check_admin_referer('link-checker-options');
 			
+			//The execution time limit must be above zero
             $new_execution_time = intval($_POST['max_execution_time']);
             if( $new_execution_time > 0 ){
                 $this->conf->options['max_execution_time'] = $new_execution_time;
             }
 
+			//The check threshold also must be > 0
             $new_check_threshold=intval($_POST['check_threshold']);
             if( $new_check_threshold > 0 ){
                 $this->conf->options['check_threshold'] = $new_check_threshold;
@@ -466,17 +472,34 @@ class wsBrokenLinkChecker {
             $new_broken_link_css = trim($_POST['broken_link_css']);
             $this->conf->options['broken_link_css'] = $new_broken_link_css;
 
-            $this->conf->options['exclusion_list']=array_filter( preg_split( '/[\s\r\n]+/',
-                $_POST['exclusion_list'], -1, PREG_SPLIT_NO_EMPTY ) );
-            //TODO: Maybe update affected links when exclusion list changes (expensive).
+			//TODO: Maybe update affected links when exclusion list changes (could be expensive resource-wise).
+            $this->conf->options['exclusion_list'] = array_filter( 
+				preg_split( 
+					'/[\s\r\n]+/',				//split on newlines and whitespace 
+					$_POST['exclusion_list'], 
+					-1,
+					PREG_SPLIT_NO_EMPTY			//skip empty values
+				) 
+			);
                 
-            $new_custom_fields = array_filter( preg_split( '/[\s\r\n]+/',
-                $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY ) );
+            //Parse the custom field list
+            $new_custom_fields = array_filter( 
+				preg_split( '/[\s\r\n]+/', $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY )
+			);
+            
+			//Calculate the difference between the old custom field list and the new one (used later)
             $diff1 = array_diff( $new_custom_fields, $this->conf->options['custom_fields'] );
             $diff2 = array_diff( $this->conf->options['custom_fields'], $new_custom_fields );
             $this->conf->options['custom_fields'] = $new_custom_fields;
             
+            //Temporary file directory
             $this->conf->options['custom_tmp_dir'] = trim(stripslashes(strval($_POST['custom_tmp_dir'])));
+            
+            //HTTP timeout
+            $new_timeout = intval($_POST['timeout']);
+            if( $new_timeout > 0 ){
+                $this->conf->options['timeout'] = $new_timeout ;
+            }
 
             $this->conf->save_options();
 			
@@ -492,8 +515,11 @@ class wsBrokenLinkChecker {
 			$base_url = remove_query_arg( array('_wpnonce', 'noheader', 'updated', 'error', 'action', 'message') );
 			wp_redirect( add_query_arg( array( 'updated' => 1), $base_url ) );
         }
+        
+		$debug = $this->get_debug_info();
+		
+		?>
 
-        ?>
         <div class="wrap"><h2>Broken Link Checker Options</h2>
 		
         <form name="link_checker_options" method="post" action="<?php 
@@ -506,7 +532,11 @@ class wsBrokenLinkChecker {
         <table class="form-table">
 
         <tr valign="top">
-        <th scope="row">Status</th>
+        <th scope="row">
+			Status
+			<br>
+			<a href="javascript:void(0)" id="blc-debug-info-toggle">Show debug info</a>
+		</th>
         <td>
 
 
@@ -539,6 +569,23 @@ class wsBrokenLinkChecker {
         </script>
         <?php //JHS: Recheck all posts link: ?>
         <p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;recheck=true')" /></p>
+        
+        <table id="blc-debug-info">
+        <?php
+        
+        //Output the debug info in a table
+		foreach( $debug as $key => $value ){
+			printf (
+				'<tr valign="top" class="blc-debug-item-%s"><th scope="row">%s</th><td>%s<div class="blc-debug-message">%s</div></td></tr>',
+				$value['state'],
+				$key,
+				$value['value'], 
+				( array_key_exists('message', $value)?$value['message']:'')
+			);
+		}
+        ?>
+        </table>
+        
         </td>
         </tr>
 
@@ -547,7 +594,7 @@ class wsBrokenLinkChecker {
         <td>
 
         Every <input type="text" name="check_threshold" id="check_threshold"
-            value="<?php echo $this->conf->options['check_threshold']; ?>" size='5' maxlength='3'/>
+            value="<?php echo $this->conf->options['check_threshold']; ?>" size='5' maxlength='5'/>
         hours
         <br/>
         <span class="description">
@@ -596,9 +643,31 @@ class wsBrokenLinkChecker {
         </td>
         </tr>
         
+        </table>
+        
+        <h3>Advanced</h3>
+        
+        <table class="form-table">
+        
+        
+        <tr valign="top">
+        <th scope="row">Timeout</th>
+        <td>
+
+        <input type="text" name="timeout" id="blc_timeout"
+            value="<?php echo $this->conf->options['timeout']; ?>" size='5' maxlength='3'/>
+        seconds
+        <br/><span class="description">
+        Links that take longer than this to load will be marked as broken. 
+		</span>
+
+        </td>
+        </tr>
+        
+        
         <tr valign="top">
         <th scope="row">
-			<a name='lockfile_directory'></a>Custom temporary directory (advanced)</th>
+			<a name='lockfile_directory'></a>Custom temporary directory</th>
         <td>
 
         <input type="text" name="custom_tmp_dir" id="custom_tmp_dir"
@@ -627,11 +696,11 @@ class wsBrokenLinkChecker {
         </tr>
 
         <tr valign="top">
-        <th scope="row">Max. execution time (advanced)</th>
+        <th scope="row">Max. execution time</th>
         <td>
 
         <input type="text" name="max_execution_time" id="max_execution_time"
-            value="<?php echo $this->conf->options['max_execution_time']; ?>" size='5' maxlength='3'/>
+            value="<?php echo $this->conf->options['max_execution_time']; ?>" size='5' maxlength='5'/>
         seconds
         <br/><span class="description">
         The plugin works by periodically creating a background worker instance that parses your posts looking for links,
@@ -641,14 +710,77 @@ class wsBrokenLinkChecker {
 
         </td>
         </tr>
-
+        
         </table>
-
+        
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
         </form>
         </div>
+        
+        <script type='text/javascript'>
+        	jQuery(function($){
+        		var toggleButton = $('#blc-debug-info-toggle'); 
+        		
+				toggleButton.click(function(){
+					
+					var box = $('#blc-debug-info'); 
+					box.toggle();
+					if( box.is(':visible') ){
+						toggleButton.text('Hide debug info');
+					} else {
+						toggleButton.text('Show debug info');
+					}
+					
+				});
+			});
+		</script>
         <?php
     }
+    
+    function options_page_css(){
+    	?>
+		<style type='text/css'>
+			#blc-debug-info-toggle {
+				font-size: smaller;
+			}
+		
+        	.blc-debug-item-ok {
+				background-color: #d7ffa2;
+			}
+        	.blc-debug-item-warning {
+				background-color: #fcffa2;
+			}
+	        .blc-debug-item-error {
+				background-color: #ffc4c4;
+			}
+			
+			#blc-debug-info {
+				display: none;
+				
+				text-align: left;
+				
+				border-width: 1px;
+				border-color: gray;
+				border-style: solid;
+				
+				border-spacing: 0px;
+				border-collapse: collapse;
+			}
+			
+			#blc-debug-info th, #blc-debug-info td {
+				padding: 6px;
+				font-weight: normal;
+				text-shadow: none;
+								
+				border-width: 1px ;
+				border-color: silver;
+				border-style: solid;
+				
+				border-collapse: collapse;
+			}
+		</style>
+		<?php
+	}
 
     function links_page(){
         global $wpdb;
@@ -1659,7 +1791,7 @@ jQuery(function($){
         		if ( !$this->is_excluded( $link['url'] ) ) {
         			//Yes, do it
         			//FB::log("Checking link {$link[link_id]}");
-					$link_obj->check();
+					$link_obj->check( $this->conf->options['timeout'] );
 					$link_obj->save();
 				} else {
 					//Nope, mark it as already checked.
@@ -2167,6 +2299,124 @@ jQuery(function($){
 				</div>
 			</div>',
 			$action_notice);
+	}
+	
+  /**
+   * wsBrokenLinkChecker::get_debug_info()
+   * Collect various debugging information and return it in an associative array
+   *
+   * @return array
+   */
+	function get_debug_info(){
+		global $wpdb;
+		
+		//Collect some information that's useful for debugging 
+		$debug = array();
+		
+		//PHP version. Any one is fine as long as WP supports it.
+		$debug['PHP version'] = array(
+			'state' => 'ok',
+			'value' => phpversion(), 
+		);
+		
+		//MySQL version
+		$debug['MySQL version'] = array(
+			'state' => 'ok',
+			'value' => @mysql_get_server_info( $wpdb->dbh ), 
+		);
+		
+		//CURL presence and version
+		if ( function_exists('curl_version') ){
+			$version = curl_version();
+			
+			if ( version_compare( $version['version'], '7.16.0', '<=' ) ){
+				$data = array(
+					'state' => 'warning', 
+					'value' => $version['version'],
+					'message' => 'You have an old version of CURL. Redirect detection may not work properly.',
+				);
+			} else {
+				$data = array(
+					'state' => 'ok', 
+					'value' => $version['version'],
+				);
+			}
+			
+		} else {
+			$data = array(
+				'state' => 'warning', 
+				'value' => 'Not installed',
+			);
+		}
+		$debug['CURL version'] = $data;
+		
+		//Snoopy presence
+		if ( class_exists('Snoopy') ){
+			$data = array(
+				'state' => 'ok',
+				'value' => 'Installed',
+			);
+		} else {
+			//No Snoopy? This should never happen, but if it does we *must* have CURL. 
+			if ( function_exists('curl_init') ){
+				$data = array(
+					'state' => 'ok',
+					'value' => 'Not installed',
+				);
+			} else {
+				$data = array(
+					'state' => 'error',
+					'value' => 'Not installed',
+					'message' => 'You must have either CURL or Snoopy installed for the plugin to work!',
+				);
+			}
+			
+		}
+		$debug['Snoopy'] = $data;
+		
+		//Safe_mode status
+		if ( ini_get('safe_mode') ){
+			$debug['Safe mode'] = array(
+				'state' => 'warning',
+				'value' => 'On',
+				'message' => 'Redirects may be detected as broken links when safe_mode is on.',
+			);
+		} else {
+			$debug['Safe mode'] = array(
+				'state' => 'ok',
+				'value' => 'Off',
+			);
+		}
+		
+		//Open_basedir status
+		if ( ini_get('open_basedir') ){
+			$debug['open_basedir'] = array(
+				'state' => 'warning',
+				'value' => 'On',
+				'message' => 'Redirects may be detected as broken links when open_basedir is on.',
+			);
+		} else {
+			$debug['open_basedir'] = array(
+				'state' => 'ok',
+				'value' => 'Off',
+			);
+		}
+		
+		//Lockfile location
+		$lockfile = $this->lockfile_name();
+		if ( $lockfile ){
+			$debug['Lockfile'] = array(
+				'state' => 'ok',
+				'value' => $lockfile,
+			);
+		} else {
+			$debug['Lockfile'] = array(
+				'state' => 'error',
+				'message' => 'Can\'t create a lockfile. Please specify a custom temporary directory.',
+			);
+		}
+		
+		return $debug;
 	}
 
 }//class ends here

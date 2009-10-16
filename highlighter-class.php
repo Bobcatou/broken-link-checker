@@ -7,6 +7,8 @@
  * @requires blcUtility
  */
 
+if ( !class_exists('blcLinkHighlighter') ){
+	
 class blcLinkHighlighter {
 	
 	var $links_to_remove;
@@ -52,7 +54,16 @@ class blcLinkHighlighter {
 				$this->links_to_remove[$row['url']] = $row;
 			}
             $content = preg_replace_callback( blcUtility::link_pattern(), array(&$this,'mark_broken_links'), $content );
-        };
+            
+            if ( BLC_DEBUG ){
+				$content .= '<p><strong>Broken links in this post : </strong></p><ul>';
+				$content .= '<li>' . implode('</li><li>', array_keys($this->links_to_remove)) . '</li></ul>';
+			}
+        } else {
+			if ( BLC_DEBUG ){
+				$content .= '<p><strong>This post contains no broken links.</strong></p>';
+			}
+		};
         
         return $content;
     }
@@ -60,6 +71,7 @@ class blcLinkHighlighter {
     function mark_broken_links($matches){
     	//TODO: Tooltip-style popups with more info
         $url = blcUtility::normalize_url( html_entity_decode( $matches[3] ), $this->current_permalink );
+        
         if( isset( $this->links_to_remove[$url] ) ){
             return $matches[1].$matches[2].$matches[3].$matches[2].' class="broken_link" '.$matches[4].
                    $matches[5].$matches[6];
@@ -73,4 +85,5 @@ class blcLinkHighlighter {
 	}
 }
 
+}
 ?>
