@@ -60,7 +60,11 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
-== Changelog ==
+= 0.5.14 =
+* Made the timeout value used when checking links user-configurable.
+* The plugin will now report an error instead of failing silently when it can't create the necessary database tables.
+* Added a table listing assorted debug info to the settings page. Click the small "Show debug info" link to display it.
+* Cleaned up some redundant/useless code.
 
 = 0.5.13 =
 * Fixed the bug where the plugin would ignore FORCE\_ADMIN\_SSL setting and always use plain HTTP for it's forms and AJAX.
@@ -251,3 +255,4 @@ To upgrade your installation
 
 = 0.1 =
 * *There are no release notes for this version*
+
