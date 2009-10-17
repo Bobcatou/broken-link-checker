@@ -209,6 +209,9 @@ class blcLinkInstance {
 
 class blcLinkInstance_post_link extends blcLinkInstance {
 	
+	var $post_permalink = '';
+	var $changed_links = 0;
+	
 	function edit($old_url, $new_url){
 		global $wpdb;
 		
@@ -228,21 +231,35 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 			return false;
 		}
 		//FB::info('Post ' . $this->source_id . ' loaded successfully');
+		//Figure out the post's permalink - it'll be needed when normalizing relative URLs
+		$this->post_permalink = get_permalink( $post['ID'] );
 		
 		$this->old_url = $old_url;
 		$this->new_url = $new_url;
 		
+		//Track how many links in the post are successfully edited so that we can report an error if none are. 
+		$this->changed_links = 0;
+		
 		//Find all links and replace those that match $old_url.
 		$content = preg_replace_callback(blcUtility::link_pattern(), array(&$this, 'edit_callback'), $post['post_content']);
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
+
+		if ( $this->changed_links <= 0 ){
+			//FB::error("Didn't find any links to edit in this post!");
+			return false;
+		}
 		
+		//Save the modified post
+		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		return $wpdb->query($q) !== false;
 	}
 	
 	function edit_callback($matches){
-		$url = blcUtility::normalize_url($matches[3]);
+		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
+		//FB::log('Found an link with URL "' . $matches[3] . '", normalized URL = "' . $url . '"');
 		
 		if ($url == $this->old_url){
+			//FB::log('Changing this link');
+			$this->changed_links++;
 			return $matches[1].$matches[2].$this->new_url.$matches[2].$matches[4].$matches[5].$matches[6];
 		} else {
 			return $matches[0];
@@ -268,12 +285,21 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 			return false;
 		}
 		//FB::info('Post ' . $this->source_id . ' loaded successfully');
+		//Figure out the post's permalink - it'll be needed when normalizing relative URLs
+		$this->post_permalink = get_permalink( $post['ID'] );
+		
+		//Track how many links in the post are successfully removed so that we can report an error if none are. 
+		$this->changed_links = 0;
 		
 		//Find all links and remove those that match $url.
 		$this->old_url = $url; //used by the callback
 		$content = preg_replace_callback(blcUtility::link_pattern(), array(&$this, 'unlink_callback'), $post['post_content']);
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		
+		if ( $this->changed_links <= 0 ){
+			return false;
+		}
+		
+		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		if ( $wpdb->query($q) !== false ){
 			//Delete the instance record
 			//FB::info("Post updated, deleting instance from DB");
@@ -285,9 +311,10 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 	}
 	
 	function unlink_callback($matches){
-		$url = blcUtility::normalize_url($matches[3]);
+		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
 		
 		if ($url == $this->old_url){
+			$this->changed_links++;
 			return $matches[5]; //just the anchor text
 		} else {
 			return $matches[0]; //return the link unchanged
@@ -297,6 +324,9 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 }
 
 class blcLinkInstance_post_image extends blcLinkInstance {
+	
+	var $post_permalink = '';
+	var $changed_images = 0;
 	
 	function edit($old_url, $new_url){
 		global $wpdb;
@@ -315,24 +345,33 @@ class blcLinkInstance_post_image extends blcLinkInstance {
 		if (!$post){
 			return false;
 		}
+		//Figure out the post's permalink - it'll be needed when normalizing relative URLs
+		$this->post_permalink = get_permalink( $post['ID'] );
 		
 		$this->old_url = $old_url;
 		$this->new_url = $new_url;
 		
 		//Find all images and change the URL of those that match $old_url.
-		//Note : this might be inefficient if there's more than one instance of the sme link
+		//Note : this might be inefficient if there's more than one instance of the same link
 		//in one post, as each instances would be called when editing the link.
-		//Either way, I thing the overhead is small enough to ignore for now. 
+		//Either way, I thing the overhead is small enough to ignore for now.
+		$this->changed_images = 0; 
 		$content = preg_replace_callback(blcUtility::img_pattern(), array(&$this, 'edit_callback'), $post['post_content']);
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		
+		if ( $this->changed_images <= 0 ){
+			return false;
+		}
+		
+		//Save the modified post
+		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		return $wpdb->query($q) !== false;
 	}
 	
 	function edit_callback($matches){
-		$url = blcUtility::normalize_url($matches[3]);
+		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
 		
 		if ($url == $this->old_url){
+			$this->changed_images++;
 			return $matches[1].$matches[2].$this->new_url.$matches[2].$matches[4].$matches[5];
 		} else {
 			return $matches[0];
@@ -358,10 +397,18 @@ class blcLinkInstance_post_image extends blcLinkInstance {
 			return false;
 		}
 		//FB::info('Post ' . $this->source_id . ' loaded successfully');
+		//Figure out the post's permalink - it'll be needed when normalizing relative URLs
+		$this->post_permalink = get_permalink( $post['ID'] );
 		
 		//Find all links and remove those that match $url.
 		$this->old_url = $url; //used by the callback
+		$this->changed_images = 0;
 		$content = preg_replace_callback(blcUtility::img_pattern(), array(&$this, 'unlink_callback'), $post['post_content']);
+		
+		if ( $this->changed_images <= 0 ){
+			return false;
+		}
+		
 		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
 		
 		if ( $wpdb->query($q) !== false ){
@@ -375,9 +422,10 @@ class blcLinkInstance_post_image extends blcLinkInstance {
 	}
 	
 	function unlink_callback($matches){
-		$url = blcUtility::normalize_url($matches[3]);
+		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
 		
 		if ($url == $this->old_url){
+			$this->changed_images++;
 			return ''; //remove the image completely
 		} else {
 			return $matches[0]; //return the image unchanged

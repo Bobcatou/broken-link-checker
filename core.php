@@ -1172,6 +1172,8 @@ jQuery(function($){
         if ( !$(editor).is(':visible') ){
         	//Begin editing
         	url_el.hide();
+        	//Reset the edit box to the actual URL value in case the user has already tried and failed to edit this link.
+        	editor.val( url_el.attr('href') );  
             editor.show();
             cancel_button_container.show();
             editor.focus();
