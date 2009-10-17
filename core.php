@@ -2383,7 +2383,7 @@ jQuery(function($){
 		$debug['Snoopy'] = $data;
 		
 		//Safe_mode status
-		if ( ini_get('safe_mode') ){
+		if ( blcUtility::is_safe_mode() ){
 			$debug['Safe mode'] = array(
 				'state' => 'warning',
 				'value' => 'On',
@@ -2397,10 +2397,10 @@ jQuery(function($){
 		}
 		
 		//Open_basedir status
-		if ( ini_get('open_basedir') ){
+		if ( blcUtility::is_open_basedir() ){
 			$debug['open_basedir'] = array(
 				'state' => 'warning',
-				'value' => 'On',
+				'value' => 'On ( ' . ini_get('open_basedir') . ' )',
 				'message' => 'Redirects may be detected as broken links when open_basedir is on.',
 			);
 		} else {

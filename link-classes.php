@@ -158,7 +158,7 @@ class blcLink {
             curl_setopt($ch, CURLOPT_REFERER, get_option('home'));
             
             //Redirects don't work when safe mode or open_basedir is enabled.
-            if ( !ini_get('safe_mode') && !ini_get('open_basedir') ) {
+            if ( !blcUtility::is_safe_mode() && !blcUtility::is_open_basedir() ) {
 	            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             }
             curl_setopt($ch, CURLOPT_MAXREDIRS, 10);

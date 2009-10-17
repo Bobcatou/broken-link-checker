@@ -167,6 +167,44 @@ class blcUtility {
 		 );
 	}
 	
+  /**
+   * blcUtility::is_safe_mode()
+   * Checks if PHP is running in safe mode
+   *
+   * @return bool
+   */
+	function is_safe_mode(){
+		$safe_mode = ini_get('safe_mode');
+		//Null, 0, '', '0' and so on count as false 
+		if ( !$safe_mode ) return false;
+		//Test for some textual true/false variations
+		switch ( strtolower($safe_mode) ){
+			case 'on':
+			case 'true':
+			case 'yes':
+				return true;
+				
+			case 'off':
+			case 'false':
+			case 'no':
+				return false;
+				
+			default: //Let PHP handle anything else
+				return (bool)(int)$safe_mode;
+		}
+	}
+	
+  /**
+   * blcUtility::is_open_basedir()
+   * Checks if open_basedir is enabled
+   *
+   * @return bool
+   */
+	function is_open_basedir(){
+		$open_basedir = ini_get('open_basedir');
+		return $open_basedir && ( strtolower($open_basedir) != 'none' );
+	}
+	
 	
 }//class
 
