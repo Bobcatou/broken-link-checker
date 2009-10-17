@@ -2219,10 +2219,16 @@ jQuery(function($){
 			$path = sys_get_temp_dir();
 			if ( $path && is_writable($path)){
 				return trailingslashit($path) . 'wp_blc_lock';
-			} else {
-				//Fail.
-				return false;
 			}
+			
+			//Finally, try the upload directory
+			$path = ini_get('upload_tmp_dir');
+			if ( $path && is_writable($path)){
+				return trailingslashit($path) . 'wp_blc_lock';
+			}
+			
+			//Fail
+			return false;
 		}
 	}
 	
