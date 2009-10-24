@@ -231,6 +231,15 @@ class blcLink {
             $this->final_url = $info['url'];
             $this->request_duration = $info['total_time'];
             $this->redirect_count = $info['redirect_count'];
+            
+            //When safe_mode or open_basedir is enabled CURL will be forbidden from following redirects,
+            //so redirect_count will be 0 for all URLs. As a workaround, set it to 1 when the HTTP
+			//response codes indicates a redirect but redirect_count is zero.
+			//Note to self : Extracting the Location header might also be helpful.
+			if ( ($this->redirect_count == 0) && ( in_array( $this->http_code, array(301, 302, 307) ) ) ){
+				$this->redirect_count = 1;
+			} 
+                            
 
             curl_close($ch);
 

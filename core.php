@@ -2215,14 +2215,17 @@ jQuery(function($){
 		if ( is_writable( dirname(__FILE__) ) ){
 			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
-			//Try the system-wide temp directory
-			$path = sys_get_temp_dir();
+			
+			//Try the upload directory. I know it's weird to try the upload dir. before
+			//trying the system-wide /tmp, but trying them in this order *may* fix
+			//open_basedir problems for some users. 
+			$path = ini_get('upload_tmp_dir');
 			if ( $path && is_writable($path)){
 				return trailingslashit($path) . 'wp_blc_lock';
 			}
 			
-			//Finally, try the upload directory
-			$path = ini_get('upload_tmp_dir');
+			//Try the system-wide temp directory
+			$path = sys_get_temp_dir();
 			if ( $path && is_writable($path)){
 				return trailingslashit($path) . 'wp_blc_lock';
 			}
