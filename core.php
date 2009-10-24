@@ -1547,6 +1547,9 @@ jQuery(function($){
 			if ( !is_array( $values ) ) $values = array($values);
 			
 			foreach( $values as $value ){
+				
+				//If this is a multiline field take the first line (workaround for the enclosure field). 
+				$value = trim( array_shift( explode("\n", $value) ) );
 
 				//Attempt to parse the $value as URL
 				$url = blcUtility::normalize_url($value);
