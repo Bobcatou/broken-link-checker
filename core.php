@@ -423,7 +423,7 @@ class wsBrokenLinkChecker {
         add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
             
         if (current_user_can('manage_options'))
-            add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
+          add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
 
         add_management_page('View Broken Links', 'Broken Links', 'edit_others_posts',
             'view-broken-links',array(&$this, 'links_page'));
@@ -1075,7 +1075,7 @@ class wsBrokenLinkChecker {
 				<td><a href='javascript:void(0);'  
 					id='discard_button-<?php print $rownum; ?>'
 					class='blc-discard-button'
-					title='Remove this message and mark the link as valid'>Discard</a>
+					title='Remove this link from the list of broken links and mark it as valid'>Discard</a>
 				</td>
                 <?php } ?>
                 </tr>
@@ -1253,6 +1253,19 @@ jQuery(function($){
 			edit_button.html('Edit URL');
         }
     });
+    
+    //Let the user use Enter and Esc as shortcuts for "Save URL" and "Cancel"
+    $('input.blc-link-editor').keypress(function (e) {
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			$(this).parents('.blc-row').find('.blc-edit-button').click();
+			return false;
+		} else if ((e.which && e.which == 27) || (e.keyCode && e.keyCode == 27)) {
+			$(this).parents('.blc-row').find('.blc-cancel-button').click();
+			return false;
+		} else {
+			return true;
+		}
+	});
     
     $(".blc-cancel-button").click(function () { 
 		var master = $(this).parents('.blc-row');
