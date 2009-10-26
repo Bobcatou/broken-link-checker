@@ -73,7 +73,7 @@ To upgrade your installation
 * Also try the upload directory when looking for places where to put the lockfile.
 
 = 0.5.15 =
-* Editing links with relative URLs via the plugin's interface should now work properly. Previously the plugin would just fail silently and behave as if the link was edited, even if it wasn't.
+* Editing links that use relative URLs should work properly now. Previously the plugin would just fail silently and behave as if the link was edited, even if it wasn't.
 
 = 0.5.14 =
 * Made the timeout value used when checking links user-configurable.
