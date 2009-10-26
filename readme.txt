@@ -60,6 +60,15 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.5.18 =
+* Added a workaround for auto-enclosures. The plugin should now parse the "enclosure" custom field correctly.
+
+= 0.5.17 =
+* Added a redirect detection workaround for users that have safe\_mode or open\_basedir enabled.
+
+= 0.5.16.1 =
+* Be more careful when parsing safe\_mode and open\_basedir settings.
+
 = 0.5.16 =
 * Also try the upload directory when looking for places where to put the lockfile.
 
