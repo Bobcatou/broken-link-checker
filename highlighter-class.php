@@ -55,14 +55,18 @@ class blcLinkHighlighter {
 			}
             $content = preg_replace_callback( blcUtility::link_pattern(), array(&$this,'mark_broken_links'), $content );
             
+            /*
             if ( BLC_DEBUG ){
 				$content .= '<p><strong>Broken links in this post : </strong></p><ul>';
 				$content .= '<li>' . implode('</li><li>', array_keys($this->links_to_remove)) . '</li></ul>';
 			}
+			//*/
         } else {
+        	/*
 			if ( BLC_DEBUG ){
 				$content .= '<p><strong>This post contains no broken links.</strong></p>';
 			}
+			//*/
 		};
         
         return $content;

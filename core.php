@@ -45,6 +45,8 @@ class wsBrokenLinkChecker {
         add_action('activate_' . plugin_basename( $this->loader ), array(&$this,'activation'));
         $this->my_basename = plugin_basename( $this->loader );
         
+        add_action('init', array(&$this,'load_language'));
+        
         add_action('admin_menu', array(&$this,'admin_menu'));
 
         //These hooks update the plugin's internal records when posts are added, deleted or modified.
@@ -127,7 +129,7 @@ class wsBrokenLinkChecker {
 
     function dashboard_widget(){
         ?>
-        <p id='wsblc_activity_box'>Loading...</p>
+        <p id='wsblc_activity_box'><?php _e('Loading...', 'broken-link-checker');  ?></p>
         <script type='text/javascript'>
         	jQuery( function($){
         		var blc_was_autoexpanded = false;
@@ -150,7 +152,7 @@ class wsBrokenLinkChecker {
 								};
 								<?php } ?>
 							} else {
-								$('#wsblc_activity_box').html('[ Network error ]');
+								$('#wsblc_activity_box').html('<?php _e('[ Network error ]', 'broken-link-checker'); ?>');
 							}
 							
 							setTimeout( blcDashboardStatus, 120*1000 ); //...update every two minutes
@@ -175,7 +177,7 @@ class wsBrokenLinkChecker {
 		?>
 		<p><label for="blc-autoexpand">
 			<input id="blc-autoexpand" name="blc-autoexpand" type="checkbox" value="1" <?php if ( $this->conf->options['autoexpand_widget'] ) echo 'checked="checked"'; ?> />
-			Automatically expand the widget if broken links have been detected
+			<?php _e('Automatically expand the widget if broken links have been detected', 'broken-link-checker'); ?>
 		</label></p>
 		<?php
     }
@@ -354,7 +356,7 @@ class wsBrokenLinkChecker {
 			)";
 		if ( $wpdb->query( $q ) === false ){
 			if ( $die_on_error )
-				die('Database error : ' . $wpdb->last_error);
+				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
 		};
 		
 		//Fix URL fields so that they are collated as case-sensitive (this can't be done via dbDelta)
@@ -363,7 +365,7 @@ class wsBrokenLinkChecker {
 			  MODIFY final_url text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL";
 		if ( $wpdb->query( $q ) === false ){
 			if ( $die_on_error )
-				die('Database error : ' . $wpdb->last_error);
+				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
 		};
 		
 		//Create the instance table if it doesn't exist yet.
@@ -381,7 +383,7 @@ class wsBrokenLinkChecker {
 			)"; 
 		if ( $wpdb->query( $q ) === false ){
 			if ( $die_on_error )
-				die('Database error : ' . $wpdb->last_error);
+				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
 		};
 		
 		//....
@@ -395,7 +397,7 @@ class wsBrokenLinkChecker {
 			)";
 		if ( $wpdb->query( $q ) === false ){
 			if ( $die_on_error )
-				die('Database error : ' . $wpdb->last_error);
+				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
 		};
 		
 		$this->conf->options['current_db_version'] = $this->db_version;
@@ -417,16 +419,24 @@ class wsBrokenLinkChecker {
 	}
 
     function admin_menu(){
-        $options_page_hook = add_options_page('Link Checker Settings', 'Link Checker', 'manage_options',
-            'link-checker-settings',array(&$this, 'options_page'));
+        $options_page_hook = add_options_page( 
+			__('Link Checker Settings', 'broken-link-checker'), 
+			__('Link Checker', 'broken-link-checker'), 
+			'manage_options',
+            'link-checker-settings',array(&$this, 'options_page')
+		);
         //Add the hook that will add the plugin's CSS styles to it's settings page 
         add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
             
         if (current_user_can('manage_options'))
           add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
 
-        add_management_page('View Broken Links', 'Broken Links', 'edit_others_posts',
-            'view-broken-links',array(&$this, 'links_page'));
+        add_management_page(
+			__('View Broken Links', 'broken-link-checker'), 
+			__('Broken Links', 'broken-link-checker'), 
+			'edit_others_posts',
+            'view-broken-links',array(&$this, 'links_page')
+		);
     }
 
     /**
@@ -520,7 +530,7 @@ class wsBrokenLinkChecker {
 		
 		?>
 
-        <div class="wrap"><h2>Broken Link Checker Options</h2>
+        <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		
         <form name="link_checker_options" method="post" action="<?php 
 			echo admin_url('options-general.php?page=link-checker-settings&noheader=1'); 
@@ -533,9 +543,9 @@ class wsBrokenLinkChecker {
 
         <tr valign="top">
         <th scope="row">
-			Status
+			<?php _e('Status','broken-link-checker'); ?>
 			<br>
-			<a href="javascript:void(0)" id="blc-debug-info-toggle">Show debug info</a>
+			<a href="javascript:void(0)" id="blc-debug-info-toggle"><?php _e('Show debug info', 'broken-link-checker'); ?></a>
 		</th>
         <td>
 
@@ -556,7 +566,7 @@ class wsBrokenLinkChecker {
 							if ( data && ( typeof(data['text']) != 'undefined' ) ){
 								$('#wsblc_full_status').html(data.text);
 							} else {
-								$('#wsblc_full_status').html('[ Network error ]');
+								$('#wsblc_full_status').html('<?php _e('[ Network error ]', 'broken-link-checker'); ?>');
 							}
 							
 							setTimeout(blcUpdateStatus, 10000); //...update every 10 seconds							
@@ -568,7 +578,10 @@ class wsBrokenLinkChecker {
 			})(jQuery);
         </script>
         <?php //JHS: Recheck all posts link: ?>
-        <p><input class="button" type="button" name="recheckbutton" value="Re-check all pages" onclick="location.replace('<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;recheck=true')" /></p>
+        <p><input class="button" type="button" name="recheckbutton" 
+				  value="<?php _e('Re-check all pages', 'broken-link-checker'); ?>" 
+				  onclick="location.replace('<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;recheck=true')" />
+		</p>
         
         <table id="blc-debug-info">
         <?php
@@ -590,27 +603,33 @@ class wsBrokenLinkChecker {
         </tr>
 
         <tr valign="top">
-        <th scope="row">Check each link</th>
+        <th scope="row"><?php _e('Check each link','broken-link-checker'); ?></th>
         <td>
 
-        Every <input type="text" name="check_threshold" id="check_threshold"
-            value="<?php echo $this->conf->options['check_threshold']; ?>" size='5' maxlength='5'/>
-        hours
+		<?php
+			printf( 
+				__('Every %s hours','broken-link-checker'),
+				sprintf(
+					'<input type="text" name="check_threshold" id="check_threshold" value="%d" size="5" maxlength="5" />',
+					$this->conf->options['check_threshold']
+				)
+			 ); 
+		?>
         <br/>
         <span class="description">
-        Existing links will be checked this often. New links will usually be checked ASAP.
+        <?php _e('Existing links will be checked this often. New links will usually be checked ASAP.', 'broken-link-checker'); ?>
         </span>
 
         </td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Broken link CSS</th>
+        <th scope="row"><?php _e('Broken link CSS','broken-link-checker'); ?></th>
         <td>
         	<label for='mark_broken_links'>
         		<input type="checkbox" name="mark_broken_links" id="mark_broken_links"
             	<?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
-            	Apply <em>class="broken_link"</em> to broken links
+            	<?php _e('Apply <em>class="broken_link"</em> to broken links', 'broken-link-checker'); ?>
 			</label>
 			<br/>
         <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
@@ -622,8 +641,8 @@ class wsBrokenLinkChecker {
         </tr>
 
         <tr valign="top">
-        <th scope="row">Exclusion list</th>
-        <td>Don't check links where the URL contains any of these words (one per line) :<br/>
+        <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
+        <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
         <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
             if( isset($this->conf->options['exclusion_list']) )
                 echo implode("\n", $this->conf->options['exclusion_list']);
@@ -633,8 +652,8 @@ class wsBrokenLinkChecker {
         </tr>
         
         <tr valign="top">
-        <th scope="row">Custom fields</th>
-        <td>Check URLs entered in these custom fields (one per line) : <br/>
+        <th scope="row"><?php _e('Custom fields', 'broken-link-checker'); ?></th>
+        <td><?php _e('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker'); ?><br/>
         <textarea name="blc_custom_fields" id="blc_custom_fields" cols='45' rows='4' /><?php
             if( isset($this->conf->options['custom_fields']) )
                 echo implode("\n", $this->conf->options['custom_fields']);
@@ -645,20 +664,20 @@ class wsBrokenLinkChecker {
         
         </table>
         
-        <h3>Advanced</h3>
+        <h3><?php _e('Advanced','broken-link-checker'); ?></h3>
         
         <table class="form-table">
         
         
         <tr valign="top">
-        <th scope="row">Timeout</th>
+        <th scope="row"><?php _e('Timeout', 'broken-link-checker'); ?></th>
         <td>
 
         <input type="text" name="timeout" id="blc_timeout"
             value="<?php echo $this->conf->options['timeout']; ?>" size='5' maxlength='3'/>
         seconds
         <br/><span class="description">
-        Links that take longer than this to load will be marked as broken. 
+        <?php _e('Links that take longer than this to load will be marked as broken.','broken-link-checker'); ?> 
 		</span>
 
         </td>
@@ -667,7 +686,7 @@ class wsBrokenLinkChecker {
         
         <tr valign="top">
         <th scope="row">
-			<a name='lockfile_directory'></a>Custom temporary directory</th>
+			<a name='lockfile_directory'></a><?php _e('Custom temporary directory', 'broken-link-checker'); ?></th>
         <td>
 
         <input type="text" name="custom_tmp_dir" id="custom_tmp_dir"
@@ -676,36 +695,51 @@ class wsBrokenLinkChecker {
             if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
 				if ( is_dir( $this->conf->options['custom_tmp_dir'] ) ){
 					if ( is_writable( $this->conf->options['custom_tmp_dir'] ) ){
-						echo "<strong>OK</strong>";
+						echo "<strong>", __('OK', 'broken-link-checker'), "</strong>";
 					} else {
-						echo '<span class="error">Error : This directory isn\'t writable by PHP.</span>';
+						echo '<span class="error">';
+						_e("Error : This directory isn't writable by PHP.", 'broken-link-checker');
+						echo '</span>';
 					}
 				} else {
-					echo '<span class="error">Error : This directory doesn\'t exist.</span>';
+					echo '<span class="error">';
+					_e("Error : This directory doesn't exist.", 'broken-link-checker');
+					echo '</span>';
 				}
 			}
 			
 			?>
         <br/>
         <span class="description">
-        Set this field if you want the plugin to use a custom directory for its lockfiles. 
-		Otherwise, leave it blank.
+        <?php _e('Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank.','broken-link-checker'); ?>
         </span>
 
         </td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Max. execution time</th>
+        <th scope="row"><?php _e('Max. execution time', 'broken-link-checker'); ?></th>
         <td>
 
-        <input type="text" name="max_execution_time" id="max_execution_time"
-            value="<?php echo $this->conf->options['max_execution_time']; ?>" size='5' maxlength='5'/>
-        seconds
+		<?php
+		
+		printf(
+			__('%s seconds', 'broken-link-checker'),
+			sprintf(
+				'<input type="text" name="max_execution_time" id="max_execution_time" value="%d" size="5" maxlength="5" />', 
+				$this->conf->options['max_execution_time']
+			)
+		);
+		
+		?>
         <br/><span class="description">
-        The plugin works by periodically creating a background worker instance that parses your posts looking for links,
+        <?php
+        
+        _e('The plugin works by periodically creating a background worker instance that parses your posts looking for links,
 		checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, 
-		the background instance may run each time before stopping. 
+		the background instance may run each time before stopping.', 'broken-link-checker');
+		
+		?> 
 		</span>
 
         </td>
@@ -726,9 +760,9 @@ class wsBrokenLinkChecker {
 					var box = $('#blc-debug-info'); 
 					box.toggle();
 					if( box.is(':visible') ){
-						toggleButton.text('Hide debug info');
+						toggleButton.text('<?php _e('Hide debug info', 'broken-link-checker'); ?>');
 					} else {
-						toggleButton.text('Show debug info');
+						toggleButton.text('<?php _e('Show debug info', 'broken-link-checker'); ?>');
 					}
 					
 				});
@@ -789,22 +823,22 @@ class wsBrokenLinkChecker {
 		$filters = array(
 			'broken' => array(
 				'where_expr' => '( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( check_count > 0 ) AND ( http_code <> ' . BLC_CHECKING . ')',
-				'name' => 'Broken',
-				'heading' => 'Broken Links',
-				'heading_zero' => 'No broken links found'
+				'name' => __('Broken', 'broken-link-checker'),
+				'heading' => __('Broken Links', 'broken-link-checker'),
+				'heading_zero' => __('No broken links found', 'broken-link-checker')
 			 ), 
 			 'redirects' => array(
 				'where_expr' => '( redirect_count > 0 )',
-				'name' => 'Redirects',
-				'heading' => 'Redirected Links',
-				'heading_zero' => 'No redirects found'
+				'name' => __('Redirects', 'broken-link-checker'),
+				'heading' => __('Redirected Links', 'broken-link-checker'),
+				'heading_zero' => __('No redirects found', 'broken-link-checker')
 			 ), 
 			 
 			'all' => array(
 				'where_expr' => '1',
-				'name' => 'All',
-				'heading' => 'Detected Links',
-				'heading_zero' => 'No links found (yet)'
+				'name' => __('All', 'broken-link-checker'),
+				'heading' => __('Detected Links', 'broken-link-checker'),
+				'heading_zero' => __('No links found (yet)', 'broken-link-checker')
 			 ), 
 		);	
 		
@@ -864,7 +898,7 @@ class wsBrokenLinkChecker {
 			echo  '</pre>';
 			//*/
 		} else {
-			echo $wpdb->last_error;
+			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
         ?>
         
@@ -981,13 +1015,15 @@ class wsBrokenLinkChecker {
                   <?php 
 				  if ( ('post' == $link['source_type']) || ('custom_field' == $link['source_type']) ){
 				  	 
-                  	echo "<a class='row-title' href='post.php?action=edit&amp;post=$link[source_id]' title='Edit this post'>{$link[post_title]}</a>";
+                  	echo "<a class='row-title' href='post.php?action=edit&amp;post=$link[source_id]' title='", 
+					  	attribute_escape(__('Edit this post')),
+						 "'>{$link[post_title]}</a>";
 
 					//Output inline action links (copied from edit-post-rows.php)                  	
                   	$actions = array();
 					if ( current_user_can('edit_post', $link['source_id']) ) {
 						$actions['edit'] = '<span class="edit"><a href="' . get_edit_post_link($link['source_id'], true) . '" title="' . attribute_escape(__('Edit this post')) . '">' . __('Edit') . '</a>';
-						$actions['delete'] = "<span class='delete'><a class='submitdelete' title='" . attribute_escape(__('Delete this post')) . "' href='" . wp_nonce_url("post.php?action=delete&amp;post=".$link['source_id'], 'delete-post_' . $link['source_id']) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete the post '%s'\n 'Cancel' to stop, 'OK' to delete."), $link['post_title'] )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+						$actions['delete'] = "<span class='delete'><a class='submitdelete' title='" . attribute_escape(__('Delete this post')) .  "' href='" . wp_nonce_url("post.php?action=delete&amp;post=".$link['source_id'], 'delete-post_' . $link['source_id']) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $link['post_title'] )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 					}
 					$actions['view'] = '<span class="view"><a href="' . get_permalink($link['source_id']) . '" title="' . attribute_escape(sprintf(__('View "%s"'), $link['post_title'])) . '" rel="permalink">' . __('View') . '</a>';
 					echo '<div class="row-actions">';
@@ -996,12 +1032,12 @@ class wsBrokenLinkChecker {
 					
                   } elseif ( 'blogroll' == $link['source_type'] ) {
                   	
-                  	echo "<a class='row-title' href='link.php?action=edit&amp;link_id=$link[source_id]' title='Edit this bookmark'>{$link[link_text]}</a>";
+                  	echo "<a class='row-title' href='link.php?action=edit&amp;link_id=$link[source_id]' title='" . __('Edit this bookmark', 'broken-link-checker') . "'>{$link[link_text]}</a>";
                   	
                   	//Output inline action links                  	
                   	$actions = array();
 					if ( current_user_can('manage_links') ) {
-						$actions['edit'] = '<span class="edit"><a href="link.php?action=edit&amp;link_id=' . $link['source_id'] . '" title="' . attribute_escape(__('Edit this bookmark')) . '">' . __('Edit') . '</a>';
+						$actions['edit'] = '<span class="edit"><a href="link.php?action=edit&amp;link_id=' . $link['source_id'] . '" title="' . attribute_escape(__('Edit this bookmark', 'broken-link-checker')) . '">' . __('Edit') . '</a>';
 						$actions['delete'] = "<span class='delete'><a class='submitdelete' href='" . wp_nonce_url("link.php?action=delete&amp;link_id={$link[source_id]}", 'delete-bookmark_' . $link['source_id']) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this link '%s'\n  'Cancel' to stop, 'OK' to delete."), $link['link_text'])) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 					}
 					
@@ -1011,7 +1047,7 @@ class wsBrokenLinkChecker {
                   	
 				  } elseif ( empty($link['source_type']) ){
 				  	
-					echo "[An orphaned link! This is a bug.]";
+					_e("[An orphaned link! This is a bug.]", 'broken-link-checker');
 					
 				  }
 				  	?>
@@ -1022,19 +1058,30 @@ class wsBrokenLinkChecker {
 					if ( 'link' == $link['instance_type'] ) {	 
 						print strip_tags($link['link_text']);
 					} elseif ( 'image' == $link['instance_type'] ){
-						echo "<img src='" . WP_PLUGIN_URL . "/broken-link-checker/images/image.png' class='blc-small-image' alt='Image' title='Image'> Image";
+						printf(
+							'<img src="%s/broken-link-checker/images/image.png" class="blc-small-image" alt="%2$s" title="%2$s"> %2$s',
+							WP_PLUGIN_URL,
+							__('Image', 'broken-link-checker')
+						);
 					} else {
 						echo '[ ??? ]';
 					}
 						
 				} elseif ( 'custom_field' == $link['source_type'] ){
 					
-					echo "<img src='" . WP_PLUGIN_URL . "/broken-link-checker/images/script_code.png' class='blc-small-image' title='Custom field' alt='Custom field'> ";
+					printf(
+						'<img src="%s/broken-link-checker/images/script_code.png" class="blc-small-image" title="%2$s" alt="%2$s"> ',
+						WP_PLUGIN_URL,
+						__('Custom field', 'broken-link-checker')
+					);
 					echo "<code>".$link['link_text']."</code>";
 					
 				} elseif ( 'blogroll' == $link['source_type'] ){
-					//echo $link['link_text'];
-					echo "<img src='" . WP_PLUGIN_URL . "/broken-link-checker/images/link.png' class='blc-small-image' title='Bookmark' alt='Bookmark'> Bookmark";
+					printf(
+						'<img src="%s/broken-link-checker/images/link.png" class="blc-small-image" title="%2$s" alt="%2$s"> %2$s',
+						WP_PLUGIN_URL,
+						__('Bookmark', 'broken-link-checker')						
+					);
 				}
 				?>
 				</td>
@@ -1048,25 +1095,25 @@ class wsBrokenLinkChecker {
                 	//Output inline action links for the link/URL                  	
                   	$actions = array();
                   	
-					$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='Show more info about this link'>Details</a>";
+					$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". attribute_escape(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
                   	
-					$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='Remove this link from all posts' ".
-						"id='unlink-button-$rownum' href='javascript:void(0);'>Unlink</a>";
+					$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . attribute_escape( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
+						"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
 					
 					if ( $excluded ){
-						$actions['exclude'] = "<span class='delete'>Excluded";
+						$actions['exclude'] = "<span class='delete'>" . __('Excluded', 'broken-link-checker');
 					} else {
-						$actions['exclude'] = "<span class='delete'><a class='submitdelete blc-exclude-button' title='Add this URL to the exclusion list' ".
-							"id='exclude-button-$rownum' href='javascript:void(0);'>Exclude</a>";
+						$actions['exclude'] = "<span class='delete'><a class='submitdelete blc-exclude-button' title='" . attribute_escape( __('Add this URL to the exclusion list' , 'broken-link-checker') ) . "' ".
+							"id='exclude-button-$rownum' href='javascript:void(0);'>" . __('Exclude' , 'broken-link-checker'). "</a>";
 					}
 					
-					$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='Edit link URL'>Edit URL</a>";
+					$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . attribute_escape( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
 						
 					echo '<div class="row-actions">';
 					echo implode(' | </span>', $actions);
 					
 					echo "<span style='display:none' class='blc-cancel-button-container'> ",
-						 "| <a href='javascript:void(0)' class='blc-cancel-button' title='Cancel URL editing'>Cancel</a></span>";
+						 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". attribute_escape(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
 					   	
 					echo '</div>';
                 ?>
@@ -1075,7 +1122,11 @@ class wsBrokenLinkChecker {
 				<td><a href='javascript:void(0);'  
 					id='discard_button-<?php print $rownum; ?>'
 					class='blc-discard-button'
-					title='Remove this link from the list of broken links and mark it as valid'>Discard</a>
+					title='<?php
+						echo attribute_escape( 
+							__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')
+						); 
+					?>'><?php _e('Discard', 'broken-link-checker'); ?></a>
 				</td>
                 <?php } ?>
                 </tr>
@@ -1120,7 +1171,7 @@ jQuery(function($){
 	//The discard button - manually mark the link as valid. The link will be checked again later.
 	$(".blc-discard-button").click(function () {
 		var me = this;
-		$(me).html('Wait...');
+		$(me).html('<?php echo js_escape(__('Wait...', 'broken-link-checker')); ?>');
 		
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
@@ -1144,7 +1195,7 @@ jQuery(function($){
 					
                     alterLinkCounter(-1);
 				} else {
-					$(me).html('Discard');
+					$(me).html('<?php echo js_escape(__('Discard' , 'broken-link-checker'));  ?>');
 					alert(data);
 				}
 			}
@@ -1178,7 +1229,7 @@ jQuery(function($){
             cancel_button_container.show();
             editor.focus();
             editor.select();
-            edit_button.html('Save URL');
+            edit_button.html('<?php echo js_escape(__('Save URL' , 'broken-link-checker')); ?>');
         } else {
             editor.hide();
             cancel_button_container.hide();
@@ -1188,7 +1239,7 @@ jQuery(function($){
             
             if (new_url != orig_url){
                 //Save the changed link
-                url_el.html('Saving changes...');
+                url_el.html('<?php echo js_escape(__('Saving changes...' , 'broken-link-checker')); ?>');
                 
                 $.getJSON(
 					"<?php echo admin_url('admin-ajax.php'); ?>",
@@ -1212,6 +1263,7 @@ jQuery(function($){
 								url_el.attr('href', new_url);
 								
 								if ( data.cnt_error > 0 ){
+									//TODO: Interationalize this error message
 									var msg = "The link was successfully modifed.";
 									msg = msg + "\nHowever, "+data.cnt_error+" instances couldn't be edited and still point to the old URL."
 									alert(msg);
@@ -1223,7 +1275,7 @@ jQuery(function($){
 									//Save the new ID 
 									master.find('.blc-link-id').html(data.new_link_id);
 									//Load up the new link info                     (so sue me)    
-									master.next('.blc-link-details').find('td').html('<center>Loading...</center>').load(
+									master.next('.blc-link-details').find('td').html('<center><?php echo js_escape(__('Loading...' , 'broken-link-checker')); ?></center>').load(
 										"<?php echo admin_url('admin-ajax.php'); ?>",
 										{
 											'action' : 'blc_link_details',
@@ -1232,6 +1284,7 @@ jQuery(function($){
 									);
 								}
 							} else {
+								//TODO: Internationalize this error message
 								alert("Something went wrong. The plugin failed to edit "+
 									data.cnt_error + ' instance(s) of this link.');
 									
@@ -1278,14 +1331,14 @@ jQuery(function($){
 		//reset and hide the editor
 		master.find('.blc-link-editor').hide().val(url_el.attr('href'));
 		//Set the edit button to say "Edit URL"
-		master.find('.blc-edit-button').html('Edit URL');
+		master.find('.blc-edit-button').html('<?php echo js_escape(__('Edit URL' , 'broken-link-checker')); ?>');
     });
     
     //The unlink button - remove the link/image from all posts, custom fields, etc.
     $(".blc-unlink-button").click(function () { 
     	var me = this;
     	var master = $(me).parents('.blc-row');
-		$(me).html('Wait...');
+		$(me).html('<?php echo js_escape(__('Wait...' , 'broken-link-checker')); ?>');
 		
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
@@ -1309,7 +1362,7 @@ jQuery(function($){
 
 					alterLinkCounter(-1);
 				} else {
-					$(me).html('Unlink');
+					$(me).html('<?php echo js_escape(__('Unlink' , 'broken-link-checker')); ?>');
 					//Show the error message
 					alert(data.error);
 				}
@@ -1322,7 +1375,7 @@ jQuery(function($){
       	var me = this;
       	var master = $(me).parents('.blc-row');
       	var details = master.next('.blc-link-details');
-		$(me).html('Wait...');
+		$(me).html('<?php echo js_escape(__('Wait...' , 'broken-link-checker')); ?>');
 		
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
@@ -1339,7 +1392,7 @@ jQuery(function($){
 					
 					if ( 'broken' == blc_current_filter ){
 						//Flash the row green to indicate success, then hide it.
-						$(me).replaceWith('Excluded');
+						$(me).replaceWith('<?php echo js_escape(__('Excluded' , 'broken-link-checker')); ?>');
 						master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: '#E2E2E2' }, 200, function(){
 							details.hide();
 							master.hide();
@@ -1350,10 +1403,10 @@ jQuery(function($){
 						//Flash the row green to indicate success and fade to the "excluded link" color
 						master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: '#E2E2E2' }, 300);
 						master.addClass('blc-excluded-link');
-						$(me).replaceWith('Excluded');
+						$(me).replaceWith('<?php echo js_escape(__('Excluded' , 'broken-link-checker')); ?>');
 					}
 				} else {
-					$(me).html('Exclude');
+					$(me).html('<?php echo js_escape(__('Exclude' , 'broken-link-checker')); ?>');
 					alert(data.error);
 				}
 			}
@@ -1375,7 +1428,7 @@ jQuery(function($){
     		print $link['last_check'];
     	?></span>
     	<ol style='list-style-type: none; width: 50%; float: right;'>
-    		<li><strong>Log :</strong>
+    		<li><strong><?php _e('Log', 'broken-link-checker'); ?> :</strong>
     	<span class='blc_log'><?php 
     		print nl2br($link['log']); 
     	?></span></li>
@@ -1383,56 +1436,55 @@ jQuery(function($){
 		
     	<ol style='list-style-type: none; padding-left: 2px;'>
     	<?php if ( !empty($link['post_date']) ) { ?>
-    	<li><strong>Post published on :</strong>
+    	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?> :</strong>
     	<span class='post_date'><?php 
     		print strftime("%B %d, %Y",strtotime($link['post_date']));
     	?></span></li>
     	<?php } ?>
-    	<li><strong>Link last checked :</strong>
+    	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?> :</strong>
     	<span class='check_date'><?php
 			$last_check = strtotime($link['last_check']);
     		if ( $last_check < strtotime('-10 years') ){
-				echo 'Never';
+				_e('Never', 'broken-link-checker');
 			} else {
     			echo strftime( "%B %d, %Y", $last_check );
     		}
     	?></span></li>
     	
-    	<li><strong>HTTP code :</strong>
+    	<li><strong><?php _e('HTTP code', 'broken-link-checker'); ?> :</strong>
     	<span class='http_code'><?php 
     		print $link['http_code']; 
     	?></span></li>
     	
-    	<li><strong>Response time :</strong>
+    	<li><strong><?php _e('Response time', 'broken-link-checker'); ?> :</strong>
     	<span class='request_duration'><?php 
-    		printf('%2.3f seconds', $link['request_duration']); 
+    		printf( __('%2.3f seconds', 'broken-link-checker'), $link['request_duration']); 
     	?></span></li>
     	
-    	<li><strong>Final URL :</strong>
+    	<li><strong><?php _e('Final URL', 'broken-link-checker'); ?> :</strong>
     	<span class='final_url'><?php 
     		print $link['final_url']; 
     	?></span></li>
     	
-    	<li><strong>Redirect count :</strong>
+    	<li><strong><?php _e('Redirect count', 'broken-link-checker'); ?> :</strong>
     	<span class='redirect_count'><?php 
     		print $link['redirect_count']; 
     	?></span></li>
     	
-    	<li><strong>Instance count :</strong>
+    	<li><strong><?php _e('Instance count', 'broken-link-checker'); ?> :</strong>
     	<span class='instance_count'><?php 
     		print $link['instance_count']; 
     	?></span></li>
     	
     	<?php if ( intval( $link['check_count'] ) > 0 ){ ?>
-    	<li><br/>This link has failed 
-    	<span class='check_count'><?php
-			echo $link['check_count']; 
-    		if ( intval($link['check_count'])==1 ){
-				echo ' time';
-			} else {
-				echo ' times';
-			}
-    	?></span>.</li>
+    	<li><br/>
+		<?php 
+			printf(
+				_n('This link has failed %d time.', 'This link has failed %d times.', $link['check_count'], 'broken-link-checker'),
+				$link['check_count']
+			);
+		?>
+		</li>
     	<?php } ?>
 		</ol>
 		<?php
@@ -1818,7 +1870,7 @@ jQuery(function($){
 					$link_obj->http_code = 200; //Use a fake code so that the link doesn't show up in queries looking for broken links.
 					$link_obj->timeout = false;
 					$link_obj->request_duration = 0; 
-					$link_obj->log = "This link wasn't checked because a matching keyword was found on your exclusion list.";
+					$link_obj->log = __("This link wasn't checked because a matching keyword was found on your exclusion list.", 'broken-link-checker');
 					$link_obj->save();
 				}
 				
@@ -1859,36 +1911,45 @@ jQuery(function($){
 		$text = '';
 	
 		if( $status['broken_links'] > 0 ){
-			$text .= sprintf( "<a href='%s' title='View broken links'><strong>Found %d broken link%s</strong></a>",
-			  admin_url('tools.php?page=view-broken-links'), $status['broken_links'], ( $status['broken_links'] == 1 )?'':'s' );
+			$text .= sprintf( 
+				"<a href='%s' title='View broken links'><strong>". 
+					_n('Found %d broken link', 'Found %d broken links', $status['broken_links'], 'broken-link-checker') .
+				"</strong></a>",
+			  	admin_url('tools.php?page=view-broken-links'), 
+				$status['broken_links']
+			);
 		} else {
-			$text .= "No broken links found.";
+			$text .= __("No broken links found.", 'broken-link-checker');
 		}
 		
 		$text .= "<br/>";
 		
 		if( $status['unchecked_links'] > 0) {
-			$text .= sprintf( '%d URL%s in the work queue', $status['unchecked_links'], ($status['unchecked_links'] == 1)?'':'s' );
+			$text .= sprintf( 
+				_n('%d URL in the work queue', '%d URLs in the work queue', $status['unchecked_links'], 'broken-link-checker'), 
+				$status['unchecked_links'] );
 		} else {
-			$text .= "No URLs in the work queue.";
+			$text .= __("No URLs in the work queue.", 'broken-link-checker');
 		}
 		
 		$text .= "<br/>";
 		if ( $status['known_links'] > 0 ){
-			$text .= sprintf( "Detected %d unique URL%s in %d link%s",
-				$status['known_links'], $status['known_links'] == 1 ? '' : 's',
-				$status['known_instances'], $status['known_instances'] == 1 ? '' : 's'
+			$text .= sprintf( 
+				_n('Detected %d unique URL', 'Detected %d unique URLs', $status['known_links'], 'broken-link-checker') .
+					' ' . _n('in %d link', 'in %d links', $status['known_instances'], 'broken-link-checker'),
+				$status['known_links'],
+				$status['known_instances']
 			 );
 			if ($this->conf->options['need_resynch']){
-				$text .= ' and still searching...';
+				$text .= ' ' . __('and still searching...', 'broken-link-checker');
 			} else {
 				$text .= '.';
 			}
 		} else {
 			if ($this->conf->options['need_resynch']){
-				$text .= 'Searching your blog for links...';
+				$text .= __('Searching your blog for links...', 'broken-link-checker');
 			} else {
-				$text .= 'No links detected.';
+				$text .= __('No links detected.', 'broken-link-checker');
 			}
 		}
 		
@@ -1957,7 +2018,7 @@ jQuery(function($){
 	function ajax_discard(){
 		//TODO:Rewrite to use JSON instead of plaintext		
 		if (!current_user_can('edit_others_posts')){
-			die( "You're not allowed to do that!" );
+			die( __("You're not allowed to do that!", 'broken-link-checker') );
 		}
 		
 		if ( isset($_POST['link_id']) ){
@@ -1965,30 +2026,31 @@ jQuery(function($){
 			$link = new blcLink( intval($_POST['link_id']) );
 			
 			if ( !$link->valid() ){
-				die("Oops, I can't find the link ".intval($_POST['link_id']) );
+				printf( __("Oops, I can't find the link %d", 'broken-link-checker'), intval($_POST['link_id']) );
+				die();
 			}
 			//Make it appear "not broken"  
 			$link->last_check = date('Y-m-d H:i:s');
 			$link->http_code =  200;
 			$link->timeout = 0;
 			$link->check_count = 0;
-			$link->log = "This link was manually marked as working by the user.";
+			$link->log = __("This link was manually marked as working by the user.", 'broken-link-checker');
 			
 			//Save the changes
 			if ( $link->save() ){
-				die("OK");
+				die( __("OK", 'broken-link-checker') );
 			} else {
-				die("Oops, couldn't modify the link!");
+				die( __("Oops, couldn't modify the link!", 'broken-link-checker') ) ;
 			}
 		} else {
-			die("Error : link_id not specified");
+			die( __("Error : link_id not specified", 'broken-link-checker') );
 		}
 	}
 	
 	function ajax_edit(){
 		if (!current_user_can('edit_others_posts')){
 			die( json_encode( array(
-					'error' => "You're not allowed to do that!" 
+					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
 		}
 		
@@ -1998,14 +2060,14 @@ jQuery(function($){
 			
 			if ( !$link->valid() ){
 				die( json_encode( array(
-					'error' => "Oops, I can't find the link ".intval($_GET['link_id']) 
+					'error' => sprintf( __("Oops, I can't find the link %d", 'broken-link-checker'), intval($_GET['link_id']) ) 
 				 )));
 			}
 			
 			$new_url = blcUtility::normalize_url($_GET['new_url']);
 			if ( !$new_url ){
 				die( json_encode( array(
-					'error' => "Oops, the new URL is invalid!" 
+					'error' => __("Oops, the new URL is invalid!", 'broken-link-checker') 
 				 )));
 			}
 			
@@ -2014,16 +2076,16 @@ jQuery(function($){
 			
 			if ( $rez == false ){
 				die( json_encode( array(
-					'error' => "An unexpected error occured!"
+					'error' => __("An unexpected error occured!", 'broken-link-checker')
 				 )));
 			} else {
-				$rez['ok'] = 'OK';
+				$rez['ok'] = __('OK', 'broken-link-checker');
 				die( json_encode($rez) );
 			}
 			
 		} else {
 			die( json_encode( array(
-					'error' => "Error : link_id or new_url not specified"
+					'error' => __("Error : link_id or new_url not specified", 'broken-link-checker')
 				 )));
 		}
 	}
@@ -2031,7 +2093,7 @@ jQuery(function($){
 	function ajax_unlink(){
 		if (!current_user_can('edit_others_posts')){
 			die( json_encode( array(
-					'error' => "You're not allowed to do that!" 
+					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
 		}
 		
@@ -2041,24 +2103,24 @@ jQuery(function($){
 			
 			if ( !$link->valid() ){
 				die( json_encode( array(
-					'error' => "Oops, I can't find the link ".intval($_POST['link_id']) 
+					'error' => sprintf( __("Oops, I can't find the link %d", 'broken-link-checker'), intval($_POST['link_id']) ) 
 				 )));
 			}
 			
 			//Try and unlink it
 			if ( $link->unlink() ){
 				die( json_encode( array(
-					'ok' => "URL {$link->url} was removed." 
+					'ok' => sprintf( __("URL %s was removed.", 'broken-link-checker'), $link->url ) 
 				 )));
 			} else {
 				die( json_encode( array(
-					'error' => "The plugin failed to remove the link." 
+					'error' => __("The plugin failed to remove the link.", 'broken-link-checker') 
 				 )));
 			}
 			
 		} else {
 			die( json_encode( array(
-					'error' => "Error : link_id not specified" 
+					'error' => __("Error : link_id not specified", 'broken-link-checker') 
 				 )));
 		}
 	}
@@ -2067,7 +2129,7 @@ jQuery(function($){
 		global $wpdb;
 		
 		if (!current_user_can('edit_others_posts')){
-			die("You don't have sufficient privileges to access this information!");
+			die( __("You don't have sufficient privileges to access this information!", 'broken-link-checker') );
 		}
 		
 		//FB::log("Loading link details via AJAX");
@@ -2080,7 +2142,7 @@ jQuery(function($){
 			$link_id = intval($_POST['link_id']);
 		} else {
 			//FB::error('Link ID not specified, you hacking bastard.');
-			die('Error : link ID not specified');
+			die( __('Error : link ID not specified', 'broken-link-checker') );
 		}
 		
 		//Load the link. link_details_row needs it as an array, so 
@@ -2104,14 +2166,15 @@ jQuery(function($){
 			$this->link_details_row($link);
 			die();
 		} else {
-			die ("Failed to load link details (" . $wpdb->last_error . ")");
+			printf( __('Failed to load link details (%s)', 'broken-link-checker'), $wpdb->last_error );
+			die ();
 		}
 	}
 	
 	function ajax_exclude_link(){
 		if ( !current_user_can('manage_options') ){
 			die( json_encode( array(
-					'error' => "You're not allowed to do that!" 
+					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
 		}
 		
@@ -2121,7 +2184,7 @@ jQuery(function($){
 			
 			if ( !$link->valid() ){
 				die( json_encode( array(
-					'error' => "Oops, I can't find the link ".intval($_POST['link_id']) 
+					'error' => sprintf( __("Oops, I can't find the link %d", 'broken-link-checker'), intval($_POST['link_id']) ) 
 				 )));
 			}
 			
@@ -2134,18 +2197,18 @@ jQuery(function($){
 				$link->http_code = 200; //Use a fake code so that the link doesn't show up in queries looking for broken links.
 				$link->timeout = false;
 				$link->request_duration = 0; 
-				$link->log = "This link wasn't checked because a matching keyword was found on your exclusion list.";
+				$link->log = __("This link wasn't checked because a matching keyword was found on your exclusion list.", 'broken-link-checker');
 				$link->save();
 			}
 				 
 			$this->conf->save_options();
 			
 			die( json_encode( array(
-					'ok' => "URL {$link->url} added to the exclusion list" 
+					'ok' => sprintf( __('URL %s added to the exclusion list', 'broken-link-checker'), $link->url ) 
 				 )));
 		} else {
 			die( json_encode( array(
-					'error' => "Link ID not specified" 
+					'error' => __("Link ID not specified", 'broken-link-checker') 
 			 )));
 		}
 	}
@@ -2297,32 +2360,30 @@ jQuery(function($){
 		//Make the notice customized to the current settings
 		if ( !empty($this->conf->options['custom_tmp_dir']) ){
 			$action_notice = sprintf(
-				'The current temporary directory is not accessible; 
-				please <a href="%s">set a different one</a>.',
+				__('The current temporary directory is not accessible; please <a href="%s">set a different one</a>.', 'broken-link-checker'),
 				$settings_page
 			);
 		} else {
 			$action_notice = sprintf(
-				'Please make the directory <code>%s</code> writable by plugins or 
-				 <a href="%s">set a custom temporary directory</a>.',
+				__('Please make the directory <code>%1$s</code> writable by plugins or <a href="%2$s">set a custom temporary directory</a>.', 'broken-link-checker'),
 				$my_dir, $settings_page
 			);
 		}
 					
 		echo sprintf('
 			<div id="blc-lockfile-warning" class="error"><p>
-				<strong>Broken Link Checker can\'t create a lockfile.</strong> %s 
-				<a href="javascript:void(0)" onclick="jQuery(\'#blc-lockfile-details\').toggle()">Details</a> 
-				</p>
+				<strong>' . __("Broken Link Checker can't create a lockfile.", 'broken-link-checker') . 
+				'</strong> %s <a href="javascript:void(0)" onclick="jQuery(\'#blc-lockfile-details\').toggle()">' . 
+				__('Details', 'broken-link-checker') . '</a> </p>
 				
-				<div id="blc-lockfile-details" style="display:none;"><p>
-				The plugin uses a file-based locking mechanism to ensure that only one instance of the
+				<div id="blc-lockfile-details" style="display:none;"><p>' . 
+				__("The plugin uses a file-based locking mechanism to ensure that only one instance of the
 				resource-heavy link checking algorithm is running at any given time. Unfortunately,  
-				BLC can\'t find a writable directory where it could store the lockfile - it failed to 
-				detect the location of your server\'s temporary directory, and the plugin\'s own directory
-				isn\'t writable by PHP. To fix this problem, please make the plugin\'s directory writable
-				or enter a specify a custom temporary directory in the plugin\'s settings.
-				</p> 
+				BLC can't find a writable directory where it could store the lockfile - it failed to 
+				detect the location of your server's temporary directory, and the plugin's own directory
+				isn't writable by PHP. To fix this problem, please make the plugin's directory writable
+				or enter a specify a custom temporary directory in the plugin's settings.", 'broken-link-checker') .
+				'</p> 
 				</div>
 			</div>',
 			$action_notice);
@@ -2341,13 +2402,13 @@ jQuery(function($){
 		$debug = array();
 		
 		//PHP version. Any one is fine as long as WP supports it.
-		$debug['PHP version'] = array(
+		$debug[ __('PHP version', 'broken-link-checker') ] = array(
 			'state' => 'ok',
 			'value' => phpversion(), 
 		);
 		
 		//MySQL version
-		$debug['MySQL version'] = array(
+		$debug[ __('MySQL version', 'broken-link-checker') ] = array(
 			'state' => 'ok',
 			'value' => @mysql_get_server_info( $wpdb->dbh ), 
 		);
@@ -2360,7 +2421,7 @@ jQuery(function($){
 				$data = array(
 					'state' => 'warning', 
 					'value' => $version['version'],
-					'message' => 'You have an old version of CURL. Redirect detection may not work properly.',
+					'message' => __('You have an old version of CURL. Redirect detection may not work properly.', 'broken-link-checker'),
 				);
 			} else {
 				$data = array(
@@ -2372,29 +2433,29 @@ jQuery(function($){
 		} else {
 			$data = array(
 				'state' => 'warning', 
-				'value' => 'Not installed',
+				'value' => __('Not installed', 'broken-link-checker'),
 			);
 		}
-		$debug['CURL version'] = $data;
+		$debug[ __('CURL version', 'broken-link-checker') ] = $data;
 		
 		//Snoopy presence
 		if ( class_exists('Snoopy') ){
 			$data = array(
 				'state' => 'ok',
-				'value' => 'Installed',
+				'value' => __('Installed', 'broken-link-checker'),
 			);
 		} else {
 			//No Snoopy? This should never happen, but if it does we *must* have CURL. 
 			if ( function_exists('curl_init') ){
 				$data = array(
 					'state' => 'ok',
-					'value' => 'Not installed',
+					'value' => __('Not installed', 'broken-link-checker'),
 				);
 			} else {
 				$data = array(
 					'state' => 'error',
-					'value' => 'Not installed',
-					'message' => 'You must have either CURL or Snoopy installed for the plugin to work!',
+					'value' => __('Not installed', 'broken-link-checker'),
+					'message' => __('You must have either CURL or Snoopy installed for the plugin to work!', 'broken-link-checker'),
 				);
 			}
 			
@@ -2405,13 +2466,13 @@ jQuery(function($){
 		if ( blcUtility::is_safe_mode() ){
 			$debug['Safe mode'] = array(
 				'state' => 'warning',
-				'value' => 'On',
-				'message' => 'Redirects may be detected as broken links when safe_mode is on.',
+				'value' => __('On', 'broken-link-checker'),
+				'message' => __('Redirects may be detected as broken links when safe_mode is on.', 'broken-link-checker'),
 			);
 		} else {
 			$debug['Safe mode'] = array(
 				'state' => 'ok',
-				'value' => 'Off',
+				'value' => __('Off', 'broken-link-checker'),
 			);
 		}
 		
@@ -2419,13 +2480,13 @@ jQuery(function($){
 		if ( blcUtility::is_open_basedir() ){
 			$debug['open_basedir'] = array(
 				'state' => 'warning',
-				'value' => 'On ( ' . ini_get('open_basedir') . ' )',
-				'message' => 'Redirects may be detected as broken links when open_basedir is on.',
+				'value' => sprintf( __('On ( %s )', 'broken-link-checker'), ini_get('open_basedir') ),
+				'message' => __('Redirects may be detected as broken links when open_basedir is on.', 'broken-link-checker'),
 			);
 		} else {
 			$debug['open_basedir'] = array(
 				'state' => 'ok',
-				'value' => 'Off',
+				'value' => __('Off', 'broken-link-checker'),
 			);
 		}
 		
@@ -2439,11 +2500,15 @@ jQuery(function($){
 		} else {
 			$debug['Lockfile'] = array(
 				'state' => 'error',
-				'message' => 'Can\'t create a lockfile. Please specify a custom temporary directory.',
+				'message' => __("Can't create a lockfile. Please specify a custom temporary directory.", 'broken-link-checker'),
 			);
 		}
 		
 		return $debug;
+	}
+	
+	function load_language(){
+		load_plugin_textdomain( 'broken-link-checker', false, basename(dirname($this->loader)) . '/languages' );
 	}
 
 }//class ends here

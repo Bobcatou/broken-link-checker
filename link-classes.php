@@ -205,12 +205,21 @@ class blcLink {
             
 			$info = curl_getinfo($ch);
             $code = intval( $info['http_code'] );
+            
+            $this->log .= '=== ';
+            
+            if ( $code ){
+				$this->log .= __('First try : 0 (No response)', 'broken-link-checker');
+			} else {
+				$this->log .= sprintf( __('First try : %d', 'broken-link-checker'), $code);
+			}
+			
+			$this->log .= " ===\n\n";
 
-            $this->log .= "=== First try : $code ".(!$code?'(No response) ':'')."===\n\n";
             $this->log .= $this->last_headers."\n";
 
             if ( (($code<200) || ($code>=400)) && $nobody) {
-                $this->log .= "Trying a second time with different settings...\n";
+                $this->log .= __("Trying a second time with different settings...", 'broken-link-checker') . "\n";
                 $this->last_headers = '';
                 
                 curl_setopt($ch, CURLOPT_NOBODY, false); //Don't send a HEAD request this time 
@@ -222,8 +231,15 @@ class blcLink {
                 
                 $info = curl_getinfo($ch);
             	$code = intval( $info['http_code'] );
+            	
+            	$this->log .= '=== ';
+	            if ( $code ){
+					$this->log .= __('Second try : 0 (No response)', 'broken-link-checker');
+				} else {
+					$this->log .= sprintf( __('Second try : %d', 'broken-link-checker'), $code);
+				}
+				$this->log .= " ===\n\n";
 
-                $this->log .= "=== Second try : $code ".(!$code?'(No response) ':'')."===\n\n";
             	$this->log .= $this->last_headers."\n";
             }
             
@@ -246,7 +262,7 @@ class blcLink {
         } elseif ( class_exists('Snoopy') ) {
             //******** Use Snoopy if CURL is not available *********
             //Note : Snoopy doesn't work too well with HTTPS URLs.
-            $this->log .= "<em>(Using Snoopy)</em>\n";
+            $this->log .= "<em>(" . __('Using Snoopy', 'broken-link-checker') . ")</em>\n";
 
 			$start_time = microtime_float(true);
 			
@@ -266,7 +282,7 @@ class blcLink {
             if ($snoopy->error)
                 $this->log .= $snoopy->error."\n";
             if ($snoopy->timed_out)
-                $this->log .= "Request timed out.\n";
+                $this->log .= __("Request timed out.", 'broken-link-checker') . "\n";
 
 			if ( is_array($snoopy->headers) )
             	$this->log .= implode("", $snoopy->headers)."\n"; //those headers already contain newlines
@@ -285,16 +301,16 @@ class blcLink {
           are treated as "page doesn't exist'". */
         //TODO: Treat circular redirects as broken links.
         if ( (($this->http_code>=200) && ($this->http_code<400)) || ($this->http_code == 401) ) {
-        	$this->log .= "Link is valid.";
+        	$this->log .= __("Link is valid.", 'broken-link-checker');
         	//Reset the check count for valid links.
         	$this->check_count = 0; 
         	return true;
         } else {
-			$this->log .= "Link is broken.";
+			$this->log .= __("Link is broken.", 'broken-link-checker');
 			if ( $this->http_code == BLC_TIMEOUT ){
 				//This is probably a timeout
 				$this->timeout = true;
-				$this->log .= "\r\n(Most likely the connection timed out or the domain doesn't exist)";
+				$this->log .= "\r\n(" . __("Most likely the connection timed out or the domain doesn't exist.", 'broken-link-checker');
 			}
 			return false;
 		}
@@ -335,7 +351,8 @@ class blcLink {
 				//If the link was successfully saved then it's no longer "new"
 				$this->is_new = !$rez;
 			} else {
-				echo "Error adding link $url : {$wpdb->last_error}\r\n<br>";
+				printf( __('Error adding link %s : %s', 'broken-link-checker'), $url, $wpdb->last_error );
+				echo "\r\n<br>";
 			}
 				
 			return $rez;
@@ -354,7 +371,8 @@ class blcLink {
 			if ( $rez !== false ){
 				//echo "Link updated, ID : {$this->link_id}\r\n<br>";
 			} else {
-				echo "Error updating link {$this->link_id} : {$wpdb->last_error}\r\n<br>";
+				printf( __('Error updating link %d : %s', 'broken-link-checker'), $this->link_id, $wpdb->last_error );
+				echo "\r\n<br>";
 			}
 			return $rez !== false;			
 		}
