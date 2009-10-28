@@ -1,12 +1,12 @@
-# SOME DESCRIPTIVE TITLE.
+# Broken Link Checker POT file
 # Copyright (C) YEAR Janis Elsts
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# This file is distributed under the same license as the BLC package.
+# Janis Elsts <whiteshadow@w-shadow.com>, 2009.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: broken-link-checker\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
 "POT-Creation-Date: 2009-10-28 16:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"

@@ -2295,16 +2295,14 @@ jQuery(function($){
 			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
 			
-			//Try the upload directory. I know it's weird to try the upload dir. before
-			//trying the system-wide /tmp, but trying them in this order *may* fix
-			//open_basedir problems for some users. 
-			$path = ini_get('upload_tmp_dir');
+			//Try the system-wide temp directory
+			$path = sys_get_temp_dir();
 			if ( $path && is_writable($path)){
 				return trailingslashit($path) . 'wp_blc_lock';
 			}
 			
-			//Try the system-wide temp directory
-			$path = sys_get_temp_dir();
+			//Try the upload directory.  
+			$path = ini_get('upload_tmp_dir');
 			if ( $path && is_writable($path)){
 				return trailingslashit($path) . 'wp_blc_lock';
 			}
@@ -2507,6 +2505,12 @@ jQuery(function($){
 		return $debug;
 	}
 	
+  /**
+   * wsBrokenLinkChecker::load_language()
+   * Load the plugin's textdomain
+   *
+   * @return void
+   */
 	function load_language(){
 		load_plugin_textdomain( 'broken-link-checker', false, basename(dirname($this->loader)) . '/languages' );
 	}
