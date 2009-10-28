@@ -23,6 +23,7 @@ This plugin will monitor your blog looking for broken links and let you know if 
 * Each link can be edited or unlinked directly via the plugin's page, without manually editing each post.
 
 **Basic Usage**
+
 Once installed, the plugin will begin parsing your posts, bookmarks (AKA blogroll), etc and looking for links. Depending on the size of your site this can take a few minutes or even several hours. When parsing is complete the plugin will start checking each link to see if it works. Again, how long this takes depends on how big your site is and how many links there are. You can monitor the progress and set various link checking options in *Settings -> Link Checker*.
 
 Note : Currently the plugin only runs when you have at least one tab of the Dashboard open. Cron support will likely be added in a later version.
@@ -60,8 +61,12 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.6 =
+* Initial localization support.
+
 = 0.5.18 =
 * Added a workaround for auto-enclosures. The plugin should now parse the "enclosure" custom field correctly.
+* Let people use Enter and Esc as shortcuts for "Save URL" and "Cancel" (respectively) when editing a link.
 
 = 0.5.17 =
 * Added a redirect detection workaround for users that have safe\_mode or open\_basedir enabled.
