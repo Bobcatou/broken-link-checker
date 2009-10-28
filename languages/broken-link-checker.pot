@@ -1,5 +1,5 @@
 # Broken Link Checker POT file
-# Copyright (C) YEAR Janis Elsts
+# Copyright (C) 2009 Janis Elsts
 # This file is distributed under the same license as the BLC package.
 # Janis Elsts <whiteshadow@w-shadow.com>, 2009.
 #
@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: broken-link-checker\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
+"Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
 "POT-Creation-Date: 2009-10-28 16:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: core.php:132 core.php:1278
 msgid "Loading..."

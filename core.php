@@ -673,9 +673,17 @@ class wsBrokenLinkChecker {
         <th scope="row"><?php _e('Timeout', 'broken-link-checker'); ?></th>
         <td>
 
-        <input type="text" name="timeout" id="blc_timeout"
-            value="<?php echo $this->conf->options['timeout']; ?>" size='5' maxlength='3'/>
-        seconds
+		<?php
+		
+		printf(
+			__('%s seconds', 'broken-link-checker'),
+			sprintf(
+				'<input type="text" name="timeout" id="blc_timeout" value="%d" size="5" maxlength="3" />', 
+				$this->conf->options['timeout']
+			)
+		);
+		
+		?>
         <br/><span class="description">
         <?php _e('Links that take longer than this to load will be marked as broken.','broken-link-checker'); ?> 
 		</span>
@@ -735,9 +743,7 @@ class wsBrokenLinkChecker {
         <br/><span class="description">
         <?php
         
-        _e('The plugin works by periodically creating a background worker instance that parses your posts looking for links,
-		checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, 
-		the background instance may run each time before stopping.', 'broken-link-checker');
+        _e('The plugin works by periodically creating a background worker instance that parses your posts looking for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the background instance may run each time before stopping.', 'broken-link-checker');
 		
 		?> 
 		</span>
@@ -1025,7 +1031,7 @@ class wsBrokenLinkChecker {
 						$actions['edit'] = '<span class="edit"><a href="' . get_edit_post_link($link['source_id'], true) . '" title="' . attribute_escape(__('Edit this post')) . '">' . __('Edit') . '</a>';
 						$actions['delete'] = "<span class='delete'><a class='submitdelete' title='" . attribute_escape(__('Delete this post')) .  "' href='" . wp_nonce_url("post.php?action=delete&amp;post=".$link['source_id'], 'delete-post_' . $link['source_id']) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $link['post_title'] )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 					}
-					$actions['view'] = '<span class="view"><a href="' . get_permalink($link['source_id']) . '" title="' . attribute_escape(sprintf(__('View "%s"'), $link['post_title'])) . '" rel="permalink">' . __('View') . '</a>';
+					$actions['view'] = '<span class="view"><a href="' . get_permalink($link['source_id']) . '" title="' . attribute_escape(sprintf(__('View "%s"', 'broken-link-checker'), $link['post_title'])) . '" rel="permalink">' . __('View') . '</a>';
 					echo '<div class="row-actions">';
 					echo implode(' | </span>', $actions);
 					echo '</div>';
