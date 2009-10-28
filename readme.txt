@@ -61,6 +61,9 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.6.1 =
+* Minor translation-related fixes.
+
 = 0.6 =
 * Initial localization support.
 
