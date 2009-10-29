@@ -993,10 +993,10 @@ class wsBrokenLinkChecker {
                 <thead>
                 <tr>
 
-                <th scope="col">Source
+                <th scope="col"><?php _e('Source', 'broken-link-checker'); ?>
                 </th>
-                <th scope="col">Link Text</th>
-                <th scope="col">URL</th>
+                <th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
+                <th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 
 				<?php if ( 'broken' == $link_type ) { ?> 
                 <th scope="col"> </th>
