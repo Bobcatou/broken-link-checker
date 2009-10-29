@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: broken-link-checker\n"
 "Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
-"POT-Creation-Date: 2009-10-28 22:36+0000\n"
+"POT-Creation-Date: 2009-10-29 14:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -212,6 +212,18 @@ msgstr ""
 #: core.php:974 core.php:1149
 #, php-format
 msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr ""
+
+#: core.php:996
+msgid "Source"
+msgstr ""
+
+#: core.php:998
+msgid "Link Text"
+msgstr ""
+
+#: core.php:999
+msgid "URL"
 msgstr ""
 
 #: core.php:1025 core.php:1031
