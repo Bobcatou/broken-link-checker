@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: broken-link-checker\n"
 "Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
-"POT-Creation-Date: 2009-10-29 14:35+0000\n"
+"POT-Creation-Date: 2009-10-30 11:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -401,6 +401,10 @@ msgstr[1] ""
 msgid ""
 "This link wasn't checked because a matching keyword was found on your "
 "exclusion list."
+msgstr ""
+
+#: core.php:1921
+msgid "View broken links"
 msgstr ""
 
 #: core.php:1922

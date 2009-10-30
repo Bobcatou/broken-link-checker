@@ -993,10 +993,10 @@ class wsBrokenLinkChecker {
                 <thead>
                 <tr>
 
-                <th scope="col">Source
+                <th scope="col"><?php _e('Source', 'broken-link-checker'); ?>
                 </th>
-                <th scope="col">Link Text</th>
-                <th scope="col">URL</th>
+                <th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
+                <th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 
 				<?php if ( 'broken' == $link_type ) { ?> 
                 <th scope="col"> </th>
@@ -1918,7 +1918,7 @@ jQuery(function($){
 	
 		if( $status['broken_links'] > 0 ){
 			$text .= sprintf( 
-				"<a href='%s' title='View broken links'><strong>". 
+				"<a href='%s' title='" . __('View broken links', 'broken-link-checker') . "'><strong>". 
 					_n('Found %d broken link', 'Found %d broken links', $status['broken_links'], 'broken-link-checker') .
 				"</strong></a>",
 			  	admin_url('tools.php?page=view-broken-links'), 
