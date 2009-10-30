@@ -209,9 +209,9 @@ class blcLink {
             $this->log .= '=== ';
             
             if ( $code ){
-				$this->log .= __('First try : 0 (No response)', 'broken-link-checker');
-			} else {
 				$this->log .= sprintf( __('First try : %d', 'broken-link-checker'), $code);
+			} else {
+				$this->log .= __('First try : 0 (No response)', 'broken-link-checker');
 			}
 			
 			$this->log .= " ===\n\n";
@@ -234,9 +234,9 @@ class blcLink {
             	
             	$this->log .= '=== ';
 	            if ( $code ){
-					$this->log .= __('Second try : 0 (No response)', 'broken-link-checker');
-				} else {
 					$this->log .= sprintf( __('Second try : %d', 'broken-link-checker'), $code);
+				} else {
+					$this->log .= __('Second try : 0 (No response)', 'broken-link-checker');
 				}
 				$this->log .= " ===\n\n";
 
