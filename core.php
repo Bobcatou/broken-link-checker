@@ -1918,7 +1918,7 @@ jQuery(function($){
 	
 		if( $status['broken_links'] > 0 ){
 			$text .= sprintf( 
-				"<a href='%s' title='View broken links'><strong>". 
+				"<a href='%s' title='" . __('View broken links', 'broken-link-checker') . "'><strong>". 
 					_n('Found %d broken link', 'Found %d broken links', $status['broken_links'], 'broken-link-checker') .
 				"</strong></a>",
 			  	admin_url('tools.php?page=view-broken-links'), 
