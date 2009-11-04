@@ -2381,12 +2381,7 @@ jQuery(function($){
 				__('Details', 'broken-link-checker') . '</a> </p>
 				
 				<div id="blc-lockfile-details" style="display:none;"><p>' . 
-				__("The plugin uses a file-based locking mechanism to ensure that only one instance of the
-				resource-heavy link checking algorithm is running at any given time. Unfortunately,  
-				BLC can't find a writable directory where it could store the lockfile - it failed to 
-				detect the location of your server's temporary directory, and the plugin's own directory
-				isn't writable by PHP. To fix this problem, please make the plugin's directory writable
-				or enter a specify a custom temporary directory in the plugin's settings.", 'broken-link-checker') .
+				__("The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings.", 'broken-link-checker') .
 				'</p> 
 				</div>
 			</div>',
