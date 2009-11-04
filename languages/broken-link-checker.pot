@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: broken-link-checker\n"
 "Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
-"POT-Creation-Date: 2009-10-30 11:06+0000\n"
+"POT-Creation-Date: 2009-11-04 13:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -540,80 +540,75 @@ msgstr ""
 #: core.php:2384
 msgid ""
 "The plugin uses a file-based locking mechanism to ensure that only one "
-"instance of the\r\n"
-"\t\t\t\tresource-heavy link checking algorithm is running at any given time. "
-"Unfortunately,  \r\n"
-"\t\t\t\tBLC can't find a writable directory where it could store the "
-"lockfile - it failed to \r\n"
-"\t\t\t\tdetect the location of your server's temporary directory, and the "
-"plugin's own directory\r\n"
-"\t\t\t\tisn't writable by PHP. To fix this problem, please make the plugin's "
-"directory writable\r\n"
-"\t\t\t\tor enter a specify a custom temporary directory in the plugin's "
-"settings."
+"instance of the resource-heavy link checking algorithm is running at any "
+"given time. Unfortunately, BLC can't find a writable directory where it "
+"could store the lockfile - it failed to detect the location of your server's "
+"temporary directory, and the plugin's own directory isn't writable by PHP. "
+"To fix this problem, please make the plugin's directory writable or enter a "
+"specify a custom temporary directory in the plugin's settings."
 msgstr ""
 
-#: core.php:2409
+#: core.php:2404
 msgid "PHP version"
 msgstr ""
 
-#: core.php:2415
+#: core.php:2410
 msgid "MySQL version"
 msgstr ""
 
-#: core.php:2428
+#: core.php:2423
 msgid ""
 "You have an old version of CURL. Redirect detection may not work properly."
 msgstr ""
 
-#: core.php:2440 core.php:2456 core.php:2461
+#: core.php:2435 core.php:2451 core.php:2456
 msgid "Not installed"
 msgstr ""
 
-#: core.php:2443
+#: core.php:2438
 msgid "CURL version"
 msgstr ""
 
-#: core.php:2449
+#: core.php:2444
 msgid "Installed"
 msgstr ""
 
-#: core.php:2462
+#: core.php:2457
 msgid "You must have either CURL or Snoopy installed for the plugin to work!"
 msgstr ""
 
-#: core.php:2473
+#: core.php:2468
 msgid "On"
 msgstr ""
 
-#: core.php:2474
+#: core.php:2469
 msgid "Redirects may be detected as broken links when safe_mode is on."
 msgstr ""
 
-#: core.php:2479 core.php:2493
+#: core.php:2474 core.php:2488
 msgid "Off"
 msgstr ""
 
-#: core.php:2487
+#: core.php:2482
 #, php-format
 msgid "On ( %s )"
 msgstr ""
 
-#: core.php:2488
+#: core.php:2483
 msgid "Redirects may be detected as broken links when open_basedir is on."
 msgstr ""
 
-#: core.php:2507
+#: core.php:2502
 msgid "Can't create a lockfile. Please specify a custom temporary directory."
 msgstr ""
 
 #: link-classes.php:212
-msgid "First try : 0 (No response)"
+#, php-format
+msgid "First try : %d"
 msgstr ""
 
 #: link-classes.php:214
-#, php-format
-msgid "First try : %d"
+msgid "First try : 0 (No response)"
 msgstr ""
 
 #: link-classes.php:222
@@ -621,12 +616,12 @@ msgid "Trying a second time with different settings..."
 msgstr ""
 
 #: link-classes.php:237
-msgid "Second try : 0 (No response)"
+#, php-format
+msgid "Second try : %d"
 msgstr ""
 
 #: link-classes.php:239
-#, php-format
-msgid "Second try : %d"
+msgid "Second try : 0 (No response)"
 msgstr ""
 
 #: link-classes.php:265
