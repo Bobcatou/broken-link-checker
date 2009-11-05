@@ -70,17 +70,21 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.6.4 =
+* Added French translation.
+* Updated Italian translation.
+
 = 0.6.3 =
 * Added a German translation.
 
 = 0.6.2 =
-* Added an Italian translation
-* Added a Danish translation
-* Added a Dutch translation
-* Added a Chinese (Simplified) translation
+* Added an Italian translation.
+* Added a Danish translation.
+* Added a Chinese (Simplified) translation.
+* Added a Dutch translation.
 
 = 0.6.1 =
-* Minor translation-related fixes.
+* Some translation-related fixes.
 
 = 0.6 =
 * Initial localization support.
