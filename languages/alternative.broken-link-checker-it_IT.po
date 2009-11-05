@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
 "POT-Creation-Date: 2009-10-28 22:36+0000\n"
 "PO-Revision-Date: 2009-11-04 14:55+0200\n"
-"Last-Translator: Jānis Elsts <whiteshadow@w-shadow.com>\n"
+"Last-Translator: Gaianorm <gaianorm@gmail.com>\n"
 "Language-Team: Gaianorm <gaianorm@gmail.com>\n"
 "Language-Team: Gaianorm | http://www.luxemozione.com/ <gaianorm@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Caricamento..."
 #: core.php:155
 #: core.php:569
 msgid "[ Network error ]"
-msgstr "[ Errore di rete]"
+msgstr "[ Errore di rete ]"
 
 #: core.php:180
 msgid "Automatically expand the widget if broken links have been detected"
