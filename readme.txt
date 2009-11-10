@@ -70,6 +70,9 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.6.5 =
+* Added Russian translation.
+
 = 0.6.4 =
 * Added French translation.
 * Updated Italian translation.
