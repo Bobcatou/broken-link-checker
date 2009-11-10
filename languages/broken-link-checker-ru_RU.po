@@ -1,0 +1,699 @@
+# Broken Link Checker POT file
+# Copyright (C) 2009 Janis Elsts
+# This file is distributed under the same license as the BLC package.
+# Janis Elsts <whiteshadow@w-shadow.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Broken Link Checker 0.6.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-11-10 14:44+0300\n"
+"PO-Revision-Date: 2009-11-10 23:21+0300\n"
+"Last-Translator: Anna Ozeritskaya <anna.ozeritskaya@gmail.com>\n"
+"Language-Team: Anna Ozeritskaya <anna.ozeritskaya@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-KeywordsList: __;_c;_e;_n:1,2;_nc:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: D:\\Projects\\l10n-ru\\trunk\\wp-plugins\\broken-link-checker\n"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:132
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1284
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:155
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:569
+msgid "[ Network error ]"
+msgstr "[ Ошибка сети ]"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:180
+msgid "Automatically expand the widget if broken links have been detected"
+msgstr "Автоматически раскрыть виджет, если обнаружены неправильные ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:359
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:368
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:386
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:400
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:907
+#, php-format
+msgid "Database error : %s"
+msgstr "Ошибка базы данных: %s"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:423
+msgid "Link Checker Settings"
+msgstr "Настройка проверки ссылок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:424
+msgid "Link Checker"
+msgstr "Проверка ссылок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:435
+msgid "View Broken Links"
+msgstr "Просмотреть неправильные ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:436
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:833
+msgid "Broken Links"
+msgstr "Неправильные ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:453
+msgid "Settings"
+msgstr "Настройки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:533
+msgid "Broken Link Checker Options"
+msgstr "Настройка проверки ссылок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:546
+msgid "Status"
+msgstr "Состояние"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:548
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:771
+msgid "Show debug info"
+msgstr "Показать отладочную информацию"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:582
+msgid "Re-check all pages"
+msgstr "Перепроверить все страницы"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:606
+msgid "Check each link"
+msgstr "Периодичность проверок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:611
+#, php-format
+msgid "Every %s hours"
+msgstr "Каждые %s ч."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:620
+msgid "Existing links will be checked this often. New links will usually be checked ASAP."
+msgstr "Ссылки в старых записях будут перепроверяться с указанным интервалом. Новые записи обычно проверяются по мере их появления."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:627
+msgid "Broken link CSS"
+msgstr "Стиль неправильных ссылок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:632
+msgid "Apply <em>class=\"broken_link\"</em> to broken links"
+msgstr "Применить к неправильным ссылкам <em>class=&quot;broken_link&quot;</em>"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:644
+msgid "Exclusion list"
+msgstr "Список исключений"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:645
+msgid "Don't check links where the URL contains any of these words (one per line) :"
+msgstr "Не проверять ссылки, которые содержат любое из этих слов (по одному на строку):"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:655
+msgid "Custom fields"
+msgstr "Произвольные поля"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:656
+msgid "Check URLs entered in these custom fields (one per line) :"
+msgstr "Проверять URL в этих произвольных полях (по одному на строку):"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:667
+msgid "Advanced"
+msgstr "Дополнительно"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:673
+msgid "Timeout"
+msgstr "Время ожидания загрузки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:679
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:735
+#, php-format
+msgid "%s seconds"
+msgstr "%s сек."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:688
+msgid "Links that take longer than this to load will be marked as broken."
+msgstr "Ссылки, время загрузки которых больше, чем указанное, будут помечены как неправильные."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:697
+msgid "Custom temporary directory"
+msgstr "Произвольная временная директория"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:706
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2047
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2088
+msgid "OK"
+msgstr "ОК"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:709
+msgid "Error : This directory isn't writable by PHP."
+msgstr "Ошибка : Эта директория недоступна для записи посредством PHP."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:714
+msgid "Error : This directory doesn't exist."
+msgstr "Ошибка: Эта директория не существует."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:722
+msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
+msgstr "Здесь вы можете указать произвольную директорию для хранения временных файлов плагина. Оставьте это поле пустым, чтобы использовать стандартное значение."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:729
+msgid "Max. execution time"
+msgstr "Максимальное время поиска"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:746
+msgid "The plugin works by periodically creating a background worker instance that parses your posts looking for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the background instance may run each time before stopping."
+msgstr "Плагин создает фоновый процесс, который ищет гиперссылки в вашем журнале и проверяет их работоспособность. Этот параметр определяет как долго может работать такой процесс."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:756
+msgid "Save Changes"
+msgstr "Сохранить изменения"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:769
+msgid "Hide debug info"
+msgstr "Скрыть отладочную информацию"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:832
+msgid "Broken"
+msgstr "Неправильные"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:834
+msgid "No broken links found"
+msgstr "Неправильных ссылок нет"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:838
+msgid "Redirects"
+msgstr "Перенаправленные"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:839
+msgid "Redirected Links"
+msgstr "Перенаправленные ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:840
+msgid "No redirects found"
+msgstr "Перенаправленных ссылок нет"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:845
+msgid "All"
+msgstr "Все"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:846
+msgid "Detected Links"
+msgstr "Все ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:847
+msgid "No links found (yet)"
+msgstr "Ссылок нет (пока)"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:966
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:967
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:974
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1149
+#, php-format
+msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr "Показано %s&#8211;%s из <span class=\"current-link-count\">%s</span>"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:996
+msgid "Source"
+msgstr "Источник"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:998
+msgid "Link Text"
+msgstr "Тип&nbsp;/&nbsp;Текст"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:999
+msgid "URL"
+msgstr "URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1025
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1031
+msgid "Edit this post"
+msgstr "Редактировать эту запись"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1031
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1046
+msgid "Edit"
+msgstr "Редактировать"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1032
+msgid "Delete this post"
+msgstr "Удалить эту запись"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1032
+#, php-format
+msgid ""
+"You are about to delete this post '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы собираетесь удалить запись '%s'.\n"
+"Нажмите 'Отмена', чтобы прекратить, или 'OK' для удаления."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1032
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1047
+msgid "Delete"
+msgstr "Удалить"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1034
+#, php-format
+msgid "View \"%s\""
+msgstr "Посмотреть &laquo;%s&raquo;"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1034
+msgid "View"
+msgstr "Посмотреть"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1041
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1046
+msgid "Edit this bookmark"
+msgstr "Редактировать эту закладку"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1047
+#, php-format
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы собираетесь удалить эту ссылку: '%s'\n"
+"Нажмите 'Отмена', чтобы прекратить, или 'OK' для удаления."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1056
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[Ссылка-сирота! Это ошибка.]"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1070
+msgid "Image"
+msgstr "Изображение"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1081
+msgid "Custom field"
+msgstr "Произвольное поле"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1089
+msgid "Bookmark"
+msgstr "Закладка"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1104
+msgid "Show more info about this link"
+msgstr "Показать подробный отчёт об этой ссылке"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1104
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2381
+msgid "Details"
+msgstr "Посмотреть отчёт"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1106
+msgid "Remove this link from all posts"
+msgstr "Удалить эту ссылку во всех записях"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1107
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1371
+msgid "Unlink"
+msgstr "Удалить ссылку"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1110
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1401
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1412
+msgid "Excluded"
+msgstr "Исключено"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1112
+msgid "Add this URL to the exclusion list"
+msgstr "Добавить этот URL в список исключений"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1113
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1415
+msgid "Exclude"
+msgstr "Исключить"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1116
+msgid "Edit link URL"
+msgstr "Редактировать URL ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1116
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1340
+msgid "Edit URL"
+msgstr "Редактировать URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1122
+msgid "Cancel URL editing"
+msgstr "Отменить редактирование URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1122
+msgid "Cancel"
+msgstr "Отмена"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1133
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "Удалить это сообщение и пометить ссылку как правильную"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1135
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1204
+msgid "Discard"
+msgstr "Сбросить"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1180
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1347
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1384
+msgid "Wait..."
+msgstr "Подождите..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1238
+msgid "Save URL"
+msgstr "Сохранить URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1248
+msgid "Saving changes..."
+msgstr "Сохранение изменений..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1437
+msgid "Log"
+msgstr "Отчёт о проверке"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1445
+msgid "Post published on"
+msgstr "Дата публикации"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1450
+msgid "Link last checked"
+msgstr "Дата последней проверки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1454
+msgid "Never"
+msgstr "Никогда"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1460
+msgid "HTTP code"
+msgstr "Код HTTP"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1465
+msgid "Response time"
+msgstr "Время отклика"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1467
+#, php-format
+msgid "%2.3f seconds"
+msgstr "%2.3f сек."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1470
+msgid "Final URL"
+msgstr "Конечный URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1475
+msgid "Redirect count"
+msgstr "Кол-во перенаправлений"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1480
+msgid "Instance count"
+msgstr "Кол-во экземпляров"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1489
+#, php-format
+msgid "This link has failed %d time."
+msgid_plural "This link has failed %d times."
+msgstr[0] "Эта ссылка не прошла проверку %d раз."
+msgstr[1] "Эта ссылка не прошла проверку %d раза."
+msgstr[2] "Эта ссылка не прошла проверку %d раз."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1879
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2206
+msgid "This link wasn't checked because a matching keyword was found on your exclusion list."
+msgstr "Эта ссылка не была проверена, поскольку находится в списке исключений."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1921
+msgid "View broken links"
+msgstr "Показать неправильные ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1922
+#, php-format
+msgid "Found %d broken link"
+msgid_plural "Found %d broken links"
+msgstr[0] "Найдена %d неправильная ссылка"
+msgstr[1] "Найдены %d неправильные ссылки"
+msgstr[2] "Найдено %d неправильных ссылок"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1928
+msgid "No broken links found."
+msgstr "Сейчас не найдено ни одной неправильной ссылки."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1935
+#, php-format
+msgid "%d URL in the work queue"
+msgid_plural "%d URLs in the work queue"
+msgstr[0] "Сейчас в очереди на проверку находится %d URL."
+msgstr[1] "Сейчас в очереди на проверку находятся %d URL."
+msgstr[2] "Сейчас в очереди на проверку находятся %d URL."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1938
+msgid "No URLs in the work queue."
+msgstr "Сейчас в очереди на проверку нет ни одного URL."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1944
+#, php-format
+msgid "Detected %d unique URL"
+msgid_plural "Detected %d unique URLs"
+msgstr[0] "Обнаружен %d уникальный URL"
+msgstr[1] "Обнаружены %d уникальных URL"
+msgstr[2] "Обнаружено %d уникальных URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1945
+#, php-format
+msgid "in %d link"
+msgid_plural "in %d links"
+msgstr[0] "в %d ссылке"
+msgstr[1] "в %d ссылках"
+msgstr[2] "в %d ссылках"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1950
+msgid "and still searching..."
+msgstr ". Поиск продолжается..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1956
+msgid "Searching your blog for links..."
+msgstr "Поиск ссылок в вашем журнале..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:1958
+msgid "No links detected."
+msgstr "Не обнаружено ни одной ссылки."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2027
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2059
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2102
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2183
+msgid "You're not allowed to do that!"
+msgstr "Вам запрещено делать это!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2035
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2069
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2112
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2193
+#, php-format
+msgid "Oops, I can't find the link %d"
+msgstr "Извините, но ссылку %d невозможно найти"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2043
+msgid "This link was manually marked as working by the user."
+msgstr "Эта ссылка была вручную помечена пользователем как рабочая."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2049
+msgid "Oops, couldn't modify the link!"
+msgstr "Извините, но ссылку невозможно отредактировать!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2052
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2129
+msgid "Error : link_id not specified"
+msgstr "Ошибка: не указан ID ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2076
+msgid "Oops, the new URL is invalid!"
+msgstr "Извините, но этот новый URL тоже неправильный!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2085
+msgid "An unexpected error occured!"
+msgstr "Произошла неожиданная ошибка!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2094
+msgid "Error : link_id or new_url not specified"
+msgstr "Ошибка: не указан ID ссылки или её новый URL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2119
+#, php-format
+msgid "URL %s was removed."
+msgstr "URL %s удалён."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2123
+msgid "The plugin failed to remove the link."
+msgstr "Эту ссылку не получилось удалить."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2138
+msgid "You don't have sufficient privileges to access this information!"
+msgstr "Вам запрещен доступ к этой информации!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2151
+msgid "Error : link ID not specified"
+msgstr "Ошибка: не указан ID ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2175
+#, php-format
+msgid "Failed to load link details (%s)"
+msgstr "Не удалось загрузить подробности о ссылке (%s)"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2213
+#, php-format
+msgid "URL %s added to the exclusion list"
+msgstr "URL %s добавлен в список исключений"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2217
+msgid "Link ID not specified"
+msgstr "Не указан ID ссылки"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2367
+#, php-format
+msgid "The current temporary directory is not accessible; please <a href=\"%s\">set a different one</a>."
+msgstr "Текущая директория для хранения временных файлов недоступна; попробуйте <a href=\"%s\">выбрать другую</a>."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2372
+#, php-format
+msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
+msgstr "Пожалуйста, сделайте директорию <code>%1$s</code> доступной для записи или <a href=\"%2$s\">выберите другую</a>."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2379
+msgid "Broken Link Checker can't create a lockfile."
+msgstr "Плагин не может создать лок-файл."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2384
+msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
+msgstr "Процедура проверки ссылок довольно ресурсоемка, и для того, чтобы она запускалась только в одном экземпляре на единицу времени, Broken Link Checker использует специальный механизм блокировки, данные о состоянии которого хранятся в специальных лок-файлах. К сожалению, плагин не смог обнаружить подходящую директорию для размещения этих данных &mdash; найти стандартную tmp-директорию вашего сервера не удалось, а собственная директория плагина не доступна для записи посредством PHP. Чтобы решить эту проблему, пожалуйста, сделайте директорию плагина доступной для записи или укажите в разделе настроек произвольную директорию для хранения временных файлов."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2404
+msgid "PHP version"
+msgstr "Версия PHP"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2410
+msgid "MySQL version"
+msgstr "Версия MySQL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2423
+msgid "You have an old version of CURL. Redirect detection may not work properly."
+msgstr "Вы используете старую версию CURL. Обнаружение перенаправлений может работать некорректно."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2435
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2451
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2456
+msgid "Not installed"
+msgstr "Не установлено"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2438
+msgid "CURL version"
+msgstr "Версия CURL"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2444
+msgid "Installed"
+msgstr "Установлено"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2457
+msgid "You must have either CURL or Snoopy installed for the plugin to work!"
+msgstr "Для того, чтобы этот плагин мог работать, у вас должны быть установлены либо CURL, либо Snoopy!"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2468
+msgid "On"
+msgstr "Вкл."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2469
+msgid "Redirects may be detected as broken links when safe_mode is on."
+msgstr "Если параметр safe mode включен, то перенаправления могут быть восприняты как неправильные ссылки."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2474
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2488
+msgid "Off"
+msgstr "Выкл."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2482
+#, php-format
+msgid "On ( %s )"
+msgstr "Вкл. ( %s )"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2483
+msgid "Redirects may be detected as broken links when open_basedir is on."
+msgstr "Если параметр open_basedir включен, то перенаправления могут быть восприняты как неправильные ссылки."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/core.php:2502
+msgid "Can't create a lockfile. Please specify a custom temporary directory."
+msgstr "Невозможно создать лок-файл. Пожалуйста, выберите другую директорию для хранения временных файлов."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:212
+#, php-format
+msgid "First try : %d"
+msgstr "Первая попытка: %d"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:214
+msgid "First try : 0 (No response)"
+msgstr "Первая попытка: 0 (Нет ответа)"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:222
+msgid "Trying a second time with different settings..."
+msgstr "Пробуем ещё раз, с другими настройками..."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:237
+#, php-format
+msgid "Second try : %d"
+msgstr "Вторая попытка: %d"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:239
+msgid "Second try : 0 (No response)"
+msgstr "Вторая попытка: 0 (Нет ответа)"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:265
+msgid "Using Snoopy"
+msgstr "Используем Snoopy"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:285
+msgid "Request timed out."
+msgstr "Время ожидания ответа на запрос истекло."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:304
+msgid "Link is valid."
+msgstr "Ссылка работает."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:309
+msgid "Link is broken."
+msgstr "Ссылка не работает."
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:313
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Судя по всему, соединение разорвано или этот домен не существует"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:354
+#, php-format
+msgid "Error adding link %s : %s"
+msgstr "Ошибка при добавлении ссылки %s: %s"
+
+#: D:\Projects\l10n-ru\trunk\wp-plugins\broken-link-checker/link-classes.php:374
+#, php-format
+msgid "Error updating link %d : %s"
+msgstr "Ошибка при обновлении ссылки %d: %s"
+
+#~ msgid "Broken Link Checker"
+#~ msgstr "Проверка ссылок"
+#~ msgid ""
+#~ "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+#~ msgstr ""
+#~ "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+#~ msgid ""
+#~ "Checks your posts for broken links and missing images and notifies you on "
+#~ "the dashboard if any are found."
+#~ msgstr ""
+#~ "Проверяет ваш журнал на неправильные ссылки на сайты или изображения и "
+#~ "выводит сообщение в консоль, если они есть."
+#~ msgid "Janis Elsts"
+#~ msgstr "Janis Elsts"
+#~ msgid "http://w-shadow.com/blog/"
+#~ msgstr "http://w-shadow.com/blog/"
+
