@@ -87,7 +87,7 @@ class wsBrokenLinkChecker {
         }
         
         //Initialize the built-in link filters
-        $this->init_native_filters();        
+        add_action('init', array(&$this,'init_native_filters'));
     }
 
     function admin_footer(){
