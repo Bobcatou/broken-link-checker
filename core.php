@@ -22,7 +22,7 @@ class wsBrokenLinkChecker {
 	var $loader;
     var $my_basename = '';	
     
-    var $db_version = 2;
+    var $db_version = 3;
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
@@ -86,6 +86,8 @@ class wsBrokenLinkChecker {
             add_action( 'admin_notices', array( &$this, 'lockfile_warning' ) );
         }
         
+        //Initialize the built-in link filters
+        $this->init_native_filters();        
     }
 
     function admin_footer(){
@@ -337,7 +339,7 @@ class wsBrokenLinkChecker {
 			return false;
 		}
 		
-		//require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+		require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
 		
 		//Create the link table if it doesn't exist yet. 
 		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_links (
@@ -372,8 +374,8 @@ class wsBrokenLinkChecker {
 				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
 		};
 		
-		//Create the instance table if it doesn't exist yet.
-		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_instances (
+		//Create the instance table
+		$q = "CREATE TABLE {$wpdb->prefix}blc_instances (
 				instance_id int(10) unsigned NOT NULL auto_increment,
 				link_id int(10) unsigned NOT NULL,
 				source_id int(10) unsigned NOT NULL,
@@ -383,14 +385,12 @@ class wsBrokenLinkChecker {
 				
 				PRIMARY KEY  (instance_id),
 				KEY link_id (link_id),
-				KEY source_id (source_id,source_type)
+				KEY source_id (source_id,source_type),
+				FULLTEXT KEY link_text (link_text)
 			)"; 
-		if ( $wpdb->query( $q ) === false ){
-			if ( $die_on_error )
-				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
-		};
+		dbDelta($q);
 		
-		//....
+		//Create the synchronization table
 		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_synch (
 			  source_id int(20) unsigned NOT NULL,
 			  source_type enum('post','blogroll') NOT NULL,
@@ -398,6 +398,18 @@ class wsBrokenLinkChecker {
 			  last_synch datetime NOT NULL,
 			  PRIMARY KEY  (source_id, source_type),
 			  KEY synched (synched)
+			)";
+		if ( $wpdb->query( $q ) === false ){
+			if ( $die_on_error )
+				die( sprintf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error) );
+		};
+		
+		//Create the custom filter table
+		$q = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}blc_filters (
+			  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+			  `name` varchar(100) NOT NULL,
+			  params text NOT NULL,
+			  PRIMARY KEY (id)
 			)";
 		if ( $wpdb->query( $q ) === false ){
 			if ( $die_on_error )
@@ -1063,6 +1075,9 @@ class wsBrokenLinkChecker {
 			$search_params = array();
 		}
 		
+		//Display the "Discard" button when listing broken links
+		$show_discard_button = ('broken' == $filter_id) || (!empty($search_params['s_filter']) && ($search_params['s_filter'] == 'broken'));
+		
         ?>
         
 <script type='text/javascript'>
@@ -1260,7 +1275,7 @@ class wsBrokenLinkChecker {
                 <th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
                 <th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 
-				<?php if ( 'broken' == $filter_id ) { ?> 
+				<?php if ( $show_discard_button ) { ?> 
                 <th scope="col"> </th>
                 <?php } ?>
 
@@ -1386,7 +1401,10 @@ class wsBrokenLinkChecker {
 					echo '</div>';
                 ?>
                 </td>
-                <?php if ( 'broken' == $filter_id ) { ?> 
+                <?php
+				 	//Display the "Discard" button when listing broken links
+					if ( $show_discard_button ) { 
+				?> 
 				<td><a href='javascript:void(0);'  
 					id='discard_button-<?php print $rownum; ?>'
 					class='blc-discard-button'
@@ -2087,7 +2105,7 @@ div.search-box{
 		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
 		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
 		//encountered when activating the plugin.
-		//(Comment out when debugging of you won't get the FirePHP output)
+		//(Comment out when debugging or you won't get the FirePHP output)
 		ob_end_clean();
  		header("Connection: close");
 		ob_start();
@@ -2393,9 +2411,12 @@ div.search-box{
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_instances WHERE 1";
 		$known_instances = $wpdb->get_var($q);
 		
+		/*
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links 
 			  WHERE check_count > 0 AND ( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( http_code <> ".BLC_CHECKING." )";
 		$broken_links = $wpdb->get_var($q);
+		*/
+		$broken_links = $this->get_links( $this->native_filters['broken'], 0, 0, true );
 		
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links
 		      WHERE 
