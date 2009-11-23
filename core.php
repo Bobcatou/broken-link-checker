@@ -1849,7 +1849,7 @@ div.search-box{
     	<?php if ( !empty($link['post_date']) ) { ?>
     	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?> :</strong>
     	<span class='post_date'><?php
-			echo date_i18n("F d, Y",strtotime($link['post_date']));
+			echo date_i18n(get_option('date_format'),strtotime($link['post_date']));
     	?></span></li>
     	<?php } ?>
     	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?> :</strong>
@@ -1858,7 +1858,7 @@ div.search-box{
     		if ( $last_check < strtotime('-10 years') ){
 				_e('Never', 'broken-link-checker');
 			} else {
-    			echo date_i18n("F d, Y", $last_check);
+    			echo date_i18n(get_option('date_format'), $last_check);
     		}
     	?></span></li>
     	
