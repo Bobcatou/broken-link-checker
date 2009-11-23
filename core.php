@@ -1,7 +1,6 @@
 <?php
 
 //The plugin will use Snoopy in case CURL is not available
-//TODO: Use WP_HTTP instead of Snoopy
 if (!class_exists('Snoopy')) require_once(ABSPATH. WPINC . '/class-snoopy.php');
 
 /**
@@ -27,6 +26,8 @@ class wsBrokenLinkChecker {
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
+    
+    var $native_filters = null;
 
   /**
    * wsBrokenLinkChecker::wsBrokenLinkChecker()
@@ -94,14 +95,12 @@ class wsBrokenLinkChecker {
         <script type='text/javascript'>
         (function($){
 				
+			//(Re)starts the background worker thread 
 			function blcDoWork(){
 				$.post(
 					"<?php echo admin_url('admin-ajax.php'); ?>",
 					{
 						'action' : 'blc_work'
-					},
-					function (data, textStatus){
-						
 					}
 				);
 			}
@@ -185,8 +184,13 @@ class wsBrokenLinkChecker {
     function admin_print_scripts(){
         //jQuery is used for AJAX and effects
         wp_enqueue_script('jquery');
-        wp_enqueue_script('jquery-ui-core');
     }
+    
+    function load_ui_scripts(){
+    	//jQuery UI is used on the settings page and in the link listings
+		wp_enqueue_script('jquery-ui-core');
+        wp_enqueue_script('jquery-ui-dialog');
+	}
 
   /**
    * ws_broken_link_checker::post_deleted()
@@ -419,24 +423,28 @@ class wsBrokenLinkChecker {
 	}
 
     function admin_menu(){
+    	if (current_user_can('manage_options'))
+          add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
+    	
         $options_page_hook = add_options_page( 
 			__('Link Checker Settings', 'broken-link-checker'), 
 			__('Link Checker', 'broken-link-checker'), 
 			'manage_options',
             'link-checker-settings',array(&$this, 'options_page')
 		);
-        //Add the hook that will add the plugin's CSS styles to it's settings page 
-        add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
-            
-        if (current_user_can('manage_options'))
-          add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
-
-        add_management_page(
+		
+        $links_page_hook = add_management_page(
 			__('View Broken Links', 'broken-link-checker'), 
 			__('Broken Links', 'broken-link-checker'), 
 			'edit_others_posts',
             'view-broken-links',array(&$this, 'links_page')
 		);
+		 
+		//Add plugin-specific scripts and CSS only to the it's own pages
+		add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
+        add_action( 'admin_print_styles-' . $links_page_hook, array(&$this, 'links_page_css') );
+        add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'load_ui_scripts') );
+        add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'load_ui_scripts') );
     }
 
     /**
@@ -481,6 +489,10 @@ class wsBrokenLinkChecker {
             $this->conf->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
             $new_broken_link_css = trim($_POST['broken_link_css']);
             $this->conf->options['broken_link_css'] = $new_broken_link_css;
+            
+            $this->conf->options['mark_removed_links'] = !empty($_POST['mark_removed_links']);
+            $new_removed_link_css = trim($_POST['removed_link_css']);
+            $this->conf->options['removed_link_css'] = $new_removed_link_css;
 
 			//TODO: Maybe update affected links when exclusion list changes (could be expensive resource-wise).
             $this->conf->options['exclusion_list'] = array_filter( 
@@ -635,6 +647,23 @@ class wsBrokenLinkChecker {
         <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
             if( isset($this->conf->options['broken_link_css']) )
                 echo $this->conf->options['broken_link_css'];
+        ?></textarea>
+
+        </td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Removed link CSS','broken-link-checker'); ?></th>
+        <td>
+        	<label for='mark_removed_links'>
+        		<input type="checkbox" name="mark_removed_links" id="mark_removed_links"
+            	<?php if ($this->conf->options['mark_removed_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e('Apply <em>class="removed_link"</em> to unlinked links', 'broken-link-checker'); ?>
+			</label>
+			<br/>
+        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'/><?php
+            if( isset($this->conf->options['removed_link_css']) )
+                echo $this->conf->options['removed_link_css'];
         ?></textarea>
 
         </td>
@@ -821,36 +850,189 @@ class wsBrokenLinkChecker {
 		</style>
 		<?php
 	}
+	
+  /**
+   * wsBrokenLinkChecker::init_native_filters()
+   * Initializes (if necessary) and returns the list of built-in link filters
+   *
+   * @return array
+   */
+	function init_native_filters(){
+		if ( !empty($this->native_filters) ){
+			return $this->native_filters;
+		} else {
+			//Available filters by link type + the appropriate WHERE expressions
+			$this->native_filters = array(
+				'broken' => array(
+					'where_expr' => '( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( check_count > 0 ) AND ( http_code <> ' . BLC_CHECKING . ')',
+					'name' => __('Broken', 'broken-link-checker'),
+					'heading' => __('Broken Links', 'broken-link-checker'),
+					'heading_zero' => __('No broken links found', 'broken-link-checker')
+				 ), 
+				 'redirects' => array(
+					'where_expr' => '( redirect_count > 0 )',
+					'name' => __('Redirects', 'broken-link-checker'),
+					'heading' => __('Redirected Links', 'broken-link-checker'),
+					'heading_zero' => __('No redirects found', 'broken-link-checker')
+				 ), 
+				 
+				'all' => array(
+					'where_expr' => '1',
+					'name' => __('All', 'broken-link-checker'),
+					'heading' => __('Detected Links', 'broken-link-checker'),
+					'heading_zero' => __('No links found (yet)', 'broken-link-checker')
+				 ), 
+			);
+			
+			return $this->native_filters;
+		}
+	}
+	
+  /**
+   * wsBrokenLinkChecker::get_custom_filters()
+   * Returns a list of user-defined link filters.
+   *
+   * @return array An array of custom filter definitions. If there are no custom filters defined returns an empty array.
+   */
+	function get_custom_filters(){
+		global $wpdb;
+		
+		$filter_data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}blc_filters ORDER BY name ASC", ARRAY_A);
+		$filters = array();
+		
+		if ( !empty($filter_data) ) {		
+			foreach($filter_data as $data){
+				$filters[ 'f'.$data['id'] ] = array(
+					'name' => $data['name'],
+					'params' => $data['params'],
+					'is_search' => true,
+					'heading' => ucwords($data['name']),
+					'heading_zero' => __('No links found for your query', 'broken-link-checker'),
+				);
+			}
+		}
+		
+		return $filters;
+	}
+	
+	function get_search_params( $filter = null ){
+		//If present, the filter's parameters may be saved either as an array or a string.
+		$params = array();
+		if ( !empty($filter) && !empty($filter['params']) ){
+			$params = $filter['params']; 
+			if ( is_string( $params ) ){
+				wp_parse_str($params, $params);
+			}
+		} else {
+			//If the filter doesn't have it's own search query, use the URL parameters
+			$params = array_merge($params, $_GET);
+		}
+		
+		//Only leave valid search query parameters
+		$search_param_names = array( 's_link_text', 's_link_url', 's_http_code', 's_filter', 's_link_type' );
+		$output = array();
+		foreach ( $params as $name => $value ){
+			if ( in_array($name, $search_param_names) ){
+				$output[$name] = $value;
+			}
+		}
+		
+		return $output;
+	}
 
     function links_page(){
         global $wpdb;
         
-		//Available filters by link type + the appropriate WHERE expressions
-		$filters = array(
-			'broken' => array(
-				'where_expr' => '( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( check_count > 0 ) AND ( http_code <> ' . BLC_CHECKING . ')',
-				'name' => __('Broken', 'broken-link-checker'),
-				'heading' => __('Broken Links', 'broken-link-checker'),
-				'heading_zero' => __('No broken links found', 'broken-link-checker')
-			 ), 
-			 'redirects' => array(
-				'where_expr' => '( redirect_count > 0 )',
-				'name' => __('Redirects', 'broken-link-checker'),
-				'heading' => __('Redirected Links', 'broken-link-checker'),
-				'heading_zero' => __('No redirects found', 'broken-link-checker')
-			 ), 
-			 
-			'all' => array(
-				'where_expr' => '1',
-				'name' => __('All', 'broken-link-checker'),
-				'heading' => __('Detected Links', 'broken-link-checker'),
-				'heading_zero' => __('No links found (yet)', 'broken-link-checker')
-			 ), 
-		);	
+        $action = !empty($_POST['action'])?$_POST['action']:'';
+        
+        if ( $action == 'create-custom-filter' ){
+        	//Create a custom filter!
+        	
+        	check_admin_referer( $action );
+        	
+        	$message = '';
+        	$msg_class = 'updated';
+        	
+        	//Filter name must be set
+			if ( empty($_POST['name']) ){
+				$message = __("You must enter a filter name!", 'broken-link-checker');
+				$msg_class = 'error';
+			//Filter parameters (a search query) must also be set
+			} elseif ( empty($_POST['params']) ){
+				$message = __("Invalid search query.", 'broken-link-checker');
+				$msg_class = 'error';
+			} else {
+				//Save the new filter
+				$q = $wpdb->prepare(
+					"INSERT INTO {$wpdb->prefix}blc_filters(name, params) VALUES (%s, %s)",
+					$_POST['name'], $_POST['params']
+				);
+				
+				if ( $wpdb->query($q) ){
+					//Saved
+					$message = sprintf( __('Filter "%s" created', 'broken-link-checker'), $_POST['name']);
+					//A little hack to make the filter active immediately
+					$_GET['filter_id'] = 'f' . $wpdb->insert_id;			
+				} else {
+					//Error
+					$message = sprintf( __("Database error : %s", 'broken-link-checker'), $wpdb->last_error);
+					$msg_class = 'error';
+				}
+			}
+			
+			echo '<div id="message" class="'.$msg_class.' fade"><p><strong>'.$message.'</strong></p></div>';
+			
+		} elseif ( $action == 'delete-custom-filter' ){
+			//Delete an existing custom filter!
+			
+			check_admin_referer( $action );
+			
+			$message = '';
+        	$msg_class = 'updated';
+			
+			//Filter ID must be set
+			if ( empty($_POST['filter_id']) ){
+				$message = __("Filter ID not specified.", 'broken-link-checker');
+				$msg_class = 'error';
+			} else {
+				//Remove the "f" character from the filter ID to get its database key
+				$filter_id = intval(ltrim($_POST['filter_id'], 'f'));
+				//Try to delete the filter
+				$q = $wpdb->prepare("DELETE FROM {$wpdb->prefix}blc_filters WHERE id = %d", $filter_id);
+				if ( $wpdb->query($q) ){
+					//Success
+					$message = __('Filter deleted', 'broken-link-checker');
+				} else {
+					//Either the ID is wrong or there was some other error
+					$message = __('Database error : %s', 'broken-link-checker');
+					$msg_class = 'error';
+				}
+			}
+			echo '<div id="message" class="'.$msg_class.' fade"><p><strong>'.$message.'</strong></p></div>';
+		} 		
+		        
+        //Build the filter list
+		$filters = array_merge($this->init_native_filters(), $this->get_custom_filters());
 		
-		$link_type = isset($_GET['link_type'])?$_GET['link_type']:'broken';
-		if ( !isset($filters[$link_type]) ){
-			$link_type = 'broken';
+		//Add the special "search" filter
+		$filters['search'] = array(
+			'name' => __('Search', 'broken-link-checker'),
+			'heading' => __('Search Results', 'broken-link-checker'),
+			'heading_zero' => __('No links found for your query', 'broken-link-checker'),
+			'is_search' => true,
+			'where_expr' => 1,
+			'hidden' => true,
+		);
+		
+		//Calculate the number of links for each filter
+		foreach ($filters as $filter => $data){
+			$filters[$filter]['count'] = $this->get_links($data, 0, 0, true);
+		}
+
+		//Get the selected filter (defaults to displaying broken links)
+		$filter_id = isset($_GET['filter_id'])?$_GET['filter_id']:'broken';
+		if ( !isset($filters[$filter_id]) ){
+			$filter_id = 'broken';
 		}
 		
 		//Get the desired page number (must be > 0) 
@@ -865,99 +1047,181 @@ class wsBrokenLinkChecker {
 			$per_page = 200;
 		}
 		
-		//calculate the number of various links
-		foreach ($filters as $filter => $data){
-			$filters[$filter]['count'] = $wpdb->get_var( 
-				"SELECT COUNT(*) FROM {$wpdb->prefix}blc_links WHERE ".$data['where_expr'] );
-		}
-		$current_filter = $filters[$link_type];
+		$current_filter = $filters[$filter_id];
 		$max_pages = ceil($current_filter['count'] / $per_page);
 		
-
 		//Select the required links + 1 instance per link.
-		//Note : The query might be somewhat inefficient, but I can't think of any better way to do this. 
-		$q = "SELECT 
-				 links.*, 
-				 instances.instance_id, instances.source_id, instances.source_type, 
-				 instances.link_text, instances.instance_type,
-				 COUNT(*) as instance_count,
-				 posts.post_title,
-				 posts.post_date
-				
-			  FROM 
-				 {$wpdb->prefix}blc_links AS links, 
-				 {$wpdb->prefix}blc_instances as instances LEFT JOIN {$wpdb->posts} as posts ON instances.source_id = posts.ID
-				
-			   WHERE
-				 links.link_id = instances.link_id
-				 AND ". $current_filter['where_expr'] ."
-				
-			   GROUP BY links.link_id
-			   LIMIT ".( ($page-1) * $per_page ).", $per_page";
-		//echo "<pre>$q</pre>";	   
-			
-		$links = $wpdb->get_results($q, ARRAY_A);
-		if ($links){
-			/*
-			echo '<pre>';
-			print_r($links);
-			echo  '</pre>';
-			//*/
-		} else {
+		$links = $this->get_links( $current_filter, ( ($page-1) * $per_page ), $per_page );
+		if ( is_null($links) && !empty($wpdb->last_error) ){
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
+		
+		//Save the search params (if any) in a handy array for later
+		if ( !empty($current_filter['is_search']) ){
+			$search_params = $this->get_search_params($current_filter);
+		} else {
+			$search_params = array();
+		}
+		
         ?>
         
 <script type='text/javascript'>
-	var blc_current_filter = '<?php echo $link_type; ?>';
+	var blc_current_filter = '<?php echo $filter_id; ?>';
 </script>
         
-<style type='text/css'>
-.blc-link-editor {
-    font-size: 1em;
-    width: 95%;
-}
-
-.blc-excluded-link {
-	background-color: #E2E2E2;
-}
-
-.blc-small-image {
-	display : block;
-	float: left;
-	padding-top: 2px;
-	margin-right: 3px;
-}
-</style>
-
 <div class="wrap">
 <h2><?php
 	//Output a header matching the current filter
 	if ( $current_filter['count'] > 0 ){
-		echo "<span class='current-link-count'>{$current_filter[count]}</span> " . $current_filter['heading'];
+		echo $current_filter['heading'] . " (<span class='current-link-count'>{$current_filter[count]}</span>)";
 	} else {
-		echo "<span class='current-link-count'></span>" . $current_filter['heading_zero'];
+		echo $current_filter['heading_zero'] . "<span class='current-link-count'></span>";
 	}
-?></h2>
+?>
+</h2>
+	<ul class="subsubsub">
+    	<?php
+    		//Construct a submenu of filter types
+    		$items = array();
+			foreach ($filters as $filter => $data){
+				if ( !empty($data['hidden']) ) continue; //skip hidden filters
+																
+				$class = $number_class = '';
+				
+				if ( $filter_id == $filter ) {
+					$class = 'class="current"';
+					$number_class = 'current-link-count';	
+				}
+				
+				$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' $class>
+					{$data[name]}</a> <span class='count'>(<span class='$number_class'>{$data[count]}</span>)</span>";
+			}
+			echo implode(' |</li>', $items);
+			unset($items);
+		?>
+	</ul>
+	
+<div class="search-box">
+	
+	<?php
+			//If we're currently displaying search results offer the user the option to s
+			//save the search query as a custom filter. 	
+			if ( $filter_id == 'search' ){
+	?>
+	<form name="save-search-query" id="custom-filter-form" action="<?php echo admin_url("tools.php?page=view-broken-links");  ?>" method="post" class="blc-inline-form">
+		<?php wp_nonce_field('create-custom-filter');  ?>
+		<input type="hidden" name="name" id="blc-custom-filter-name" value="" />
+		<input type="hidden" name="params" id="blc-custom-filter-params" value="<?php echo http_build_query($search_params, null, '&'); ?>" />
+		<input type="hidden" name="action" value="create-custom-filter" />
+		<input type="button" value="<?php esc_attr_e( 'Save This Search As a Filter', 'broken-link-checker' ); ?>" id="blc-create-filter" class="button" />
+	</form>				 				
+	<?php
+			} elseif ( !empty($current_filter['is_search']) ){
+			//If we're displaying a custom filter give an option to delete it.
+	?>
+	<form name="save-search-query" id="custom-filter-form" action="<?php echo admin_url("tools.php?page=view-broken-links");  ?>" method="post" class="blc-inline-form">
+		<?php wp_nonce_field('delete-custom-filter');  ?>
+		<input type="hidden" name="filter_id" id="blc-custom-filter-id" value="<?php echo $filter_id; ?>" />
+		<input type="hidden" name="action" value="delete-custom-filter" />
+		<input type="submit" value="<?php esc_attr_e( 'Delete This Filter', 'broken-link-checker' ); ?>" id="blc-delete-filter" class="button" />
+	</form>
+	<?php
+			}
+	?>
+	
+	<input type="button" value="<?php esc_attr_e( 'Search', 'broken-link-checker' ); ?> &raquo;" id="blc-open-search-box" class="button" />
+</div>
+
+<!-- The search dialog -->
+<div id='search-links-dialog' title='Search'>
+<form class="search-form" action="<?php echo admin_url('tools.php?page=view-broken-links'); ?>" method="get">
+	<input type="hidden" name="page" value="view-broken-links" />
+	<input type="hidden" name="filter_id" value="search" />
+	<fieldset>
+	
+	<label for="s_link_text"><?php _e('Link text', 'broken-link-checker'); ?></label>
+	<input type="text" name="s_link_text" value="<?php if(!empty($search_params['s_link_text'])) echo esc_attr($search_params['s_link_text']); ?>" id="s_link_text" class="text ui-widget-content" />
+	
+	<label for="s_link_url"><?php _e('URL', 'broken-link-checker'); ?></label>
+	<input type="text" name="s_link_url" id="s_link_url" value="<?php if(!empty($search_params['s_link_url'])) echo esc_attr($search_params['s_link_url']); ?>" class="text ui-widget-content" />
+	
+	<label for="s_http_code"><?php _e('HTTP code', 'broken-link-checker'); ?></label>
+	<input type="text" name="s_http_code" id="s_http_code" value="<?php if(!empty($search_params['s_http_code'])) echo esc_attr($search_params['s_http_code']); ?>" class="text ui-widget-content" />
+	
+	<label for="s_filter"><?php _e('Link status', 'broken-link-checker'); ?></label>
+	<select name="s_filter" id="s_filter">
+		<?php
+		if ( !empty($search_params['s_filter']) ){
+			$search_subfilter = $search_params['s_filter']; 
+		} else {
+			$search_subfilter = $filter_id;
+		}
+		
+		foreach ($this->native_filters as $filter => $data){
+			$selected = ($search_subfilter == $filter)?' selected="selected"':'';
+			printf('<option value="%s"%s>%s</option>', $filter, $selected, $data['name']);
+		}		 
+		?>
+	</select>
+	
+	<label for="s_link_type"><?php _e('Link type', 'broken-link-checker'); ?></label>
+	<select name="s_link_type" id="s_link_type">
+		<?php
+		$link_types = array(
+			__('Any', 'broken-link-checker') => '',
+			__('Normal link', 'broken-link-checker') => 'link',
+			__('Image', 'broken-link-checker') => 'image',
+			__('Custom field', 'broken-link-checker') => 'custom_field',
+			__('Bookmark', 'broken-link-checker') => 'blogroll',
+		);
+		
+		foreach ($link_types as $name => $value){
+			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $value )?' selected="selected"':'';
+			printf('<option value="%s"%s>%s</option>', $value, $selected, $name);
+		}
+		?>
+	</select>
+	
+	</fieldset>
+	
+	<div id="blc-search-button-row">
+		<input type="submit" value="<?php esc_attr_e( 'Search Links', 'broken-link-checker' ); ?>" id="blc-search-button" name="search_button" class="button-primary" />
+		<input type="button" value="<?php esc_attr_e( 'Cancel', 'broken-link-checker' ); ?>" id="blc-cancel-search" class="button" />
+	</div>
+	
+</form>	
+</div>
 
 	<div class='tablenav'>
-	    <ul class="subsubsub">
-	    	<?php
-	    		//Construct a submenu of filter types
-	    		$items = array();
-				foreach ($filters as $filter => $data){
-					$class = $number_class = '';
-					
-					if ( $link_type == $filter ) $class = 'class="current"';
-					if ( $link_type == $filter ) $number_class = 'current-link-count';
-					
-					$items[] = "<li><a href='tools.php?page=view-broken-links&link_type=$filter' $class>
-						{$data[name]}</a> <span class='count'>(<span class='$number_class'>{$data[count]}</span>)</span>";
+	
+		<div class="alignleft actions">
+			<span class='description'>
+			<?php
+			/*
+			//If this is a search filter, display the search query here 
+			if ( !empty($current_filter['is_search']) ){
+				$params = $search_params;
+				$search_query = array();
+				
+				if ( !empty($params['s_link_text']) ){
+					$search_query[] = sprintf('link text is like "%s"', $params['s_link_text']);
 				}
-				echo implode(' |</li>', $items);
-				unset($items);
+				if ( !empty($params['s_link_url']) ){
+					$search_query[] = sprintf('the URL contains "%s"', $params['s_link_url']);
+				}
+				if ( !empty($params['s_http_code']) ){
+					$search_query[] = 'HTTP code matches ' . $params['s_http_code'];
+				}
+				if ( !empty($params['s_link_type']) ){
+					$search_query[] = sprintf('link type is "%s"', $params['s_link_type']);
+				}
+				
+				echo sprintf("Showing %s links where ", $params['s_filter']) , implode(', ', $search_query);
+			}
+			*/
 			?>
-		</ul>
+			</span>
+		</div>
 		<?php
 			//Display pagination links 
 			$page_links = paginate_links( array(
@@ -971,7 +1235,7 @@ class wsBrokenLinkChecker {
 			
 			if ( $page_links ) { 
 				echo '<div class="tablenav-pages">';
-				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>' ) . '</span>%s',
+				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
 					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
 					number_format_i18n( min( $page * $per_page, count($links) ) ),
 					number_format_i18n( $current_filter['count'] ),
@@ -983,9 +1247,7 @@ class wsBrokenLinkChecker {
 		?>
 	
 	</div>
-
-
-
+	
 <?php
         if($links && (count($links)>0)){
             ?>
@@ -998,7 +1260,7 @@ class wsBrokenLinkChecker {
                 <th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
                 <th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 
-				<?php if ( 'broken' == $link_type ) { ?> 
+				<?php if ( 'broken' == $filter_id ) { ?> 
                 <th scope="col"> </th>
                 <?php } ?>
 
@@ -1124,7 +1386,7 @@ class wsBrokenLinkChecker {
 					echo '</div>';
                 ?>
                 </td>
-                <?php if ( 'broken' == $link_type ) { ?> 
+                <?php if ( 'broken' == $filter_id ) { ?> 
 				<td><a href='javascript:void(0);'  
 					id='discard_button-<?php print $rownum; ?>'
 					class='blc-discard-button'
@@ -1309,7 +1571,7 @@ jQuery(function($){
             } else {
 				//It's the same URL, so do nothing.
 			}
-			edit_button.html('Edit URL');
+			edit_button.html('<?php echo js_escape(__('Edit URL', 'broken-link-checker')); ?>');
         }
     });
     
@@ -1418,6 +1680,64 @@ jQuery(function($){
 			}
 		);
     });
+    
+    //--------------------------------------------
+    //The search box(es)
+    //--------------------------------------------
+    
+    var searchForm = $('#search-links-dialog');
+	    
+    searchForm.dialog({
+		autoOpen : false,
+		dialogClass : 'blc-search-container',
+		resizable: false,
+	});
+    
+    $('#blc-open-search-box').click(function(){
+    	if ( searchForm.dialog('isOpen') ){
+			searchForm.dialog('close');
+		} else {
+	    	var button_position = $('#blc-open-search-box').offset();
+	    	var button_height = $('#blc-open-search-box').outerHeight(true);
+	    	var button_width = $('#blc-open-search-box').outerWidth(true);
+	    	
+			var dialog_width = searchForm.dialog('option', 'width');
+						
+	    	searchForm.dialog('option', 'position', 
+				[ 
+					button_position.left - dialog_width + button_width/2, 
+					button_position.top + button_height + 1 - $(document).scrollTop()
+				]
+			);
+			searchForm.dialog('open');
+		}
+	});
+	
+	$('#blc-cancel-search').click(function(){
+		searchForm.dialog('close');
+	});
+	
+	//The "Save This Search Query" button creates a new custom filter based on the current search
+	$('#blc-create-filter').click(function(){
+		var filter_name = prompt("<?php echo js_escape(__("Enter a name for the new custom filter", 'broken-link-checker')); ?>", "");
+		if ( filter_name ){
+			$('#blc-custom-filter-name').val(filter_name);
+			$('#custom-filter-form').submit();
+		}
+	});
+	
+	//Display a confirmation dialog when the user clicks the "Delete This Filter" button 
+	$('#blc-delete-filter').click(function(){
+		if ( confirm('<?php 
+			echo js_escape(  
+					__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
+				); 
+		?>') ){
+			return true;
+		} else {
+			return false;
+		}
+	});
 	
 });
 
@@ -1425,10 +1745,77 @@ jQuery(function($){
 		<?php
 	}
 	
+	function links_page_css(){
+		?>
+<style type='text/css'>
+.blc-link-editor {
+    font-size: 1em;
+    width: 95%;
+}
+
+.blc-excluded-link {
+	background-color: #E2E2E2;
+}
+
+.blc-small-image {
+	display : block;
+	float: left;
+	padding-top: 2px;
+	margin-right: 3px;
+}
+
+.blc-search-container {
+	background : white !important;
+	border: 3px solid #EEEEEE;
+	padding: 12px;
+}
+
+.blc-search-container .ui-dialog-titlebar {
+	display: none;
+	margin: 0px;
+}
+
+#search-links-dialog {
+	display: none;
+}
+
+#search-links-dialog label, #search-links-dialog input.text, #search-links-dialog select { display:block; }
+#search-links-dialog input.text { margin-bottom:12px; width:95%; padding: .4em; }
+#search-links-dialog select { margin-bottom:12px; padding: .4em; }
+#search-links-dialog fieldset { padding:0; border:0; margin-top:25px; }
+
+#blc-search-button-row {
+	text-align: center;
+}
+
+#blc-search-button-row input {
+	padding: 0.4em;
+	margin-left: 8px;
+	margin-right: 8px;
+	margin-top: 8px; 
+}
+
+.blc-inline-form {
+	display: inline;
+}
+
+div.search-box{
+	float: right;
+	margin-top: -5px;
+	margin-right: 0pt;
+	margin-bottom: 0pt;
+	margin-left: 0pt;
+}
+</style>
+		<?php
+	}
+	
 	function link_details_row($link){
 		?>
-		<span id='post_date_full' style='display:none;'><?php 
+		<span id='post_date_full' style='display:none;'><?php
+			 
     		print $link['post_date'];
+    		
     	?></span>
     	<span id='check_date_full' style='display:none;'><?php
     		print $link['last_check'];
@@ -1443,8 +1830,8 @@ jQuery(function($){
     	<ol style='list-style-type: none; padding-left: 2px;'>
     	<?php if ( !empty($link['post_date']) ) { ?>
     	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?> :</strong>
-    	<span class='post_date'><?php 
-    		print strftime("%B %d, %Y",strtotime($link['post_date']));
+    	<span class='post_date'><?php
+			echo date_i18n("F d, Y",strtotime($link['post_date']));
     	?></span></li>
     	<?php } ?>
     	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?> :</strong>
@@ -1453,7 +1840,7 @@ jQuery(function($){
     		if ( $last_check < strtotime('-10 years') ){
 				_e('Never', 'broken-link-checker');
 			} else {
-    			echo strftime( "%B %d, %Y", $last_check );
+    			echo date_i18n("F d, Y", $last_check);
     		}
     	?></span></li>
     	
@@ -1684,17 +2071,32 @@ jQuery(function($){
 						Preparation
 		******************************************/
 		// Check for safe mode
-		if( ini_get('safe_mode') ){
-		    // Do it the safe mode way
-		    $t=ini_get('max_execution_time');
+		if( blcUtility::is_safe_mode() ){
+		    // Do it the safe mode way - obey the existing max_execution_time setting
+		    $t = ini_get('max_execution_time');
 		    if ($t && ($t < $max_execution_time)) 
 		    	$max_execution_time = $t-1;
 		} else {
 		    // Do it the regular way
 		    @set_time_limit( $max_execution_time * 2 ); //x2 should be plenty, running any longer would mean a glitch.
 		}
-		@ignore_user_abort(true);
 		
+		//Don't stop the script when the connection is closed
+		ignore_user_abort( true );
+		
+		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
+		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
+		//encountered when activating the plugin.
+		//(Comment out when debugging of you won't get the FirePHP output)
+		ob_end_clean();
+ 		header("Connection: close");
+		ob_start();
+		echo ('Connection closed'); //This could be anything
+		$size = ob_get_length();
+		header("Content-Length: $size");
+ 		ob_end_flush(); // Strange behaviour, will not work
+ 		flush();        // Unless both are called !
+ 		
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', strtotime('-20 minutes'));
 		
@@ -2044,7 +2446,7 @@ jQuery(function($){
 			
 			//Save the changes
 			if ( $link->save() ){
-				die( __("OK", 'broken-link-checker') );
+				die( "OK" );
 			} else {
 				die( __("Oops, couldn't modify the link!", 'broken-link-checker') ) ;
 			}
@@ -2514,6 +2916,166 @@ jQuery(function($){
    */
 	function load_language(){
 		load_plugin_textdomain( 'broken-link-checker', false, basename(dirname($this->loader)) . '/languages' );
+	}
+	
+  /**
+   * wsBrokenLinkChecker::get_links()
+   * Get the list of links that match a given filter. 
+   *
+   * @param array|null $filter The filter to apply. Set this to null to return all links (default).
+   * @param integer $offset	Skip this many links from the beginning. If this parameter is nonzero you must also set the next one.
+   * @param integer $max_results The maximum number of links to return.
+   * @param bool $count_only Only return the total number of matching links, not the links themselves
+   * @return array|int Either an array of links, or the number of matching links. Null on error.
+   */
+	function get_links( $filter = null, $offset = 0, $max_results = 0, $count_only = false){
+		global $wpdb; 
+		
+		//Figure out the WHERE expression for this filter
+		$where_expr = '1'; //default = select all links
+		
+		if ( !empty($filter) ){
+			
+			//Is this a custom search filter?
+			if ( empty($filter['is_search']) ){
+				//It's a native filter, so it should have the WHERE epression already set
+				$where_expr = $filter['where_expr'];
+			} else {
+				//It's a search filter, so we must build the WHERE expr for the specific query
+				//from the query parameters.
+				
+				$params = $this->get_search_params($filter);
+				
+				//Generate the individual clauses of the WHERE expression
+				$pieces = array();				
+				
+				//Anchor text - use fulltext search
+				if ( !empty($params['s_link_text']) ){
+					$pieces[] = 'MATCH(instances.link_text) AGAINST("' . $wpdb->escape($params['s_link_text']) . '")';
+				}
+				
+				//URL - try to match both the initial URL and the final URL.
+				//There is limited wildcard support, e.g. "google.*/search" will match both 
+				//"google.com/search" and "google.lv/search"  
+				if ( !empty($params['s_link_url']) ){
+					$s_link_url = like_escape($wpdb->escape($params['s_link_url']));
+					$s_link_url = str_replace('*', '%', $s_link_url);
+					
+					$pieces[] = '(links.url LIKE "%'. $s_link_url .'%") OR '.
+						        '(links.final_url LIKE "%'. $s_link_url .'%")';
+				}
+				
+				//Link type should match either the instance_type or the source_type
+				if ( !empty($params['s_link_type']) ){
+					$s_link_type = $wpdb->escape($params['s_link_type']);
+					$pieces[] = "instances.instance_type = '$s_link_type' OR instances.source_type='$s_link_type'";
+				}
+				
+				//HTTP code - the user can provide a list of HTTP response codes and code ranges.
+				//Example : 201,400-410,500 
+				if ( !empty($params['s_http_code']) ){
+					//Strip spaces.
+					$params['s_http_code'] = str_replace(' ', '', $params['s_http_code']);
+					//Split by comma
+					$codes = explode(',', $params['s_http_code']);
+					
+					$individual_codes = array();
+					$ranges = array();
+					
+					//Try to parse each response code or range. Invalid ones are simply ignored.
+					foreach($codes as $code){
+						if ( is_numeric($code) ){
+							//It's a single number
+							$individual_codes[] = abs(intval($code));
+						} elseif ( strpos($code, '-') !== false ) {
+							//Try to parse it as a range
+							$range = explode( '-', $code, 2 );
+							if ( (count($range) == 2) && is_numeric($range[0]) && is_numeric($range[0]) ){
+								//Make sure the smaller code comes first
+								$range = array( intval($range[0]), intval($range[1]) );
+								$ranges[] = array( min($range), max($range) );
+							}
+						}
+					}
+					
+					$piece = array();
+					
+					//All individual response codes get one "http_code IN (...)" clause 
+					if ( !empty($individual_codes) ){
+						$piece[] = '(links.http_code IN ('. implode(', ', $individual_codes) .'))';
+					}
+					
+					//Ranges get a "http_code BETWEEN min AND max" clause each
+					if ( !empty($ranges) ){
+						$range_strings = array();
+						foreach($ranges as $range){
+							$range_strings[] = "(links.http_code BETWEEN $range[0] AND $range[1])";
+						}
+						$piece[] = '( ' . implode(' OR ', $range_strings) . ' )';
+					}
+					
+					//Finally, generate a composite WHERE clause for both types of response code queries
+					if ( !empty($piece) ){
+						$pieces[] = implode(' OR ', $piece);
+					}
+					
+				}			
+				
+				//Custom filters can optionally call one of the native filters
+				//to narrow down the result set.
+				if ( !empty($params['s_filter']) && isset($this->native_filters[$params['s_filter']]) ){
+					$pieces[] = $this->native_filters[$params['s_filter']]['where_expr'];
+				}
+				
+				if ( !empty($pieces) ){
+					$where_expr = "\t( " . implode(" ) AND\n\t( ", $pieces) . ' ) ';
+				}
+			}
+					
+		}
+		
+		if ( $count_only ){
+			//Only get the number of matching links. This lets us use a simplified query with less joins.
+			$q = "
+				SELECT COUNT(*)
+				FROM (	
+					SELECT 0
+					
+					FROM 
+						{$wpdb->prefix}blc_links AS links, 
+						{$wpdb->prefix}blc_instances as instances
+					
+					WHERE
+						links.link_id = instances.link_id
+						AND ". $where_expr ."
+					
+				   GROUP BY links.link_id) AS foo";
+			return $wpdb->get_var($q);
+		} else {
+			//Select the required links + 1 instance per link + 1 post for instances contained in posts.
+			$q = "SELECT 
+					 links.*, 
+					 instances.instance_id, instances.source_id, instances.source_type, 
+					 instances.link_text, instances.instance_type,
+					 COUNT(*) as instance_count,
+					 posts.post_title,
+					 posts.post_date
+					
+				  FROM 
+					 {$wpdb->prefix}blc_links AS links, 
+					 {$wpdb->prefix}blc_instances as instances LEFT JOIN {$wpdb->posts} as posts ON instances.source_id = posts.ID
+					
+				   WHERE
+					 links.link_id = instances.link_id
+					 AND ". $where_expr ."
+					
+				   GROUP BY links.link_id";
+			if ( $max_results || $offset ){
+				$q .= "\nLIMIT $offset, $max_results";
+			}
+			
+			return $wpdb->get_results($q, ARRAY_A);
+		}
 	}
 
 }//class ends here

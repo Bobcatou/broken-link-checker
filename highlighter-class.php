@@ -47,7 +47,7 @@ class blcLinkHighlighter {
 			    AND ( links.http_code < 200 OR links.http_code >= 400 OR links.timeout = 1 )
 				AND links.http_code <> " . BLC_CHECKING;
 				
-		$rows = $wpdb->get_results( $wpdb->prepare( $q, $post->ID ), ARRAY_A ); 
+		$rows = $wpdb->get_results( $wpdb->prepare( $q, $post->ID ), ARRAY_A );
         if( $rows ){
         	$this->links_to_remove = array();
         	foreach($rows as $row){

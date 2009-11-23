@@ -1,0 +1,690 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Broken Link Checker\n"
+"Report-Msgid-Bugs-To: whiteshadow@w-shadow.com\n"
+"POT-Creation-Date: 2009-11-04 13:02+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Omi | http://equipajedemano.info <equipajedemano@gmail.com>\n"
+"Language-Team: Omi | http://equipajedemano.info/ <equipajedemano@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: Spain\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: core.php:132
+#: core.php:1284
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: core.php:155
+#: core.php:569
+msgid "[ Network error ]"
+msgstr "[ Error de Red ]"
+
+#: core.php:180
+msgid "Automatically expand the widget if broken links have been detected"
+msgstr "Expandir automáticamente el widget si de detectan enlaces rotos"
+
+#: core.php:359
+#: core.php:368
+#: core.php:386
+#: core.php:400
+#: core.php:907
+#, php-format
+msgid "Database error : %s"
+msgstr "Error en la base de datos: %s"
+
+#: core.php:423
+msgid "Link Checker Settings"
+msgstr "Configuración de Link Checker"
+
+#: core.php:424
+msgid "Link Checker"
+msgstr "Broken Link Checker"
+
+#: core.php:435
+msgid "View Broken Links"
+msgstr "Ver Enlaces Rotos"
+
+#: core.php:436
+#: core.php:833
+msgid "Broken Links"
+msgstr "Enlaces Rotos"
+
+#: core.php:453
+msgid "Settings"
+msgstr "Configuraciones"
+
+#: core.php:533
+msgid "Broken Link Checker Options"
+msgstr "Opciones de Broken Link Checker"
+
+#: core.php:546
+msgid "Status"
+msgstr "Estado"
+
+#: core.php:548
+#: core.php:771
+msgid "Show debug info"
+msgstr "Mostrar información de depuración"
+
+#: core.php:582
+msgid "Re-check all pages"
+msgstr "Volver a comprobar todas las páginas"
+
+#: core.php:606
+msgid "Check each link"
+msgstr "Comprobar cada enlace"
+
+#: core.php:611
+#, php-format
+msgid "Every %s hours"
+msgstr "Cada %s horas"
+
+#: core.php:620
+msgid "Existing links will be checked this often. New links will usually be checked ASAP."
+msgstr "Los enlaces ya existentes se comprobarán con esta frecuencia. Los nuevos enlaces se comprobarán lo antes posible."
+
+#: core.php:627
+msgid "Broken link CSS"
+msgstr "Enlace CSS roto"
+
+#: core.php:632
+msgid "Apply <em>class=\"broken_link\"</em> to broken links"
+msgstr "Aplicar <em>class=\"broken_link\"</em> a los enlaces rotos"
+
+#: core.php:644
+msgid "Exclusion list"
+msgstr "Lista de exclusión"
+
+#: core.php:645
+msgid "Don't check links where the URL contains any of these words (one per line) :"
+msgstr "No comprobar enlaces en los que la URL contenga alguna de estas palabras (una por línea):"
+
+#: core.php:655
+msgid "Custom fields"
+msgstr "Campos personalizados"
+
+#: core.php:656
+msgid "Check URLs entered in these custom fields (one per line) :"
+msgstr "Comprobar las siguientes URL personalizadas (una por línea):"
+
+#: core.php:667
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: core.php:673
+msgid "Timeout"
+msgstr "Intervalo"
+
+#: core.php:679
+#: core.php:735
+#, php-format
+msgid "%s seconds"
+msgstr "%s segundos"
+
+#: core.php:688
+msgid "Links that take longer than this to load will be marked as broken."
+msgstr "Los enlaces que tarden más de este tiempo en cargar se marcarán como rotos."
+
+#: core.php:697
+msgid "Custom temporary directory"
+msgstr "Directorio temporal personalizado"
+
+#: core.php:706
+#: core.php:2047
+#: core.php:2088
+msgid "OK"
+msgstr "Aceptar"
+
+#: core.php:709
+msgid "Error : This directory isn't writable by PHP."
+msgstr "Error: PHP no puede escribir en ese directorio."
+
+#: core.php:714
+msgid "Error : This directory doesn't exist."
+msgstr "Error: No existe ese directorio"
+
+#: core.php:722
+msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
+msgstr "Rellena este campo si quieres que el plugin utilice un directorio personalizado para sus ficheros temporales. En caso contrario, déjalo en blanco."
+
+#: core.php:729
+msgid "Max. execution time"
+msgstr "Tiempo de ejecución máximo"
+
+#: core.php:746
+msgid "The plugin works by periodically creating a background worker instance that parses your posts looking for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the background instance may run each time before stopping."
+msgstr "El plugin funciona ejecutando periódicamente una tarea en segundo plano que analizará tus entradas para comprobar los enlaces, así como otros trabajos que te roban mucho tiempo. Desde aquí podrás establecer cada cuanto tiempo, como mucho, se estará ejecutando la tarea en segundo plano antes de detenerla."
+
+#: core.php:756
+msgid "Save Changes"
+msgstr "Guardar Cambios"
+
+#: core.php:769
+msgid "Hide debug info"
+msgstr "Ocultar información de depuración"
+
+#: core.php:832
+msgid "Broken"
+msgstr "Rotos"
+
+#: core.php:834
+msgid "No broken links found"
+msgstr "No se han encontrado enlaces rotos"
+
+#: core.php:838
+msgid "Redirects"
+msgstr "Redirecciones"
+
+#: core.php:839
+msgid "Redirected Links"
+msgstr "Enlaces Redirigidos"
+
+#: core.php:840
+msgid "No redirects found"
+msgstr "No se han encontrado redirecciones"
+
+#: core.php:845
+msgid "All"
+msgstr "Todos"
+
+#: core.php:846
+msgid "Detected Links"
+msgstr "Enlaces Detectados"
+
+#: core.php:847
+msgid "No links found (yet)"
+msgstr "No se han encontrado enlaces (todavía)"
+
+#: core.php:966
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: core.php:967
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#: core.php:974
+#: core.php:1149
+#, php-format
+msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr "Mostrando %s&#8211;%s de <span class=\"current-link-count\">%s</span>"
+
+#: core.php:996
+msgid "Source"
+msgstr "Fuente"
+
+#: core.php:998
+msgid "Link Text"
+msgstr "Texto del Enlace"
+
+#: core.php:999
+msgid "URL"
+msgstr "URL"
+
+#: core.php:1025
+#: core.php:1031
+msgid "Edit this post"
+msgstr "Editar esta entrada"
+
+#: core.php:1031
+#: core.php:1046
+msgid "Edit"
+msgstr "Editar"
+
+#: core.php:1032
+msgid "Delete this post"
+msgstr "Borrar esta entrada"
+
+#: core.php:1032
+#, php-format
+msgid ""
+"You are about to delete this post '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Estás a punto de borrar esta entrada '%s'\n"
+" 'Cancelar' para salir, 'Aceptar' para borrarla."
+
+#: core.php:1032
+#: core.php:1047
+msgid "Delete"
+msgstr "Borrar"
+
+#: core.php:1034
+#, php-format
+msgid "View \"%s\""
+msgstr "Ver \"%s\""
+
+#: core.php:1034
+msgid "View"
+msgstr "Ver"
+
+#: core.php:1041
+#: core.php:1046
+msgid "Edit this bookmark"
+msgstr "Editar este marcador"
+
+#: core.php:1047
+#, php-format
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Estás a punto de borrar este enlace '%s'\n"
+"  'Cancelar' para salir, 'Aceptar para borrarlo."
+
+#: core.php:1056
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[¡Un enlace huérfano! Esto es un fallo.]"
+
+#: core.php:1070
+msgid "Image"
+msgstr "Imagen"
+
+#: core.php:1081
+msgid "Custom field"
+msgstr "Campo personalizado"
+
+#: core.php:1089
+msgid "Bookmark"
+msgstr "Marcador"
+
+#: core.php:1104
+msgid "Show more info about this link"
+msgstr "Mostrar más información sobre este enlace"
+
+#: core.php:1104
+#: core.php:2381
+msgid "Details"
+msgstr "Detalles"
+
+#: core.php:1106
+msgid "Remove this link from all posts"
+msgstr "Eliminar este enlace de todas las entradas"
+
+#: core.php:1107
+#: core.php:1371
+msgid "Unlink"
+msgstr "Desenlazar"
+
+#: core.php:1110
+#: core.php:1401
+#: core.php:1412
+msgid "Excluded"
+msgstr "Excluídos"
+
+#: core.php:1112
+msgid "Add this URL to the exclusion list"
+msgstr "Añadir esta URL a la lista de exclusiones"
+
+#: core.php:1113
+#: core.php:1415
+msgid "Exclude"
+msgstr "Excluir"
+
+#: core.php:1116
+msgid "Edit link URL"
+msgstr "Editar la URL del enlace"
+
+#: core.php:1116
+#: core.php:1340
+msgid "Edit URL"
+msgstr "Editar URL"
+
+#: core.php:1122
+msgid "Cancel URL editing"
+msgstr "Cancelar la edición de URL"
+
+#: core.php:1122
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: core.php:1133
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "Eliminar este enlace de la lista de enlaces rotos y marcarlo como válido"
+
+#: core.php:1135
+#: core.php:1204
+msgid "Discard"
+msgstr "Descartar"
+
+#: core.php:1180
+#: core.php:1347
+#: core.php:1384
+msgid "Wait..."
+msgstr "Espera..."
+
+#: core.php:1238
+msgid "Save URL"
+msgstr "Guardar URL"
+
+#: core.php:1248
+msgid "Saving changes..."
+msgstr "Guardando cambios..."
+
+#: core.php:1437
+msgid "Log"
+msgstr "Registro"
+
+#: core.php:1445
+msgid "Post published on"
+msgstr "Entrada publicada el"
+
+#: core.php:1450
+msgid "Link last checked"
+msgstr "Última comprobación"
+
+#: core.php:1454
+msgid "Never"
+msgstr "Nunca"
+
+#: core.php:1460
+msgid "HTTP code"
+msgstr "Código HTTP"
+
+#: core.php:1465
+msgid "Response time"
+msgstr "Tiempo de respuesta"
+
+#: core.php:1467
+#, php-format
+msgid "%2.3f seconds"
+msgstr "%2.3f segundos"
+
+#: core.php:1470
+msgid "Final URL"
+msgstr "URL final"
+
+#: core.php:1475
+msgid "Redirect count"
+msgstr "Recuento de redirecciones"
+
+#: core.php:1480
+msgid "Instance count"
+msgstr "Recuento de instancias"
+
+#: core.php:1489
+#, php-format
+msgid "This link has failed %d time."
+msgid_plural "This link has failed %d times."
+msgstr[0] "Este enlace ha fallado %d vez."
+msgstr[1] "Este enlace ha fallado %d veces."
+
+#: core.php:1879
+#: core.php:2206
+msgid "This link wasn't checked because a matching keyword was found on your exclusion list."
+msgstr "Este enlace no se comprobó ya que contiene una palabra coincidente con tu lista de exclusión."
+
+#: core.php:1921
+msgid "View broken links"
+msgstr "Ver enlaces rotos"
+
+#: core.php:1922
+#, php-format
+msgid "Found %d broken link"
+msgid_plural "Found %d broken links"
+msgstr[0] "Se encontró %d enlace roto"
+msgstr[1] "Se encontraron %d enlaces rotos"
+
+#: core.php:1928
+msgid "No broken links found."
+msgstr "No se encontraron enlaces rotos."
+
+#: core.php:1935
+#, php-format
+msgid "%d URL in the work queue"
+msgid_plural "%d URLs in the work queue"
+msgstr[0] "%d URL a la espera de ser revisada"
+msgstr[1] "%d URL a la espera de ser revisadas"
+
+#: core.php:1938
+msgid "No URLs in the work queue."
+msgstr "No hay URL en la cola de trabajo."
+
+#: core.php:1944
+#, php-format
+msgid "Detected %d unique URL"
+msgid_plural "Detected %d unique URLs"
+msgstr[0] "Detectada %d URL única"
+msgstr[1] "Detectadas %d URL únicas"
+
+#: core.php:1945
+#, php-format
+msgid "in %d link"
+msgid_plural "in %d links"
+msgstr[0] "en %d enlace"
+msgstr[1] "en %d enlaces"
+
+#: core.php:1950
+msgid "and still searching..."
+msgstr "y buscando todavía..."
+
+#: core.php:1956
+msgid "Searching your blog for links..."
+msgstr "Buscando enlaces en tu sitio..."
+
+#: core.php:1958
+msgid "No links detected."
+msgstr "No se detectaron enlaces."
+
+#: core.php:2027
+#: core.php:2059
+#: core.php:2102
+#: core.php:2183
+msgid "You're not allowed to do that!"
+msgstr "¡No tienes permisos para hacer eso!"
+
+#: core.php:2035
+#: core.php:2069
+#: core.php:2112
+#: core.php:2193
+#, php-format
+msgid "Oops, I can't find the link %d"
+msgstr "¡Vaya!, no se pudo encontrar el enlace %d"
+
+#: core.php:2043
+msgid "This link was manually marked as working by the user."
+msgstr "Este enlace se marcó manualmente como válido por el usuario."
+
+#: core.php:2049
+msgid "Oops, couldn't modify the link!"
+msgstr "¡Vaya!, no se pudo modificar el enlace"
+
+#: core.php:2052
+#: core.php:2129
+msgid "Error : link_id not specified"
+msgstr "Error: link_id no especificado"
+
+#: core.php:2076
+msgid "Oops, the new URL is invalid!"
+msgstr "¡Vaya!, la nueva URL no es válida"
+
+#: core.php:2085
+msgid "An unexpected error occured!"
+msgstr "¡Ocurrió un error inesperado!"
+
+#: core.php:2094
+msgid "Error : link_id or new_url not specified"
+msgstr "Error: No se especificó link_id o new_url"
+
+#: core.php:2119
+#, php-format
+msgid "URL %s was removed."
+msgstr "La URL %s se eliminó."
+
+#: core.php:2123
+msgid "The plugin failed to remove the link."
+msgstr "El plugin no ha podido eliminar el enlace."
+
+#: core.php:2138
+msgid "You don't have sufficient privileges to access this information!"
+msgstr "¡No tienes suficientes permisos para acceder a esta información!"
+
+#: core.php:2151
+msgid "Error : link ID not specified"
+msgstr "Error: link ID no especificado"
+
+#: core.php:2175
+#, php-format
+msgid "Failed to load link details (%s)"
+msgstr "Error cargando los detalles de carga del enlace (%s)"
+
+#: core.php:2213
+#, php-format
+msgid "URL %s added to the exclusion list"
+msgstr "La URL %s se añadió a la lista de exclusión"
+
+#: core.php:2217
+msgid "Link ID not specified"
+msgstr "Link ID no especificado"
+
+#: core.php:2367
+#, php-format
+msgid "The current temporary directory is not accessible; please <a href=\"%s\">set a different one</a>."
+msgstr "El directorio temporal actual no es accesible; por favor, <a href=\"%s\">establece uno distinto</a>."
+
+#: core.php:2372
+#, php-format
+msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
+msgstr "Por favor, debes permitir que los plugins puedan grabar datos en el directorio <code>%1$s</code> o bien <a href=\"%2$s\">establecer un directorio temporal personalizado</a>."
+
+#: core.php:2379
+msgid "Broken Link Checker can't create a lockfile."
+msgstr "Broken Link Checker no ha podido crear un archivo temporal."
+
+#: core.php:2384
+msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
+msgstr "Este plugin utiliza un sistema de bloqueo de archivos para garantizar que sólo se ejecuta una instancia del algoritmo de comprobación de enlaces en un momento determinado, ya que consume bastantes recursos. Desafortunadamente, el plugin no ha podido encontrar un directorio en el que almacenar el fichero de bloqueo - ha fallado al detectar la localización del directorio temporal de tu servidor, y el propio directorio del plugin no permite la escritura desde PHP. Para resolverlo, tendrás que dar permisos de escritura al directorio o establecer un directorio temporal en la configuración del plugin."
+
+#: core.php:2404
+msgid "PHP version"
+msgstr "Versión PHP"
+
+#: core.php:2410
+msgid "MySQL version"
+msgstr "Versión MySQL"
+
+#: core.php:2423
+msgid "You have an old version of CURL. Redirect detection may not work properly."
+msgstr "Tienes una versión obsoleta de CURL. La detección de redirecciones puede no funcionar correctamente."
+
+#: core.php:2435
+#: core.php:2451
+#: core.php:2456
+msgid "Not installed"
+msgstr "No instalado"
+
+#: core.php:2438
+msgid "CURL version"
+msgstr "Versión CURL"
+
+#: core.php:2444
+msgid "Installed"
+msgstr "Instalado"
+
+#: core.php:2457
+msgid "You must have either CURL or Snoopy installed for the plugin to work!"
+msgstr "¡Tienes que tener CURL o Snoopy instalado para que funcione el plugin!"
+
+#: core.php:2468
+msgid "On"
+msgstr "Activado"
+
+#: core.php:2469
+msgid "Redirects may be detected as broken links when safe_mode is on."
+msgstr "Las redirecciones podrían interpretarse como enlaces rotos cuando safe_mode esta activo."
+
+#: core.php:2474
+#: core.php:2488
+msgid "Off"
+msgstr "Desactivado"
+
+#: core.php:2482
+#, php-format
+msgid "On ( %s )"
+msgstr "Activado ( %s )"
+
+#: core.php:2483
+msgid "Redirects may be detected as broken links when open_basedir is on."
+msgstr "Las redirecciones podrían interpretarse como enlaces rotos cuando open_basedir esta activo."
+
+#: core.php:2502
+msgid "Can't create a lockfile. Please specify a custom temporary directory."
+msgstr "No puedo crear archivo de bloqueo. Por favor, especifica un directorio temporal personalizado."
+
+#: link-classes.php:212
+#, php-format
+msgid "First try : %d"
+msgstr "Primer intento: %d"
+
+#: link-classes.php:214
+msgid "First try : 0 (No response)"
+msgstr "Primer intento: 0 (Sin respuesta)"
+
+#: link-classes.php:222
+msgid "Trying a second time with different settings..."
+msgstr "Realizando un segundo intendo con diferentes configuraciones..."
+
+#: link-classes.php:237
+#, php-format
+msgid "Second try : %d"
+msgstr "Segundo intento: %d"
+
+#: link-classes.php:239
+msgid "Second try : 0 (No response)"
+msgstr "Segundo intento: 0 (Sin respuesta)"
+
+#: link-classes.php:265
+msgid "Using Snoopy"
+msgstr "Utilizando Snoopy"
+
+#: link-classes.php:285
+msgid "Request timed out."
+msgstr "Tiempo de espera agotado."
+
+#: link-classes.php:304
+msgid "Link is valid."
+msgstr "El enlace es válido."
+
+#: link-classes.php:309
+msgid "Link is broken."
+msgstr "El enlace esta roto."
+
+#: link-classes.php:313
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Lo más probable es que el tiempo de espera se agotase o bien que el dominio no exista."
+
+#: link-classes.php:354
+#, php-format
+msgid "Error adding link %s : %s"
+msgstr "Error añadiendo enlace %s: %s"
+
+#: link-classes.php:374
+#, php-format
+msgid "Error updating link %d : %s"
+msgstr "Error actualizando enlace %d: %s"
+
+#. Plugin Name of an extension
+msgid "Broken Link Checker"
+msgstr "Broken Link Checker"
+
+#. Plugin URI of an extension
+msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+msgstr "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+
+#. Description of an extension
+msgid "Checks your posts for broken links and missing images and notifies you on the dashboard if any are found."
+msgstr "Comprueba los enlaces e imágenes de tus entradas y te informa en el escritorio de WordPress si alguno está fallando."
+
+#. Author of an extension
+msgid "Janis Elsts"
+msgstr "Janis Elsts"
+
+#. Author URI of an extension
+msgid "http://w-shadow.com/blog/"
+msgstr "http://w-shadow.com/blog/"
+

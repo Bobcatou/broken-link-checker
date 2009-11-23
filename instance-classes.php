@@ -310,12 +310,30 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 		};
 	}
 	
+  /**
+   * blcLinkInstance_post_link::unlink_callback()
+   * Remove the link while leaving the anchor text intact.
+   *
+   * @uses $blc_config_manager Global variable pointing to the plugin's configuration manager
+   *
+   * @param array $matches
+   * @return string
+   */
 	function unlink_callback($matches){
+		global $blc_config_manager;
+		
 		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
 		
+		//Does the URL match?
 		if ($url == $this->old_url){
 			$this->changed_links++;
-			return $matches[5]; //just the anchor text
+			if ( $blc_config_manager->options['mark_removed_links'] ){
+				//leave only the anchor text + the removed_link CSS class
+				return '<span class="removed_link">' . $matches[5] . '</span>'; 
+			} else {
+				return $matches[5]; //just the anchor text
+			}
+			
 		} else {
 			return $matches[0]; //return the link unchanged
 		}

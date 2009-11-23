@@ -4,9 +4,10 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.6.5
+Version: 0.7
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
+Text Domain: broken-link-checker
 */
 
 /*
@@ -53,8 +54,13 @@ $blc_config_manager = new blcConfigurationManager(
 	array(
         'max_execution_time' => 5*60, 	//How long the worker instance may run, at most. 
         'check_threshold' => 72, 		//Check each link every 72 hours.
+        
         'mark_broken_links' => true, 	//Whether to add the broken_link class to broken links in posts.
         'broken_link_css' => ".broken_link, a.broken_link {\n\ttext-decoration: line-through;\n}",
+        
+        'mark_removed_links' => false, 	//Whether to add the removed_link class when un-linking a link.
+        'removed_link_css' => ".removed_link, a.removed_link {\n\ttext-decoration: line-through;\n}",
+        
         'exclusion_list' => array(), 	//Links that contain a substring listed in this array won't be checked. 
         'recheck_count' => 3, 			//[Internal] How many times a broken link should be re-checked (slightly buggy)
 		
@@ -80,12 +86,20 @@ $blc_config_manager = new blcConfigurationManager(
 
 	
 if ( !is_admin() ){
-	//This is user-side request, so the only thing we may need to do is run the broken link highlighter.
+	//This is user-side request, so we may need to do is run the broken link highlighter.
 	if ( $blc_config_manager->options['mark_broken_links'] ){
 		//Load some utilities (used by the higlighter) and the highlighter itself
 		require $blc_directory . '/utility-class.php';
 		require $blc_directory . '/highlighter-class.php';
 		$blc_link_highlighter = new blcLinkHighlighter( $blc_config_manager->options['broken_link_css'] );
+	}
+	//And possibly inject the CSS for removed links
+	if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
+		function blc_print_remove_link_css(){
+			global $blc_config_manager;
+			echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
+		}
+		add_action('wp_head', 'blc_print_remove_link_css');
 	}
 } else {
 	//Load everything

@@ -310,7 +310,7 @@ class blcLink {
 			if ( $this->http_code == BLC_TIMEOUT ){
 				//This is probably a timeout
 				$this->timeout = true;
-				$this->log .= "\r\n(" . __("Most likely the connection timed out or the domain doesn't exist.", 'broken-link-checker');
+				$this->log .= "\r\n(" . __("Most likely the connection timed out or the domain doesn't exist.", 'broken-link-checker') . ')';
 			}
 			return false;
 		}
