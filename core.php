@@ -1024,7 +1024,7 @@ class wsBrokenLinkChecker {
 		} 		
 		        
         //Build the filter list
-		$filters = array_merge($this->init_native_filters(), $this->get_custom_filters());
+		$filters = array_merge($this->native_filters, $this->get_custom_filters());
 		
 		//Add the special "search" filter
 		$filters['search'] = array(
