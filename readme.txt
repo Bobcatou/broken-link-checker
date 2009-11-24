@@ -73,6 +73,15 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.7 =
+* Added a Search function and the ability to save searches as custom filters
+* Added a Spanish translation
+* Added a Belorussian translation
+* Added an option to add a removed\_link CSS class to unlinked links
+* Slight layout changes
+* Added localized date display (where applicable)
+* The background worker thread that is started up via AJAX will now close the connection almost immediately after it starts running. This will reduce resource usage slightly. May also solve the rare and mysterious slowdown some users have experienced when activating the plugin.
+
 = 0.6.5 =
 * Added Russian translation.
 
