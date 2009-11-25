@@ -1426,7 +1426,7 @@ class wsBrokenLinkChecker {
             //Also display pagination links at the bottom
             if ( $page_links ) { 
 				echo '<div class="tablenav"><div class="tablenav-pages">';
-				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>' ) . '</span>%s',
+				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
 					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
 					number_format_i18n( min( $page * $per_page, count($links) ) ),
 					number_format_i18n( $current_filter['count'] ),
