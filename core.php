@@ -2720,13 +2720,13 @@ div.search-box{
 		}
 		
 		//Try the plugin's own directory.
-		if ( !blcUtility::is_writable( dirname(__FILE__) ) ){
+		if ( blcUtility::is_writable( dirname(__FILE__) ) ){
 			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
 			
 			//Try the system-wide temp directory
 			$path = trailingslashit( sys_get_temp_dir() );
-			if ( $path && blcUtility::is_writable($path)){ //Apparently, is_writable() can throw an error if the dir. is inaccessible. WTF? 
+			if ( $path && blcUtility::is_writable($path)){  
 				return $path . 'wp_blc_lock';
 			}
 			
