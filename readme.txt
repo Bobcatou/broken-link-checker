@@ -20,6 +20,7 @@ This plugin will monitor your blog looking for broken links and let you know if 
 * Link checking intervals can be configured.
 * New/modified posts are checked ASAP.
 * You view broken links, redirects, and a complete list of links used on your site, in the *Tools -> Broken Links* tab. 
+* Searching and filtering links by URL, anchor text and so on is also possible.
 * Each link can be edited or unlinked directly via the plugin's page, without manually editing each post.
 
 **Basic Usage**
@@ -73,6 +74,10 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.7.1 =
+* Updated Russian translation.
+* Yet another modification of the algorithm that tries to detect a usable directory for the lockfile.
+
 = 0.7 =
 * Added a Search function and the ability to save searches as custom filters
 * Added a Spanish translation
@@ -81,6 +86,8 @@ To upgrade your installation
 * Slight layout changes
 * Added localized date display (where applicable)
 * The background worker thread that is started up via AJAX will now close the connection almost immediately after it starts running. This will reduce resource usage slightly. May also solve the rare and mysterious slowdown some users have experienced when activating the plugin.
+* Updated Italian translation
+* Fixed an unlocalized string on the "Broken Links" page
 
 = 0.6.5 =
 * Added Russian translation.
