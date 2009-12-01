@@ -2712,15 +2712,16 @@ div.search-box{
 	function lockfile_name(){
 		//Try the user-specified temp. directory first, if any
 		if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
-			if ( blcUtility::is_writable($this->conf->options['custom_tmp_dir']) && @is_dir($this->conf->options['custom_tmp_dir']) ) {
-				return trailingslashit($this->conf->options['custom_tmp_dir']) . 'wp_blc_lock';
+			$custom_dir = trailingslashit($this->conf->options['custom_tmp_dir']);
+			if ( blcUtility::is_writable( $custom_dir ) && @is_dir( $custom_dir ) ) {
+				return $custom_dir . 'wp_blc_lock';
 			} else {
 				return false;
 			}
 		}
 		
 		//Try the plugin's own directory.
-		if ( blcUtility::is_writable( dirname(__FILE__) ) ){
+		if ( blcUtility::is_writable( trailingslashit(dirname(__FILE__)) ) ){
 			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
 			
