@@ -2713,7 +2713,7 @@ div.search-box{
 		//Try the user-specified temp. directory first, if any
 		if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
 			$custom_dir = trailingslashit($this->conf->options['custom_tmp_dir']);
-			if ( blcUtility::is_writable( $custom_dir ) && @is_dir( $custom_dir ) ) {
+			if ( blcUtility::is_writable( $custom_dir ) && is_dir( $custom_dir ) ) {
 				return $custom_dir . 'wp_blc_lock';
 			} else {
 				return false;
@@ -2721,8 +2721,9 @@ div.search-box{
 		}
 		
 		//Try the plugin's own directory.
-		if ( blcUtility::is_writable( trailingslashit(dirname(__FILE__)) ) ){
-			return dirname(__FILE__) . '/wp_blc_lock';
+		$plugins_directory = trailingslashit(dirname(__FILE__));
+		if ( blcUtility::is_writable( $plugins_directory ) ){
+			return $plugins_directory . 'wp_blc_lock';
 		} else {
 			
 			//Try the system-wide temp directory
