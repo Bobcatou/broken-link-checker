@@ -207,12 +207,15 @@ class blcUtility {
 	
   /**
    * blcUtility::is_writable()
-   * Check if a file or directory is writable
+   * Check if a file or directory is writable.
    *
    * @param string $path
    * @return bool
    */
 	function is_writable($path){
+		//The raison d'etre of this function is that the built-in is_writable() function 
+		//may behave incorrectly when open_basedir is set. So we check for it and use 
+		//a custom algorithm if that's the case.
 	    if ( blcUtility::is_open_basedir() ){
 			return blcUtility::_custom_is_writable( $path );
 		} else {
@@ -220,6 +223,13 @@ class blcUtility {
 		}
 	}
 	
+  /**
+   * blcUtility::_custom_is_writable()
+   * Check if a file or directory is writable by attempting to actually write to that file or directory. 
+   *
+   * @param string $path
+   * @return bool
+   */
 	function _custom_is_writable($path){
 		//will work in despite of Windows ACLs bug
 	    //NOTE: use a trailing slash for folders!!!
