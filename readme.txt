@@ -74,6 +74,9 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.7.2 =
+* Only use the custom access rights detection routine if open\_basedir is set.
+
 = 0.7.1 =
 * Updated Russian translation.
 * Yet another modification of the algorithm that tries to detect a usable directory for the lockfile.
