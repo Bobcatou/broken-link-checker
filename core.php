@@ -2712,30 +2712,28 @@ div.search-box{
 	function lockfile_name(){
 		//Try the user-specified temp. directory first, if any
 		if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
-			$custom_dir = trailingslashit($this->conf->options['custom_tmp_dir']);
-			if ( blcUtility::is_writable( $custom_dir ) && is_dir( $custom_dir ) ) {
-				return $custom_dir . 'wp_blc_lock';
+			if ( @is_writable($this->conf->options['custom_tmp_dir']) && @is_dir($this->conf->options['custom_tmp_dir']) ) {
+				return trailingslashit($this->conf->options['custom_tmp_dir']) . 'wp_blc_lock';
 			} else {
 				return false;
 			}
 		}
 		
 		//Try the plugin's own directory.
-		$plugins_directory = trailingslashit(dirname(__FILE__));
-		if ( blcUtility::is_writable( $plugins_directory ) ){
-			return $plugins_directory . 'wp_blc_lock';
+		if ( @is_writable( dirname(__FILE__) ) ){
+			return dirname(__FILE__) . '/wp_blc_lock';
 		} else {
 			
 			//Try the system-wide temp directory
-			$path = trailingslashit( sys_get_temp_dir() );
-			if ( $path && blcUtility::is_writable($path)){  
-				return $path . 'wp_blc_lock';
+			$path = sys_get_temp_dir();
+			if ( $path && @is_writable($path)){
+				return trailingslashit($path) . 'wp_blc_lock';
 			}
 			
 			//Try the upload directory.  
-			$path = trailingslashit( ini_get('upload_tmp_dir') );
-			if ( $path && blcUtility::is_writable($path)){
-				return $path . 'wp_blc_lock';
+			$path = ini_get('upload_tmp_dir');
+			if ( $path && @is_writable($path)){
+				return trailingslashit($path) . 'wp_blc_lock';
 			}
 			
 			//Fail
