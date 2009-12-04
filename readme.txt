@@ -74,6 +74,9 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.7.3 =
+* Reverted to the old access-checking algorithm + some error suppression.
+
 = 0.7.2 =
 * Only use the custom access rights detection routine if open\_basedir is set.
 
