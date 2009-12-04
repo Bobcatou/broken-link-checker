@@ -527,7 +527,7 @@ class wsBrokenLinkChecker {
             $this->conf->options['custom_fields'] = $new_custom_fields;
             
             //Temporary file directory
-            $this->conf->options['custom_tmp_dir'] = trailingslashit( trim(stripslashes(strval($_POST['custom_tmp_dir']))) );
+            $this->conf->options['custom_tmp_dir'] = trim( stripslashes(strval($_POST['custom_tmp_dir'])) );
             
             //HTTP timeout
             $new_timeout = intval($_POST['timeout']);
@@ -743,7 +743,7 @@ class wsBrokenLinkChecker {
             <?php 
             if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
 				if ( @is_dir( $this->conf->options['custom_tmp_dir'] ) ){
-					if ( blcUtility::is_writable( $this->conf->options['custom_tmp_dir'] ) ){
+					if ( @is_writable( $this->conf->options['custom_tmp_dir'] ) ){
 						echo "<strong>", __('OK', 'broken-link-checker'), "</strong>";
 					} else {
 						echo '<span class="error">';
