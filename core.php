@@ -387,7 +387,7 @@ class wsBrokenLinkChecker {
 				KEY link_id (link_id),
 				KEY source_id (source_id,source_type),
 				FULLTEXT KEY link_text (link_text)
-			)"; 
+			) ENGINE = MYISAM"; 
 		dbDelta($q);
 		
 		//Create the synchronization table
@@ -1252,7 +1252,7 @@ class wsBrokenLinkChecker {
 				echo '<div class="tablenav-pages">';
 				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
 					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
-					number_format_i18n( min( $page * $per_page, count($links) ) ),
+					number_format_i18n( min( $page * $per_page, $current_filter['count'] ) ),
 					number_format_i18n( $current_filter['count'] ),
 					$page_links
 				); 
@@ -1428,7 +1428,7 @@ class wsBrokenLinkChecker {
 				echo '<div class="tablenav"><div class="tablenav-pages">';
 				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
 					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
-					number_format_i18n( min( $page * $per_page, count($links) ) ),
+					number_format_i18n( min( $page * $per_page, $current_filter['count'] ) ),
 					number_format_i18n( $current_filter['count'] ),
 					$page_links
 				); 
@@ -2106,14 +2106,16 @@ div.search-box{
 		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
 		//encountered when activating the plugin.
 		//(Comment out when debugging or you won't get the FirePHP output)
-		ob_end_clean();
- 		header("Connection: close");
-		ob_start();
-		echo ('Connection closed'); //This could be anything
-		$size = ob_get_length();
-		header("Content-Length: $size");
- 		ob_end_flush(); // Strange behaviour, will not work
- 		flush();        // Unless both are called !
+		if ( !defined('BLC_DEBUG') ){
+			ob_end_clean();
+	 		header("Connection: close");
+			ob_start();
+			echo ('Connection closed'); //This could be anything
+			$size = ob_get_length();
+			header("Content-Length: $size");
+	 		ob_end_flush(); // Strange behaviour, will not work
+	 		flush();        // Unless both are called !
+ 		}
  		
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', strtotime('-20 minutes'));
