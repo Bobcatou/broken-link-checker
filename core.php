@@ -1549,7 +1549,7 @@ jQuery(function($){
 								url_el.attr('href', new_url);
 								
 								if ( data.cnt_error > 0 ){
-									//TODO: Interationalize this error message
+									//TODO: Internationalize this error message
 									var msg = "The link was successfully modifed.";
 									msg = msg + "\nHowever, "+data.cnt_error+" instances couldn't be edited and still point to the old URL."
 									alert(msg);

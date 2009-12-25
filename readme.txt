@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin
 Requires at least: 2.8.0
 Tested up to: 2.9
-Stable tag: 0.7.3
+Stable tag: 0.7.4
 
 This plugin will check your posts, custom fields and the blogroll for broken links and missing images and notify you if any are found. 
 
@@ -52,6 +52,7 @@ There are several actions associated with each link listed -
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
 * Spanish - [Omi](http://equipajedemano.info/)
+* Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
 
 == Installation ==
 
