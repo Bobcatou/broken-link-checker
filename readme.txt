@@ -75,6 +75,10 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.7.4 =
+* Fixed a minor bug where the plugin would display an incorrect number of links in the "Displaying x-y of z" label when the user moves to a different page of the results.
+* Added Ukrainian translation.
+
 = 0.7.3 =
 * Reverted to the old access-checking algorithm + some error suppression.
 
