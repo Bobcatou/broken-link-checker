@@ -477,6 +477,7 @@ class blcLinkInstance_custom_field_link extends blcLinkInstance {
 		
 		//FB::log("Removing [{$this->link_text}] from post {$this->source_id} where value is '$url'");
 		delete_post_meta( $this->source_id, $this->link_text, $url );
+		//TODO: Make unlink work for custom fields where the URL is only the first line, not the entire value
 		
 		return $this->forget() !== false;
 	}

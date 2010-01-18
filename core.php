@@ -53,11 +53,16 @@ class wsBrokenLinkChecker {
         //These hooks update the plugin's internal records when posts are added, deleted or modified.
 		add_action('delete_post', array(&$this,'post_deleted'));
         add_action('save_post', array(&$this,'post_saved'));
+        //Treat post trashing/untrashing as delete/save. 
+        add_action('trash_post', array(&$this,'post_deleted'));
+        add_action('untrash_post', array(&$this,'post_saved'));
         
         //These do the same for (blogroll) links.
         add_action('add_link', array(&$this,'hook_add_link'));
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
+        
+        //TODO: Hook the delete_post_meta action to detect when custom fields are deleted directly
         
 		//Load jQuery on Dashboard pages (probably redundant as WP already does that)
         add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
@@ -956,14 +961,27 @@ class wsBrokenLinkChecker {
         global $wpdb;
         
         $action = !empty($_POST['action'])?$_POST['action']:'';
+        if ( intval($action) == -1 ){
+        	//Try the second bulk actions box
+			$action = !empty($_POST['action2'])?$_POST['action2']:'';
+		}
+        
+        //Links selected via checkboxes
+        $selected_links = array();
+		if ( isset($_POST['selected_links']) && is_array($_POST['selected_links']) ){
+			//Convert all link IDs to integers (non-numeric entries are converted to zero)
+			$selected_links = array_map('intval', $_POST['selected_links']);
+			//Remove all zeroes
+			$selected_links = array_filter($selected_links);
+		}
+        
+        $message = '';
+        $msg_class = 'updated';
         
         if ( $action == 'create-custom-filter' ){
         	//Create a custom filter!
         	
         	check_admin_referer( $action );
-        	
-        	$message = '';
-        	$msg_class = 'updated';
         	
         	//Filter name must be set
 			if ( empty($_POST['name']) ){
@@ -992,15 +1010,10 @@ class wsBrokenLinkChecker {
 				}
 			}
 			
-			echo '<div id="message" class="'.$msg_class.' fade"><p><strong>'.$message.'</strong></p></div>';
-			
 		} elseif ( $action == 'delete-custom-filter' ){
 			//Delete an existing custom filter!
 			
 			check_admin_referer( $action );
-			
-			$message = '';
-        	$msg_class = 'updated';
 			
 			//Filter ID must be set
 			if ( empty($_POST['filter_id']) ){
@@ -1020,9 +1033,145 @@ class wsBrokenLinkChecker {
 					$msg_class = 'error';
 				}
 			}
+			
+		} elseif ($action == 'bulk-delete-sources') {
+			//Delete posts and blogroll entries that contain any of the selected links
+			//(links inside custom fields count as part of the post for the purposes of this action).
+			//
+			//Note that once all posts/bookmarks containing a particular link have been deleted,
+			//there is no need to explicitly delete the link record itself. The hooks attached to 
+			//the post_deleted and delete_link actions will take care of that. 
+						
+			check_admin_referer( 'bulk-action' );
+			
+			if ( count($selected_links) > 0 ) {	
+				$selected_links_sql = implode(', ', $selected_links);	
+				
+				$messages = array();	
+								
+				//First, fetch the posts that contain any of the selected links,
+				//either in the content or in a custom field.
+				$q = "
+					SELECT posts.id, posts.post_title
+					FROM 
+						{$wpdb->prefix}blc_links AS links,
+						{$wpdb->prefix}blc_instances AS instances,
+						{$wpdb->posts} AS posts
+					WHERE
+						links.link_id IN ($selected_links_sql)
+						AND links.link_id = instances.link_id
+						AND (instances.source_type = 'post' OR instances.source_type = 'custom_field')
+						AND instances.source_id = posts.id
+						AND posts.post_status <> \"trash\"
+					GROUP BY posts.id
+				";
+				
+				$posts_to_delete = $wpdb->get_results($q);
+				$deleted_posts = array();
+				
+				//Delete the selected posts
+				foreach($posts_to_delete as $post){
+					if ( wp_delete_post($post->id) !== false) {
+						$deleted_posts[] = $post;
+					} else {
+						$messages[] = sprintf(
+							__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
+							$post->pots_title,
+							$post->id
+						);
+						$msg_class = 'error';
+					};
+				}
+								
+				if ( count($deleted_posts) > 0 ) {
+					//Since the "Trash" feature has been introduced, calling wp_delete_post
+					//doesn't actually delete the post (unless you set force_delete to True), 
+					//just moves it to the trash. So we pick the message accordingly. 
+					if ( function_exists('wp_trash_post') ){
+						$delete_msg = _n("%d post moved to the trash", "%d posts moved to the trash", count($deleted_posts), 'broken-link-checker');
+					} else {
+						$delete_msg = _n("%d post deleted", "%d posts deleted", count($deleted_posts), 'broken-link-checker');
+					}
+					
+					$messages[] = sprintf( 
+						$delete_msg, 
+						count($deleted_posts)
+					);
+				}
+				
+				//Fetch blogroll links (AKA bookmarks) that match any of the selected links
+				$q = "
+					SELECT bookmarks.link_id AS bookmark_id, bookmarks.link_name
+					FROM 
+						{$wpdb->prefix}blc_links AS links,
+						{$wpdb->prefix}blc_instances AS instances,
+						{$wpdb->links} AS bookmarks
+					WHERE
+						links.link_id IN ($selected_links_sql)
+						AND links.link_id = instances.link_id
+						AND instances.source_type = 'blogroll'
+						AND instances.source_id = bookmarks.link_id
+					GROUP BY bookmarks.link_id
+				";
+				//echo "<pre>$q</pre>";
+				
+				$bookmarks_to_delete = $wpdb->get_results($q);
+				$deleted_bookmarks = array();
+				
+				if ( count($bookmarks_to_delete) > 0 ){
+					//Delete the matching blogroll links
+					foreach($bookmarks_to_delete as $bookmark){
+						if ( wp_delete_link($bookmark->bookmark_id) ){
+							$deleted_bookmarks[] = $bookmark;
+						} else {
+							$messages[] = sprintf(
+								__('Failed to delete blogroll link "%s" (%d)', 'broken-link-checker'),
+								$bookmark->link_name,
+								$bookmark->link_id
+							);
+							$msg_class = 'error';
+						}
+					}
+					
+					if ( count($deleted_bookmarks) > 0 ) {
+						$messages[] = sprintf( 
+							_n("%d blogroll link deleted", "%d blogroll links deleted", count($deleted_bookmarks), 'broken-link-checker'), 
+							count($deleted_bookmarks)
+						);
+					}
+				}
+				
+				if ( count($messages) > 0 ){
+					$message = implode('<br>', $messages);
+				} else {
+					$message = __("Didn't find anything to delete!", 'broken-link-checker');
+					$msg_class = 'error';
+				}
+				
+				
+			}
+		
+		} elseif ($action == 'bulk-exclude') {
+			
+			$message = "Not implemented yet";
+			$msg_class = 'error';
+			
+		} elseif ($action == 'bulk-unlink') {
+			
+			$message = "Not implemented yet";
+			$msg_class = 'error';
+			
+		} elseif ($action == 'bulk-deredirect') {
+			
+			$message = "Not implemented yet";
+			$msg_class = 'error';
+			
+		}
+		
+		if ( !empty($message) ){
 			echo '<div id="message" class="'.$msg_class.' fade"><p><strong>'.$message.'</strong></p></div>';
-		} 		
-		        
+		}
+		
         //Build the filter list
 		$filters = array_merge($this->native_filters, $this->get_custom_filters());
 		
@@ -1077,6 +1226,11 @@ class wsBrokenLinkChecker {
 		
 		//Display the "Discard" button when listing broken links
 		$show_discard_button = ('broken' == $filter_id) || (!empty($search_params['s_filter']) && ($search_params['s_filter'] == 'broken'));
+		
+		//Figure out what the "safe" URL to acccess the current page would be.
+		//This is used by the bulk action form. 
+		$special_args = array('_wpnonce', '_wp_http_referer', 'action', 'selected_links');
+		$neutral_current_url = remove_query_arg($special_args);
 		
         ?>
         
@@ -1207,35 +1361,34 @@ class wsBrokenLinkChecker {
 </form>	
 </div>
 
+<?php
+		//Do we have any links to display?
+        if( $links && ( count($links) > 0 ) ) {
+?>
+<!-- The link list -->
+<form id="blc-bulk-action-form" action="<?php echo $neutral_current_url;  ?>" method="post">
+	<?php 
+		wp_nonce_field('bulk-action');
+		
+		$bulk_actions = array(
+			'-1' => __('Bulk Actions', 'broken-link-checker'),
+			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
+			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
+			"bulk-delete-sources" => __('Delete sources', 'broken-link-checker'),
+		);
+		
+		$bulk_actions_html = '';
+		foreach($bulk_actions as $value => $name){
+			$bulk_actions_html .= sprintf('<option value="%s">%s</option>', $value, $name);
+		} 
+	?>
+
 	<div class='tablenav'>
-	
 		<div class="alignleft actions">
-			<span class='description'>
-			<?php
-			/*
-			//If this is a search filter, display the search query here 
-			if ( !empty($current_filter['is_search']) ){
-				$params = $search_params;
-				$search_query = array();
-				
-				if ( !empty($params['s_link_text']) ){
-					$search_query[] = sprintf('link text is like "%s"', $params['s_link_text']);
-				}
-				if ( !empty($params['s_link_url']) ){
-					$search_query[] = sprintf('the URL contains "%s"', $params['s_link_url']);
-				}
-				if ( !empty($params['s_http_code']) ){
-					$search_query[] = 'HTTP code matches ' . $params['s_http_code'];
-				}
-				if ( !empty($params['s_link_type']) ){
-					$search_query[] = sprintf('link type is "%s"', $params['s_link_type']);
-				}
-				
-				echo sprintf("Showing %s links where ", $params['s_filter']) , implode(', ', $search_query);
-			}
-			*/
-			?>
-			</span>
+			<select name="action">
+				<?php echo $bulk_actions_html; ?>
+			</select>
+			<input type="submit" name="doaction" id="doaction" value="<?php echo attribute_escape(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
 		</div>
 		<?php
 			//Display pagination links 
@@ -1262,16 +1415,14 @@ class wsBrokenLinkChecker {
 		?>
 	
 	</div>
-	
-<?php
-        if($links && (count($links)>0)){
-            ?>
-            <table class="widefat">
+            <table class="widefat" id="blc-links">
                 <thead>
                 <tr>
 
-                <th scope="col"><?php _e('Source', 'broken-link-checker'); ?>
-                </th>
+				<th scope="col" id="cb" class="check-column">
+					<input type="checkbox">
+				</th>
+                <th scope="col"><?php _e('Source', 'broken-link-checker'); ?></th>
                 <th scope="col"><?php _e('Link Text', 'broken-link-checker'); ?></th>
                 <th scope="col"><?php _e('URL', 'broken-link-checker'); ?></th>
 
@@ -1293,6 +1444,11 @@ class wsBrokenLinkChecker {
             	
                 ?>
                 <tr id='<?php echo "blc-row-$rownum"; ?>' class='blc-row <?php echo $rowclass; ?>'>
+                
+				<th class="check-column" scope="row">
+					<input type="checkbox" name="selected_links[]" value="<?php echo $link['link_id']; ?>">
+				</th>
+				                
                 <td class='post-title column-title'>
                 	<span class='blc-link-id' style='display:none;'><?php echo $link['link_id']; ?></span> 	
                   <?php 
@@ -1418,14 +1574,22 @@ class wsBrokenLinkChecker {
                 </tr>
                 <!-- Link details -->
                 <tr id='<?php print "link-details-$rownum"; ?>' style='display:none;' class='blc-link-details'>
-					<td colspan='4'><?php $this->link_details_row($link); ?></td>
+					<td colspan='<?php echo $show_discard_button?5:4; ?>'><?php $this->link_details_row($link); ?></td>
 				</tr><?php
             }
-            ?></tbody></table><?php
+            ?></tbody></table>
+            
+	<div class="tablenav">			
+		<div class="alignleft actions">
+			<select name="action2">
+				<?php echo $bulk_actions_html; ?>
+			</select>
+			<input type="submit" name="doaction2" id="doaction2" value="<?php echo attribute_escape(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
+		</div><?php
             
             //Also display pagination links at the bottom
-            if ( $page_links ) { 
-				echo '<div class="tablenav"><div class="tablenav-pages">';
+            if ( $page_links ) {
+				echo '<div class="tablenav-pages">';
 				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
 					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
 					number_format_i18n( min( $page * $per_page, $current_filter['count'] ) ),
@@ -1433,14 +1597,22 @@ class wsBrokenLinkChecker {
 					$page_links
 				); 
 				echo $page_links_text; 
-				echo '</div></div>';
+				echo '</div>';
 			}
-        };
 ?>
+	</div>
+	
+</form>
+<?php
+
+        }; //End of the links table & assorted nav stuff
+        
+?>
+
 		<?php $this->links_page_js(); ?>
 </div>
         <?php
-    }
+    } //Function ends
     
     function links_page_js(){
 		?>
@@ -1757,6 +1929,11 @@ jQuery(function($){
 		}
 	});
 	
+	//--------------------------------------------
+    // Bulk actions
+    //--------------------------------------------
+	
+	//Not implemented yet
 });
 
 </script>
@@ -1905,7 +2082,7 @@ div.search-box{
    * ws_broken_link_checker::cleanup_links()
    * Remove orphaned links that have no corresponding instances
    *
-   * @param int $link_id (optional) Only check this link
+   * @param int|array $link_id (optional) Only check these links
    * @return bool
    */
     function cleanup_links( $link_id = null ){
@@ -1917,8 +2094,11 @@ div.search-box{
 				WHERE
 					{$wpdb->prefix}blc_instances.link_id IS NULL";
 					
-		if ( $link_id !==null ) {
-			$q .= " AND {$wpdb->prefix}blc_links.link_id = " . intval( $link_id );
+		if ( $link_id !== null ) {
+			if ( !is_array($link_id) ){
+				$link_id = array( intval($link_id) );
+			}
+			$q .= " AND {$wpdb->prefix}blc_links.link_id IN (" . implode(', ', $link_id) . ')';
 		}
 		
 		return $wpdb->query( $q );
