@@ -75,6 +75,14 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.8 =
+* Initial support for performing some action on multiple links at once.
+* Added a "Delete sources" bulk action that lets you delete all posts (or blogroll entries) that contain any of the selected links. Doing this in WP 2.9 and up this will instead move the posts to the trash, not delete them permanently.
+* New bulk action : Unlink. Removes all selected links from all posts.
+* New bulk action : Fix redirects. Analyzes the selected links and replaces any redirects with direct links.
+* Added a notice asking the user to take the feedback survey.
+* Updated the .POT file with new i18n strings.
+
 = 0.7.4 =
 * Fixed a minor bug where the plugin would display an incorrect number of links in the "Displaying x-y of z" label when the user moves to a different page of the results.
 * Added Ukrainian translation.
@@ -333,4 +341,3 @@ To upgrade your installation
 
 = 0.1 =
 * *There are no release notes for this version*
-
