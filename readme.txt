@@ -2,7 +2,7 @@
 Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin
 Requires at least: 2.8.0
-Tested up to: 2.9.1
+Tested up to: 3.0-alpha
 Stable tag: 0.8
 
 This plugin will check your posts, custom fields and the blogroll for broken links and missing images and notify you if any are found. 

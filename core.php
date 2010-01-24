@@ -1261,7 +1261,7 @@ class wsBrokenLinkChecker {
 						$msg_class = 'error';
 					}
 				} else {
-					$message = __('None of the selected links are redirects!');
+					$message = __('None of the selected links are redirects!', 'broken-link-checker');
 				}
 			}
 			
