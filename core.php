@@ -93,6 +93,11 @@ class wsBrokenLinkChecker {
         
         //Initialize the built-in link filters
         add_action('init', array(&$this,'init_native_filters'));
+        
+        //Appearify the survey notice on all Dashboard pages
+        if ( $this->conf->options['show_survey_notice'] ){
+        	add_action('admin_notices', array(&$this, 'display_survey_notice'));
+        }
     }
 
     function admin_footer(){
@@ -458,6 +463,7 @@ class wsBrokenLinkChecker {
 		);
 		 
 		//Add plugin-specific scripts and CSS only to the it's own pages
+		//TODO: Use the admin_enqueue_scripts action to enqueue the scripts
 		add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
         add_action( 'admin_print_styles-' . $links_page_hook, array(&$this, 'links_page_css') );
         add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'load_ui_scripts') );
@@ -966,7 +972,7 @@ class wsBrokenLinkChecker {
 			$action = !empty($_POST['action2'])?$_POST['action2']:'';
 		}
         
-        //Links selected via checkboxes
+        //Get the list of link IDs selected via checkboxes
         $selected_links = array();
 		if ( isset($_POST['selected_links']) && is_array($_POST['selected_links']) ){
 			//Convert all link IDs to integers (non-numeric entries are converted to zero)
@@ -1151,20 +1157,113 @@ class wsBrokenLinkChecker {
 				
 			}
 		
-		} elseif ($action == 'bulk-exclude') {
-			
-			$message = "Not implemented yet";
-			$msg_class = 'error';
-			
 		} elseif ($action == 'bulk-unlink') {
+			//Unlink all selected links.
 			
-			$message = "Not implemented yet";
-			$msg_class = 'error';
+			check_admin_referer( 'bulk-action' );
+			
+			if ( count($selected_links) > 0 ) {	
+				$selected_links_sql = implode(', ', $selected_links);
+				
+				//Fetch the selected links
+				$q = "SELECT * FROM {$wpdb->prefix}blc_links WHERE link_id IN ($selected_links_sql)";				
+				$links = $wpdb->get_results($q, ARRAY_A);
+				
+				if ( count($links) > 0 ) {
+					$processed_links = 0;
+					$failed_links = 0;
+					
+					//Unlink (delete) all selected links
+					foreach($links as $link){
+						$the_link = new blcLink($link);
+						$rez = $the_link->unlink();
+						if ( $rez !== false ){
+							$processed_links++;
+						} else {
+							$failed_links++;
+						}
+					}	
+					
+					//This message is slightly misleading - it doesn't account for the fact that 
+					//a link can be present in more than one post.
+					$message = sprintf(
+						_n(
+							'%d link removed',
+							'%d links removed',
+							$processed_links, 
+							'broken-link-checker'
+						),
+						$processed_links
+					);			
+					
+					if ( $failed_links > 0 ) {
+						$message .= '<br>' . sprintf(
+							_n(
+								'Failed to remove %d link', 
+								'Failed to remove %d links',
+								$failed_links,
+								'broken-link-checker'
+							),
+							$failed_links
+						);
+						$msg_class = 'error';
+					}
+				}
+			}
 			
 		} elseif ($action == 'bulk-deredirect') {
+			//For all selected links, replace the URL with the final URL that it redirects to.
 			
-			$message = "Not implemented yet";
-			$msg_class = 'error';
+			check_admin_referer( 'bulk-action' );
+			
+			if ( count($selected_links) > 0 ) {	
+				$selected_links_sql = implode(', ', $selected_links);
+				
+				//Fetch the selected links
+				$q = "SELECT * FROM {$wpdb->prefix}blc_links WHERE link_id IN ($selected_links_sql) AND redirect_count > 0";				
+				$links = $wpdb->get_results($q, ARRAY_A);
+				
+				if ( count($links) > 0 ) {
+					$processed_links = 0;
+					$failed_links = 0;
+					
+					//Deredirect all selected links
+					foreach($links as $link){
+						$the_link = new blcLink($link);
+						$rez = $the_link->deredirect();
+						if ( $rez !== false ){
+							$processed_links++;
+						} else {
+							$failed_links++;
+						}
+					}	
+					
+					$message = sprintf(
+						_n(
+							'Replaced %d redirect with a direct link',
+							'Replaced %d redirects with direct links',
+							$processed_links, 
+							'broken-link-checker'
+						),
+						$processed_links
+					);			
+					
+					if ( $failed_links > 0 ) {
+						$message .= '<br>' . sprintf(
+							_n(
+								'Failed to fix %d redirect', 
+								'Failed to fix %d redirects',
+								$failed_links,
+								'broken-link-checker'
+							),
+							$failed_links
+						);
+						$msg_class = 'error';
+					}
+				} else {
+					$message = __('None of the selected links are redirects!');
+				}
+			}
 			
 		}
 		
@@ -3279,6 +3378,40 @@ div.search-box{
 			
 			return $wpdb->get_results($q, ARRAY_A);
 		}
+	}
+	
+  /**
+   * wsBrokenLinkChecker::display_survey_notice()
+   * Display a notice asking the user to take the Broken Link Checker user survey.
+   *
+   * @return void
+   */
+	function display_survey_notice(){
+		//Only people who can actually use the plugin will see the notice
+		if ( !current_user_can('manage_links') ) return;
+		
+		if ( !empty($_GET['dismiss-blc-survey']) ){
+			//The user has chosen to hide the survey notice
+			$this->conf->options['show_survey_notice'] = false;
+			$this->conf->save_options();
+			return;
+		}
+		
+		$survey_url = 'http://spreadsheets.google.com/viewform?formkey=dEZxR1Y3QWZ2WjV4WEJORWJ2UHhJZGc6MA';
+		
+		$msg = sprintf(
+			'<strong>Help improve Broken Link Checker - take the user feedback survey!</strong>
+			<ul>
+				<li><a href="%s" target="_blank" title="This link will open in a new window"><strong>Take the survey</strong></a></li>
+				<li><a href="%s">Dismiss this notice</a></li>
+			</ul>',
+			$survey_url,
+			add_query_arg('dismiss-blc-survey', 1)
+		);
+		
+		
+				
+		echo '<div id="update-nag" style="text-align: left; padding-left: 20px;">'.$msg.'</div>';
 	}
 
 }//class ends here

@@ -457,7 +457,31 @@ class blcLink {
 		 );			 
 	}
 	
-	//Delete (unlink) all instances and the link itself
+  /**
+   * blcLink::deredirect()
+   * Edit all of of this link's instances and replace the URL with the URL that it redirects to. 
+   * This method does nothing if the link isn't a redirect. 
+   *
+   * @return bool|array An associative array with the new_link_id, the number of successfully edited instances (cnt_okay) and the number of failed edits (cnt_error). Returns False on error or if the link is not a redirect.
+   */ 
+	function deredirect(){
+		if ( !$this->valid() ){
+			return false;
+		}
+		
+		if ( ($this->redirect_count <= 0) || empty($this->final_url) ){
+			return false;	
+		}
+		
+		return $this->edit($this->final_url);
+	}
+
+  /**
+   * blcLink::unlink()
+   * Delete (unlink) all instances and the link itself
+   *
+   * @return bool Returns True on success, False on error
+   */
 	function unlink(){
 		if ( !$this->valid() ){
 			return false;

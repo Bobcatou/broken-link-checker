@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your posts for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.8-dev
+Version: 0.8
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 Text Domain: broken-link-checker
@@ -79,11 +79,12 @@ $blc_config_manager = new blcConfigurationManager(
 										//If this option is not set, the plugin's own directory or the 
 										//system-wide /tmp directory will be used instead.
 										
-		'timeout' => 30,				//Links that take longer than this to respond will be treated as broken.  
+		'timeout' => 30,				//Links that take longer than this to respond will be treated as broken.
+		
+		'show_survey_notice' => true,	//Show/hide the Dashboard notice asking the user to take a survey about the plugin  
    )
 );
 
-	
 if ( !is_admin() ){
 	//This is user-side request, so we may need to do is run the broken link highlighter.
 	if ( $blc_config_manager->options['mark_broken_links'] ){

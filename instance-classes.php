@@ -239,7 +239,7 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 		
 		//Track how many links in the post are successfully edited so that we can report an error if none are. 
 		$this->changed_links = 0;
-		
+
 		//Find all links and replace those that match $old_url.
 		$content = preg_replace_callback(blcUtility::link_pattern(), array(&$this, 'edit_callback'), $post['post_content']);
 
@@ -248,14 +248,27 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 			return false;
 		}
 		
-		//Save the modified post
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
-		return $wpdb->query($q) !== false;
+		//Clear the post/page cache. This ensures that any further calls to this method
+		//will not load the post content from the cache and thus discard the changes
+		//we just made.
+		if ( 'page' == $post['post_type'] )
+			clean_page_cache($this->source_id);
+		else
+			clean_post_cache($this->source_id);
+			
+		//Update the post
+		$rez = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_content' => $content ),
+			array( 'id' => $this->source_id )
+		);
+		
+		return $rez !== false;
 	}
 	
 	function edit_callback($matches){
 		$url = blcUtility::normalize_url($matches[3], $this->post_permalink);
-		//FB::log('Found an link with URL "' . $matches[3] . '", normalized URL = "' . $url . '"');
+		//FB::log('Found a link with URL "' . $matches[3] . '", normalized URL = "' . $url . '"');
 		
 		if ($url == $this->old_url){
 			//FB::log('Changing this link');
@@ -299,8 +312,22 @@ class blcLinkInstance_post_link extends blcLinkInstance {
 			return false;
 		}
 		
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
-		if ( $wpdb->query($q) !== false ){
+		//Clear the post/page cache. This ensures that any further calls to this method
+		//will not load the post content from the cache and thus discard the changes
+		//we just made.
+		if ( 'page' == $post['post_type'] )
+			clean_page_cache($this->source_id);
+		else
+			clean_post_cache($this->source_id);
+			
+		//Update the post
+		$rez = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_content' => $content ),
+			array( 'id' => $this->source_id )
+		);
+		
+		if ( $rez !== false ){
 			//Delete the instance record
 			//FB::info("Post updated, deleting instance from DB");
 			return $this->forget() !== false;
@@ -380,9 +407,22 @@ class blcLinkInstance_post_image extends blcLinkInstance {
 			return false;
 		}
 		
+		//Clear the post/page cache. This ensures that any further calls to this method
+		//will not load the post content from the cache and thus discard the changes
+		//we just made.
+		if ( 'page' == $post['post_type'] )
+			clean_page_cache($this->source_id);
+		else
+			clean_post_cache($this->source_id);
+			
 		//Save the modified post
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
-		return $wpdb->query($q) !== false;
+		$rez = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_content' => $content ),
+			array( 'id' => $this->source_id )
+		);
+		
+		return $rez !== false;
 	}
 	
 	function edit_callback($matches){
@@ -427,9 +467,22 @@ class blcLinkInstance_post_image extends blcLinkInstance {
 			return false;
 		}
 		
-		$q = $wpdb->prepare("UPDATE $wpdb->posts SET post_content = %s WHERE id = %d", $content, $this->source_id);
+		//Clear the post/page cache. This ensures that any further calls to this method
+		//will not load the post content from the cache and thus discard the changes
+		//we just made.
+		if ( 'page' == $post['post_type'] )
+			clean_page_cache($this->source_id);
+		else
+			clean_post_cache($this->source_id);
+			
+		//Save the modified post
+		$rez = $wpdb->update(
+			$wpdb->posts,
+			array( 'post_content' => $content ),
+			array( 'id' => $this->source_id )
+		);
 		
-		if ( $wpdb->query($q) !== false ){
+		if ( $rez !== false ){
 			//Delete the instance record
 			//FB::info("Post updated, deleting instance from DB");
 			return $this->forget() !== false;
