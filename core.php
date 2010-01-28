@@ -93,11 +93,6 @@ class wsBrokenLinkChecker {
         
         //Initialize the built-in link filters
         add_action('init', array(&$this,'init_native_filters'));
-        
-        //Appearify the survey notice on all Dashboard pages
-        if ( $this->conf->options['show_survey_notice'] ){
-        	add_action('admin_notices', array(&$this, 'display_survey_notice'));
-        }
     }
 
     function admin_footer(){
@@ -3378,40 +3373,6 @@ div.search-box{
 			
 			return $wpdb->get_results($q, ARRAY_A);
 		}
-	}
-	
-  /**
-   * wsBrokenLinkChecker::display_survey_notice()
-   * Display a notice asking the user to take the Broken Link Checker user survey.
-   *
-   * @return void
-   */
-	function display_survey_notice(){
-		//Only people who can actually use the plugin will see the notice
-		if ( !current_user_can('manage_links') ) return;
-		
-		if ( !empty($_GET['dismiss-blc-survey']) ){
-			//The user has chosen to hide the survey notice
-			$this->conf->options['show_survey_notice'] = false;
-			$this->conf->save_options();
-			return;
-		}
-		
-		$survey_url = 'http://spreadsheets.google.com/viewform?formkey=dEZxR1Y3QWZ2WjV4WEJORWJ2UHhJZGc6MA';
-		
-		$msg = sprintf(
-			'<strong>Help improve Broken Link Checker - take the user feedback survey!</strong>
-			<ul>
-				<li><a href="%s" target="_blank" title="This link will open in a new window"><strong>Take the survey</strong></a></li>
-				<li><a href="%s">Dismiss this notice</a></li>
-			</ul>',
-			$survey_url,
-			add_query_arg('dismiss-blc-survey', 1)
-		);
-		
-		
-				
-		echo '<div id="update-nag" style="text-align: left; padding-left: 20px;">'.$msg.'</div>';
 	}
 
 }//class ends here
