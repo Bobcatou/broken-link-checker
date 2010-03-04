@@ -67,7 +67,7 @@ class blcUtility {
 	        if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') )
 	            return false;
 	    }
-	
+	    
 	    $url = html_entity_decode($url);
 	    $url = preg_replace(
 	        array('/([\?&]PHPSESSID=\w+)$/i', //remove session ID
@@ -103,12 +103,18 @@ class blcUtility {
 	        return false;
 	    }
 	    if( isset($p["scheme"]) ) return $relative;
+	    
+	    //If the relative URL is just a query string, simply attach it to the absolute URL and return
+	    if ( substr($relative, 0, 1) == '?' ){
+			return $absolute . $relative;
+		}
 	
 	    $parts=(parse_url($absolute));
-	
+	    
 	    if(substr($relative,0,1)=='/') {
-	        $cparts = (explode("/", $relative));
-	        array_shift($cparts);
+	    	//Relative URL starts with a slash => ignore the base path and jump straight to the root. 
+	        $path_segments = explode("/", $relative);
+	        array_shift($path_segments);
 	    } else {
 	        if(isset($parts['path'])){
 	            $aparts=explode('/',$parts['path']);
@@ -117,20 +123,23 @@ class blcUtility {
 	        } else {
 	            $aparts=array();
 	        }
-	
-	        $rparts = (explode("/", $relative));
-	
-	        $cparts = array_merge($aparts, $rparts);
-	        foreach($cparts as $i => $part) {
-	            if($part == '.') {
-	                unset($cparts[$i]);
-	            } else if($part == '..') {
-	                unset($cparts[$i]);
-	                unset($cparts[$i-1]);
-	            }
-	        }
+	        
+	        //Merge together the base path & the relative path
+	        $aparts = array_merge($aparts, explode("/", $relative));
+	        
+	        //Filter the merged path 
+	        $path_segments = array();
+	        foreach($aparts as $part){
+	        	if ( $part == '.' ){
+					continue; //. = "this directory". It's basically a no-op, so we skip it.
+				} elseif ( $part == '..' )  {
+					array_pop($path_segments);	//.. = one directory up. Remove the last seen path segment.
+				} else {
+					array_push($path_segments, $part); //Normal directory -> add it to the path.
+				}
+			}
 	    }
-	    $path = implode("/", $cparts);
+	    $path = implode("/", $path_segments);
 	
 	    $url = '';
 	    if($parts['scheme']) {
