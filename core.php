@@ -557,7 +557,6 @@ class wsBrokenLinkChecker {
         }
         
 		$debug = $this->get_debug_info();
-		
 		?>
 
         <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
@@ -1077,7 +1076,7 @@ class wsBrokenLinkChecker {
 					} else {
 						$messages[] = sprintf(
 							__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
-							$post->pots_title,
+							$post->post_title,
 							$post->id
 						);
 						$msg_class = 'error';
@@ -1548,9 +1547,9 @@ class wsBrokenLinkChecker {
                   <?php 
 				  if ( ('post' == $link['source_type']) || ('custom_field' == $link['source_type']) ){
 				  	 
-                  	echo "<a class='row-title' href='post.php?action=edit&amp;post=$link[source_id]' title='", 
-					  	attribute_escape(__('Edit this post')),
-						 "'>{$link[post_title]}</a>";
+					echo '<a class="row-title" href="' . get_edit_post_link($link['source_id'], true) . '" title="',
+						 attribute_escape(__('Edit this post')), 
+						 '">' . get_the_title($link['source_id']) . '</a>';
 
 					//Output inline action links (copied from edit-post-rows.php)                  	
                   	$actions = array();
@@ -1558,7 +1557,7 @@ class wsBrokenLinkChecker {
 						$actions['edit'] = '<span class="edit"><a href="' . get_edit_post_link($link['source_id'], true) . '" title="' . attribute_escape(__('Edit this post')) . '">' . __('Edit') . '</a>';
 						$actions['delete'] = "<span class='delete'><a class='submitdelete' title='" . attribute_escape(__('Delete this post')) .  "' href='" . wp_nonce_url("post.php?action=delete&amp;post=".$link['source_id'], 'delete-post_' . $link['source_id']) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), $link['post_title'] )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 					}
-					$actions['view'] = '<span class="view"><a href="' . get_permalink($link['source_id']) . '" title="' . attribute_escape(sprintf(__('View "%s"', 'broken-link-checker'), $link['post_title'])) . '" rel="permalink">' . __('View') . '</a>';
+					$actions['view'] = '<span class="view"><a href="' . get_permalink($link['source_id']) . '" title="' . attribute_escape(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($link['source_id']))) . '" rel="permalink">' . __('View') . '</a>';
 					echo '<div class="row-actions">';
 					echo implode(' | </span>', $actions);
 					echo '</div>';
@@ -2239,6 +2238,7 @@ div.search-box{
 		$content = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $content);
 		//Get the post permalink - it's used to resolve relative URLs
 		$permalink = get_permalink( $post_id );
+		//FB::log($permalink, "Post permalink");
 		
 		//Find links
 		if(preg_match_all(blcUtility::link_pattern(), $content, $matches, PREG_SET_ORDER)){
@@ -2248,6 +2248,7 @@ div.search-box{
 				//FB::log($url, "Found link");
 				
 				$url = blcUtility::normalize_url($url, $permalink);
+				//FB::log($url, "Normalized URL");
 				//Skip invalid links
 				if ( !$url || (strlen($url)<6) ) continue; 
 			    
@@ -2543,7 +2544,6 @@ div.search-box{
 		 	  	( 
 					( http_code >= 400 OR http_code < 200 OR timeout = 1) 
 					AND check_count < %d 
-					AND check_count > 0  
 					AND last_check < %s 
 				) 
 			  ORDER BY last_check ASC
@@ -2687,18 +2687,14 @@ div.search-box{
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_instances WHERE 1";
 		$known_instances = $wpdb->get_var($q);
 		
-		/*
-		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links 
-			  WHERE check_count > 0 AND ( http_code < 200 OR http_code >= 400 OR timeout = 1 ) AND ( http_code <> ".BLC_CHECKING." )";
-		$broken_links = $wpdb->get_var($q);
-		*/
 		$broken_links = $this->get_links( $this->native_filters['broken'], 0, 0, true );
 		
+		//TODO: The query that loads links-to-be-checked should only be defined in one place
 		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links
 		      WHERE 
 			  	( ( last_check < '$check_threshold' ) OR 
 		 	  	  ( 
-					 ( http_code >= 400 OR http_code < 200 ) 
+					 ( http_code >= 400 OR http_code < 200 OR timeout = 1 ) 
 					 AND check_count < 3 
 					 AND last_check < '$recheck_threshold' ) 
 				  )";
