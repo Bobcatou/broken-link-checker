@@ -1,0 +1,38 @@
+#blc-debug-info-toggle {
+	font-size: smaller;
+}
+
+.blc-debug-item-ok {
+	background-color: #d7ffa2;
+}
+.blc-debug-item-warning {
+	background-color: #fcffa2;
+}
+.blc-debug-item-error {
+	background-color: #ffc4c4;
+}
+
+#blc-debug-info {
+	display: none;
+	
+	text-align: left;
+	
+	border-width: 1px;
+	border-color: gray;
+	border-style: solid;
+	
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+#blc-debug-info th, #blc-debug-info td {
+	padding: 6px;
+	font-weight: normal;
+	text-shadow: none;
+					
+	border-width: 1px ;
+	border-color: silver;
+	border-style: solid;
+	
+	border-collapse: collapse;
+}

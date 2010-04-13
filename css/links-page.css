@@ -1,0 +1,124 @@
+/* Link table layout */
+
+table#blc-links {
+	width: 100%;
+	table-layout: fixed;
+}
+
+td.blc-link-details {
+	width: 100%;
+}
+
+.blc-detail-container {
+	display: block;
+	width: 100%;
+}
+
+.blc-detail-block {
+	width: 50%;
+}
+
+.blc-column-source {
+	width: 33%;
+}
+
+.blc-column-link-text {
+	width: 24%;
+}
+
+.blc-column-url {
+	/*width: 35%;*/
+}
+
+/* Styles for broken links, redirects and excluded links */
+
+.blc-redirect { }
+
+.blc-redirect .blc-link-url {
+	background-image: url("../images/bullet_blue.png");
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+.blc-broken-link { }
+
+.blc-broken-link .blc-link-url {
+	background-image: url("../images/bullet_error.png");
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+.blc-excluded-link {
+	background-color: #E2E2E2;
+}
+
+
+/* Misc table styles */
+
+.blc-link-url {
+	padding-left: 16px;
+}
+
+.blc-link-editor {
+    font-size: 1em;
+    width: 95%;
+    margin-left: 12px;
+}
+
+.column-url .row-actions {
+	margin-left: 16px;
+}
+
+.blc-link-text {
+	cursor: pointer; 
+}
+
+
+.blc-small-image {
+	vertical-align: middle;
+}
+
+/* Search form */
+
+.blc-search-container {
+	background : white !important;
+	border: 3px solid #EEEEEE;
+	padding: 12px;
+}
+
+.blc-search-container .ui-dialog-titlebar {
+	display: none;
+	margin: 0px;
+}
+
+#search-links-dialog {
+	display: none;
+}
+
+#search-links-dialog label, #search-links-dialog input.text, #search-links-dialog select { display:block; }
+#search-links-dialog input.text { margin-bottom:12px; width:95%; padding: .4em; }
+#search-links-dialog select { margin-bottom:12px; padding: .4em; }
+#search-links-dialog fieldset { padding:0; border:0; margin-top:25px; }
+
+#blc-search-button-row {
+	text-align: center;
+}
+
+#blc-search-button-row input {
+	padding: 0.4em;
+	margin-left: 8px;
+	margin-right: 8px;
+	margin-top: 8px; 
+}
+
+.blc-inline-form {
+	display: inline;
+}
+
+div.search-box{
+	float: right;
+	margin-top: -5px;
+	margin-right: 0pt;
+	margin-bottom: 0pt;
+	margin-left: 0pt;
+}
