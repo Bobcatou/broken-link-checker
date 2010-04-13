@@ -19,13 +19,11 @@ class wsBrokenLinkChecker {
 	var $loader;
     var $my_basename = '';	
     
-    var $db_version = 4;
+    var $db_version = 4; 		//The required version of the plugin's DB schema.
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
     
-    var $native_filters = null;
-
   /**
    * wsBrokenLinkChecker::wsBrokenLinkChecker()
    * Class constructor
@@ -2744,7 +2742,7 @@ EOZ;
 		$rez = wp_mail(
 			$this->conf->options['notification_address'],
 			$subject,
-			$message
+			$body
 		);
 		if ( $rez ){
 			$this->conf->options['last_notification_sent'] = time();
