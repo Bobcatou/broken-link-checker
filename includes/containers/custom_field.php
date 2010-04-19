@@ -170,12 +170,20 @@ class blcPostMeta extends blcContainer {
 	}
 	
 	function ui_get_source($container_field, $context = 'display'){
-		$field_html = sprintf(
-			'<img src="%s/broken-link-checker/images/script_code.png" class="blc-small-image" title="%2$s" alt="%2$s"> <code>%3$s</code>',
+		$image_html = sprintf(
+			'<img src="%s/broken-link-checker/images/script_code.png" class="blc-small-image" title="%2$s" alt="%2$s"> ',
 			WP_PLUGIN_URL,
-			__('Custom field', 'broken-link-checker'),
-			$container_field
+			__('Custom field', 'broken-link-checker')
 		);
+		
+		$field_html = sprintf(
+			'<code>%s</code>',
+			$container_field
+		); 
+		
+		if ( $context != 'email' ){
+			$field_html = $image_html . $field_html;
+		}
 		
 		$post_html = sprintf(
 			'<a class="row-title" href="%s" title="%s">%s</a>',

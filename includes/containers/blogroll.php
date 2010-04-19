@@ -20,7 +20,11 @@ class blcBookmark extends blcContainer{
 			sanitize_bookmark_field('link_name', $bookmark->link_name, $this->container_id, 'display')
 		);
 		
-		return "$image $link_name";
+		if ( $context != 'email' ){
+			return "$image $link_name";
+		} else {
+			return $link_name;
+		}
 	}
 	
 	function ui_get_action_links($container_field){

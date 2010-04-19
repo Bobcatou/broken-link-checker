@@ -122,12 +122,19 @@ class blcComment extends blcContainer{
 	}
 	
 	function ui_get_source($container_field, $context = 'display'){
+		//Display a comment icon. 
 		if ( $container_field == 'comment_author_url' ){
 			$image = 'user_comment.png';
-			//$image = 'comment.png';
 		} else {
 			$image = 'comment.png';
 		}
+		
+		$image = sprintf(
+			'<img src="%s/broken-link-checker/images/%s" class="blc-small-image" title="%3$s" alt="%3$s"> ',
+			WP_PLUGIN_URL,
+			$image,
+			__('Comment', 'broken-link-checker')
+		);
 		
 		$comment = $this->get_wrapped_object();
 		
@@ -136,16 +143,18 @@ class blcComment extends blcContainer{
 		$text_sample = blcUtility::truncate($text_sample, 65);
 		
 		$html = sprintf(
-			'<img src="%s/broken-link-checker/images/%s" class="blc-small-image" title="%3$s" alt="%3$s"> '.
-			'<a href="%4$s" title="%5$s"><b>%6$s</b> &mdash; %7$s</a>',
-			WP_PLUGIN_URL,
-			$image,
-			__('Comment', 'broken-link-checker'),
+			'<a href="%s" title="%s"><b>%s</b> &mdash; %s</a>',
 			$this->get_edit_url(),
 			esc_attr__('Edit comment'),
 			esc_attr($comment->comment_author),
 			$text_sample			
 		);
+		
+		//Don't show the image in email notifications.
+		if ( $context != 'email' ){
+			$html = $image . $html;
+		}
+		
 		return $html;
 	}
 	
