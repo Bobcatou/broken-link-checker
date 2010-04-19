@@ -34,6 +34,15 @@ class blcHTMLLink extends blcParser {
 		return $instances;
 	}
 	
+  /**
+   * blcHTMLLink::parser_callback()
+   *
+   * @access private
+   *
+   * @param array $link
+   * @param array $params
+   * @return blcLinkInstance|null
+   */
 	function parser_callback($link, $params){
 		extract($params);
 		
@@ -134,8 +143,14 @@ class blcHTMLLink extends blcParser {
 		if ( empty($raw_url) ){
 			$raw_url = $url;
 		}
-		$this->old_url = $raw_url; //used by the callback
-		$content = preg_replace_callback($this->link_pattern, array(&$this, 'unlink_callback'), $content);
+		
+		$args = array(
+			'old_url' => $raw_url,
+		);
+		
+		//Find all links and remove those that match $raw_url.
+		$content = $this->multi_edit($content, array(&$this, 'unlink_callback'), $args);
+		
 		return $content;
 	}
 	
@@ -144,24 +159,23 @@ class blcHTMLLink extends blcParser {
    *
    * @access private
    * 
-   * @param array $matches
+   * @param array $link
+   * @param array $params
    * @return string
    */
-	function unlink_callback($matches){
-		$url = $matches[3];
-
-		//Does the URL match?
-		if ($url == $this->old_url){
-			$config = blc_get_configuration();
-			if ( $config->options['mark_removed_links'] ){
-				//leave only the anchor text + the removed_link CSS class
-				return '<span class="removed_link">' . $matches[5] . '</span>'; 
-			} else {
-				return $matches[5]; //just the anchor text
-			}
-			
+	function unlink_callback($link, $params){
+		//Skip links that don't match the specified URL
+		if ($link['href'] != $params['old_url']){
+			return $link['#raw'];
+		}
+		
+		$config = blc_get_configuration();
+		if ( $config->options['mark_removed_links'] ){
+			//Leave only the anchor text + the removed_link CSS class
+			return '<span class="removed_link">' . $link['#link_text'] . '</span>'; 
 		} else {
-			return $matches[0]; //return the link unchanged
+			//Just the anchor text
+			return $link['#link_text']; 
 		}
 	}
 	
@@ -176,6 +190,25 @@ class blcHTMLLink extends blcParser {
 		return $instance->link_text;
 	}
 	
+ /**
+   * Apply a callback function to all HTML links found in a string and return the results.
+   *
+   * The link data array will contain at least these keys :
+   *  'href' - the URL of the link (with htmlentitydecode() already applied).
+   *  '#raw' - the raw link code, e.g. the entire '<a href="...">...</a>' tag of a HTML link.
+   *  '#offset' - the offset within $content at which the first character of the link tag was found.
+   *  '#link_text' - the link's anchor text, if any. May contain HTML tags.
+   * 
+   * Any attributes of the link tag will also be included in the returned array as attr_name => attr_value
+   * pairs. This function will also automatically decode any HTML entities found in attribute values.   
+   *
+   * @see blcParser::map()
+   *
+   * @param string $content A text string to parse for links. 
+   * @param callback $callback Callback function to apply to all found links.  
+   * @param mixed $extra If the optional $extra param. is supplied, it will be passed as the second parameter to the function $callback. 
+   * @return array An array of all detected links after applying $callback to each of them.
+   */
 	function map($content, $callback, $extra = null){
 		$results = array();
 		
@@ -210,6 +243,23 @@ class blcHTMLLink extends blcParser {
 		return $results;
 	}
 	
+  /**
+   * Modify all HTML links found in a string using a callback function.
+   *
+   * The callback function should return either an associative array or a string. If 
+   * a string is returned, the parser will replace the current link with the contents
+   * of that string. If an array is returned, the current link will be modified/rebuilt
+   * by substituting the new values for the old ones.
+   *
+   * htmlentities() will be automatically applied to attribute values (but not to #link_text).
+   *
+   * @see blcParser::multi_edit()
+   *
+   * @param string $content A text string containing the links to edit.
+   * @param callback $callback Callback function used to modify the links.
+   * @param mixed $extra If supplied, $extra will be passed as the second parameter to the function $callback. 
+   * @return string The modified input string. 
+   */
 	function multi_edit($content, $callback, $extra = null){
 		//Just reuse map() + a little helper func. to apply the callback to all links and get modified links
 		$modified_links = $this->map($content, array(&$this, 'execute_edit_callback'), array($callback, $extra));
