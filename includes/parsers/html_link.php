@@ -3,9 +3,6 @@
 class blcHTMLLink extends blcParser {
 	var $supported_formats = array('html');
 	
-	//	                  \1                       \2      \3 URL    \4       \5 Text  \6
-	var $link_pattern = '/(<a[\s]+[^>]*href\s*=\s*)([\"\'])([^>]*?)\2([^<>]*>)((?sU).*)(<\/a>)/i';
-	
   /**
    * Parse a string for HTML links - <a href="URL">anchor text</a>
    *

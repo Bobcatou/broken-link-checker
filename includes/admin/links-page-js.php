@@ -18,7 +18,7 @@ function reloadDetailsRow(link_id){
 	var master = jQuery('#blc-row-'+link_id);
 	
 	//Load up the new link info                     (so sue me)    
-	master.next('.blc-link-details').find('td').html('<center><?php echo js_escape(__('Loading...' , 'broken-link-checker')); ?></center>').load(
+	master.next('.blc-link-details').find('td').html('<center><?php echo esc_js(__('Loading...' , 'broken-link-checker')); ?></center>').load(
 		"<?php echo admin_url('admin-ajax.php'); ?>",
 		{
 			'action' : 'blc_link_details',
@@ -37,7 +37,7 @@ jQuery(function($){
 	//The discard button - manually mark the link as valid. The link will be checked again later.
 	$(".blc-discard-button").click(function () {
 		var me = $(this);
-		me.html('<?php echo js_escape(__('Wait...', 'broken-link-checker')); ?>');
+		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
 		
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
@@ -45,7 +45,8 @@ jQuery(function($){
 			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
 				'action' : 'blc_discard',
-				'link_id' : link_id
+				'link_id' : link_id,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_discard'));  ?>'
 			},
 			function (data, textStatus){
 				if (data == 'OK'){
@@ -74,7 +75,7 @@ jQuery(function($){
                     	alterLinkCounter(-1);
                     }
 				} else {
-					$(me).html('<?php echo js_escape(__('Not broken' , 'broken-link-checker'));  ?>');
+					$(me).html('<?php echo esc_js(__('Not broken' , 'broken-link-checker'));  ?>');
 					alert(data);
 				}
 			}
@@ -105,7 +106,7 @@ jQuery(function($){
             cancel_button_container.show();
             editor.focus();
             editor.select();
-            edit_button.html('<?php echo js_escape(__('Save URL' , 'broken-link-checker')); ?>');
+            edit_button.html('<?php echo esc_js(__('Save URL' , 'broken-link-checker')); ?>');
         } else {
         	//"Save" clicked.
             editor.hide();
@@ -116,14 +117,15 @@ jQuery(function($){
             
             if (new_url != orig_url){
                 //Save the changed link
-                url_el.html('<?php echo js_escape(__('Saving changes...' , 'broken-link-checker')); ?>');
+                url_el.html('<?php echo esc_js(__('Saving changes...' , 'broken-link-checker')); ?>');
                 
                 $.getJSON(
 					"<?php echo admin_url('admin-ajax.php'); ?>",
 					{
 						'action' : 'blc_edit',
 						'link_id' : link_id,
-						'new_url' : new_url
+						'new_url' : new_url,
+						'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_edit'));  ?>'
 					},
 					function (data, textStatus){
 						var display_url = '';
@@ -173,10 +175,10 @@ jQuery(function($){
 										msg = msg + msgpiece + "\n";
 									}
 								} else {
-									msg = msg + '<?php echo js_escape(__('The link could not be modified.', 'broken-link-checker')); ?>\n';
+									msg = msg + '<?php echo esc_js(__('The link could not be modified.', 'broken-link-checker')); ?>\n';
 								}
 																
-								msg = msg + '\n<?php echo js_escape(__("The following error(s) occured :", 'broken-link-checker')); ?>\n* ';
+								msg = msg + '\n<?php echo esc_js(__("The following error(s) occured :", 'broken-link-checker')); ?>\n* ';
 								msg = msg + data.errors.join('\n* ');
 								
 								alert(msg);
@@ -194,7 +196,7 @@ jQuery(function($){
             } else {
 				//It's the same URL, so do nothing.
 			}
-			edit_button.html('<?php echo js_escape(__('Edit URL', 'broken-link-checker')); ?>');
+			edit_button.html('<?php echo esc_js(__('Edit URL', 'broken-link-checker')); ?>');
         }
     });
     
@@ -222,14 +224,14 @@ jQuery(function($){
 		//reset and hide the editor
 		master.find('.blc-link-editor').hide().val(url_el.attr('href'));
 		//Set the edit button to say "Edit URL"
-		master.find('.blc-edit-button').html('<?php echo js_escape(__('Edit URL' , 'broken-link-checker')); ?>');
+		master.find('.blc-edit-button').html('<?php echo esc_js(__('Edit URL' , 'broken-link-checker')); ?>');
     });
     
     //The unlink button - remove the link/image from all posts, custom fields, etc.
     $(".blc-unlink-button").click(function () { 
     	var me = this;
     	var master = $(me).parents('.blc-row');
-		$(me).html('<?php echo js_escape(__('Wait...' , 'broken-link-checker')); ?>');
+		$(me).html('<?php echo esc_js(__('Wait...' , 'broken-link-checker')); ?>');
 		
 		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
         
@@ -237,7 +239,8 @@ jQuery(function($){
 			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
 				'action' : 'blc_unlink',
-				'link_id' : link_id
+				'link_id' : link_id,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_unlink'));  ?>'
 			},
 			function (data, textStatus){
 				eval('data = ' + data);
@@ -287,7 +290,7 @@ jQuery(function($){
 					}				
 				}
 				
-				$(me).html('<?php echo js_escape(__('Unlink' , 'broken-link-checker')); ?>'); 
+				$(me).html('<?php echo esc_js(__('Unlink' , 'broken-link-checker')); ?>'); 
 			}
 		);
     });
@@ -308,6 +311,7 @@ jQuery(function($){
     	if ( searchForm.dialog('isOpen') ){
 			searchForm.dialog('close');
 		} else {
+			//Display the search form under the "Search" button
 	    	var button_position = $('#blc-open-search-box').offset();
 	    	var button_height = $('#blc-open-search-box').outerHeight(true);
 	    	var button_width = $('#blc-open-search-box').outerWidth(true);
@@ -330,7 +334,7 @@ jQuery(function($){
 	
 	//The "Save This Search Query" button creates a new custom filter based on the current search
 	$('#blc-create-filter').click(function(){
-		var filter_name = prompt("<?php echo js_escape(__("Enter a name for the new custom filter", 'broken-link-checker')); ?>", "");
+		var filter_name = prompt("<?php echo esc_js(__("Enter a name for the new custom filter", 'broken-link-checker')); ?>", "");
 		if ( filter_name ){
 			$('#blc-custom-filter-name').val(filter_name);
 			$('#custom-filter-form').submit();
@@ -340,7 +344,7 @@ jQuery(function($){
 	//Display a confirmation dialog when the user clicks the "Delete This Filter" button 
 	$('#blc-delete-filter').click(function(){
 		if ( confirm('<?php 
-			echo js_escape(  
+			echo esc_js(  
 					__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
 				); 
 		?>') ){
@@ -363,7 +367,7 @@ jQuery(function($){
     	//Convey the gravitas of deleting link sources.
     	if ( action == 'bulk-delete-sources' ){
     		var message = '<?php 
-				echo js_escape(  
+				echo esc_js(  
 					__("Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
 				); 
 			?>'; 

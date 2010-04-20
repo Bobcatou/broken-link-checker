@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your blog for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.9-dev
+Version: 0.9-rc1
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 Text Domain: broken-link-checker
@@ -86,7 +86,6 @@ $blc_config_manager = new blcConfigurationManager(
         'exclusion_list' => array(), 	//Links that contain a substring listed in this array won't be checked.
 		
 		'send_email_notifications' => false,//Whether to send email notifications about broken links
-		'notification_address' => get_option('admin_email'), //Email address to send the notifications to.
 		'notification_schedule' => 'daily', //How often (at most) notifications will be sent. Possible values : 'daily', 'weekly'
 		'last_notification_sent' => 0,		//When the last email notification was send (Unix timestamp)
 		
@@ -98,8 +97,8 @@ $blc_config_manager = new blcConfigurationManager(
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 		
-		'need_resynch' => false,  		//[Internal flag]
-		'current_db_version' => 0,		//The current version of the plugin's tables
+		'need_resynch' => false,  		//[Internal flag] True if there are unparsed items.
+		'current_db_version' => 0,		//The currently set-up version of the plugin's tables
 		
 		'custom_tmp_dir' => '',			//The lockfile will be stored in this directory. 
 										//If this option is not set, the plugin's own directory or the 
@@ -188,7 +187,7 @@ function blc_init_checkers(){
 	//Load the base classes for link checker algorithms
 	require $blc_directory . '/includes/checkers.php';
 	
-	//Load built-in checker implementations
+	//Load built-in checker implementations (only HTTP at the time)
 	require $blc_directory . '/includes/checkers/http.php';
 
 	do_action('blc_init_checkers');

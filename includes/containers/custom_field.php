@@ -475,7 +475,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function ui_bulk_delete_message($n){
 		//This is identical 
-		if ( function_exists('wp_trash_post') ){
+		if ( function_exists('wp_trash_post') && EMPTY_TRASH_DAYS ){
 			$delete_msg = _n("%d post moved to the trash", "%d posts moved to the trash", $n, 'broken-link-checker');
 		} else {
 			$delete_msg = _n("%d post deleted", "%d posts deleted", $n, 'broken-link-checker');

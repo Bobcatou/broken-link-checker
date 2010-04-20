@@ -53,7 +53,6 @@ class wsBrokenLinkChecker {
         add_action('wp_dashboard_setup', array(&$this, 'hook_wp_dashboard_setup'));
 		
         //AJAXy hooks
-        //TODO: Check nonces in AJAX hooks
         add_action( 'wp_ajax_blc_full_status', array(&$this,'ajax_full_status') );
         add_action( 'wp_ajax_blc_dashboard_status', array(&$this,'ajax_dashboard_status') );
         add_action( 'wp_ajax_blc_work', array(&$this,'ajax_work') );
@@ -81,6 +80,11 @@ class wsBrokenLinkChecker {
 		add_action('blc_cron_check_links', array(&$this, 'cron_check_links'));
     }
 
+  /**
+   * Output the script that runs the link monitor while the Dashboard is open.
+   *
+   * @return void
+   */
     function admin_footer(){
     	if ( !$this->conf->options['run_in_dashboard'] ){
 			return;
@@ -111,6 +115,12 @@ class wsBrokenLinkChecker {
         <?php
     }
 
+  /**
+   * Check if an URL matches the exclusion list.
+   *
+   * @param string $url
+   * @return bool
+   */
     function is_excluded($url){
         if (!is_array($this->conf->options['exclusion_list'])) return false;
         foreach($this->conf->options['exclusion_list'] as $excluded_word){
@@ -193,6 +203,11 @@ class wsBrokenLinkChecker {
         wp_enqueue_script('sprintf', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/sprintf.js');
 	}
 
+  /**
+   * Initiate a full recheck - reparse everything and check all links anew. 
+   *
+   * @return void
+   */
     function initiate_recheck(){
     	global $wpdb;
     	
@@ -240,6 +255,7 @@ class wsBrokenLinkChecker {
 		wp_clear_scheduled_hook('blc_cron_check_links');
 		wp_clear_scheduled_hook('blc_cron_email_notifications');
 	}
+	
   /**
    * Create and/or upgrade the plugin's database tables.
    *
@@ -438,7 +454,6 @@ EOZ;
 	}
 	
   /**
-   * wsBrokenLinkChecker::optimize_database()
    * Optimize the plugin's tables
    *
    * @return void
@@ -474,7 +489,7 @@ EOZ;
         add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'enqueue_link_page_scripts') );
     }
 
-    /**
+  /**
    * plugin_action_links()
    * Handler for the 'plugin_action_links' hook. Adds a "Settings" link to this plugin's entry
    * on the plugin list.
@@ -487,11 +502,6 @@ EOZ;
         if ($file == $this->my_basename)
             $links[] = "<a href='options-general.php?page=link-checker-settings'>" . __('Settings') . "</a>";
         return $links;
-    }
-
-    function mytruncate($str, $max_length=50){
-        if(strlen($str)<=$max_length) return $str;
-        return (substr($str, 0, $max_length-3).'...');
     }
 
     function options_page(){
@@ -606,6 +616,7 @@ EOZ;
 				}
 			}
 			
+			//Redirect back to the settings page
 			$base_url = remove_query_arg( array('_wpnonce', 'noheader', 'updated', 'error', 'action', 'message') );
 			wp_redirect( add_query_arg( array( 'settings-updated' => true), $base_url ) );
         }
@@ -977,7 +988,7 @@ EOZ;
     }
     
     function options_page_css(){
-    	wp_enqueue_style('blc-links-page', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/css/options-page.css' );
+    	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
 	}
 	
 
@@ -1012,6 +1023,7 @@ EOZ;
         $message = '';
         $msg_class = 'updated';
         
+        //Run the selected bulk action, if any
         if ( $action == 'create-custom-filter' ){
         	list($message, $msg_class) = $this->do_create_custom_filter(); 
 		} elseif ( $action == 'delete-custom-filter' ){
@@ -1033,7 +1045,7 @@ EOZ;
         //Load custom filters, if any
         $blc_link_query->load_custom_filters();
 		
-		//Calculate the number of links for each filter
+		//Calculate the number of links matching each filter
 		$blc_link_query->count_filter_results();
 		
 		$filters = $blc_link_query->get_filters();
@@ -1081,10 +1093,6 @@ EOZ;
 		if ( !empty($current_filter['custom']) || ($filter_id == 'search') ){
 			$search_params = $blc_link_query->get_search_params($current_filter);
 		}
-		
-		//Display the "Discard" button when listing broken links
-		//$show_discard_button = ('broken' == $filter_id) || (!empty($search_params['s_filter']) && ($search_params['s_filter'] == 'broken'));
-		$show_discard_button = false;
 		
 		//Figure out what the "safe" URL to acccess the current page would be.
 		//This is used by the bulk action form. 
@@ -1286,7 +1294,7 @@ EOZ;
 				</td>
                 <td class='column-url'>
                     <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
-                    	<?php print $this->mytruncate($link->url); ?></a>
+                    	<?php print blcUtility::truncate($link->url, 50, ''); ?></a>
                     <input type='text' id='link-editor-<?php print $rownum; ?>' 
                     	value="<?php print esc_attr($link->url); ?>" 
                         class='blc-link-editor' style='display:none' />
@@ -1318,24 +1326,11 @@ EOZ;
 					echo '</div>';
                 ?>
                 </td>
-                <?php
-				 	//Display the "Discard" button when listing broken links
-					if ( $show_discard_button ) { 
-				?> 
-				<td><a href='javascript:void(0);'  
-					id='discard_button-<?php print $rownum; ?>'
-					class='blc-discard-button'
-					title='<?php
-						echo attribute_escape( 
-							__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')
-						); 
-					?>'><?php _e('Discard', 'broken-link-checker'); ?></a>
-				</td>
-                <?php } ?>
+
                 </tr>
                 <!-- Link details -->
                 <tr id='<?php print "link-details-$rownum"; ?>' style='display:none;' class='blc-link-details'>
-					<td colspan='<?php echo $show_discard_button?5:4; ?>'><?php $this->link_details_row($link); ?></td>
+					<td colspan='4'><?php $this->link_details_row($link); ?></td>
 				</tr><?php
             }
             ?></tbody></table>
@@ -1541,7 +1536,7 @@ EOZ;
 				$processed_links = 0;
 				$failed_links = 0;
 				
-				//Unlink (delete) all selected links
+				//Unlink (delete) each one
 				foreach($links as $link){
 					$rez = $link->unlink();
 					if ( ($rez == false) || is_wp_error($rez) ){
@@ -1696,7 +1691,7 @@ EOZ;
 	
     
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/css/links-page.css' );
+		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css' );
 	}
 	
 	function link_details_row($link){
@@ -1781,7 +1776,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::work()
    * The main worker function that does all kinds of things.
    *
    * @return void
@@ -1800,7 +1794,6 @@ EOZ;
 			return;
 		}
 		
-		//TODO: Test load limiting
 		if ( $this->server_too_busy() ){
 			//FB::warn("Server is too busy. Stop.");
 			return;
@@ -1830,8 +1823,8 @@ EOZ;
 		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
 		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
 		//encountered when activating the plugin.
-		//(Comment out when debugging or you won't get the FirePHP output)
-		if ( !defined('BLC_DEBUG') ){
+		//(Disable when debugging or you won't get the FirePHP output)
+		if ( !constant('BLC_DEBUG') ){
 			ob_end_clean();
 	 		header("Connection: close");
 			ob_start();
@@ -1921,7 +1914,7 @@ EOZ;
 		******************************************/
 		while ( $links = $this->get_links_to_check(50) ){
 		
-			//some unchecked links found
+			//Some unchecked links found
 			//FB::log("Checking ".count($links)." link(s)");
 			
 			foreach ($links as $link) {
@@ -2045,6 +2038,12 @@ EOZ;
 		return $links;
 	}
 	
+  /**
+   * Output the current link checker status in JSON format.
+   * Ajax hook for the 'blc_full_status' action.
+   *
+   * @return void
+   */
 	function ajax_full_status( ){
 		$status = $this->get_status();
 		$text = $this->status_text( $status );
@@ -2058,7 +2057,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::status_text()
    * Generates a status message based on the status info in $status
    *
    * @param array $status
@@ -2113,9 +2111,14 @@ EOZ;
 		return $text;
 	}
 	
+  /**
+   * @uses wsBrokenLinkChecker::ajax_full_status() 
+   *
+   * @return void
+   */
 	function ajax_dashboard_status(){
 		//Just display the full status.
-		$this->ajax_full_status( );
+		$this->ajax_full_status();
 	}
 	
   /**
@@ -2179,8 +2182,13 @@ EOZ;
 		die();
 	}
 	
+  /**
+   * AJAX hook for the "Not broken" button. Marks a link as broken and as a likely false positive.
+   *
+   * @return void
+   */
 	function ajax_discard(){
-		if (!current_user_can('edit_others_posts')){
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_discard', false, false)){
 			die( __("You're not allowed to do that!", 'broken-link-checker') );
 		}
 		
@@ -2209,8 +2217,13 @@ EOZ;
 		}
 	}
 	
+  /**
+   * AJAX hook for the inline link editor on Tools -> Broken Links. 
+   *
+   * @return void
+   */
 	function ajax_edit(){
-		if (!current_user_can('edit_others_posts')){
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_edit', false, false)){
 			die( json_encode( array(
 					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
@@ -2266,8 +2279,14 @@ EOZ;
 		}
 	}
 	
+  /**
+   * AJAX hook for the "Unlink" action links in Tools -> Broken Links. 
+   * Removes the specified link from all posts and other supported items.
+   *
+   * @return void
+   */
 	function ajax_unlink(){
-		if (!current_user_can('edit_others_posts')){
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_discard', false, false)){
 			die( json_encode( array(
 					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
@@ -2344,7 +2363,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::acquire_lock()
    * Create and lock a temporary file.
    *
    * @return bool
@@ -2382,7 +2400,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::release_lock()
    * Unlock and delete the temporary file
    *
    * @return bool
@@ -2405,7 +2422,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::lockfile_name()
    * Generate system-specific lockfile filename
    *
    * @return string A filename or FALSE on error 
@@ -2534,7 +2550,6 @@ EOZ;
 	}
 	
   /**
-   * wsBrokenLinkChecker::get_debug_info()
    * Collect various debugging information and return it in an associative array
    *
    * @return array
@@ -2738,9 +2753,8 @@ EOZ;
 		add_filter('wp_mail_content_type', array(&$this, 'override_mail_content_type'));
 		
 		//Send the notification
-		//TODO: Test e-mail notifications
 		$rez = wp_mail(
-			$this->conf->options['notification_address'],
+			get_option('admin_email'),
 			$subject,
 			$body
 		);
@@ -2777,7 +2791,8 @@ EOZ;
 		}
 		
 		//Email notifications about broken links
-		if ( $this->conf->options['send_email_notifications'] && !empty($this->conf->options['notification_address']) ){
+		$notification_email = get_option('admin_email');
+		if ( $this->conf->options['send_email_notifications'] && !empty($notification_email) ){
 			if ( !wp_next_scheduled('blc_cron_email_notifications') ){
 				wp_schedule_event(time(), $this->conf->options['notification_schedule'], 'blc_cron_email_notifications');
 			}

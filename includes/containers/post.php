@@ -18,7 +18,7 @@ class blcPostContainer extends blcContainer {
 			if ( EMPTY_TRASH_DAYS ) { 
 				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr(__('Move this post to the Trash')) . "' href='" . get_delete_post_link($this->container_id) . "'>" . __('Trash') . "</a>";
 			} else {
-				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url( admin_url("post.php?action=delete&amp;post=".$this->container_id), 'delete-post_' . $this->container_id) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), get_the_title($this->container_id) )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url( admin_url("post.php?action=delete&amp;post=".$this->container_id), 'delete-post_' . $this->container_id) . "' onclick=\"if ( confirm('" . esc_js(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), get_the_title($this->container_id) )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 			}
 		}
 		$actions['view'] = '<span class="view"><a href="' . get_permalink($this->container_id) . '" title="' . attribute_escape(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($this->container_id))) . '" rel="permalink">' . __('View') . '</a>';
@@ -294,7 +294,7 @@ class blcPostContainerManager extends blcContainerManager {
 		//Since the "Trash" feature has been introduced, calling wp_delete_post
 		//doesn't actually delete the post (unless you set force_delete to True), 
 		//just moves it to the trash. So we pick the message accordingly. 
-		if ( function_exists('wp_trash_post') ){
+		if ( function_exists('wp_trash_post') && EMPTY_TRASH_DAYS ){
 			$delete_msg = _n("%d post moved to the trash", "%d posts moved to the trash", $n, 'broken-link-checker');
 		} else {
 			$delete_msg = _n("%d post deleted", "%d posts deleted", $n, 'broken-link-checker');

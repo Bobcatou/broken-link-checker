@@ -139,11 +139,19 @@ class blcHTMLImage extends blcParser {
    * @return string HTML 
    */
 	function ui_get_link_text($instance, $context = 'display'){
-		return sprintf(
-			'<img src="%s/broken-link-checker/images/image.png" class="blc-small-image" alt="%2$s" title="%2$s"> %2$s',
-			WP_PLUGIN_URL,
-			__('Image', 'broken-link-checker')
+		$text = __('Image', 'broken-link-checker'); 
+		
+		$image = sprintf(
+			'<img src="%s/broken-link-checker/images/image.png" class="blc-small-image" alt="%2$s" title="%2$s"> ',
+			WP_PLUGIN_URL, //TODO: Use plugin_dir_url() instead
+			esc_attr($text)
 		);
+		
+		if ( $context != 'email' ){
+			$text = $image . $text;
+		}
+		
+		return $text;
 	}
 }
 
