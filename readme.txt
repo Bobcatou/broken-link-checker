@@ -73,6 +73,27 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.9 =
+* Masquerade as IE 7 when using the Snoopy library to check links. Should prevent some false positives.
+* Fixed relative URL handling (yet again). It'll work this time, honest ;)
+* Fixed post titles being displayed incorrectly on multilingual blogs (props Konstanin Zhilenko)
+* Misc fixes/comments.
+* "Unlink" works properly now.
+* Additional source code comments.
+* Don't try to display icons in email notifications. It didn't work anyway.
+* Use AJAX nonces for additional security.
+* General code cleanup.
+* Email notifications about broken links.
+* "Recheck" bulk action.
+* Check comment links.
+* Suspend checking if the server is overloaded (on by default).
+* Icons for broken links and redirects.
+* Fixed some UI glitches.
+* "Discard" gone, replaced by "Not broken".
+* "Exclude" gone from action links.
+* Better handling of false positives.
+* FTP, mailto:, javascript: and other links with unsupported protocols now show up in the “All links” list.
+
 = 0.8.1 =
 * Updated Italian translation.
 * Removed the survey link.
@@ -218,7 +239,7 @@ To upgrade your installation
 
 = 0.5 =
 * This is a near-complete rewrite with a lot of new features. 
-* See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
+* See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
 
 = 0.4.14 =
 * Fix false positives when the URL contains an #anchor
