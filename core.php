@@ -2286,7 +2286,7 @@ EOZ;
    * @return void
    */
 	function ajax_unlink(){
-		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_discard', false, false)){
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_unlink', false, false)){
 			die( json_encode( array(
 					'error' => __("You're not allowed to do that!", 'broken-link-checker') 
 				 )));
