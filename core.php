@@ -939,7 +939,7 @@ EOZ;
 				
 			})(jQuery);
         </script>
-			<?
+			<?php
 			
 			echo '<br/><span class="description">';
 	        printf(
