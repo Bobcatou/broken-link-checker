@@ -89,7 +89,7 @@ $blc_config_manager = new blcConfigurationManager(
 		'notification_schedule' => 'daily', //How often (at most) notifications will be sent. Possible values : 'daily', 'weekly'
 		'last_notification_sent' => 0,		//When the last email notification was send (Unix timestamp)
 		
-		'server_load_limit' => 2,		//Stop parsing stuff & checking links if the 1-minute load average
+		'server_load_limit' => 4,		//Stop parsing stuff & checking links if the 1-minute load average
 										//goes over this value. Only works on Linux servers. 0 = no limit.
 		'enable_load_limit' => true,	//Enable/disable load monitoring. 
 		
