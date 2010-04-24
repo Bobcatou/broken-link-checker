@@ -158,10 +158,17 @@ class blcCurlHttp extends blcHttpChecker {
         $result['request_duration'] = $info['total_time'];
         $result['redirect_count'] = $info['redirect_count'];
         
-        if ( $nobody && ($result['http_code'] == 405) ){
-			//405 = Method not allowed. The site in question is probably expecting
-			//GET instead of HEAD. So lets retry the request using the GET verb.
+        //Determine if the link counts as "broken"
+		$result['broken'] = $this->is_error_code($result['http_code']) || $result['timeout'];
+        
+        if ( $nobody && $result['broken'] ){
+			//The site in question might be expecting GET instead of HEAD, so lets retry the request 
+			//using the GET verb.
 			return $this->check($url, true);
+			 
+			//Note : normally a server that doesn't allow HEAD requests on a specific resource *should*
+			//return "405 Method Not Allowed". Unfortunately, there are sites that return 404 or
+			//another, even more general, error code instead. So just checking for 405 wouldn't be enough. 
 		}
         
         //When safe_mode or open_basedir is enabled CURL will be forbidden from following redirects,
@@ -171,9 +178,6 @@ class blcCurlHttp extends blcHttpChecker {
 		if ( ($result['redirect_count'] == 0) && ( in_array( $result['http_code'], array(301, 302, 303, 307) ) ) ){
 			$result['redirect_count'] = 1;
 		} 
-		
-		//Determine if the link counts as "broken"
-		$result['broken'] = $this->is_error_code($result['http_code']) || $result['timeout'];
 		
         //Build the log from HTTP code and headers.
         //TODO: Put some kind of a color-coded error explanation at the top of the log, not a cryptic HTTP code. 
