@@ -61,6 +61,7 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
+        add_action( 'wp_ajax_blc_save_highlight_settings', array(&$this,'ajax_save_highlight_settings') );
         
         //Check if it's possible to create a lockfile and nag the user about it if not.
         if ( $this->lockfile_name() ){
@@ -487,7 +488,31 @@ EOZ;
         add_action( 'admin_print_styles-' . $links_page_hook, array(&$this, 'links_page_css') );
 		add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'enqueue_settings_scripts') );
         add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'enqueue_link_page_scripts') );
+        
+        /*
+		Display a checkbox in "Screen Options" that lets the user highlight links that 
+		have been broken for a long time. The "Screen Options" panel isn't directly 
+		customizable, so we must resort to ugly hacks using add_meta_box() and JavaScript. 
+		*/ 
+        $input_html = sprintf(
+        	'</label><input style="margin-left: -1em" type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2">',
+        	$this->conf->options['failure_duration_threshold']
+		);
+        $title_html = sprintf(
+			__('Highlight links broken for at least %s days', 'broken_link_checker'),
+			$input_html
+		);
+        add_meta_box('highlight_permanent_failures', $title_html, array(&$this, 'noop'), $links_page_hook);
     }
+    
+  /**
+   * Dummy callback for the non-existent 'highlight_permanent_failures' meta box. Does nothing.
+   *
+   * @return void
+   */
+    function noop(){
+		//Do nothing.
+	}
 
   /**
    * plugin_action_links()
@@ -1230,12 +1255,23 @@ EOZ;
 					$rowclass .= ' blc-redirect';
 				}
             	
+            	$days_broken = 0;
             	if ( $link->broken ){
 					$rowclass .= ' blc-broken-link';
+					
+					//Add a highlight to broken links that appear to be permanently broken
+					$days_broken = intval( (time() - $link->first_failure) / (3600*24) );
+					if ( $days_broken >= $this->conf->options['failure_duration_threshold'] ){
+						$rowclass .= ' blc-permanently-broken';
+						if ( $this->conf->options['highlight_permanent_failures'] ){
+							$rowclass .= ' blc-permanently-broken-hl';
+						}
+					}
 				}
+				
             	
                 ?>
-                <tr id='<?php echo "blc-row-" . $link->link_id; ?>' class='blc-row <?php echo $rowclass; ?>'>
+                <tr id='<?php echo "blc-row-" . $link->link_id; ?>' class='blc-row <?php echo $rowclass; ?>' days_broken="<?php echo $days_broken; ?>">
                 
 				<th class="check-column" scope="row">
 					<input type="checkbox" name="selected_links[]" value="<?php echo $link->link_id; ?>">
@@ -1747,6 +1783,14 @@ EOZ;
 						_n('This link has failed %d time.', 'This link has failed %d times.', $link->check_count, 'broken-link-checker'),
 						$link->check_count
 					);
+					
+					echo '<br>';
+					
+					$delta = time() - $link->first_failure;
+					printf(
+						__('This link has been broken for %s.', 'broken-link-checker'),
+						$this->fuzzy_delta($delta)
+					);
 				?>
 				</li>
 		    	<?php } ?>
@@ -1765,6 +1809,110 @@ EOZ;
 			<div style="clear:both;"> </div>
 		</div>
 		<?php
+	}
+	
+  /**
+   * Format a time delta using a fuzzy format, e.g. 'less than a minute', '2 days', etc.
+   *
+   * @param int $delta Time period in seconds.
+   * @return string
+   */
+	function fuzzy_delta($delta){
+		$ONE_MINUTE = 60;
+		$ONE_HOUR = 60 * $ONE_MINUTE;
+		$ONE_DAY = 24 * $ONE_HOUR;
+		$ONE_MONTH = $ONE_DAY * 3652425 / 120000;
+		$ONE_YEAR = $ONE_DAY * 3652425 / 10000;
+		
+		if ( $delta < $ONE_MINUTE ){
+			return __('less than a minute', 'broken-link-checker');
+		}
+		
+		if ( $delta < $ONE_HOUR ){
+			$minutes = intval($delta / $ONE_MINUTE);
+			
+			return sprintf(
+				_n(
+					'%d minute',
+					'%d minutes',
+					$minutes,
+					'broken-link-checker'
+				),
+				$minutes
+			);
+		}
+		
+		if ( $delta < $ONE_DAY ){
+			$hours = intval($delta / $ONE_HOUR);
+			
+			return sprintf(
+				_n(
+					'%d hour',
+					'%d hours',
+					$hours,
+					'broken-link-checker'
+				),
+				$hours
+			);
+		}
+		
+		if ( $delta < $ONE_MONTH ){
+			$days = intval($delta / $ONE_DAY);
+			$hours = intval( ($delta - $days * $ONE_DAY)/$ONE_HOUR );
+			 
+			$ret = sprintf(
+				_n(
+					'%d day',
+					'%d days',
+					$days,
+					'broken-link-checker'
+				),
+				$days
+			);
+			
+			
+			if ( ($days < 2) && ($hours > 0) ){
+				$ret .= ' ' . sprintf(
+					_n(
+						'%d hour',
+						'%d hours',
+						$hours,
+						'broken-link-checker'
+					),
+					$hours
+				); 
+			}
+			
+			return $ret;
+		}
+		
+		
+		$months = intval( $delta / $ONE_MONTH );
+		$days = intval( ($delta - $months * $ONE_MONTH)/$ONE_DAY );
+		 
+		$ret = sprintf(
+			_n(
+				'%d month',
+				'%d months',
+				$months,
+				'broken-link-checker'
+			),
+			$months
+		);
+		
+		if ( $days > 0 ){
+			$ret .= ' ' . sprintf(
+				_n(
+					'%d day',
+					'%d days',
+					$days,
+					'broken-link-checker'
+				),
+				$days
+			); 
+		}
+		
+		return $ret;
 	}
 	
 	function start_timer(){
@@ -2360,6 +2508,29 @@ EOZ;
 			printf( __('Failed to load link details (%s)', 'broken-link-checker'), $wpdb->last_error );
 			die();
 		}
+	}
+	
+  /**
+   * AJAX hook for saving the settings from the "Screen Options" panel in Tools -> Broken Links.
+   *
+   * @return void
+   */
+	function ajax_save_highlight_settings(){
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_save_highlight_settings', false, false)){
+			die( json_encode( array(
+				'error' => __("You're not allowed to do that!", 'broken-link-checker') 
+			 )));
+		}
+		
+		$this->conf->options['highlight_permanent_failures'] = !empty($_POST['highlight_permanent_failures']);
+		
+		$failure_duration_threshold = intval($_POST['failure_duration_threshold']);
+		if ( $failure_duration_threshold >=1 ){
+			$this->conf->options['failure_duration_threshold'] = $failure_duration_threshold;
+		}
+		
+		$this->conf->save_options();
+		die('1');
 	}
 	
   /**

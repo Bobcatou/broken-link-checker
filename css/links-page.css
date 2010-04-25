@@ -30,7 +30,7 @@ td.blc-link-details {
 	/*width: 35%;*/
 }
 
-/* Styles for broken links, redirects and excluded links */
+/* Styles for broken links, redirects and other link states or types */
 
 .blc-redirect { }
 
@@ -50,6 +50,14 @@ td.blc-link-details {
 
 .blc-excluded-link {
 	background-color: #E2E2E2;
+}
+
+.blc-permanently-broken { 
+	
+}
+
+.blc-permanently-broken-hl {
+	background-image: url("../images/red_highlight.png");
 }
 
 
@@ -121,4 +129,10 @@ div.search-box{
 	margin-right: 0pt;
 	margin-bottom: 0pt;
 	margin-left: 0pt;
+}
+
+/* Misc link page styles */
+
+.tools_page_view-broken-links #screen-options-wrap h5 {
+	display: none;
 }

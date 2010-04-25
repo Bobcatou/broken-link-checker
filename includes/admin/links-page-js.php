@@ -377,7 +377,87 @@ jQuery(function($){
 		}
 	});
 	
-	//Not implemented yet
+	//------------------------------------------------------------
+    // Manipulate highlight settings for permanently broken links
+    //------------------------------------------------------------
+    var highlight_permanent_failures_checkbox = $('#highlight_permanent_failures-hide');
+	var failure_duration_threshold_input = $('#failure_duration_threshold');
+	
+	//Update the checkbox depending on current settings.
+	<?php
+	$conf = blc_get_configuration();
+	if ( $conf->options['highlight_permanent_failures'] ){
+		echo 'highlight_permanent_failures_checkbox.attr("checked", "checked");';
+	} else {
+		echo 'highlight_permanent_failures_checkbox.removeAttr("checked");';
+	}
+	?>;
+	
+    //Apply/remove highlights when the checkbox is (un)checked
+    highlight_permanent_failures_checkbox.change(function(){
+    	save_highlight_settings();
+    	
+		if ( this.checked ){
+			$('#blc-links tr.blc-permanently-broken').addClass('blc-permanently-broken-hl');
+		} else {
+			$('#blc-links tr.blc-permanently-broken').removeClass('blc-permanently-broken-hl');
+		}
+	});
+	
+	//Apply/remove highlights when the duration threshold is changed.
+	failure_duration_threshold_input.change(function(){
+		var new_threshold = parseInt($(this).val());
+		save_highlight_settings();
+		if (isNaN(new_threshold) || (new_threshold < 1)) {
+			return;
+		}
+		
+		highlight_permanent_failures = highlight_permanent_failures_checkbox.is(':checked');
+		
+		$('#blc-links tr.blc-row').each(function(index){
+			var days_broken = $(this).attr('days_broken');
+			if ( days_broken >= new_threshold ){
+				$(this).addClass('blc-permanently-broken');
+				if ( highlight_permanent_failures ){
+					$(this).addClass('blc-permanently-broken-hl');
+				}
+			} else {
+				$(this).removeClass('blc-permanently-broken').removeClass('blc-permanently-broken-hl');
+			}
+		});
+	});
+	
+	//Don't let the user manually submit the "Screen Options" form - it wouldn't work properly anyway.
+	$('#adv-settings').submit(function(){
+		return false;	
+	});
+	
+	//Save highlight settings using AJAX
+	function save_highlight_settings(){
+		var $ = jQuery; 
+		
+		var highlight_permanent_failures = highlight_permanent_failures_checkbox.is(':checked');
+		var failure_duration_threshold = parseInt(failure_duration_threshold_input.val());
+		
+		if ( isNaN(failure_duration_threshold) || ( failure_duration_threshold < 1 ) ){
+			failure_duration_threshold = 1;
+		}
+		
+		failure_duration_threshold_input.val(failure_duration_threshold);
+		
+		$.post(
+			"<?php echo admin_url('admin-ajax.php'); ?>",
+			{
+				'action' : 'blc_save_highlight_settings',
+				'failure_duration_threshold' : failure_duration_threshold,
+				'highlight_permanent_failures' : highlight_permanent_failures?1:0,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_save_highlight_settings'));  ?>'
+			}
+		);
+	}
+	
+	
+	
 });
 
 </script>

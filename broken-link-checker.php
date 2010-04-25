@@ -105,6 +105,10 @@ $blc_config_manager = new blcConfigurationManager(
 										//system-wide /tmp directory will be used instead.
 										
 		'timeout' => 30,				//(in seconds) Links that take longer than this to respond will be treated as broken.
+		
+		'highlight_permanent_failures' => false,//Highlight links that have appear to be permanently broken (in Tools -> Broken Links).
+		'failure_duration_threshold' => 3, 		//(days) Assume a link is permanently broken if it still hasn't 
+												//recovered after this many days.
    )
 );
 
