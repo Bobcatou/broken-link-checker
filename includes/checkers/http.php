@@ -138,7 +138,7 @@ class blcCurlHttp extends blcHttpChecker {
 			curl_setopt($ch, CURLOPT_NOBODY, true);  
 		} else {
 			//If we must use GET at least limit the amount of downloaded data.
-			curl_setopt($ch, HTTP_HEADER, array('Range: bytes=0-2048')); //2 KB
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Range: bytes=0-2048')); //2 KB
 		}
         
         //Register a callback function which will process the HTTP header(s).
