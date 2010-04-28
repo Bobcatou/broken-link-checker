@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 2.9.0
 Tested up to: 3.0-beta1
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 
 This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
 
@@ -72,6 +72,18 @@ To upgrade your installation
 == Changelog ==
 
 *This is an automatically generated changelog*
+
+= 0.9.2 =
+* In Tools -> Broken Links, highlight links that have been broken for a long time (off by default).
+* Fixed an invalid parameter bug in the HTTP link checking routine.
+* Added nofollow to broken links (optional, only works for links in posts).
+* Fixed some PHP notices and a bunch of deprecated function calls.
+* Fixed "Trash" links for comments.
+
+= 0.9.1 =
+* Fixed the "syntax error: unexpected $end" problem caused by a unintentional PHP shorttag.
+* Eliminated a bunch of false positives by adding a workaround for buggy servers that incorrectly respond with 404 to HEAD requests.
+* Increased the default server load limit to 4.0 to prevent the plugin from idling endlessly on weakling servers.
 
 = 0.9 =
 * Masquerade as IE 7 when using the Snoopy library to check links. Should prevent some false positives.
@@ -239,7 +251,7 @@ To upgrade your installation
 
 = 0.5 =
 * This is a near-complete rewrite with a lot of new features. 
-* See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
+* See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
 
 = 0.4.14 =
 * Fix false positives when the URL contains an #anchor
@@ -364,3 +376,4 @@ To upgrade your installation
 
 = 0.1 =
 * *There are no release notes for this version*
+
