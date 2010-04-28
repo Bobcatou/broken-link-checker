@@ -568,6 +568,8 @@ EOZ;
             $this->conf->options['mark_removed_links'] = !empty($_POST['mark_removed_links']);
             $new_removed_link_css = trim($_POST['removed_link_css']);
             $this->conf->options['removed_link_css'] = $new_removed_link_css;
+            
+            $this->conf->options['nofollow_broken_links'] = !empty($_POST['nofollow_broken_links']);
 
             $this->conf->options['exclusion_list'] = array_filter( 
 				preg_split( 
@@ -779,6 +781,17 @@ EOZ;
                 echo $this->conf->options['removed_link_css'];
         ?></textarea>
 
+        </td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Broken link SEO','broken-link-checker'); ?></th>
+        <td>
+        	<label for='nofollow_broken_links'>
+        		<input type="checkbox" name="nofollow_broken_links" id="nofollow_broken_links"
+            	<?php if ($this->conf->options['nofollow_broken_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e('Apply <em>rel="nofollow"</em> to broken links', 'broken-link-checker'); ?>
+			</label>
         </td>
         </tr>
 
@@ -1141,7 +1154,7 @@ EOZ;
 <h2><?php
 	//Output a header matching the current filter
 	if ( $current_filter['count'] > 0 ){
-		echo $current_filter['heading'] . " (<span class='current-link-count'>{$current_filter[count]}</span>)";
+		echo $current_filter['heading'] . " (<span class='current-link-count'>{$current_filter['count']}</span>)";
 	} else {
 		echo $current_filter['heading_zero'] . "<span class='current-link-count'></span>";
 	}
@@ -1162,7 +1175,7 @@ EOZ;
 				}
 				
 				$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' $class>
-					{$data[name]}</a> <span class='count'>(<span class='$number_class'>{$data[count]}</span>)</span>";
+					{$data['name']}</a> <span class='count'>(<span class='$number_class'>{$data['count']}</span>)</span>";
 			}
 			echo implode(' |</li>', $items);
 			unset($items);
@@ -1202,7 +1215,7 @@ EOZ;
 			<select name="action" id="blc-bulk-action">
 				<?php echo $bulk_actions_html; ?>
 			</select>
-			<input type="submit" name="doaction" id="doaction" value="<?php echo attribute_escape(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
+			<input type="submit" name="doaction" id="doaction" value="<?php echo esc_attr(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
 		</div>
 		<?php
 			//Display pagination links 
@@ -1338,9 +1351,9 @@ EOZ;
                 	//Output inline action links for the link/URL                  	
                   	$actions = array();
                   	
-					$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". attribute_escape(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
+					$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
                   	
-					$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . attribute_escape( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
+					$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
 						"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
 					
 					if ( $link->broken ){
@@ -1351,13 +1364,13 @@ EOZ;
 						);
 					}
 					
-					$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . attribute_escape( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
+					$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
 					
 					echo '<div class="row-actions">';
 					echo implode(' | </span>', $actions);
 					
 					echo "<span style='display:none' class='blc-cancel-button-container'> " .
-						 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". attribute_escape(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
+						 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
 
 					echo '</div>';
                 ?>
@@ -1376,7 +1389,7 @@ EOZ;
 			<select name="action2"  id="blc-bulk-action2">
 				<?php echo $bulk_actions_html; ?>
 			</select>
-			<input type="submit" name="doaction2" id="doaction2" value="<?php echo attribute_escape(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
+			<input type="submit" name="doaction2" id="doaction2" value="<?php echo esc_attr(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
 		</div><?php
             
             //Also display pagination links at the bottom
@@ -1973,7 +1986,7 @@ EOZ;
 		//encountered when activating the plugin.
 		//(Disable when debugging or you won't get the FirePHP output)
 		if ( !constant('BLC_DEBUG') ){
-			ob_end_clean();
+			@ob_end_clean(); //Discard the existing buffer, if any
 	 		header("Connection: close");
 			ob_start();
 			echo ('Connection closed'); //This could be anything

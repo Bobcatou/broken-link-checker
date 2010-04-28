@@ -154,7 +154,7 @@ class blcContainerRegistry {
 			return array();
 		}
 		
-		if ( is_string($first[0]) && is_numeric($first[1]) ){
+		if ( isset($first[0]) && is_string($first[0]) && is_numeric($first[1]) ){
 			//The argument is an array of [container_type, id].
 			//Divide the container IDs by container type.
 			$by_type = array();

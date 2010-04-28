@@ -13,7 +13,7 @@ class blcPostContainer extends blcContainer {
 	function ui_get_action_links($container_field = ''){
 		$actions = array();
 		if ( current_user_can('edit_post', $this->container_id) ) {
-			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . attribute_escape(__('Edit this post')) . '">' . __('Edit') . '</a>';
+			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . esc_attr(__('Edit this post')) . '">' . __('Edit') . '</a>';
 			
 			if ( EMPTY_TRASH_DAYS ) { 
 				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr(__('Move this post to the Trash')) . "' href='" . get_delete_post_link($this->container_id) . "'>" . __('Trash') . "</a>";
@@ -21,7 +21,7 @@ class blcPostContainer extends blcContainer {
 				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url( admin_url("post.php?action=delete&amp;post=".$this->container_id), 'delete-post_' . $this->container_id) . "' onclick=\"if ( confirm('" . esc_js(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), get_the_title($this->container_id) )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 			}
 		}
-		$actions['view'] = '<span class="view"><a href="' . get_permalink($this->container_id) . '" title="' . attribute_escape(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($this->container_id))) . '" rel="permalink">' . __('View') . '</a>';
+		$actions['view'] = '<span class="view"><a href="' . get_permalink($this->container_id) . '" title="' . esc_attr(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($this->container_id))) . '" rel="permalink">' . __('View') . '</a>';
 		
 		return $actions;
 	}
@@ -38,7 +38,7 @@ class blcPostContainer extends blcContainer {
 		$source = sprintf(
 			$source,
 			$this->get_edit_url(),
-			attribute_escape(__('Edit this post')),
+			esc_attr(__('Edit this post')),
 			get_the_title($this->container_id)
 		);
 		
@@ -136,6 +136,8 @@ class blcPostContainer extends blcContainer {
 class blcPostContainerManager extends blcContainerManager {
 	var $container_class_name = 'blcPostContainer';
 	
+	var $_conf; //Keep a local reference to the BLC configuration manager. Yields a minor performance benefit. 
+	
   /**
    * Set up hooks that monitor added/modified/deleted posts.
    *
@@ -149,11 +151,11 @@ class blcPostContainerManager extends blcContainerManager {
         add_action('trash_post', array(&$this,'post_deleted'));
         add_action('untrash_post', array(&$this,'post_saved'));
         
-        //Highlight broken links in posts & pages
-        $conf = blc_get_configuration();
-        if ( $conf->options['mark_broken_links'] ){
+        //Highlight and nofollow broken links in posts & pages
+        $this->_conf = blc_get_configuration();
+        if ( $this->_conf->options['mark_broken_links'] || $this->_conf->options['nofollow_broken_links'] ){
         	add_filter( 'the_content', array(&$this,'hook_the_content') );
-        	if ( !empty( $conf->options['broken_link_css'] ) ){
+        	if ( $this->_conf->options['mark_broken_links'] && !empty( $this->_conf->options['broken_link_css'] ) ){
 	            add_action( 'wp_head', array(&$this,'hook_wp_head') );
 			}
         }
@@ -339,7 +341,6 @@ class blcPostContainerManager extends blcContainerManager {
 			$broken_link_urls[] = $link['raw_url'];
 		}
 		
-        
         //Iterate over all HTML links and modify the broken ones
 		$parser = blc_get_parser('link');
 		$content = $parser->multi_edit($content, array(&$this, 'highlight_broken_link'), $broken_link_urls);
@@ -363,14 +364,29 @@ class blcPostContainerManager extends blcContainerManager {
 		}
 		
 		//Add 'broken_link' to the 'class' attribute (unless already present).
-		if ( isset($link['class']) ){
-			$classes = explode(' ', $link['class']);
-			if ( !in_array('broken_link', $classes) ){
-				$classes[] = 'broken_link';
-				$link['class'] = implode(' ', $classes);
+		if ( $this->_conf->options['mark_broken_links'] ){
+			if ( isset($link['class']) ){
+				$classes = explode(' ', $link['class']);
+				if ( !in_array('broken_link', $classes) ){
+					$classes[] = 'broken_link';
+					$link['class'] = implode(' ', $classes);
+				}
+			} else {
+				$link['class'] = 'broken_link';
 			}
-		} else {
-			$link['class'] = 'broken_link';
+		}
+		
+		//Nofollow the link (unless it's already nofollow'ed)
+		if ( $this->_conf->options['nofollow_broken_links'] ){
+			if ( isset($link['rel']) ){
+				$relations = explode(' ', $link['rel']);
+				if ( !in_array('nofollow', $relations) ){
+					$relations[] = 'nofollow';
+					$link['rel'] = implode(' ', $relations);
+				}
+			} else {
+				$link['rel'] = 'nofollow';
+			}
 		}
 		
 		return $link;

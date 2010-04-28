@@ -79,6 +79,7 @@ $blc_config_manager = new blcConfigurationManager(
         
         'mark_broken_links' => true, 	//Whether to add the broken_link class to broken links in posts.
         'broken_link_css' => ".broken_link, a.broken_link {\n\ttext-decoration: line-through;\n}",
+        'nofollow_broken_links' => false, //Whether to add rel="nofollow" to broken links in posts.
         
         'mark_removed_links' => false, 	//Whether to add the removed_link class when un-linking a link.
         'removed_link_css' => ".removed_link, a.removed_link {\n\ttext-decoration: line-through;\n}",
@@ -302,7 +303,7 @@ if ( is_admin() || defined('DOING_CRON') ){
 	
 	//If broken links need to be marked, we also need to load parsers
 	//(used to find & modify links) and utilities (used by some parsers).
-	if ( $blc_config_manager->options['mark_broken_links'] ){
+	if ( $blc_config_manager->options['mark_broken_links'] || $blc_config_manager->options['nofollow_broken_links'] ){
 		require $blc_directory . '/utility-class.php';
 		add_action('plugins_loaded', 'blc_init_parsers');
 	}

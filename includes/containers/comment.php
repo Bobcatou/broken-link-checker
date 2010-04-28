@@ -99,6 +99,7 @@ class blcComment extends blcContainer{
 		$actions = array();
 		
 		$comment = $this->get_wrapped_object();
+		$post = get_post($comment->comment_post_ID);
 		
 		//Display Edit & Delete/Trash links only if the user has the right caps.
 		$user_can = current_user_can('edit_post', $comment->comment_post_ID);  
@@ -116,7 +117,7 @@ class blcComment extends blcContainer{
 			}
 		}
 		
-		$actions['view'] = '<span class="view"><a href="' . get_comment_link($this->container_id) . '" title="' . attribute_escape(__('View comment', 'broken-link-checker')) . '" rel="permalink">' . __('View') . '</a>';
+		$actions['view'] = '<span class="view"><a href="' . get_comment_link($this->container_id) . '" title="' . esc_attr(__('View comment', 'broken-link-checker')) . '" rel="permalink">' . __('View') . '</a>';
 		
 		return $actions;
 	}
@@ -321,7 +322,7 @@ class blcCommentManager extends blcContainerManager {
 				$comment = get_comment($comment);
 				
 				//Attach it to the container
-				$key = $this->container_type . '|' . $post->ID;
+				$key = $this->container_type . '|' . $comment->comment_ID;
 				if ( isset($containers[$key]) ){
 					$containers[$key]->wrapped_object = $comment;
 				}
