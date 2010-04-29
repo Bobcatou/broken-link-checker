@@ -56,7 +56,7 @@ class blcHttpChecker extends blcChecker{
    */
 	function urlencodefix($url){
 		return preg_replace_callback(
-			'|[^a-z0-9\+\-\/\\#:.=?&%@]|i', 
+			'|[^a-z0-9\+\-\/\\#:.,;=?!&%@()$\|*]|i', 
 			create_function('$str','return rawurlencode($str[0]);'), 
 			$url
 		 );
