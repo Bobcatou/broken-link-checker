@@ -361,10 +361,10 @@ EOD;
 		  `link_id` int(10) unsigned NOT NULL,
 		  `container_id` int(10) unsigned NOT NULL,
 		  `container_type` varchar(40) NOT NULL DEFAULT 'post',
-		  `link_text` varchar(250) NOT NULL,
+		  `link_text` varchar(250) NOT NULL DEFAULT '',
 		  `parser_type` varchar(40) NOT NULL DEFAULT 'link',
-		  `container_field` varchar(250) NOT NULL,
-		  `link_context` varchar(250) NOT NULL,
+		  `container_field` varchar(250) NOT NULL DEFAULT '',
+		  `link_context` varchar(250) NOT NULL DEFAULT '',
 		  `raw_url` text NOT NULL,
 		  
 		  PRIMARY KEY (`instance_id`),
@@ -398,7 +398,7 @@ EOT;
 		  `final_url` text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
 		  `redirect_count` smallint(5) unsigned NOT NULL DEFAULT '0',
 		  `log` text NOT NULL,
-		  `http_code` smallint(6) NOT NULL,
+		  `http_code` smallint(6) NOT NULL DEFAULT '0',
 		  `request_duration` float NOT NULL DEFAULT '0',
 		  `timeout` tinyint(1) unsigned NOT NULL DEFAULT '0',
 		  `broken` tinyint(1) NOT NULL DEFAULT '0',
@@ -432,7 +432,7 @@ EOS;
 		  `container_id` int(20) unsigned NOT NULL,
 		  `container_type` varchar(40) NOT NULL,
 		  `synched` tinyint(3) unsigned NOT NULL,
-		  `last_synch` datetime NOT NULL,
+		  `last_synch` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 		  
 		  PRIMARY KEY (`container_type`,`container_id`),
 		  KEY `synched` (`synched`)
@@ -499,7 +499,7 @@ EOZ;
         	$this->conf->options['failure_duration_threshold']
 		);
         $title_html = sprintf(
-			__('Highlight links broken for at least %s days', 'broken_link_checker'),
+			__('Highlight links broken for at least %s days', 'broken-link-checker'),
 			$input_html
 		);
         add_meta_box('highlight_permanent_failures', $title_html, array(&$this, 'noop'), $links_page_hook);
@@ -2300,7 +2300,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::get_status()
    * Returns an array with various status information about the plugin. Array key reference: 
    *	check_threshold 	- date/time; links checked before this threshold should be checked again.
    *	recheck_threshold 	- date/time; broken links checked before this threshold should be re-checked.
