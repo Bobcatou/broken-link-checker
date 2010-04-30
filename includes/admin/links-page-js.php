@@ -304,7 +304,7 @@ jQuery(function($){
     searchForm.dialog({
 		autoOpen : false,
 		dialogClass : 'blc-search-container',
-		resizable: false,
+		resizable: false
 	});
     
     $('#blc-open-search-box').click(function(){
