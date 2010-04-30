@@ -236,7 +236,7 @@ class blcCommentManager extends blcContainerManager {
  			$q = "DELETE synch.*
 				  FROM 
 					 {$wpdb->prefix}blc_synch AS synch LEFT JOIN {$wpdb->comments} AS comments
-					 ON comments.ID = synch.container_id
+					 ON comments.comment_ID = synch.container_id
 				  WHERE 
 					 synch.container_type = '{$this->container_type}' AND comments.comment_ID IS NULL";
 			$wpdb->query( $q );
