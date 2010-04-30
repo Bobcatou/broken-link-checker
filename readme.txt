@@ -49,7 +49,7 @@ There are several actions associated with each link. They show up when you move 
 * German - [Alex Frison](http://notaniche.com)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
-* Spanish - [Omi](http://equipajedemano.info/)
+* Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
 
 == Installation ==
