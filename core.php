@@ -499,7 +499,7 @@ EOZ;
         	$this->conf->options['failure_duration_threshold']
 		);
         $title_html = sprintf(
-			__('Highlight links broken for at least %s days', 'broken_link_checker'),
+			__('Highlight links broken for at least %s days', 'broken-link-checker'),
 			$input_html
 		);
         add_meta_box('highlight_permanent_failures', $title_html, array(&$this, 'noop'), $links_page_hook);
@@ -2300,7 +2300,6 @@ EOZ;
 	}
 	
   /**
-   * ws_broken_link_checker::get_status()
    * Returns an array with various status information about the plugin. Array key reference: 
    *	check_threshold 	- date/time; links checked before this threshold should be checked again.
    *	recheck_threshold 	- date/time; broken links checked before this threshold should be re-checked.
