@@ -238,7 +238,13 @@ class wsBrokenLinkChecker {
 		//Mark all new posts and other parse-able objects as unsynchronized. 
         blc_resynch();
 
-        //Save the default options. 
+		//Turn off load limiting if it's not available on this server.
+		$load = $this->get_server_load();
+		if ( empty($load) ){
+			$this->conf->options['enable_load_limit'] = false;
+		}
+		
+        //Save the default options.
         $this->conf->save_options();
         
         //And optimize my DB tables, too (for good measure) 
@@ -605,8 +611,9 @@ EOZ;
             	if ( $this->conf->options['server_load_limit'] < 0 ){
 					$this->conf->options['server_load_limit'] = 0;
 				}
+				
+				$this->conf->options['enable_load_limit'] = $this->conf->options['server_load_limit'] > 0;
             }
-            $this->conf->options['enable_load_limit'] = $this->conf->options['server_load_limit'] > 0; 
             
             //When to run the checker
             $this->conf->options['run_in_dashboard'] = !empty($_POST['run_in_dashboard']);
@@ -2652,6 +2659,9 @@ EOZ;
 		}
 		
 		$loads = $this->get_server_load();
+		if ( empty($loads) ){
+			return false;
+		}
 		$one_minute = floatval(reset($loads));
 		
 		return $one_minute > $this->conf->options['server_load_limit'];
