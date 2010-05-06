@@ -281,17 +281,16 @@ add_filter('cron_schedules', 'blc_cron_schedules');
 				Main functionality
 ************************************************/
 
+//Load the base classes
+require $blc_directory . '/includes/links.php';
+require $blc_directory . '/includes/instances.php';
+
 if ( is_admin() || defined('DOING_CRON') ){
 	
-	//It's an admin-side or Cron request. Load everything.
+	//It's an admin-side or Cron request. Load all plugin components.
 	add_action('plugins_loaded', 'blc_init_all_components');
-	
 	require $blc_directory . '/utility-class.php';
-	require $blc_directory . '/includes/links.php';
-	require $blc_directory . '/includes/instances.php';
-	
 	require $blc_directory . '/core.php';
-	
 	$ws_link_checker = new wsBrokenLinkChecker( __FILE__ , $blc_config_manager );
 	
 } else {
