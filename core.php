@@ -354,7 +354,7 @@ class wsBrokenLinkChecker {
 			); 
 			
 			$blclog->error($error);
-			trigger_error($error,E_USER_ERROR);
+			trigger_error($error, E_USER_ERROR);
 		}
 		
 		//Upgrade was successful.

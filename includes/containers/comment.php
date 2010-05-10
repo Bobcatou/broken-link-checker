@@ -110,7 +110,7 @@ class blcComment extends blcContainer{
 			$trash_url = esc_url( admin_url("comment.php?action=trashcomment&p=$post->ID&c=$comment->comment_ID&$del_nonce") );
 			$delete_url = esc_url( admin_url("comment.php?action=deletecomment&p=$post->ID&c=$comment->comment_ID&$del_nonce") );
 			
-			if ( !EMPTY_TRASH_DAYS ) {
+			if ( !constant('EMPTY_TRASH_DAYS') ) {
 				$actions['delete'] = "<a href='$delete_url' class='delete:the-comment-list:comment-$comment->comment_ID::delete=1 delete vim-d vim-destructive'>" . __('Delete Permanently') . '</a>';
 			} else {
 				$actions['trash'] = "<a href='$trash_url' class='delete:the-comment-list:comment-$comment->comment_ID::trash=1 delete vim-d vim-destructive' title='" . esc_attr__( 'Move this comment to the trash' ) . "'>" . _x('Trash', 'verb') . '</a>';
@@ -197,9 +197,15 @@ class blcCommentManager extends blcContainerManager {
 		}
 	}
 	
-	function hook_deleted_comment($comment_id){
-		$container = blc_get_container(array($this->container_type, $comment_id));
-		$container->delete();
+	function hook_deleted_comment($comment_ids){
+		if ( !is_array($comment_ids) ){
+			$comment_ids = array($comment_ids);
+		}
+		
+		foreach($comment_ids as $comment_id){
+			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container->delete();
+		}
 		//Clean up any dangling links
 		blc_cleanup_links();
 	}

@@ -824,7 +824,7 @@ function blc_register_container( $container_type, $manager_class ){
 /**
  * Retrieve or create a link container.
  *
- * @param array $container	Either (container type, id), or an assoc. array of container data.
+ * @param array $container Either (container type, id), or an assoc. array of container data.
  * @return blcContainer|null Returns null if the container type is unrecognized.
  */
 function blc_get_container($container){
