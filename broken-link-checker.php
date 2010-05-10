@@ -21,17 +21,6 @@ MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 
 define('BLC_DEBUG', false);
 
-/*
-if ( constant('BLC_DEBUG') ){
-	//Load FirePHP for debug logging
-	if ( !class_exists('FB') ) {
-		require_once 'FirePHPCore/fb.php4';
-	}
-	//FB::setEnabled(false);
-}
-//to comment out all calls : (^[^\/]*)(FB::)  ->  $1\/\/$2
-//to uncomment : \/\/(\s*FB::)  ->   $1
-//*/
 
 /***********************************************
 				Constants
@@ -110,8 +99,33 @@ $blc_config_manager = new blcConfigurationManager(
 		'highlight_permanent_failures' => false,//Highlight links that have appear to be permanently broken (in Tools -> Broken Links).
 		'failure_duration_threshold' => 3, 		//(days) Assume a link is permanently broken if it still hasn't 
 												//recovered after this many days.
+												
+		'installation_complete' => false,
+		'installation_failed' => false,
    )
 );
+
+/***********************************************
+				Logging
+************************************************/
+
+include 'logger.php';
+
+global $blclog;
+$blclog = new blcDummyLogger;
+
+
+/*
+if ( constant('BLC_DEBUG') ){
+	//Load FirePHP for debug logging
+	if ( !class_exists('FB') ) {
+		require_once 'FirePHPCore/fb.php4';
+	}
+	//FB::setEnabled(false);
+}
+//to comment out all calls : (^[^\/]*)(FB::)  ->  $1\/\/$2
+//to uncomment : \/\/(\s*FB::)  ->   $1
+//*/
 
 /***********************************************
 				Global functions
@@ -241,24 +255,39 @@ function blc_got_unsynched_items(){
  * @return void
  */
 function blc_resynch( $forced = false ){
-	global $wpdb;
+	global $wpdb, $blclog;
 	
 	if ( $forced ){
+		$blclog->info('... Forced resynchronization initiated');
+		
 		//Drop all synchronization records
 		$wpdb->query("TRUNCATE {$wpdb->prefix}blc_synch");
+	} else {
+		$blclog->info('... Resynchronization initiated');
 	}
 	
 	//(Re)create and update synch. records for all container types.
+	$blclog->info('... (Re)creating container records');
 	blc_resynch_containers($forced);
 	
 	//Delete invalid instances
+	$blclog->info('... Deleting invalid link instances');
 	blc_cleanup_instances();
+	
 	//Delete orphaned links
+	$blclog->info('... Deleting orphaned links');
 	blc_cleanup_links();
 	
-	//All done.
+	$blclog->info('... Setting resync. flags');
 	blc_got_unsynched_items();
+	
+	//All done.
+	$blclog->info('Database resynchronization complete.');
 }
+
+/***********************************************
+				Utility hooks
+************************************************/
 
 /**
  * Add a weekly Cron schedule for email notifications
@@ -276,6 +305,35 @@ function blc_cron_schedules($schedules){
 	return $schedules;
 }
 add_filter('cron_schedules', 'blc_cron_schedules');
+
+/**
+ * Display installation errors (if any) on the Dashboard.
+ *
+ * @return void
+ */
+function blc_print_installation_errors(){
+	$conf = blc_get_configuration();
+	if ( !$conf->options['installation_failed'] ){
+		return;
+	}
+	
+	$logger = new blcOptionLogger('blc_installation_log');
+	$log = $logger->get_messages();
+	
+	$message = array(
+		'<strong>' . __('Broken Link Checker installation failed', 'broken-link-checker') . '</strong>',
+		'',
+		'<em>Installation log follows :</em>',
+	);
+	foreach($log as $entry){
+		array_push($message, $entry);
+	}
+	$message = implode("<br>\n", $message);
+	
+	echo "<div class='error'><p>$message</p></div>";
+}
+add_action('admin_notices', 'blc_print_installation_errors');
+
 
 /***********************************************
 				Main functionality

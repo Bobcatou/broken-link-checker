@@ -230,27 +230,47 @@ class wsBrokenLinkChecker {
    * @return void
    */
     function activation(){
+    	global $blclog;
+    	
+    	$blclog = new blcOptionLogger('blc_installation_log');
+		$blclog->clear();
+    	
+    	$blclog->info('Plugin activated.');
+    	
+    	$this->conf->options['installation_complete'] = false;
+    	$this->conf->options['installation_failed'] = true;
+        $this->conf->save_options();
+        $blclog->info('Installation/update begins.');
+        
+        $blclog->info('Initializing components...');
     	blc_init_all_components();
     	
     	//Prepare the database.
+    	$blclog->info('Upgrading the database...');
         $this->upgrade_database();
 
-		//Mark all new posts and other parse-able objects as unsynchronized. 
+		//Mark all new posts and other parse-able objects as unsynchronized.
+		$blclog->info('Updating database entries...'); 
         blc_resynch();
 
 		//Turn off load limiting if it's not available on this server.
+		$blclog->info('Updating server load limit settings...');
 		$load = $this->get_server_load();
 		if ( empty($load) ){
 			$this->conf->options['enable_load_limit'] = false;
 		}
 		
-        //Save the default options.
+		//And optimize my DB tables, too (for good measure)
+		$blclog->info('Optimizing the database...'); 
+        $this->optimize_database();
+		
+		$blclog->info('Completing installation...');
+        $this->conf->options['installation_complete'] = true;
+        $this->conf->options['installation_failed'] = false;
         $this->conf->save_options();
         
-        //And optimize my DB tables, too (for good measure) 
-        $this->optimize_database();
+        $blclog->info('Installation/update successfully completed.');
     }
-    
     
   /**
    * A hook executed when the plugin is deactivated.
@@ -266,26 +286,36 @@ class wsBrokenLinkChecker {
   /**
    * Create and/or upgrade the plugin's database tables.
    *
-   * @return void
+   * @return bool
    */
     function upgrade_database(){
-		global $wpdb;
+		global $wpdb, $blclog;
 		
 		//Do we need to upgrade?
 		if ( $this->db_version == $this->conf->options['current_db_version'] ) {
 			//The DB is up to date, but lets make sure all the required tables are present
 			//in case the user has decided to delete some of them.
+			$blclog->info( sprintf(
+				'The database appears to be up to date (current version : %d).',
+				$this->conf->options['current_db_version']
+			));
 			return $this->maybe_create_tables();	
 		}
 		
 		//Upgrade to DB version 4
 		if ( $this->db_version == 4 ){
+			$blclog->info(sprintf(
+				'Upgrading the database to version %d',
+				$this->db_version
+			));
+			
 			//The 4th version makes a lot of backwards-incompatible changes to the main
 			//BLC tables (in particular, it adds several required fields to blc_instances).
 			//While it would be possible to import data from an older version of the DB,
 			//some things - like link editing - wouldn't work with the old data. 
 			
-			//So we just drop, recreate and repopulate most tables. 
+			//So we just drop, recreate and repopulate most tables.
+			$blclog->info('Deleting old tables'); 
 			$tables = array(
 				$wpdb->prefix . 'blc_linkdata',
 				$wpdb->prefix . 'blc_postdata',
@@ -296,15 +326,17 @@ class wsBrokenLinkChecker {
 			
 			$q = "DROP TABLE IF EXISTS " . implode(', ', $tables);
 			$rez = $wpdb->query( $q );
+			
 			if ( $rez === false ){
-				trigger_error(
-					sprintf(
-						__("Failed to delete old DB tables. Database error : %s", 'broken-link-checker'),
-						$wpdb->last_error
-					),
-					E_USER_ERROR
-				);
+				$error = sprintf(
+					__("Failed to delete old DB tables. Database error : %s", 'broken-link-checker'),
+					$wpdb->last_error
+				); 
+				
+				$blclog->error($error);
+				trigger_error($error, E_USER_ERROR);
 			}
+			$blclog->info('Done.');
 			
 			//Create new DB tables.
 			if ( !$this->maybe_create_tables() ){
@@ -313,22 +345,23 @@ class wsBrokenLinkChecker {
 			
 		} else {
 			//This should never happen.
-			trigger_error(
-				sprintf(
-					__(
-						"Unexpected error: The plugin doesn't know how to upgrade its database to version '%d'.",
-						'broken-link-checker'
-					),
-					$this->db_version
+			$error = sprintf(
+				__(
+					"Unexpected error: The plugin doesn't know how to upgrade its database to version '%d'.",
+					'broken-link-checker'
 				),
-				E_USER_ERROR
-			);
+				$this->db_version
+			); 
+			
+			$blclog->error($error);
+			trigger_error($error,E_USER_ERROR);
 		}
 		
 		//Upgrade was successful.
 		$this->conf->options['current_db_version'] = $this->db_version;
 		$this->conf->save_options();
 		
+		$blclog->info('Database successfully upgraded.');
 		return true;
 	}
 	
@@ -338,9 +371,12 @@ class wsBrokenLinkChecker {
    * @return bool
    */
 	function maybe_create_tables(){
-		global $wpdb;
+		global $wpdb, $blclog;
+		
+		$blclog->info('Creating database tables');
 		
 		//Search filters
+		$blclog->info('... Creating the search filter table');
 		$q = <<<EOD
 			CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_filters` (
 			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -350,17 +386,21 @@ class wsBrokenLinkChecker {
 			)
 EOD;
 		if ( $wpdb->query($q) === false ){
+			$error = sprintf(
+				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
+				$wpdb->prefix . 'blc_filters',
+				$wpdb->last_error
+			); 
+			
+			$blclog->error($error);
 			trigger_error(
-				sprintf(
-					__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-					$wpdb->prefix . 'blc_filters',
-					$wpdb->last_error
-				),
+				$error,
 				E_USER_ERROR
 			);
 		}
 		
 		//Link instances (i.e. link occurences inside posts and other items)
+		$blclog->info('... Creating the link instance table');
 		$q = <<<EOT
 		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_instances` (
 		  `instance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -378,13 +418,16 @@ EOD;
 		  KEY `source_id` (`container_id`,`container_type`)
 		);
 EOT;
-		if ( $wpdb->query($q) === false ){
+		if ( $wpdb->query($q) === false ){ 
+			$error = sprintf(
+				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
+				$wpdb->prefix . 'blc_instances',
+				$wpdb->last_error
+			);
+			
+			$blclog->error($error);
 			trigger_error(
-				sprintf(
-					__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-					$wpdb->prefix . 'blc_instances',
-					$wpdb->last_error
-				),
+				$error,
 				E_USER_ERROR
 			);
 		}
@@ -392,6 +435,7 @@ EOT;
 		//Links themselves. Note : The 'url' and 'final_url' columns must be collated
 		//in a case-sensitive manner. This is because "http://a.b/cde" may be a page 
 		//very different from "http://a.b/CDe".
+		$blclog->info('... Creating the link table');
 		$q = <<<EOS
 		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_links` (
 		  `link_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -421,18 +465,22 @@ EOT;
 		);
 EOS;
 		if ( $wpdb->query($q) === false ){
+			$error = sprintf(
+				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
+				$wpdb->prefix . 'blc_links',
+				$wpdb->last_error
+			);
+			
+			$blclog->error($error);
 			trigger_error(
-				sprintf(
-					__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-					$wpdb->prefix . 'blc_links',
-					$wpdb->last_error
-				),
+				$error,
 				E_USER_ERROR
 			);
 		}
 		
 		//Synchronization records. This table is used to keep track of if and when various items 
 		//(e.g. posts, comments, etc) were parsed.
+		$blclog->info('... Creating the synch. record table');
 		$q = <<<EOZ
 		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_synch` (
 		  `container_id` int(20) unsigned NOT NULL,
@@ -446,17 +494,21 @@ EOS;
 EOZ;
 		
 		if ( $wpdb->query($q) === false ){
+			$error = sprintf(
+				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
+				$wpdb->prefix . 'blc_synch',
+				$wpdb->last_error
+			);
+			
+			$blclog->error($error);		
 			trigger_error(
-				sprintf(
-					__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-					$wpdb->prefix . 'blc_synch',
-					$wpdb->last_error
-				),
+				$error,
 				E_USER_ERROR
 			);
 		}
 		
 		//All good.
+		$blclog->info('All database tables successfully created.');
 		return true;
 	}
 	
