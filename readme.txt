@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 2.9.0
 Tested up to: 3.0-beta2
-Stable tag: 0.9.2
+Stable tag: 0.9.3
 
 This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
 
@@ -72,6 +72,13 @@ To upgrade your installation
 == Changelog ==
 
 *This is an automatically generated changelog*
+
+= 0.9.3 =
+* Fixed a JS error that only happened in IE by removing a superfluous comma from an object literal.
+* Fixed load limiting not being completely disabled on servers that don't support it.
+* Fixed a mishandling of new comments that would occur when CAPTCHA verification was enabled and someone entered an incorrect code.
+* Added installation/update logging.
+* Fixed a crash that would occur when the user tried to permanently delete a trashed post that has comments.
 
 = 0.9.2 =
 * In Tools -> Broken Links, highlight links that have been broken for a long time (off by default).
