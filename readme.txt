@@ -23,6 +23,8 @@ This plugin will monitor your blog looking for broken links and let you know if 
 * Searching and filtering links by URL, anchor text and so on is also possible.
 * Each link can be edited or unlinked directly via the plugin's page, without manually editing each post.
 
+[Suggest new features and improvements here](http://feedback.w-shadow.com/forums/58400-broken-link-checker)
+
 **Basic Usage**
 
 Once installed, the plugin will begin parsing your posts, bookmarks (AKA blogroll), etc and looking for links. Depending on the size of your site this can take from a few minutes to several hours. When parsing is complete, the plugin will start checking each link to see if it works. Again, how long this takes depends on how big your site is and how many links there are. You can monitor the progress and tweak various link checking options in *Settings -> Link Checker*.
@@ -34,7 +36,7 @@ The "Broken Links" tab will by default display a list of broken links that have 
 There are several actions associated with each link. They show up when you move your mouse over to one of the links listed the aforementioned tab -
 
 * "Details" shows more info about the link. You can also toggle link details by clicking on the "link text" cell.
-* "Edit URL" lets you change the URL of that link. If the link is present in more than one place (e.g. both in a post and in the blogroll) then all occurences of that URL will be changed.
+* "Edit URL" lets you change the URL of that link. If the link is present in more than one place (e.g. both in a post and in the blogroll) then all occurrences of that URL will be changed.
 * "Unlink" removes the link but leaves the link text intact.
 * "Not broken" lets you manually mark a "broken" link as working. This is useful if you know it was incorrectly detected as broken due to a network glitch or a bug. The marked link will still be checked periodically, but the plugin won't consider it broken unless it gets a new result.
 
