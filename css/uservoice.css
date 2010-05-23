@@ -1,0 +1,39 @@
+#blc-feedback-widget-wrap {
+	float: right;
+	height: 22px;
+	padding: 0;
+	margin: 0 6px 0 0;
+	font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+	background: #e3e3e3; /* original gray */
+	/*background-color: #D2EFB3;*/ /* pastel green */
+	/*background-color: #BFE2FF;*/ /* light blue */
+	/* background-color: #FF9F2F; */ /* UserVoice orange */
+	/* background-color: #FFB64F; */ /* different orange */
+	
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+}
+
+#blc-feedback-widget-wrap a.show-settings {
+	background-image: none;
+	padding:0 6px 0 6px;
+	font-weight: bold;
+}
+
+/* Hackety-hack */
+.blc-feedback-highlighted {
+	background-color: #FFB64F !important;
+}
+
+.blc-feedback-highlighted a.show-settings {
+	color: white !important;
+	text-shadow: none !important;
+}
+
+.blc-feedback-highlighted a.show-settings:hover {
+	color: black !important;
+}
