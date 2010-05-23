@@ -62,6 +62,7 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
         add_action( 'wp_ajax_blc_save_highlight_settings', array(&$this,'ajax_save_highlight_settings') );
+        add_action( 'wp_ajax_blc_disable_widget_highlight', array(&$this,'ajax_disable_widget_highlight') );
         
         //Check if it's possible to create a lockfile and nag the user about it if not.
         if ( $this->lockfile_name() ){
@@ -115,7 +116,7 @@ class wsBrokenLinkChecker {
         <!-- /wsblc admin footer -->
         <?php
     }
-
+    
   /**
    * Check if an URL matches the exclusion list.
    *
@@ -194,14 +195,103 @@ class wsBrokenLinkChecker {
     
     function enqueue_settings_scripts(){
     	//jQuery UI is used on the settings page
-		wp_enqueue_script('jquery-ui-core');
+		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog');
 	}
 	
 	function enqueue_link_page_scripts(){
-		wp_enqueue_script('jquery-ui-core');
-        wp_enqueue_script('jquery-ui-dialog');
-        wp_enqueue_script('sprintf', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/sprintf.js');
+		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
+        wp_enqueue_script('jquery-ui-dialog'); //Used for the search form
+        wp_enqueue_script('sprintf', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/sprintf.js'); //Used in error messages
+	}
+	
+  /**
+   * Output the JavaScript that adds the "Feedback" widget to screen meta.
+   *
+   * @return void
+   */
+	function print_uservoice_widget(){
+		$highlight = '';
+		if ( $this->conf->options['highlight_feedback_widget'] ){
+			$highlight = 'blc-feedback-highlighted';
+		}; 
+		?>
+		<script type="text/javascript">
+		(function($){
+			$('#screen-meta-links').append(
+				'<div id="blc-feedback-widget-wrap" class="hide-if-no-js screen-meta-toggle <?php echo $highlight; ?>">' +
+					'<a href="#" id="blc-feedback-widget" class="show-settings">Feedback</a>' +
+				'</div>'
+			);
+			
+			$('#blc-feedback-widget').click(function(){
+				<?php
+				if($this->conf->options['highlight_feedback_widget']):
+				?>
+				
+				//Return the "Feedback" button to the boring gray state
+				$(this).parent().animate({ backgroundColor: "#E3E3E3" }, 500).removeClass('blc-feedback-highlighted');
+				$.post(
+					"<?php echo admin_url('admin-ajax.php'); ?>",
+					{
+						'action' : 'blc_disable_widget_highlight',
+						'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_disable_widget_highlight'));  ?>'
+					}
+				);
+				
+				<?php
+				endif;
+				?>
+				
+				//Launch UserVoice
+				UserVoice.Popin.show(uservoiceOptions); 
+				return false;
+			});
+		})(jQuery);
+		</script>
+		<?php
+	}
+	
+  /**
+   * Load the UserVoice script for use with the "Feedback" widget
+   *
+   * @return void
+   */
+	function uservoice_widget(){
+		?>
+		<script type="text/javascript">
+		  var uservoiceOptions = {
+		    key: 'whiteshadow',
+		    host: 'feedback.w-shadow.com', 
+		    forum: '58400',
+		    lang: 'en',
+		    showTab: false
+		  };
+		  function _loadUserVoice() {
+		    var s = document.createElement('script');
+		    s.src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
+		    document.getElementsByTagName('head')[0].appendChild(s);
+		  }
+		  _loadSuper = window.onload;
+		  window.onload = (typeof window.onload != 'function') ? _loadUserVoice : function() { _loadSuper(); _loadUserVoice(); };
+		</script>
+		<?php
+	}
+	
+  /**
+   * Turn off the widget highlight. Expected to be called via AJAX.
+   * 
+   * @return void
+   */
+	function ajax_disable_widget_highlight(){
+		check_ajax_referer('blc_disable_widget_highlight');
+		
+		if ( current_user_can('edit_others_posts') || current_user_can('manage_options') ){
+			$this->conf->options['highlight_feedback_widget'] = false;
+			$this->conf->save_options();
+			die('OK');
+		}
+		die('-2');
 	}
 
   /**
@@ -547,6 +637,10 @@ EOZ;
 		add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'enqueue_settings_scripts') );
         add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'enqueue_link_page_scripts') );
         
+        //Add the UserVoice widget to the plugin's pages
+        add_action( 'admin_footer-' . $options_page_hook, array(&$this, 'uservoice_widget') );
+        add_action( 'admin_footer-' . $links_page_hook, array(&$this, 'uservoice_widget') );
+        
         /*
 		Display a checkbox in "Screen Options" that lets the user highlight links that 
 		have been broken for a long time. The "Screen Options" panel isn't directly 
@@ -714,9 +808,10 @@ EOZ;
         }
         
 		$debug = $this->get_debug_info();
-
+		
+		$this->print_uservoice_widget();
 		?>
-
+		
         <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		
         <form name="link_checker_options" method="post" action="<?php 
@@ -879,7 +974,7 @@ EOZ;
         <tr valign="top">
         <th scope="row"><?php _e('E-mail notifications', 'broken-link-checker'); ?></th>
         <td>
-        	<p>
+        	<p style="margin-top: 0px;">
         	<label for='send_email_notifications'>
         		<input type="checkbox" name="send_email_notifications" id="send_email_notifications"
             	<?php if ($this->conf->options['send_email_notifications']) echo ' checked="checked"'; ?>/>
@@ -894,7 +989,6 @@ EOZ;
         <h3><?php _e('Advanced','broken-link-checker'); ?></h3>
         
         <table class="form-table">
-        
         
         <tr valign="top">
         <th scope="row"><?php _e('Timeout', 'broken-link-checker'); ?></th>
@@ -1057,7 +1151,7 @@ EOZ;
 		?> 
         </td>
         </tr>
-
+        
         </table>
         
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
@@ -1086,6 +1180,7 @@ EOZ;
     
     function options_page_css(){
     	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
+    	wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
 	}
 	
 
@@ -1196,6 +1291,8 @@ EOZ;
 		$special_args = array('_wpnonce', '_wp_http_referer', 'action', 'selected_links');
 		$neutral_current_url = remove_query_arg($special_args);
 		
+		//Add the "Feedback" widget to the screen meta bar
+		$this->print_uservoice_widget();
         ?>
         
 <script type='text/javascript'>
@@ -1800,6 +1897,7 @@ EOZ;
     
 	function links_page_css(){
 		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css' );
+		wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
 	}
 	
 	function link_details_row($link){

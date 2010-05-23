@@ -100,6 +100,8 @@ $blc_config_manager = new blcConfigurationManager(
 		'failure_duration_threshold' => 3, 		//(days) Assume a link is permanently broken if it still hasn't 
 												//recovered after this many days.
 												
+		'highlight_feedback_widget' => true, //Highlight the "Feedback" button in vivid orange
+												
 		'installation_complete' => false,
 		'installation_failed' => false,
    )
