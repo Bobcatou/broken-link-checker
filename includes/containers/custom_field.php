@@ -217,10 +217,66 @@ class blcPostMeta extends blcContainer {
    *
    * @access protected   
    *
-   * @return
+   * @return string
    */
 	function get_edit_url(){
-		return get_edit_post_link($this->container_id);
+		/*
+		The below is a near-exact copy of the get_post_edit_link() function.  
+		Unfortunately we can't just call that function because it has a hardcoded 
+		caps-check which fails when called from the email notification script 
+		executed by Cron.
+		*/ 
+		
+		if ( !$post = &get_post( $this->container_id ) ){
+			return '';
+		}
+		
+		$context = 'display';
+		
+		if ( function_exists('get_post_type_object') ){
+			//WP 3.0
+			if ( 'display' == $context )
+				$action = '&amp;action=edit';
+			else
+				$action = '&action=edit';
+		
+			$post_type_object = get_post_type_object( $post->post_type );
+			if ( !$post_type_object ){
+				return '';
+			}
+		
+			return apply_filters( 'get_edit_post_link', admin_url( sprintf($post_type_object->_edit_link . $action, $post->ID) ), $post->ID, $context );
+			
+		} else { 
+			//WP 2.9.x
+			if ( 'display' == $context )
+				$action = 'action=edit&amp;';
+			else
+				$action = 'action=edit&';
+		
+			switch ( $post->post_type ) :
+				case 'page' :
+					$file = 'page';
+					$var  = 'post';
+					break;
+				case 'attachment' :
+					$file = 'media';
+					$var  = 'attachment_id';
+					break;
+				case 'revision' :
+					$file = 'revision';
+					$var  = 'revision';
+					$action = '';
+					break;
+				default :
+					$file = 'post';
+					$var  = 'post';
+					break;
+			endswitch;
+		
+			return apply_filters( 'get_edit_post_link', admin_url("$file.php?{$action}$var=$post->ID"), $post->ID, $context );
+			
+		}
 	}
 	
   /**
