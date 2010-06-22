@@ -1,0 +1,1167 @@
+# Translation of the WordPress plugin Broken Link Checker 0.9.2 by Janis Elsts.
+# Copyright (C) 2010 Janis Elsts
+# This file is distributed under the same license as the Broken Link Checker package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Broken Link Checker 0.9.2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
+"POT-Creation-Date: 2010-04-28 18:48+0000\n"
+"PO-Revision-Date: 2010-06-21 16:28+0900\n"
+"Last-Translator: 人間です <ningendesu@live.jp>\n"
+"Language-Team: 人間です <a@ningendesu.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: broken-link-checker.php:273
+msgid "Once Weekly"
+msgstr "週1回"
+
+#: core.php:137
+#: includes/admin/links-page-js.php:21
+msgid "Loading..."
+msgstr "読み込み中..."
+
+#: core.php:160
+#: core.php:696
+msgid "[ Network error ]"
+msgstr "[ネットワークエラー]"
+
+#: core.php:185
+msgid "Automatically expand the widget if broken links have been detected"
+msgstr "リンクエラーが検出された場合に、ウィジェットを自動的に展開する"
+
+#: core.php:296
+#, php-format
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "古いDBのテーブルを削除に失敗しました。データベースエラー： %s"
+
+#: core.php:313
+#, php-format
+msgid "Unexpected error: The plugin doesn't know how to upgrade its database to version '%d'."
+msgstr "予期しないエラー: このプラグインがそのデータベースをバージョン '%d' にアップグレードする方法がわかりません。"
+
+#: core.php:349
+#: core.php:378
+#: core.php:420
+#: core.php:445
+#, php-format
+msgid "Failed to create table '%s'. Database error: %s"
+msgstr "テーブル '%s' を作成できませんでした。 データベースエラー: %s"
+
+#: core.php:473
+msgid "Link Checker Settings"
+msgstr "Link Checkerの設定"
+
+#: core.php:474
+msgid "Link Checker"
+msgstr "Link Checker"
+
+#: core.php:480
+msgid "View Broken Links"
+msgstr "リンクエラーを見る"
+
+#: core.php:481
+#: includes/links.php:771
+msgid "Broken Links"
+msgstr "リンクエラーをチェック"
+
+#: core.php:502
+#, php-format
+msgid "Highlight links broken for at least %s days"
+msgstr "最小 %s 日のリンクエラーをハイライト表示する"
+
+#: core.php:528
+msgid "Settings"
+msgstr "設定"
+
+#: core.php:538
+#: core.php:1039
+#, php-format
+msgid "Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)"
+msgstr "エラーが発生しました：プラグインのデータベーステーブルを最新の状態にされていません！ （現在のバージョン：%d, 予期されるバージョン： %d)"
+
+#: core.php:653
+msgid "Settings saved."
+msgstr "設定を保存"
+
+#: core.php:661
+msgid "Broken Link Checker Options"
+msgstr "Broken Link Checkerのオプション"
+
+#: core.php:674
+msgid "Status"
+msgstr "ステータス"
+
+#: core.php:676
+#: core.php:1019
+msgid "Show debug info"
+msgstr "デバッグ情報を表示"
+
+#: core.php:709
+msgid "Re-check all pages"
+msgstr "すべてのページを再確認"
+
+#: core.php:733
+msgid "Check each link"
+msgstr "各リンクをチェック"
+
+#: core.php:738
+#, php-format
+msgid "Every %s hours"
+msgstr "%s 時間ごと"
+
+#: core.php:747
+msgid "Existing links will be checked this often. New links will usually be checked ASAP."
+msgstr "既存のリンクは、定期的にチェックされます。 新しいリンクは通常、至急チェックされます。"
+
+#: core.php:754
+msgid "Broken link CSS"
+msgstr "リンクエラーのCSS"
+
+#: core.php:759
+msgid "Apply <em>class=\"broken_link\"</em> to broken links"
+msgstr "リンクエラーのクラスは<em>class=\"broken_link\"</em>にする"
+
+#: core.php:771
+msgid "Removed link CSS"
+msgstr "削除されたリンク CSS"
+
+#: core.php:776
+msgid "Apply <em>class=\"removed_link\"</em> to unlinked links"
+msgstr "削除されたリンクのクラスは<em>class=\"broken_link\"</em>にする"
+
+#: core.php:788
+msgid "Broken link SEO"
+msgstr "リンクエラー SEO"
+
+#: core.php:793
+msgid "Apply <em>rel=\"nofollow\"</em> to broken links"
+msgstr "リンクエラーには<em>rel=\"nofollow\"</em>を付けておく"
+
+#: core.php:799
+msgid "Exclusion list"
+msgstr "除外リスト"
+
+#: core.php:800
+msgid "Don't check links where the URL contains any of these words (one per line) :"
+msgstr "URLはこれらの言葉（１行あたり１つ）が含まれるリンクをチェックしないでください："
+
+#: core.php:810
+msgid "Custom fields"
+msgstr "カスタムフィールド"
+
+#: core.php:811
+msgid "Check URLs entered in these custom fields (one per line) :"
+msgstr "これらのカスタム フィールド (1 行に 1 つ) で入力した URL を確認します："
+
+#: core.php:821
+msgid "E-mail notifications"
+msgstr "メールで通知"
+
+#: core.php:827
+msgid "Send me e-mail notifications about newly detected broken links"
+msgstr "新たに検出されたリンクエラーに関してメール通知を受ける"
+
+#: core.php:835
+msgid "Advanced"
+msgstr "高度な設定"
+
+#: core.php:841
+msgid "Timeout"
+msgstr "タイムアウト"
+
+#: core.php:847
+#: core.php:891
+#, php-format
+msgid "%s seconds"
+msgstr "%s 秒"
+
+#: core.php:856
+msgid "Links that take longer than this to load will be marked as broken."
+msgstr "これよりも読み込みに時間がかかったリンクはリンクエラーとマークする"
+
+#: core.php:863
+msgid "Link monitor"
+msgstr "リンクモニター"
+
+#: core.php:869
+msgid "Run continuously while the Dashboard is open"
+msgstr "継続的にダッシュボードが開いている間実行する"
+
+#: core.php:877
+msgid "Run hourly in the background"
+msgstr "バックグラウンドで1時間ごとに実行する"
+
+#: core.php:885
+msgid "Max. execution time"
+msgstr "最大実行時間"
+
+#: core.php:902
+msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
+msgstr "このプラグインは、あなたの記事へのリンクを解析し、検出された URL をチェックし、他の時間のかかるタスクを実行するバックグラウンドジョブを定期的に起動することで動作します。 ここでは、リンクモニタが停止する前に実行することができる時間を設定することができます。"
+
+#: core.php:912
+msgid "Custom temporary directory"
+msgstr "一時ディレクトリ"
+
+#: core.php:921
+msgid "OK"
+msgstr "OK"
+
+#: core.php:924
+msgid "Error : This directory isn't writable by PHP."
+msgstr "エラー : PHP が書き込み可能ではありません。"
+
+#: core.php:929
+msgid "Error : This directory doesn't exist."
+msgstr "エラー : このディレクトリーが存在しません。"
+
+#: core.php:937
+msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
+msgstr "ロックファイルにカスタムディレクトリを使用するには、このフィールドを設定します。　それ以外の場合、空白のままにしておきます。"
+
+#: core.php:944
+msgid "Server load limit"
+msgstr "サーバーの負担の制限"
+
+#: core.php:985
+#, php-format
+msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
+msgstr "平均サーバーの<a href=\"%s\">負荷がこの数</a>以上に上昇する場合上昇するとリンクチェックが中断されます。負荷制限を無効にするには、このフィールドを空白にしておきます。"
+
+#: core.php:995
+msgid "Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible."
+msgstr "負荷制限が動作し、アクセス可能な '/proc/loadavg' を Linux のようなシステムで動作します。"
+
+#: core.php:1004
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: core.php:1017
+msgid "Hide debug info"
+msgstr "デバッグ情報を隠す"
+
+#: core.php:1125
+#: core.php:1458
+#: core.php:1490
+#, php-format
+msgid "Database error : %s"
+msgstr "データベース エラー: %s"
+
+#: core.php:1200
+msgid "Bulk Actions"
+msgstr "一括操作"
+
+#: core.php:1201
+msgid "Recheck"
+msgstr "再確認"
+
+#: core.php:1202
+msgid "Fix redirects"
+msgstr "リダイレクトを修正"
+
+#: core.php:1203
+#: core.php:1357
+#: includes/admin/links-page-js.php:293
+msgid "Unlink"
+msgstr "リンク解除"
+
+#: core.php:1204
+msgid "Delete sources"
+msgstr "ソースを削除"
+
+#: core.php:1218
+#: core.php:1392
+msgid "Apply"
+msgstr "適用"
+
+#: core.php:1225
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: core.php:1226
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#: core.php:1233
+#: core.php:1398
+#, php-format
+msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr "表示 %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+
+#: core.php:1252
+msgid "Source"
+msgstr "ソース"
+
+#: core.php:1253
+msgid "Link Text"
+msgstr "リンクテキスト"
+
+#: core.php:1254
+#: includes/admin/search-form.php:42
+msgid "URL"
+msgstr "URL"
+
+#: core.php:1330
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[独立したリンク！ これはバグです]"
+
+#: core.php:1354
+msgid "Show more info about this link"
+msgstr "このリンクに関する表示詳細情報をもっと見る"
+
+#: core.php:1354
+#: core.php:2726
+msgid "Details"
+msgstr "詳細"
+
+#: core.php:1356
+msgid "Remove this link from all posts"
+msgstr "すべての記事からこのリンクを削除"
+
+#: core.php:1362
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "リンクエラーのリストから、このリンクを削除し、有効なものとしてそれをマーク"
+
+#: core.php:1363
+#: includes/admin/links-page-js.php:78
+msgid "Not broken"
+msgstr "リンクエラーでない"
+
+#: core.php:1367
+msgid "Edit link URL"
+msgstr "リンクのURLを編集"
+
+#: core.php:1367
+#: includes/admin/links-page-js.php:199
+#: includes/admin/links-page-js.php:227
+msgid "Edit URL"
+msgstr "URLを編集"
+
+#: core.php:1373
+msgid "Cancel URL editing"
+msgstr "URLの編集をキャンセル"
+
+#: core.php:1373
+#: includes/admin/search-form.php:87
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: core.php:1441
+msgid "You must enter a filter name!"
+msgstr "フィルター名を入力する必要があります！"
+
+#: core.php:1445
+msgid "Invalid search query."
+msgstr "無効な検索クエリ"
+
+#: core.php:1453
+#, php-format
+msgid "Filter \"%s\" created"
+msgstr "フィルター %s を作成しました。"
+
+#: core.php:1481
+msgid "Filter ID not specified."
+msgstr "フィルタが指定されないIDです。"
+
+#: core.php:1487
+msgid "Filter deleted"
+msgstr "フィルタを削除"
+
+#: core.php:1535
+#, php-format
+msgid "Replaced %d redirect with a direct link"
+msgid_plural "Replaced %d redirects with direct links"
+msgstr[0] "%d個の直接リンクをリダイレクト置き換え"
+msgstr[1] "%d個の直接リンクをリダイレクト置き換え"
+
+#: core.php:1546
+#, php-format
+msgid "Failed to fix %d redirect"
+msgid_plural "Failed to fix %d redirects"
+msgstr[0] "%d リダイレクトの修正に失敗しました。"
+msgstr[1] "%d リダイレクトの修正に失敗しました。"
+
+#: core.php:1556
+msgid "None of the selected links are redirects!"
+msgstr "選択したリンクはリダイレクトではありません。"
+
+#: core.php:1602
+#, php-format
+msgid "%d link removed"
+msgid_plural "%d links removed"
+msgstr[0] "%d リンクの削除"
+msgstr[1] "%d リンクの削除"
+
+#: core.php:1613
+#, php-format
+msgid "Failed to remove %d link"
+msgid_plural "Failed to remove %d links"
+msgstr[0] "%d リンクを削除できませんでした。"
+msgstr[1] "%d リンクを削除できませんでした。"
+
+#: core.php:1701
+msgid "Didn't find anything to delete!"
+msgstr "削除するには何も見つかりませんでした！"
+
+#: core.php:1729
+#, php-format
+msgid "%d link scheduled for rechecking"
+msgid_plural "%d links scheduled for rechecking"
+msgstr[0] "%d個のリンク再確認のためのスケジュール"
+msgstr[1] "%d個のリンク再確認のためのスケジュール"
+
+#: core.php:1752
+msgid "Post published on"
+msgstr "投稿を公開"
+
+#: core.php:1757
+msgid "Link last checked"
+msgstr "最後リンクチェック"
+
+#: core.php:1761
+msgid "Never"
+msgstr "決して"
+
+#: core.php:1767
+#: includes/admin/search-form.php:45
+msgid "HTTP code"
+msgstr "HTTP コード"
+
+#: core.php:1772
+msgid "Response time"
+msgstr "応答時間"
+
+#: core.php:1774
+#, php-format
+msgid "%2.3f seconds"
+msgstr "%2.3f 秒"
+
+#: core.php:1777
+msgid "Final URL"
+msgstr "最終的なURL"
+
+#: core.php:1782
+msgid "Redirect count"
+msgstr "リダイレクトの回数"
+
+#: core.php:1787
+msgid "Instance count"
+msgstr "インスタンス数"
+
+#: core.php:1796
+#, php-format
+msgid "This link has failed %d time."
+msgid_plural "This link has failed %d times."
+msgstr[0] "最終チェック %d 時間前"
+msgstr[1] "最終チェック %d 時間前"
+
+#: core.php:1804
+#, php-format
+msgid "This link has been broken for %s."
+msgstr " %s の間リンクエラー状態です。"
+
+#: core.php:1815
+msgid "Log"
+msgstr "ログ"
+
+#: core.php:1841
+msgid "less than a minute"
+msgstr "1 分未満"
+
+#: core.php:1849
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d 分"
+msgstr[1] "%d 分"
+
+#: core.php:1863
+#: core.php:1890
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d 時間"
+msgstr[1] "%d 時間"
+
+#: core.php:1878
+#: core.php:1919
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d 日"
+msgstr[1] "%d 日"
+
+#: core.php:1908
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d 分"
+msgstr[1] "%d 分"
+
+#: core.php:2231
+msgid "View broken links"
+msgstr "リンクエラーを表示"
+
+#: core.php:2232
+#, php-format
+msgid "Found %d broken link"
+msgid_plural "Found %d broken links"
+msgstr[0] "%d のリンクエラーを発見"
+msgstr[1] "%d のリンクエラーを発見"
+
+#: core.php:2238
+msgid "No broken links found."
+msgstr "リンクを発見しました。"
+
+#: core.php:2245
+#, php-format
+msgid "%d URL in the work queue"
+msgid_plural "%d URLs in the work queue"
+msgstr[0] "%d URLワークキュー内"
+msgstr[1] "%d URLワークキュー内"
+
+#: core.php:2248
+msgid "No URLs in the work queue."
+msgstr "ワーク キュー内の URL がありません。"
+
+#: core.php:2254
+#, php-format
+msgid "Detected %d unique URL"
+msgid_plural "Detected %d unique URLs"
+msgstr[0] "%d リンク検出　ユニークURL"
+msgstr[1] "%d リンク検出　ユニークURL"
+
+#: core.php:2255
+#, php-format
+msgid "in %d link"
+msgid_plural "in %d links"
+msgstr[0] "%dリンク"
+msgstr[1] "%d リンク"
+
+#: core.php:2260
+msgid "and still searching..."
+msgstr "そして、まだ検索..."
+
+#: core.php:2266
+msgid "Searching your blog for links..."
+msgstr "あなたのブログへのリンクを検索しています..."
+
+#: core.php:2268
+msgid "No links detected."
+msgstr "リンクの検出。"
+
+#: core.php:2353
+#: core.php:2389
+#: core.php:2452
+#: core.php:2534
+msgid "You're not allowed to do that!"
+msgstr "それを行うことが許可されていません！"
+
+#: core.php:2361
+#: core.php:2399
+#: core.php:2462
+#, php-format
+msgid "Oops, I can't find the link %d"
+msgstr "私のリンク %d を見つけることができません。"
+
+#: core.php:2368
+msgid "This link was manually marked as working by the user."
+msgstr "このリンクは手動での作業としてマークされました。"
+
+#: core.php:2374
+msgid "Oops, couldn't modify the link!"
+msgstr "リンクを変更できませんでした！"
+
+#: core.php:2377
+#: core.php:2488
+msgid "Error : link_id not specified"
+msgstr "エラー: link_id が指定されていません"
+
+#: core.php:2409
+msgid "Oops, the new URL is invalid!"
+msgstr "おっと、新しい URL が無効です！"
+
+#: core.php:2420
+#: core.php:2471
+msgid "An unexpected error occured!"
+msgstr "予期しないエラーが発生しました ！"
+
+#: core.php:2438
+msgid "Error : link_id or new_url not specified"
+msgstr "エラー: link_id または new_url が指定されていません"
+
+#: core.php:2497
+msgid "You don't have sufficient privileges to access this information!"
+msgstr "この情報にアクセスする権限を持っていない！"
+
+#: core.php:2510
+msgid "Error : link ID not specified"
+msgstr "エラー: リンクIDは指定しませんでした。"
+
+#: core.php:2521
+#, php-format
+msgid "Failed to load link details (%s)"
+msgstr "リンクの詳細 (%s) の読み込みに失敗しました"
+
+#: core.php:2717
+#, php-format
+msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
+msgstr "ディレクトリ <code>%1$s</code> プラグインによって書き込み可能にするか、カスタム一時ディレクトリを <a href=\"%2$s\">設定</a>してください。"
+
+#: core.php:2724
+msgid "Broken Link Checker can't create a lockfile."
+msgstr "Broken Link Checker ロックファイルを作成できません。"
+
+#: core.php:2729
+msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
+msgstr "このプラグインは、リソースの重いリンクチェックアルゴリズムの1つだけのインスタンスが任意の時点で実行しているように、ファイルベースのロックメカニズムを使用します。残念ながら、ロックファイルを保存できる書き込み可能なディレクトリを見つけることができません。- サーバーの一時ディレクトリの場所を検出できませんでしたし、プラグインのディレクトリを PHP が書き込み可能ではありません。この問題を解決するには、プラグインのディレクトリを書き込み可能にするか、プラグインの設定でカスタムの一時ディレクトリを指定してください。"
+
+#: core.php:2748
+msgid "PHP version"
+msgstr "PHPバージョン"
+
+#: core.php:2754
+msgid "MySQL version"
+msgstr "MySQLバージョン"
+
+#: core.php:2767
+msgid "You have an old version of CURL. Redirect detection may not work properly."
+msgstr "CURLのバージョンが古いため、リダイレクト検出が正しく動作しないことがあります。"
+
+#: core.php:2779
+#: core.php:2795
+#: core.php:2800
+msgid "Not installed"
+msgstr "インストールされていません"
+
+#: core.php:2782
+msgid "CURL version"
+msgstr "CURLバージョン"
+
+#: core.php:2788
+msgid "Installed"
+msgstr "インストールされています"
+
+#: core.php:2801
+msgid "You must have either CURL or Snoopy installed for the plugin to work!"
+msgstr "CURL か Snoopy はプラグイン動作するためにインストールされている必要があります！"
+
+#: core.php:2812
+msgid "On"
+msgstr "ON"
+
+#: core.php:2813
+msgid "Redirects may be detected as broken links when safe_mode is on."
+msgstr "セーフモードが有効な場合リダイレクトリンクエラーとして検出されることがあります。"
+
+#: core.php:2818
+#: core.php:2832
+msgid "Off"
+msgstr "OFF"
+
+#: core.php:2826
+#, php-format
+msgid "On ( %s )"
+msgstr "ON ( %s )"
+
+#: core.php:2827
+msgid "Redirects may be detected as broken links when open_basedir is on."
+msgstr "ここにある場合リダイレクトリンクエラーとして検出されることがあります。"
+
+#: core.php:2846
+msgid "Can't create a lockfile. Please specify a custom temporary directory."
+msgstr "ロックファイルを作成することはできません。 カスタムの一時ディレクトリを指定してください。"
+
+#: core.php:2875
+#, php-format
+msgid "[%s] Broken links detected"
+msgstr "[%s] リンクエラーの検出"
+
+#: core.php:2881
+#, php-format
+msgid "Broken Link Checker has detected %d new broken link on your site."
+msgid_plural "Broken Link Checker has detected %d new broken links on your site."
+msgstr[0] "Broken Link Checkerは、あなたのサイトに新しいリンク %d がリンクエラーと検出されました。"
+msgstr[1] "Broken Link Checkerは、あなたのサイトに新しいリンク %d がリンクエラーと検出されました。"
+
+#: core.php:2896
+#, php-format
+msgid "Here's a list of the first %d broken links:"
+msgid_plural "Here's a list of the first %d broken links:"
+msgstr[0] "このリンクエラーが、最初の %d の一覧。"
+msgstr[1] "このリンクエラーが、最初の %d の一覧。"
+
+#: core.php:2904
+msgid "Here's a list of the new broken links: "
+msgstr "リンクエラーの一覧　: "
+
+#: core.php:2916
+#, php-format
+msgid "Link text : %s"
+msgstr "リンク テキスト: %s"
+
+#: core.php:2917
+#, php-format
+msgid "Link URL : <a href=\"%s\">%s</a>"
+msgstr "リンクのURL : <a href=\"%s\">%s</a>"
+
+#: core.php:2918
+#, php-format
+msgid "Source : %s"
+msgstr "ソース : %s"
+
+#: core.php:2932
+msgid "You can see all broken links here:"
+msgstr "すべてのリンクエラーを見ることができます:"
+
+#: includes/admin/links-page-js.php:40
+#: includes/admin/links-page-js.php:234
+msgid "Wait..."
+msgstr "処理中..."
+
+#: includes/admin/links-page-js.php:109
+msgid "Save URL"
+msgstr "URL を保存"
+
+#: includes/admin/links-page-js.php:120
+msgid "Saving changes..."
+msgstr "変更を保存しています..."
+
+#: includes/admin/links-page-js.php:166
+#, php-format
+msgid "%d instances of the link were successfully modified."
+msgstr "%d インスタンスのリンクが正常に変更されました。"
+
+#: includes/admin/links-page-js.php:178
+msgid "The link could not be modified."
+msgstr "リンクを変更できませんでした。"
+
+#: includes/admin/links-page-js.php:181
+#: includes/admin/links-page-js.php:285
+msgid "The following error(s) occured :"
+msgstr "次のエラーが発生しました："
+
+#: includes/admin/links-page-js.php:271
+#, php-format
+msgid "%d instances of the link were successfully unlinked."
+msgstr "リンク%dのインスタンスが正常に解除されました。"
+
+#: includes/admin/links-page-js.php:277
+#, php-format
+msgid "However, %d instances couldn't be removed."
+msgstr "しかし、 %d 個のインスタンスは削除できませんでした。"
+
+#: includes/admin/links-page-js.php:282
+msgid "The plugin failed to remove the link."
+msgstr "プラグインは、リンクを削除できませんでした。"
+
+#: includes/admin/links-page-js.php:337
+msgid "Enter a name for the new custom filter"
+msgstr "新しいカスタムフィルターの名前を入力します。"
+
+#: includes/admin/links-page-js.php:348
+msgid ""
+"You are about to delete the current filter.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"あなたは現在のフィルタを削除しようとしています。 \n"
+"「OK」で削除、「キャンセル」で中止します。"
+
+#: includes/admin/links-page-js.php:371
+msgid ""
+"Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"すべての記事の、ブックマーク、またはいずれかを選択したリンクが含まれている他の項目を削除してよろしいですか？\n"
+"この操作は元に戻すことはできません。\n"
+"「OK」で削除、「キャンセル」で中止します。"
+
+#: includes/admin/search-form.php:13
+msgid "Save This Search As a Filter"
+msgstr "この検索フィルターとして保存"
+
+#: includes/admin/search-form.php:23
+msgid "Delete This Filter"
+msgstr "このフィルターを削除"
+
+#: includes/admin/search-form.php:29
+#: includes/links.php:798
+msgid "Search"
+msgstr "検索"
+
+#: includes/admin/search-form.php:39
+msgid "Link text"
+msgstr "リンクテキスト"
+
+#: includes/admin/search-form.php:48
+msgid "Link status"
+msgstr "リンクのステータス"
+
+#: includes/admin/search-form.php:64
+msgid "Link type"
+msgstr "リンクの種類"
+
+#: includes/admin/search-form.php:68
+msgid "Any"
+msgstr "任意"
+
+#: includes/admin/search-form.php:69
+msgid "Normal link"
+msgstr "通常のリンク"
+
+#: includes/admin/search-form.php:70
+#: includes/parsers/image.php:142
+msgid "Image"
+msgstr "イメージ"
+
+#: includes/admin/search-form.php:71
+#: includes/containers/custom_field.php:176
+msgid "Custom field"
+msgstr "カスタムフィールド"
+
+#: includes/admin/search-form.php:72
+#: includes/containers/blogroll.php:13
+msgid "Bookmark"
+msgstr "ブックマーク"
+
+#: includes/admin/search-form.php:73
+#: includes/containers/comment.php:137
+msgid "Comment"
+msgstr "コメント"
+
+#: includes/admin/search-form.php:86
+msgid "Search Links"
+msgstr "リンク検索"
+
+#: includes/checkers/http.php:186
+#: includes/checkers/http.php:253
+#, php-format
+msgid "HTTP code : %d"
+msgstr "HTTP コード : %d"
+
+#: includes/checkers/http.php:188
+#: includes/checkers/http.php:255
+msgid "(No response)"
+msgstr "(応答なし)"
+
+#: includes/checkers/http.php:194
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "ほとんどの場合、ドメインが存在しないかサーバーが一切反応しないためタイムアウトしました。"
+
+#: includes/checkers/http.php:262
+msgid "Request timed out."
+msgstr "要求がタイムアウトしました。"
+
+#: includes/checkers/http.php:280
+msgid "Using Snoopy"
+msgstr "Snoopyを使用"
+
+#: includes/containers.php:262
+#, php-format
+msgid "Container type '%s' not recognized"
+msgstr "コンテナの型 '%s' が認識されません。"
+
+#: includes/containers.php:792
+#, php-format
+msgid "%d '%s' has been deleted"
+msgid_plural "%d '%s' have been deleted"
+msgstr[0] "%d '%s' は削除されています"
+msgstr[1] "%d '%s' は削除されています"
+
+#: includes/containers/blogroll.php:19
+#: includes/containers/blogroll.php:38
+msgid "Edit this bookmark"
+msgstr "このブックマークを編集"
+
+#: includes/containers/blogroll.php:38
+#: includes/containers/comment.php:107
+#: includes/containers/custom_field.php:201
+#: includes/containers/post.php:16
+msgid "Edit"
+msgstr "編集"
+
+#: includes/containers/blogroll.php:39
+#, php-format
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"このリンク '%s' 削除しようとしています。\n"
+"「OK」で削除、「キャンセル」で中止します。"
+
+#: includes/containers/blogroll.php:39
+#: includes/containers/custom_field.php:206
+#: includes/containers/post.php:21
+msgid "Delete"
+msgstr "削除"
+
+#: includes/containers/blogroll.php:75
+#: includes/containers/comment.php:36
+#: includes/containers/post.php:86
+msgid "Nothing to update"
+msgstr "何も更新してません"
+
+#: includes/containers/blogroll.php:89
+#, php-format
+msgid "Updating bookmark %d failed"
+msgstr "ブックマーク %d の更新に失敗しました"
+
+#: includes/containers/blogroll.php:120
+#, php-format
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "ブログロールのリンク '%s' を削除できませんでした (%d)"
+
+#: includes/containers/blogroll.php:280
+#, php-format
+msgid "%d blogroll link deleted"
+msgid_plural "%d blogroll links deleted"
+msgstr[0] "%d個のブログロールのリンクを削除"
+msgstr[1] "%d個のブログロールのリンクを削除"
+
+#: includes/containers/comment.php:46
+#, php-format
+msgid "Updating comment %d failed"
+msgstr "更新コメントの %d は失敗しました"
+
+#: includes/containers/comment.php:64
+#, php-format
+msgid "Failed to delete comment %d"
+msgstr "%d 個のコメントを削除できませんでした。"
+
+#: includes/containers/comment.php:107
+#: includes/containers/comment.php:149
+msgid "Edit comment"
+msgstr "コメントを編集"
+
+#: includes/containers/comment.php:114
+msgid "Delete Permanently"
+msgstr "完全に削除します"
+
+#: includes/containers/comment.php:116
+msgid "Move this comment to the trash"
+msgstr "このコメントをゴミ箱に移動"
+
+#: includes/containers/comment.php:116
+msgctxt "verb"
+msgid "Trash"
+msgstr "ゴミ箱"
+
+#: includes/containers/comment.php:120
+msgid "View comment"
+msgstr "ビューのコメント"
+
+#: includes/containers/comment.php:120
+#: includes/containers/custom_field.php:209
+#: includes/containers/post.php:24
+msgid "View"
+msgstr "ビュー"
+
+#: includes/containers/comment.php:273
+#, php-format
+msgid "%d comment moved to the trash"
+msgid_plural "%d comments moved to the trash"
+msgstr[0] "%dコメントをゴミ箱に移動"
+msgstr[1] "%dコメントをゴミ箱に移動"
+
+#: includes/containers/comment.php:283
+#, php-format
+msgid "%d comment has been deleted"
+msgid_plural "%d comments have been deleted"
+msgstr[0] "%d個のコメントが削除されました"
+msgstr[1] "%d個のコメントが削除されました"
+
+#: includes/containers/custom_field.php:191
+#: includes/containers/custom_field.php:201
+#: includes/containers/post.php:16
+#: includes/containers/post.php:41
+msgid "Edit this post"
+msgstr "この記事を編集"
+
+#: includes/containers/custom_field.php:204
+#: includes/containers/post.php:19
+msgid "Trash"
+msgstr "ゴミ箱"
+
+#: includes/containers/custom_field.php:206
+#: includes/containers/post.php:21
+msgid "Delete this post permanently"
+msgstr "この記事を完全に削除"
+
+#: includes/containers/custom_field.php:206
+#: includes/containers/post.php:21
+#, php-format
+msgid ""
+"You are about to delete this post '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"あなたはこのポスト'%s' \n"
+"を削除しようとしています。"
+
+#: includes/containers/custom_field.php:209
+#: includes/containers/post.php:24
+#, php-format
+msgid "View \"%s\""
+msgstr "\"%s\" を見る"
+
+#: includes/containers/custom_field.php:248
+#: includes/containers/post.php:127
+#, php-format
+msgid "Failed to delete post \"%s\" (%d)"
+msgstr "\"%s\" (%d) の投稿を削除できませんでした。"
+
+#: includes/containers/custom_field.php:479
+#: includes/containers/post.php:300
+#, php-format
+msgid "%d post moved to the trash"
+msgid_plural "%d posts moved to the trash"
+msgstr[0] "%d ポストをゴミ箱に移動"
+msgstr[1] "%d ポストをゴミ箱に移動"
+
+#: includes/containers/custom_field.php:481
+#: includes/containers/post.php:302
+#, php-format
+msgid "%d post deleted"
+msgid_plural "%d posts deleted"
+msgstr[0] "%d ポストの削除"
+msgstr[1] "%d ポストの削除"
+
+#: includes/containers/dummy.php:21
+#: includes/containers/dummy.php:32
+#, php-format
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "未知のため、'%s' [%d]を編集することができません。"
+
+#: includes/containers/post.php:96
+#, php-format
+msgid "Updating post %d failed"
+msgstr "ポスト %d を更新できませんでした。"
+
+#: includes/instances.php:102
+#: includes/instances.php:148
+#, php-format
+msgid "Container %s[%d] not found"
+msgstr "%s[%d] コンテナーが見つかりません。"
+
+#: includes/instances.php:111
+#: includes/instances.php:157
+#, php-format
+msgid "Parser '%s' not found."
+msgstr "パーサー '%s' が見つかりません。"
+
+#: includes/links.php:157
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "リンクを確認しようとしたとき、プラグインか、スクリプトが終了しました。"
+
+#: includes/links.php:201
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "未知のリンクの種類です。"
+
+#: includes/links.php:289
+msgid "Link is valid."
+msgstr "リンクは有効です。"
+
+#: includes/links.php:291
+msgid "Link is broken."
+msgstr "リンクエラーです。"
+
+#: includes/links.php:484
+#: includes/links.php:586
+#: includes/links.php:621
+msgid "Link is not valid"
+msgstr "リンクは有効では"
+
+#: includes/links.php:501
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "それはこのサイトで使用されていないためこのリンクを編集することはできません。"
+
+#: includes/links.php:527
+msgid "Failed to create a DB entry for the new URL."
+msgstr "新しい URL を DB のエントリを作成できませんでした。"
+
+#: includes/links.php:599
+msgid "This link is not a redirect"
+msgstr "このリンクはリダイレクトされません"
+
+#: includes/links.php:648
+#: includes/links.php:685
+msgid "Couldn't delete the link's database record"
+msgstr "リンクのデータベースのレコードを削除できませんでした"
+
+#: includes/links.php:770
+msgid "Broken"
+msgstr "リンクエラー"
+
+#: includes/links.php:772
+msgid "No broken links found"
+msgstr "リンクを発見します"
+
+#: includes/links.php:779
+msgid "Redirects"
+msgstr "リダイレクト"
+
+#: includes/links.php:780
+msgid "Redirected Links"
+msgstr "リダイレクトされたリンク"
+
+#: includes/links.php:781
+msgid "No redirects found"
+msgstr "リダイレクトが見つかりませんでした"
+
+#: includes/links.php:789
+msgid "All"
+msgstr "すべて"
+
+#: includes/links.php:790
+msgid "Detected Links"
+msgstr "検出されたリンク"
+
+#: includes/links.php:791
+msgid "No links found (yet)"
+msgstr "リンクは(まだ)見つかりません"
+
+#: includes/links.php:799
+msgid "Search Results"
+msgstr "検索結果"
+
+#: includes/links.php:800
+#: includes/links.php:843
+msgid "No links found for your query"
+msgstr "クエリのないリンク"
+
+#: includes/parsers.php:151
+#, php-format
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "編集は、'%s'パーサーでは実装されていません"
+
+#: includes/parsers.php:166
+#, php-format
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "'%s'パーサーではリンク解除は実装されていません"
+
+#. Plugin Name of the plugin/theme
+msgid "Broken Link Checker"
+msgstr "Broken Link Checker"
+
+#. Plugin URI of the plugin/theme
+msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+msgstr "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+
+#. Description of the plugin/theme
+msgid "Checks your blog for broken links and missing images and notifies you on the dashboard if any are found."
+msgstr "リンクエラーやリンクエラーの画像がないかブログをチェックし、いずれかが見つかった場合は、ダッシュボード等で通知します。"
+
+#. Author of the plugin/theme
+msgid "Janis Elsts"
+msgstr "Janis Elsts"
+
+#. Author URI of the plugin/theme
+msgid "http://w-shadow.com/blog/"
+msgstr "http://w-shadow.com/blog/"
+

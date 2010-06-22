@@ -378,7 +378,7 @@ class wsBrokenLinkChecker {
    *
    * @return bool
    */
-    function upgrade_database(){
+    function upgrade_database($trigger_errors = true){
 		global $wpdb, $blclog;
 		
 		//Do we need to upgrade?
@@ -424,12 +424,15 @@ class wsBrokenLinkChecker {
 				); 
 				
 				$blclog->error($error);
-				trigger_error($error, E_USER_ERROR);
+				if ( $trigger_errors ){
+					trigger_error($error, E_USER_ERROR);
+				}
+				return false;
 			}
 			$blclog->info('Done.');
 			
 			//Create new DB tables.
-			if ( !$this->maybe_create_tables() ){
+			if ( !$this->maybe_create_tables($trigger_errors) ){
 				return false;
 			};
 			
@@ -444,7 +447,10 @@ class wsBrokenLinkChecker {
 			); 
 			
 			$blclog->error($error);
-			trigger_error($error, E_USER_ERROR);
+			if ( $trigger_errors ){
+				trigger_error($error, E_USER_ERROR);
+			}
+			return false;
 		}
 		
 		//Upgrade was successful.
@@ -460,7 +466,7 @@ class wsBrokenLinkChecker {
    *
    * @return bool
    */
-	function maybe_create_tables(){
+	function maybe_create_tables($trigger_errors = true){
 		global $wpdb, $blclog;
 		
 		$blclog->info('Creating database tables');
@@ -483,10 +489,13 @@ EOD;
 			); 
 			
 			$blclog->error($error);
-			trigger_error(
-				$error,
-				E_USER_ERROR
-			);
+			if ( $trigger_errors ){
+				trigger_error(
+					$error,
+					E_USER_ERROR
+				);
+			}
+			return false;
 		}
 		
 		//Link instances (i.e. link occurences inside posts and other items)
@@ -516,10 +525,14 @@ EOT;
 			);
 			
 			$blclog->error($error);
-			trigger_error(
-				$error,
-				E_USER_ERROR
-			);
+			
+			if ( $trigger_errors ){
+				trigger_error(
+					$error,
+					E_USER_ERROR
+				);
+			}
+			return false;
 		}
 		
 		//Links themselves. Note : The 'url' and 'final_url' columns must be collated
@@ -562,10 +575,13 @@ EOS;
 			);
 			
 			$blclog->error($error);
-			trigger_error(
-				$error,
-				E_USER_ERROR
-			);
+			if ( $trigger_errors ){
+				trigger_error(
+					$error,
+					E_USER_ERROR
+				);
+			}
+			return false;
 		}
 		
 		//Synchronization records. This table is used to keep track of if and when various items 
@@ -591,10 +607,13 @@ EOZ;
 			);
 			
 			$blclog->error($error);		
-			trigger_error(
-				$error,
-				E_USER_ERROR
-			);
+			if ( $trigger_errors ){
+				trigger_error(
+					$error,
+					E_USER_ERROR
+				);
+			}
+			return false;
 		}
 		
 		//All good.
@@ -682,7 +701,7 @@ EOZ;
     }
 
     function options_page(){
-    	global $blc_container_registry;
+    	global $blc_container_registry, $blclog;
     	
     	//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -691,6 +710,10 @@ EOZ;
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
+			
+			$blclog = new blcMemoryLogger();
+			$this->upgrade_database(false);
+			echo '<p>', implode('<br>', $blclog->get_messages()), '</p>';
 			return;
 		}
     	
@@ -1185,7 +1208,7 @@ EOZ;
 	
 
     function links_page(){
-        global $wpdb, $blc_link_query;
+        global $wpdb, $blc_link_query, $blclog;
         
         //Sanity check : Make sure the plugin's tables are all set up.
         if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -1194,6 +1217,11 @@ EOZ;
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
+			
+			
+			$blclog = new blcMemoryLogger();
+			$this->upgrade_database(false);
+			echo '<p>', implode('<br>', $blclog->get_messages()), '</p>';
 			return;
 		}
         

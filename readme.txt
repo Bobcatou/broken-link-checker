@@ -50,6 +50,7 @@ There are several actions associated with each link. They show up when you move 
 * French - [Whiler](http://blogs.wittwer.fr/whiler/)
 * German - [Alex Frison](http://notaniche.com)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
+* Japanese - [ningendesu](http://ningendesu.com/)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
