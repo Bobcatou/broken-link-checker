@@ -424,10 +424,12 @@ class wsBrokenLinkChecker {
 				); 
 				
 				$blclog->error($error);
+				/*//FIXME: In very rare cases, DROP TABLE IF EXISTS throws an error when the table(s) don't exist. 
 				if ( $trigger_errors ){
 					trigger_error($error, E_USER_ERROR);
 				}
 				return false;
+				//*/
 			}
 			$blclog->info('Done.');
 			
