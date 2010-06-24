@@ -49,6 +49,7 @@ There are several actions associated with each link. They show up when you move 
 * Dutch - [Gideon van Melle](http://www.gvmelle.com/)
 * French - [Whiler](http://blogs.wittwer.fr/whiler/)
 * German - [Alex Frison](http://notaniche.com)
+* Hindi - [Outshine Solutions](http://outshinesolutions.com/)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Japanese - [ningendesu](http://ningendesu.com/)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
