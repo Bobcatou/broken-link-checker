@@ -1316,6 +1316,8 @@ EOZ;
 			list($message, $msg_class) = $this->do_bulk_deredirect($selected_links);
 		} elseif ($action == 'bulk-recheck') {
 			list($message, $msg_class) = $this->do_bulk_recheck($selected_links);
+		} elseif ($action == 'bulk-not-broken') {
+			list($message, $msg_class) = $this->do_bulk_discard($selected_links);
 		}
 		
 		if ( !empty($message) ){
@@ -1444,6 +1446,7 @@ EOZ;
 			'-1' => __('Bulk Actions', 'broken-link-checker'),
 			"bulk-recheck" => __('Recheck', 'broken-link-checker'),
 			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
+			"bulk-not-broken" => __('Mark as not broken', 'broken-link-checker'),
 			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
 			"bulk-delete-sources" => __('Delete sources', 'broken-link-checker'),
 		);
@@ -1883,7 +1886,7 @@ EOZ;
 		
 		//Delete posts, blogroll entries and any other link containers that contain any of the selected links.
 		//
-		//Note that once all cotnainers containing a particular link have been deleted,
+		//Note that once all containers containing a particular link have been deleted,
 		//there is no need to explicitly delete the link record itself. The hooks attached to 
 		//the actions that execute when something is deleted (e.g. "post_deleted") will 
 		//take care of that. 
@@ -1980,6 +1983,69 @@ EOZ;
 		}
 		
 		return array($message, $msg_class);
+	}
+	
+	
+	/**
+	 * Mark multiple links as not broken.
+	 * 
+	 * @param array $selected_links An array of link IDs
+	 * @return array Confirmation nessage and the CSS class to use with that message.
+	 */
+	function do_bulk_discard($selected_links){
+		check_admin_referer( 'bulk-action' );
+		
+		$messages = array();
+		$msg_class = 'updated';
+		$processed_links = 0;
+		
+		if ( count($selected_links) > 0 ){
+			foreach($selected_links as $link_id){
+				//Load the link
+				$link = new blcLink( intval($link_id) );
+				
+				//Skip links that don't actually exist
+				if ( !$link->valid() ){
+					continue;
+				}
+				
+				//Skip links that weren't actually detected as broken
+				if ( !$link->broken ){
+					continue;
+				}
+				
+				//Make it appear "not broken"
+				$link->broken = false;  
+				$link->false_positive = true;
+				$link->last_check_attempt = time();
+				$link->log = __("This link was manually marked as working by the user.", 'broken-link-checker');
+				
+				//Save the changes
+				if ( $link->save() ){
+					$processed_links++;
+				} else {
+					$messages[] = sprintf(
+						__("Couldn't modify link %d", 'broken-link-checker'),
+						$link_id
+					);
+					$msg_class = 'error';
+				}
+			}
+		}
+		
+		if ( $processed_links > 0 ){
+			$messages[] = sprintf(
+				_n(
+					'%d link marked as not broken',
+					'%d links marked as not broken',
+					$processed_links, 
+					'broken-link-checker'
+				),
+				$processed_links
+			);
+		}
+		
+		return array(implode('<br>', $messages), $msg_class);
 	}
 	
     
