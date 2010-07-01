@@ -471,6 +471,15 @@ class wsBrokenLinkChecker {
 	function maybe_create_tables($trigger_errors = true){
 		global $wpdb, $blclog;
 		
+		//Use the character set and collation that's configured for WP tables
+		$charset_collate = '';
+		if ( !empty($wpdb->charset) ){
+			$charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
+		}
+		if ( !empty($wpdb->collate) ){
+			$charset_collate = " COLLATE {$wpdb->collate}";
+		}
+		
 		$blclog->info('Creating database tables');
 		
 		//Search filters
@@ -481,7 +490,7 @@ class wsBrokenLinkChecker {
 			  `name` varchar(100) NOT NULL,
 			  `params` text NOT NULL,
 			  PRIMARY KEY (`id`)
-			)
+			) {$charset_collate}
 EOD;
 		if ( $wpdb->query($q) === false ){
 			$error = sprintf(
@@ -517,7 +526,7 @@ EOD;
 		  PRIMARY KEY (`instance_id`),
 		  KEY `link_id` (`link_id`),
 		  KEY `source_id` (`container_id`,`container_type`)
-		);
+		) {$charset_collate};
 EOT;
 		if ( $wpdb->query($q) === false ){ 
 			$error = sprintf(
@@ -567,7 +576,7 @@ EOT;
 		  KEY `final_url` (`final_url`(150)),
 		  KEY `http_code` (`http_code`),
 		  KEY `broken` (`broken`)
-		);
+		) {$charset_collate};
 EOS;
 		if ( $wpdb->query($q) === false ){
 			$error = sprintf(
@@ -598,7 +607,7 @@ EOS;
 		  
 		  PRIMARY KEY (`container_type`,`container_id`),
 		  KEY `synched` (`synched`)
-		);
+		) {$charset_collate};
 EOZ;
 		
 		if ( $wpdb->query($q) === false ){
