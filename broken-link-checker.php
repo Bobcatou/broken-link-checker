@@ -84,6 +84,7 @@ $blc_config_manager = new blcConfigurationManager(
 		'enable_load_limit' => true,	//Enable/disable load monitoring. 
 		
         'custom_fields' => array(),		//List of custom fields that can contain URLs and should be checked.
+        'check_comment_links' => true,	//Whether to check links found in comments
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
 		
@@ -155,8 +156,13 @@ function blc_init_containers(){
 	require $blc_directory . '/includes/containers/post.php';
 	require $blc_directory . '/includes/containers/blogroll.php';
 	require $blc_directory . '/includes/containers/custom_field.php';
-	require $blc_directory . '/includes/containers/comment.php';
 	require $blc_directory . '/includes/containers/dummy.php';
+	
+	$conf = blc_get_configuration();
+	if ( $conf->options['check_comment_links'] ){	
+		require $blc_directory . '/includes/containers/comment.php';
+	}
+	
 	
 	//Notify other plugins that they may register their custom containers now.
 	do_action('blc_init_containers');

@@ -803,6 +803,9 @@ EOZ;
 			}
             $this->conf->options['send_email_notifications'] = $email_notifications;
             
+            //Commen link checking on/off
+            $this->conf->options['check_comment_links'] = !empty($_POST['check_comment_links']);
+            
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
 			
@@ -993,6 +996,19 @@ EOZ;
                 echo implode("\n", $this->conf->options['custom_fields']);
         ?></textarea>
 
+        </td>
+        </tr>
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Comment links', 'broken-link-checker'); ?></th>
+        <td>
+        	<p style="margin-top: 0px;">
+        	<label for='check_comment_links'>
+        		<input type="checkbox" name="check_comment_links" id="check_comment_links"
+            	<?php if ($this->conf->options['check_comment_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e('Check comment links', 'broken-link-checker'); ?>
+			</label><br>
+			</p>
         </td>
         </tr>
         
@@ -2503,11 +2519,8 @@ EOZ;
 		$check_threshold=date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold=date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
 		
-		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_links WHERE 1";
-		$known_links = $wpdb->get_var($q);
-		
-		$q = "SELECT count(*) FROM {$wpdb->prefix}blc_instances WHERE 1";
-		$known_instances = $wpdb->get_var($q);
+		$known_links = blc_get_links(array('count_only' => true));
+		$known_instances = blc_get_usable_instance_count();
 		
 		$broken_links = $blc_link_query->get_filter_links('broken', array('count_only' => true));
 		

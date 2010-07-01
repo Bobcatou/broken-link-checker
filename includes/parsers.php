@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Parser Registry class for managing parsers.
+ * Parser Registry class for managing parsers. Used as a singleton.
  *
  * @see blcParser
  *
@@ -14,6 +14,19 @@ class blcParserRegistry {
    * @access protected 
    */
 	var $registered_parsers = array();
+	
+	/**
+	 * Get an instance of the parser registry class.
+	 * 
+	 * @return blcParserRegistry
+	 */
+	function getInstance(){
+		static $instance = null;
+		if ( is_null($instance) ){
+			$instance = new blcParserRegistry;
+		}
+		return $instance;
+	}
 	
   /**
    * Register a new link parser.
@@ -31,6 +44,15 @@ class blcParserRegistry {
 		$this->registered_parsers[$parser_type] = $parser;
 		
 		return true;
+	}
+	
+	/**
+	 * Retrieve a list of all registered parsers.
+	 * 
+	 * @return array An associative array of parser objects indexed by parser ID.
+	 */
+	function get_registered_parsers(){
+		return $this->registered_parsers;
 	}
 	
   /**
@@ -70,7 +92,7 @@ class blcParserRegistry {
 }
 
 //Create the parser registry singleton.
-$GLOBALS['blc_parser_registry'] = new blcParserRegistry();
+$GLOBALS['blc_parser_registry'] = blcParserRegistry::getInstance();
 
 
 /**
@@ -321,8 +343,7 @@ class blcParser {
  * @return bool
  */
 function blc_register_parser( $parser_type, $class_name ) {
-	global $blc_parser_registry;
-	return $blc_parser_registry->register_parser($parser_type, $class_name);
+	return blcParserRegistry::getInstance()->register_parser($parser_type, $class_name);
 }
 
 /**
@@ -334,8 +355,7 @@ function blc_register_parser( $parser_type, $class_name ) {
  * @return blcParser|null
  */
 function blc_get_parser( $parser_type ){
-	global $blc_parser_registry;
-	return $blc_parser_registry->get_parser($parser_type);
+	return blcParserRegistry::getInstance()->get_parser($parser_type);
 }
 
 /**
@@ -348,8 +368,7 @@ function blc_get_parser( $parser_type ){
  * @return array of blcParser
  */
 function blc_get_parsers( $format, $container_type ){
-	global $blc_parser_registry;
-	return $blc_parser_registry->get_parsers($format, $container_type);
+	return blcParserRegistry::getInstance()->get_parsers($format, $container_type);
 }
 
 

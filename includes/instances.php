@@ -215,7 +215,7 @@ class blcLinkInstance {
 			$this->container_id = $this->_container->container_id;
 		}
 		
-		//If the link is new, insert a new row into the DB. Otherwise updat the existing row.		
+		//If the link is new, insert a new row into the DB. Otherwise update the existing row.		
 		if ( $this->is_new ){
 			
 			$q = "
@@ -464,11 +464,12 @@ class blcLinkInstance {
  *
  * @param array $link_ids Array of link IDs.
  * @param string $purpose An optional code indicating how the instances will be used. Available predefined constants : BLC_FOR_DISPLAY, BLC_FOR_EDITING
- * @param bool $load_containers Preload containers regardless of purpose. 
- * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose.
+ * @param bool $load_containers Preload containers regardless of purpose. Defaults to false.
+ * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose. Defaults to false.
+ * @param bool $include_invalid Include instances that refer to not-loaded containers or parsers. Defaults to false.
  * @return array An array indexed by link ID. Each item of the array will be an array of blcLinkInstance objects.
  */ 
-function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, $load_wrapped_objects = false ){
+function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, $load_wrapped_objects = false, $include_invalid = false ){
 	global $wpdb;
 	
 	if ( empty($link_ids) ){
@@ -477,7 +478,20 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
 	
 	$link_ids_in = implode(', ', $link_ids);
 	
-	$q = "SELECT * FROM {$wpdb->prefix}blc_instances WHERE link_id IN ($link_ids_in)"; 
+	$q = "SELECT * FROM {$wpdb->prefix}blc_instances WHERE link_id IN ($link_ids_in)";
+	
+	//Skip instances that reference containers or parsers that aren't currently loaded
+	if ( !$include_invalid ){
+		$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+		$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+		
+		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
+		$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
+		
+		$q .= " AND container_type IN ('" . implode("', '", $loaded_containers) . "') ";
+		$q .= " AND parser_type IN ('" . implode("', '", $loaded_parsers) . "') ";	
+	}
+	
 	$results = $wpdb->get_results($q, ARRAY_A);
 	
 	if ( empty($results) ) {
@@ -521,6 +535,29 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
 	}
 	
 	return $instances;
+}
+
+/**
+ * Get the number of instances that reference only currently loaded containers and parsers.
+ * 
+ * @return int
+ */
+function blc_get_usable_instance_count(){
+	global $wpdb;
+	
+	$q = "SELECT COUNT(instance_id) FROM {$wpdb->prefix}blc_instances WHERE 1";
+	
+	//Skip instances that reference containers or parsers that aren't currently loaded
+	$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+	$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+	
+	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
+	$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
+	
+	$q .= " AND container_type IN ('" . implode("', '", $loaded_containers) . "') ";
+	$q .= " AND parser_type IN ('" . implode("', '", $loaded_parsers) . "') ";
+	
+	return $wpdb->get_var($q);
 }
 
 /**

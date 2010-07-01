@@ -35,6 +35,14 @@ class blcContainerRegistry {
 		$this->__construct();
 	}
 	
+	function getInstance(){
+		static $instance = null;
+		if ( is_null($instance) ){
+			$instance = new blcContainerRegistry;
+		}
+		return $instance;
+	}
+	
   /**
    * Register a new container type.
    *
@@ -63,6 +71,15 @@ class blcContainerRegistry {
 		$this->registered_managers[$container_type] = new $manager_class($container_type);
 		
 		return true;
+	}
+	
+	/**
+	 * Retrieve a list of all registered container types and their managers.
+	 * 
+	 * @return array An associative array of container manager objects indexed by container type.
+	 */
+	function get_registered_containers(){
+		return $this->registered_managers;
 	}
 	
   /**
@@ -267,7 +284,7 @@ class blcContainerRegistry {
 }
 
 //Init the container registry & make it global
-$GLOBALS['blc_container_registry'] = new blcContainerRegistry();
+$GLOBALS['blc_container_registry'] = blcContainerRegistry::getInstance();
 
  
 
@@ -817,8 +834,8 @@ class blcContainerManager {
  * @return bool	True if the container was successfully registered, false otherwise.
  */
 function blc_register_container( $container_type, $manager_class ){
-	global $blc_container_registry;
-	return $blc_container_registry->register_container($container_type, $manager_class);
+	$instance = blcContainerRegistry::getInstance();
+	return $instance->register_container($container_type, $manager_class);
 }
 
 /**
@@ -828,8 +845,8 @@ function blc_register_container( $container_type, $manager_class ){
  * @return blcContainer|null Returns null if the container type is unrecognized.
  */
 function blc_get_container($container){
-	global $blc_container_registry;
-	return $blc_container_registry->get_container($container);
+	$instance = blcContainerRegistry::getInstance();
+	return $instance->get_container($container);
 }
 
 /**
@@ -856,8 +873,8 @@ function blc_get_container($container){
  * @return array of blcContainer indexed by 'container_type|container_id'
  */
 function blc_get_containers( $containers, $purpose = '', $load_wrapped_objects = false ){
-	global $blc_container_registry;
-	return $blc_container_registry->get_containers($containers, $purpose, '', $load_wrapped_objects);
+	$instance = blcContainerRegistry::getInstance();
+	return $instance->get_containers($containers, $purpose, '', $load_wrapped_objects);
 }
 
 /**
@@ -867,8 +884,8 @@ function blc_get_containers( $containers, $purpose = '', $load_wrapped_objects =
  * @return array of blcContainer
  */
 function blc_get_unsynched_containers($max_results = 0){
-	global $blc_container_registry;
-	return $blc_container_registry->get_unsynched_containers($max_results);
+	$instance = blcContainerRegistry::getInstance();
+	return $instance->get_unsynched_containers($max_results);
 }
 
 /**
@@ -879,8 +896,8 @@ function blc_get_unsynched_containers($max_results = 0){
  * @return void
  */
 function blc_resynch_containers($forced = false){
-	global $blc_container_registry;
-	$blc_container_registry->resynch($forced);
+	$instance = blcContainerRegistry::getInstance();
+	$instance->resynch($forced);
 }
 
 ?>

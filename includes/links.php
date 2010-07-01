@@ -979,6 +979,73 @@ class blcLinkQuery {
 		//Generate the individual clauses of the WHERE expression and store them in an array.
 		$pieces = array();
 		
+		//Convert parser and container type lists to arrays of valid values
+		$s_parser_type = array();
+		if ( !empty($params['s_parser_type']) ){
+			$s_parser_type = $params['s_parser_type'];
+			if ( is_string($s_parser_type) ){
+				$s_parser_type =  preg_split('/[,\s]+/', $s_parser_type);
+			}
+		}
+		
+		$s_container_type = array();
+		if ( !empty($params['s_container_type']) ){
+			$s_container_type = $params['s_container_type'];
+			if ( is_string($s_container_type) ){
+				$s_container_type =  preg_split('/[,\s]+/', $s_container_type);
+			}
+		}
+		
+		//Don't include links with instances that reference invalid (not currently loaded) 
+		//containers and parsers (unless specifically told to also include invalid links).
+		if ( empty($params['include_invalid']) ){
+			$join_instances = true;
+			
+			$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+			$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+			
+			if ( empty($s_parser_type) ){
+				$s_parser_type = $loaded_parsers;
+			} else {
+				$s_parser_type = array_intersect($s_parser_type, $loaded_parsers);
+			}
+			
+			if ( empty($s_container_type) ){
+				$s_container_type = $loaded_containers;
+			} else {
+				$s_container_type = array_intersect($s_container_type, $loaded_containers);
+			}
+		}
+		
+		//Parser type should match the parser_type column in the instance table.
+		if ( !empty($s_parser_type) ){
+			$s_parser_type = array_map('trim', array_unique($s_parser_type));
+			$s_parser_type = array_map(array(&$wpdb, 'escape'), $s_parser_type);
+			
+			if ( count($s_parser_type) == 1 ){
+				$pieces[] = sprintf("instances.parser_type = '%s'", reset($s_parser_type));
+			} else {
+				$pieces[] = "instances.parser_type IN ('" . implode("', '", $s_parser_type) . "')";
+			}
+			
+			$join_instances = true;
+		}
+		
+		//Container type should match the container_type column in the instance table.
+		if ( !empty($s_container_type) ){
+			//Sanitize for use in SQL
+			$s_container_type = array_map('trim', array_unique($s_container_type));
+			$s_container_type = array_map(array(&$wpdb, 'escape'), $s_container_type);
+			
+			if ( count($s_container_type) == 1 ){
+				$pieces[] = sprintf("instances.container_type = '%s'", reset($s_container_type));
+			} else {
+				$pieces[] = "instances.container_type IN ('" . implode("', '", $s_container_type) . "')";
+			}
+			
+			$join_instances = true;
+		}
+		
 		//A part of the WHERE expression can be specified explicitly
 		if ( !empty($params['where_expr']) ){
 			$pieces[] = $params['where_expr'];
@@ -1023,20 +1090,6 @@ class blcLinkQuery {
 			
 			$pieces[] = '(links.url LIKE "%'. $s_link_url .'%") OR '.
 				        '(links.final_url LIKE "%'. $s_link_url .'%")';
-		}
-		
-		//Parser type should match the parser_type column in the instance table.
-		if ( !empty($params['s_parser_type']) ){
-			$s_parser_type = $wpdb->escape($params['s_parser_type']);
-			$pieces[] = "instances.parser_type = '$s_parser_type'";
-			$join_instances = true;
-		}
-		
-		//Container type should match the container_type column in the instance table.
-		if ( !empty($params['s_container_type']) ){
-			$s_container_type = $wpdb->escape($params['s_container_type']);
-			$pieces[] = "instances.container_type = '$s_container_type'";
-			$join_instances = true;
 		}
 		
 		//Container ID should match... you guessed it - container_id
@@ -1145,6 +1198,7 @@ class blcLinkQuery {
 			'load_wrapped_objects' => false,
 			'count_only' => false,
 			'purpose' => '',
+			'include_invalid' => false,
 		);
 		
 		$params = array_merge($defaults, $params);
@@ -1195,7 +1249,7 @@ class blcLinkQuery {
 			   WHERE
 				 $where_expr
 				
-			   GROUP BY links.link_id";
+			   GROUP BY links.link_id"; //Note: would be a lot faster without GROUP BY 
 			   
 		//Add the LIMIT clause
 		if ( $params['max_results'] || $params['offset'] ){
@@ -1305,6 +1359,7 @@ $GLOBALS['blc_link_query'] = new blcLinkQuery();
  *     'load_wrapped_objects' - Pre-load wrapped object data (e.g. posts, comments, etc) for each container. Default is false.
  *     'count_only' - Only return the number of results (int), not the whole result set. 'offset' and 'max_results' will be ignored if this is set. Default is false.
  *     'purpose' -  An optional code indicating how the links will be used.
+ *     'include_invalid' - Include links that have no instances and links that only have instances that reference not-loaded containers or parsers. Defaults to false. 
  *
  * All keys are optional.
  *
