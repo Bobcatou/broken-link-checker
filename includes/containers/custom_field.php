@@ -198,10 +198,10 @@ class blcPostMeta extends blcContainer {
 	function ui_get_action_links($container_field){
 		$actions = array();
 		if ( current_user_can('edit_post', $this->container_id) ) {
-			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . esc_attr(__('Edit this post')) . '">' . __('Edit') . '</a>';
+			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . esc_attr(__('Edit this item')) . '">' . __('Edit') . '</a>';
 			
 			if ( EMPTY_TRASH_DAYS ) { 
-				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr(__('Move this post to the Trash')) . "' href='" . get_delete_post_link($this->container_id) . "'>" . __('Trash') . "</a>";
+				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr(__('Move this item to the Trash')) . "' href='" . get_delete_post_link($this->container_id) . "'>" . __('Trash') . "</a>";
 			} else {
 				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url( admin_url("post.php?action=delete&amp;post=".$this->container_id), 'delete-post_' . $this->container_id) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), get_the_title($this->container_id) )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 			}

@@ -752,6 +752,13 @@ class blcLink {
 
 } //class_exists
 
+/**
+ * Class for querying, sorting and filtering links.
+ * Used as a singleton.
+ * 
+ * @package Broken Link Checker
+ * @access public
+ */
 class blcLinkQuery {
 	
 	var $native_filters;
@@ -819,6 +826,14 @@ class blcLinkQuery {
 	
 	function blcLinkQuery(){
 		$this->__construct();
+	}
+	
+	function getInstance(){
+		static $instance = null;
+		if ( is_null($instance) ){
+			$instance = new blcLinkQuery;
+		}
+		return $instance;
 	}
 	
   /**
@@ -1335,8 +1350,6 @@ class blcLinkQuery {
 	}
 }
 
-$GLOBALS['blc_link_query'] = new blcLinkQuery();
-
 /**
  * Retrieve a list of links matching some criteria.
  *
@@ -1369,8 +1382,7 @@ $GLOBALS['blc_link_query'] = new blcLinkQuery();
  * @return int|array Either an array of blcLink objects, or the number of results for the query.
  */
 function blc_get_links($params = null){
-	global $blc_link_query;
-	return $blc_link_query->get_links($params, $purpose);
+	return blcLinkQuery::getInstance()->get_links($params, $purpose);
 }
 
 /**

@@ -1226,7 +1226,8 @@ EOZ;
 	
 
     function links_page(){
-        global $wpdb, $blc_link_query, $blclog;
+        global $wpdb, $blclog;
+        $blc_link_query = blcLinkQuery::getInstance();
         
         //Sanity check : Make sure the plugin's tables are all set up.
         if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -1634,7 +1635,6 @@ EOZ;
    */
     function do_create_custom_filter(){
 		//Create a custom filter!
-		global $blc_link_query;
     	check_admin_referer( 'create-custom-filter' );
     	$msg_class = 'updated';
     	
@@ -1648,6 +1648,7 @@ EOZ;
 			$msg_class = 'error';
 		} else {
 			//Save the new filter
+			$blc_link_query = blcLinkQuery::getInstance();
 			$filter_id = $blc_link_query->create_custom_filter($_POST['name'], $_POST['params']);
 			
 			if ( $filter_id ){
@@ -1674,7 +1675,6 @@ EOZ;
    */
 	function do_delete_custom_filter(){
 		//Delete an existing custom filter!
-		global $blc_link_query;
 		check_admin_referer( 'delete-custom-filter' );
 		$msg_class = 'updated';
 		
@@ -1684,6 +1684,7 @@ EOZ;
 			$msg_class = 'error';
 		} else {
 			//Try to delete the filter
+			$blc_link_query = blcLinkQuery::getInstance();
 			if ( $blc_link_query->delete_custom_filter($_POST['filter_id']) ){
 				//Success
 				$message = __('Filter deleted', 'broken-link-checker');
@@ -1931,7 +1932,7 @@ EOZ;
 					"%d link scheduled for rechecking",
 					"%d links scheduled for rechecking",
 					$changes, 
-					'broken-link-chekcer'
+					'broken-link-checker'
 				),
 				$changes
 			);
@@ -2514,7 +2515,8 @@ EOZ;
    * @return array
    */
 	function get_status(){
-		global $wpdb, $blc_link_query;
+		global $wpdb;
+		$blc_link_query = blcLinkQuery::getInstance();
 		
 		$check_threshold=date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold=date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
@@ -2893,11 +2895,16 @@ EOZ;
 		return $load;
 	}
 	
+	/**
+	 * Register BLC's Dashboard widget
+	 * 
+	 * @return void
+	 */
 	function hook_wp_dashboard_setup(){
 		if ( function_exists( 'wp_add_dashboard_widget' ) ) {
 			wp_add_dashboard_widget(
 				'blc_dashboard_widget', 
-				'Broken Link Checker', 
+				__('Broken Link Checker', 'broken-link-checker'), 
 				array( &$this, 'dashboard_widget' ),
 				array( &$this, 'dashboard_widget_control' )
 			 );
