@@ -274,6 +274,10 @@ function blc_resynch( $forced = false ){
 		$blclog->info('... Resynchronization initiated');
 	}
 	
+	//Delete synch. records for container types that don't exist
+	$blclog->info('... Deleting invalid container records');
+	blc_cleanup_containers(); 
+	
 	//(Re)create and update synch. records for all container types.
 	$blclog->info('... (Re)creating container records');
 	blc_resynch_containers($forced);
@@ -306,10 +310,17 @@ function blc_resynch( $forced = false ){
 function blc_cron_schedules($schedules){
 	if ( !isset($schedules['weekly']) ){
 		$schedules['weekly'] = array(
-	 		'interval' => 604800,
+	 		'interval' => 604800, //7 days
 	 		'display' => __('Once Weekly')
 	 	);
  	}
+ 	if ( !isset($schedules['bimonthly']) ){
+		$schedules['bimonthly'] = array(
+	 		'interval' => 15*24*2600, //15 days
+	 		'display' => __('Twice a Month')
+	 	);
+ 	}
+ 	
 	return $schedules;
 }
 add_filter('cron_schedules', 'blc_cron_schedules');

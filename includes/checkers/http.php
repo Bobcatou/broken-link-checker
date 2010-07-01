@@ -147,7 +147,9 @@ class blcCurlHttp extends blcHttpChecker {
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'read_header'));
 
 		//Execute the request
+		$start_time = microtime_float();
         curl_exec($ch);
+        $measured_request_duration = microtime_float() - $start_time;
         
 		$info = curl_getinfo($ch);
 		curl_close($ch);
@@ -158,6 +160,12 @@ class blcCurlHttp extends blcHttpChecker {
         $result['final_url'] = $info['url'];
         $result['request_duration'] = $info['total_time'];
         $result['redirect_count'] = $info['redirect_count'];
+        
+        //CURL doesn't return a request duration when a timeout happens, so we measure it ourselves.
+        //It is useful to see how long the plugin waited for the server to respond before assuming it timed out.        
+        if( empty($result['request_duration']) ){
+        	$result['request_duration'] = $measured_request_duration;
+        }
         
         //Determine if the link counts as "broken"
 		$result['broken'] = $this->is_error_code($result['http_code']) || $result['timeout'];
@@ -230,7 +238,7 @@ class blcSnoopyHttp extends blcHttpChecker {
 		$conf = blc_get_configuration();
 		$timeout = $conf->options['timeout'];
 		
-		$start_time = microtime_float(true);
+		$start_time = microtime_float();
 		
 		//Fetch the URL with Snoopy
         $snoopy = new Snoopy;
@@ -239,7 +247,7 @@ class blcSnoopyHttp extends blcHttpChecker {
         $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
         $snoopy->fetch($url);
         
-        $result['request_duration'] = microtime_float(true) - $start_time;
+        $result['request_duration'] = microtime_float() - $start_time;
 
         $result['http_code'] = $snoopy->status; //HTTP status code
 		//Snoopy returns -100 on timeout 

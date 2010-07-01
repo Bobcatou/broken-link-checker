@@ -80,6 +80,7 @@ class wsBrokenLinkChecker {
         //Set hooks that listen for our Cron actions
     	add_action('blc_cron_email_notifications', array( &$this, 'send_email_notifications' ));
 		add_action('blc_cron_check_links', array(&$this, 'cron_check_links'));
+		add_action('blc_cron_database_maintenance', array(&$this, 'database_maintenance'));
     }
 
   /**
@@ -371,6 +372,7 @@ class wsBrokenLinkChecker {
     	//Remove our Cron events
 		wp_clear_scheduled_hook('blc_cron_check_links');
 		wp_clear_scheduled_hook('blc_cron_email_notifications');
+		wp_clear_scheduled_hook('blc_cron_database_maintenance');
 	}
 	
   /**
@@ -642,6 +644,24 @@ EOZ;
 		
 		$wpdb->query("OPTIMIZE TABLE {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_synch");
 	}
+	
+	/**
+	 * Perform various database maintenance tasks on the plugin's tables.
+	 * 
+	 * Removes records that reference disabled containers and parsers,
+	 * deletes invalid instances and links, optimizes tables, etc.
+	 * 
+	 * @return void
+	 */
+	function database_maintenance(){
+		blc_init_all_components();
+		
+		blc_cleanup_containers();
+		blc_cleanup_instances();
+		blc_cleanup_links();
+		
+		$this->optimize_database();
+	}
 
     function admin_menu(){
     	if (current_user_can('manage_options'))
@@ -712,7 +732,7 @@ EOZ;
     }
 
     function options_page(){
-    	global $blc_container_registry, $blclog;
+    	global $blclog, $blc_directory;
     	
     	//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -813,7 +833,19 @@ EOZ;
             $this->conf->options['send_email_notifications'] = $email_notifications;
             
             //Commen link checking on/off
+            $old_setting = $this->conf->options['check_comment_links'];
             $this->conf->options['check_comment_links'] = !empty($_POST['check_comment_links']);
+            //If comment link checking was just turned on we need to load the comment manager
+			//and re-parse comments for new links. This is quite hack-y.
+			//TODO: More elegant handling of freshly enabled/disabled container types 
+            if ( !$old_setting && $this->conf->options['check_comment_links'] ){
+            	include $blc_directory . '/includes/containers/comment.php';
+            	$comment_manager = blcContainerRegistry::getInstance()->get_manager('comment');
+            	if ( $comment_manager ){
+            		$comment_manager->resynch();
+            		blc_got_unsynched_items();
+            	}
+            }
             
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
@@ -826,7 +858,7 @@ EOZ;
 			 inefficient.  
 			 */
 			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-				$manager = $blc_container_registry->get_manager('custom_field');
+				$manager = blcContainerRegistry::getInstance()->get_manager('custom_field');
 				if ( !is_null($manager) ){
 					$manager->resynch();
 					blc_got_unsynched_items();
@@ -1098,7 +1130,7 @@ EOZ;
 			)
 		);
 		
-		?>
+		?> 
         <br/><span class="description">
         <?php
         
@@ -1844,7 +1876,7 @@ EOZ;
    * @return array Confirmation message and its CSS class.
    */
 	function do_bulk_delete_sources($selected_links){
-		global $blc_container_registry;
+		$blc_container_registry = blcContainerRegistry::getInstance();
 		
 		$message = '';
 		$msg_class = 'updated';
@@ -2359,24 +2391,44 @@ EOZ;
 		//can also be considered broken/buggy, so those will be selected 
 		//as well.
 		
+		//Only check links that have at least one valid instance (i.e. an instance exists and 
+		//it corresponds to one of the currently loaded container/parser types).
+		$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
+		$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
+		
+		$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+		$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
+		$loaded_parsers = "'" . implode("', '", $loaded_parsers) . "'";
+		
 		//Note : This is a slow query, but AFAIK there is no way to speed it up.
 		//I could put an index on last_check_attempt, but that value is almost 
 		//certainly unique for each row so it wouldn't be much better than a full table scan.
 		if ( $count_only ){
-			$q = "SELECT COUNT(*)\n";
+			$q = "SELECT COUNT(links.link_id)\n";
 		} else {
-			$q = "SELECT *\n";
+			$q = "SELECT links.*\n";
 		}
-		$q .= "FROM {$wpdb->prefix}blc_links
+		$q .= "FROM {$wpdb->prefix}blc_links AS links
 		      WHERE 
-			  	( last_check_attempt < %s ) 
-				OR 
-		 	  	( 
-					(broken = 1 OR being_checked = 1) 
-					AND may_recheck = 1
-					AND check_count < %d 
-					AND last_check_attempt < %s 
-				)";
+		      	(
+				  	( last_check_attempt < %s ) 
+					OR 
+			 	  	( 
+						(broken = 1 OR being_checked = 1) 
+						AND may_recheck = 1
+						AND check_count < %d 
+						AND last_check_attempt < %s 
+					)
+				)
+				AND EXISTS (
+					SELECT 1 FROM {$wpdb->prefix}blc_instances AS instances
+					WHERE 
+						instances.link_id = links.link_id
+						AND ( instances.container_type IN ({$loaded_containers}) )
+						AND ( instances.parser_type IN ({$loaded_parsers}) )
+				)
+			";
 		if ( !$count_only ){
 			$q .= "\nORDER BY last_check_attempt ASC\n";
 			if ( !empty($max_results) ){
@@ -3065,6 +3117,12 @@ EOZ;
 			);
 		}
 		
+		//Default PHP execution time limit
+	 	$debug['Default PHP execution time limit'] = array(
+	 		'state' => 'ok',
+	 		'value' => sprintf(__('%s seconds'), ini_get('max_execution_time')),
+		);
+		
 		return $debug;
 	}
 	
@@ -3200,6 +3258,11 @@ EOZ;
 			}
 		} else {
 			wp_clear_scheduled_hook('blc_cron_email_notifications');
+		}
+		
+		//Run database maintenance every two weeks or so
+		if ( !wp_next_scheduled('blc_cron_database_maintenance') ){
+			wp_schedule_event(time(), 'bimonthly', 'blc_cron_database_maintenance');
 		}
 	} 
 	

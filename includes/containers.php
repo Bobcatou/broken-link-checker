@@ -900,4 +900,25 @@ function blc_resynch_containers($forced = false){
 	$instance->resynch($forced);
 }
 
+/**
+ * Remove synch. records that reference container types not currently loaded
+ * 
+ * @return bool
+ */
+function blc_cleanup_containers(){
+	global $wpdb;
+	
+	$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
+	$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
+	
+	$q = "DELETE synch.*
+	      FROM {$wpdb->prefix}blc_synch AS synch
+	      WHERE
+      	    synch.container_type NOT IN ({$loaded_containers})";
+	$rez = $wpdb->query($q);
+	
+	return $rez !== false;
+}
+
 ?>

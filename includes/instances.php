@@ -561,7 +561,7 @@ function blc_get_usable_instance_count(){
 }
 
 /**
- * Remove instances that reference invalid containers
+ * Remove instances that reference invalid containers or containers/parsers that are not currently loaded
  *
  * @return bool
  */
@@ -577,7 +577,22 @@ function blc_cleanup_instances(){
  			synch.container_id IS NULL";
 	$rez = $wpdb->query($q);
 	
-	return $rez !== false;
+	$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
+	$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
+	
+	$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+	$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
+	$loaded_parsers = "'" . implode("', '", $loaded_parsers) . "'";
+	
+	$q = "DELETE instances.*
+	      FROM {$wpdb->prefix}blc_instances AS instances
+	      WHERE
+	        instances.container_type NOT IN ({$loaded_containers}) OR
+	        instances.parser_type NOT IN ({$loaded_parsers})";
+	$rez2 = $wpdb->query($q);
+	
+	return ($rez !== false) && ($rez2 !== false);
 }
 
 
