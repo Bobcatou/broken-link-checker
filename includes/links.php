@@ -143,7 +143,7 @@ class blcLink {
 		running over the execution time limit or causing a fatal error.
 		
 		This problem is likely to be temporary for most links, so we leave it be and treat it
-		as any other links (i.e. check it again later using the default recheck periodicity). 
+		as any other link (i.e. check it again later using the default recheck periodicity). 
         */
         if ( $this->being_checked ) {
         	$this->being_checked = false;
