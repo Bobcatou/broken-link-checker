@@ -908,7 +908,8 @@ function blc_resynch_containers($forced = false){
 function blc_cleanup_containers(){
 	global $wpdb;
 	
-	$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+	$containerRegistry = blcContainerRegistry::getInstance();
+	$loaded_containers = array_keys($containerRegistry->get_registered_containers());
 	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
 	$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
 	

@@ -343,7 +343,8 @@ class blcParser {
  * @return bool
  */
 function blc_register_parser( $parser_type, $class_name ) {
-	return blcParserRegistry::getInstance()->register_parser($parser_type, $class_name);
+	$instance = blcParserRegistry::getInstance(); 
+	return $instance->register_parser($parser_type, $class_name);
 }
 
 /**
@@ -355,7 +356,8 @@ function blc_register_parser( $parser_type, $class_name ) {
  * @return blcParser|null
  */
 function blc_get_parser( $parser_type ){
-	return blcParserRegistry::getInstance()->get_parser($parser_type);
+	$instance = blcParserRegistry::getInstance();
+	return $instance->get_parser($parser_type);
 }
 
 /**
@@ -368,7 +370,8 @@ function blc_get_parser( $parser_type ){
  * @return array of blcParser
  */
 function blc_get_parsers( $format, $container_type ){
-	return blcParserRegistry::getInstance()->get_parsers($format, $container_type);
+	$instance = blcParserRegistry::getInstance(); 
+	return $instance->get_parsers($format, $container_type);
 }
 
 

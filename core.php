@@ -840,7 +840,8 @@ EOZ;
 			//TODO: More elegant handling of freshly enabled/disabled container types 
             if ( !$old_setting && $this->conf->options['check_comment_links'] ){
             	include $blc_directory . '/includes/containers/comment.php';
-            	$comment_manager = blcContainerRegistry::getInstance()->get_manager('comment');
+            	$containerRegistry = blcContainerRegistry::getInstance();
+            	$comment_manager = $containerRegistry->get_manager('comment');
             	if ( $comment_manager ){
             		$comment_manager->resynch();
             		blc_got_unsynched_items();
@@ -858,7 +859,8 @@ EOZ;
 			 inefficient.  
 			 */
 			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-				$manager = blcContainerRegistry::getInstance()->get_manager('custom_field');
+				$containerRegistry = blcContainerRegistry::getInstance();
+				$manager = $containerRegistry->get_manager('custom_field');
 				if ( !is_null($manager) ){
 					$manager->resynch();
 					blc_got_unsynched_items();
@@ -2459,11 +2461,13 @@ EOZ;
 		
 		//Only check links that have at least one valid instance (i.e. an instance exists and 
 		//it corresponds to one of the currently loaded container/parser types).
-		$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
+		$containerRegistry = blcContainerRegistry::getInstance();
+		$loaded_containers = array_keys($containerRegistry->get_registered_containers());
 		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
 		$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
 		
-		$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+		$parserRegistry = blcParserRegistry::getInstance();
+		$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 		$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
 		$loaded_parsers = "'" . implode("', '", $loaded_parsers) . "'";
 		

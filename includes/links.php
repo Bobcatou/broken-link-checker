@@ -1011,8 +1011,10 @@ class blcLinkQuery {
 		if ( empty($params['include_invalid']) ){
 			$join_instances = true;
 			
-			$loaded_containers = array_keys(blcContainerRegistry::getInstance()->get_registered_containers());
-			$loaded_parsers = array_keys(blcParserRegistry::getInstance()->get_registered_parsers());
+			$containerRegistry = blcContainerRegistry::getInstance();
+			$loaded_containers = array_keys($containerRegistry->get_registered_containers());
+			$parserRegistry = blcParserRegistry::getInstance();
+			$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 			
 			if ( empty($s_parser_type) ){
 				$s_parser_type = $loaded_parsers;
@@ -1377,7 +1379,8 @@ class blcLinkQuery {
  * @return int|array Either an array of blcLink objects, or the number of results for the query.
  */
 function blc_get_links($params = null){
-	return blcLinkQuery::getInstance()->get_links($params, $purpose);
+	$instance = blcLinkQuery::getInstance();
+	return $instance->get_links($params, $purpose);
 }
 
 /**
