@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 2.9.0
 Tested up to: 3.0
-Stable tag: 0.9.3
+Stable tag: 0.9.4
 
 This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
 
@@ -77,6 +77,22 @@ To upgrade your installation
 == Changelog ==
 
 *This is an automatically generated changelog*
+
+= 0.9.4 =
+* Fixed missing post and comment edit links in email notifications.
+* Updated Danish translation.
+* Added Japanese translation.
+* Added a Hindi translation.
+* Added a Portuguese translation.
+* Slightly improved DB error reporting.
+* Added the ability to disable comment link checking.
+* Fixed a couple of minor bugs that made some of the UI text impossible to translate.
+* The plugin's tables are now created with the same character set and collation settings as native WP tables (previously they used the database defaults instead).
+* Automatically clean up and optimize the plugin's tables twice per month.
+* Instead of displaying a zero response time for timed out links, now it shows how long the plugin waited before assuming that the link has timed out.
+* Added the default PHP script execution time limit to the "Debug info" table.
+* Added a "Mark as not broken" bulk action.
+* Links that make the plugin crash are no longer assumed to be broken.
 
 = 0.9.3 =
 * Fixed a JS error that only happened in IE by removing a superfluous comma from an object literal.
