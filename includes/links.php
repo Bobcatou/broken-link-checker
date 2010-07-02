@@ -140,29 +140,24 @@ class blcLink {
 		/*
 		If the link is stil marked as in the process of being checked, that probably means
 		that the last time the plugin tried to check it the script got terminated by PHP for 
-		running over the execution time limit or causing a fatal error. Lets assume the link is broken.  
+		running over the execution time limit or causing a fatal error.
+		
+		This problem is likely to be temporary for most links, so we leave it be and treat it
+		as any other links (i.e. check it again later using the default recheck periodicity). 
         */
         if ( $this->being_checked ) {
-        	
         	$this->being_checked = false;
         	
-        	$this->broken = true;
-        	$this->timeout = true;
-        	$this->http_code = BLC_TIMEOUT;
+        	//Add an explanatory notice to the link's log
+        	$error_notice = "[" . __("The plugin script was terminated while trying to check the link.", 'broken-link-checker') . "]";
+        	if ( strpos($this->log, $error_notice) === false ){
+        		$this->log = $error_notice . "\r\n" . $this->log;
+        	}
         	
-        	$this->request_duration = 0;
-        	$this->redirect_count = 0;
-        	$this->final_url = $this->url;
-        	
-        	$this->log .= "\r\n[" . __("The plugin script was terminated while trying to check the link.", 'broken-link-checker') . "]";
-        	
-        	$this->status_changed($this->broken, 'link_checker_terminated');
-
-        	        	
         	if ( $save_results ){
 				$this->save();
 			}
-        	
+			
             return false;
         }
         
