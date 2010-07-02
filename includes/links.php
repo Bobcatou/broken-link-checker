@@ -1081,7 +1081,7 @@ class blcLinkQuery {
 				}
 			}
 			
-			$pieces[] = 'link_id IN (' . implode(', ', $sanitized_link_ids) . ')';
+			$pieces[] = 'links.link_id IN (' . implode(', ', $sanitized_link_ids) . ')';
 		}
 		
 		//Anchor text - use LIKE search
