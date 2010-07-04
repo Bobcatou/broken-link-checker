@@ -3193,6 +3193,51 @@ EOZ;
 	 		'value' => sprintf(__('%s seconds'), ini_get('max_execution_time')),
 		);
 		
+		//Resynch flag.
+		$debug['Resynch. flag'] = array(
+	 		'state' => 'ok',
+	 		'value' => sprintf('%d', $this->conf->options['need_resynch']),
+		);
+		
+		//Synch records
+		$synch_records = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}blc_synch"));
+		$data = array(
+	 		'state' => 'ok',
+	 		'value' => sprintf('%d', $synch_records),
+		);
+		if ( $synch_records == 0 ){
+			$data['state'] = 'warning';
+			$data['message'] = __('If this value is zero even after several page reloads you have probably encountered a bug.', 'broken-link-checker');
+		}
+		$debug['Synch. records'] = $data;
+		
+		//Total links and instances (including invalid ones)
+		$all_links = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}blc_links"));
+		$all_instances = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}blc_instances"));
+		
+		//Show the number of unparsed containers. Useful for debugging. For performance, 
+		//this is only shown when we have no links/instances yet.
+		if( ($all_links == 0) && ($all_instances == 0) ){
+			$unparsed_items = intval($wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}blc_synch WHERE synched=0"));
+			$debug['Unparsed items'] = array(
+				'state' => 'warning', 
+				'value' => $unparsed_items,
+			);
+		} 
+		
+		//Links & instances
+		if ( ($all_links > 0) && ($all_instances > 0) ){
+			$debug['Link records'] = array(
+				'state' => 'ok',
+				'value' => sprintf('%d (%d)', $all_links, $all_instances),
+			);
+		} else {
+			$debug['Link records'] = array(
+				'state' => 'warning',
+				'value' => sprintf('%d (%d)', $all_links, $all_instances),
+			);
+		}		
+		
 		return $debug;
 	}
 	
