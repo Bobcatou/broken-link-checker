@@ -35,7 +35,12 @@ class blcContainerRegistry {
 		$this->__construct();
 	}
 	
-	function getInstance(){
+	/**
+	 * Return a singleton instance of this class.
+	 * 
+	 * @return blcContainerRegistry
+	 */
+	function &getInstance(){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcContainerRegistry;
@@ -284,7 +289,7 @@ class blcContainerRegistry {
 }
 
 //Init the container registry & make it global
-$GLOBALS['blc_container_registry'] = blcContainerRegistry::getInstance();
+$GLOBALS['blc_container_registry'] = & blcContainerRegistry::getInstance();
 
  
 
@@ -834,7 +839,7 @@ class blcContainerManager {
  * @return bool	True if the container was successfully registered, false otherwise.
  */
 function blc_register_container( $container_type, $manager_class ){
-	$instance = blcContainerRegistry::getInstance();
+	$instance = & blcContainerRegistry::getInstance();
 	return $instance->register_container($container_type, $manager_class);
 }
 
@@ -845,7 +850,7 @@ function blc_register_container( $container_type, $manager_class ){
  * @return blcContainer|null Returns null if the container type is unrecognized.
  */
 function blc_get_container($container){
-	$instance = blcContainerRegistry::getInstance();
+	$instance = & blcContainerRegistry::getInstance();
 	return $instance->get_container($container);
 }
 
@@ -873,7 +878,7 @@ function blc_get_container($container){
  * @return array of blcContainer indexed by 'container_type|container_id'
  */
 function blc_get_containers( $containers, $purpose = '', $load_wrapped_objects = false ){
-	$instance = blcContainerRegistry::getInstance();
+	$instance = & blcContainerRegistry::getInstance();
 	return $instance->get_containers($containers, $purpose, '', $load_wrapped_objects);
 }
 
@@ -884,7 +889,7 @@ function blc_get_containers( $containers, $purpose = '', $load_wrapped_objects =
  * @return array of blcContainer
  */
 function blc_get_unsynched_containers($max_results = 0){
-	$instance = blcContainerRegistry::getInstance();
+	$instance = & blcContainerRegistry::getInstance();
 	return $instance->get_unsynched_containers($max_results);
 }
 
@@ -896,7 +901,7 @@ function blc_get_unsynched_containers($max_results = 0){
  * @return void
  */
 function blc_resynch_containers($forced = false){
-	$instance = blcContainerRegistry::getInstance();
+	$instance = & blcContainerRegistry::getInstance();
 	$instance->resynch($forced);
 }
 
@@ -908,7 +913,7 @@ function blc_resynch_containers($forced = false){
 function blc_cleanup_containers(){
 	global $wpdb;
 	
-	$containerRegistry = blcContainerRegistry::getInstance();
+	$containerRegistry = & blcContainerRegistry::getInstance();
 	$loaded_containers = array_keys($containerRegistry->get_registered_containers());
 	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
 	$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";

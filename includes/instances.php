@@ -482,9 +482,9 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
 	
 	//Skip instances that reference containers or parsers that aren't currently loaded
 	if ( !$include_invalid ){
-		$containerRegistry = blcContainerRegistry::getInstance();
+		$containerRegistry = & blcContainerRegistry::getInstance();
 		$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-		$parserRegistry = blcParserRegistry::getInstance();
+		$parserRegistry = & blcParserRegistry::getInstance();
 		$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 		
 		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
@@ -550,9 +550,9 @@ function blc_get_usable_instance_count(){
 	$q = "SELECT COUNT(instance_id) FROM {$wpdb->prefix}blc_instances WHERE 1";
 	
 	//Skip instances that reference containers or parsers that aren't currently loaded
-	$containerRegistry = blcContainerRegistry::getInstance();
+	$containerRegistry = & blcContainerRegistry::getInstance();
 	$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-	$parserRegistry = blcParserRegistry::getInstance();
+	$parserRegistry = & blcParserRegistry::getInstance();
 	$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 	
 	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
@@ -581,9 +581,9 @@ function blc_cleanup_instances(){
  			synch.container_id IS NULL";
 	$rez = $wpdb->query($q);
 	
-	$containerRegistry = blcContainerRegistry::getInstance();
+	$containerRegistry = & blcContainerRegistry::getInstance();
 	$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-	$parserRegistry = blcParserRegistry::getInstance();
+	$parserRegistry = & blcParserRegistry::getInstance();
 	$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 	
 	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);

@@ -20,7 +20,7 @@ class blcParserRegistry {
 	 * 
 	 * @return blcParserRegistry
 	 */
-	function getInstance(){
+	function &getInstance(){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcParserRegistry;
@@ -92,7 +92,7 @@ class blcParserRegistry {
 }
 
 //Create the parser registry singleton.
-$GLOBALS['blc_parser_registry'] = blcParserRegistry::getInstance();
+$GLOBALS['blc_parser_registry'] = & blcParserRegistry::getInstance();
 
 
 /**
@@ -343,7 +343,7 @@ class blcParser {
  * @return bool
  */
 function blc_register_parser( $parser_type, $class_name ) {
-	$instance = blcParserRegistry::getInstance(); 
+	$instance = & blcParserRegistry::getInstance(); 
 	return $instance->register_parser($parser_type, $class_name);
 }
 
@@ -356,7 +356,7 @@ function blc_register_parser( $parser_type, $class_name ) {
  * @return blcParser|null
  */
 function blc_get_parser( $parser_type ){
-	$instance = blcParserRegistry::getInstance();
+	$instance = & blcParserRegistry::getInstance();
 	return $instance->get_parser($parser_type);
 }
 
@@ -370,7 +370,7 @@ function blc_get_parser( $parser_type ){
  * @return array of blcParser
  */
 function blc_get_parsers( $format, $container_type ){
-	$instance = blcParserRegistry::getInstance(); 
+	$instance = & blcParserRegistry::getInstance(); 
 	return $instance->get_parsers($format, $container_type);
 }
 

@@ -833,7 +833,7 @@ EOZ;
 			}
             $this->conf->options['send_email_notifications'] = $email_notifications;
             
-            //Commen link checking on/off
+            //Comment link checking on/off
             $old_setting = $this->conf->options['check_comment_links'];
             $this->conf->options['check_comment_links'] = !empty($_POST['check_comment_links']);
             //If comment link checking was just turned on we need to load the comment manager
@@ -841,7 +841,7 @@ EOZ;
 			//TODO: More elegant handling of freshly enabled/disabled container types 
             if ( !$old_setting && $this->conf->options['check_comment_links'] ){
             	include $blc_directory . '/includes/containers/comment.php';
-            	$containerRegistry = blcContainerRegistry::getInstance();
+            	$containerRegistry = & blcContainerRegistry::getInstance();
             	$comment_manager = $containerRegistry->get_manager('comment');
             	if ( $comment_manager ){
             		$comment_manager->resynch();
@@ -860,7 +860,7 @@ EOZ;
 			 inefficient.  
 			 */
 			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-				$containerRegistry = blcContainerRegistry::getInstance();
+				$containerRegistry = & blcContainerRegistry::getInstance();
 				$manager = $containerRegistry->get_manager('custom_field');
 				if ( !is_null($manager) ){
 					$manager->resynch();
@@ -1271,7 +1271,7 @@ EOZ;
 
     function links_page(){
         global $wpdb, $blclog;
-        $blc_link_query = blcLinkQuery::getInstance();
+        $blc_link_query = & blcLinkQuery::getInstance();
         
         //Sanity check : Make sure the plugin's tables are all set up.
         if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -1695,7 +1695,7 @@ EOZ;
 			$msg_class = 'error';
 		} else {
 			//Save the new filter
-			$blc_link_query = blcLinkQuery::getInstance();
+			$blc_link_query = & blcLinkQuery::getInstance();
 			$filter_id = $blc_link_query->create_custom_filter($_POST['name'], $_POST['params']);
 			
 			if ( $filter_id ){
@@ -1731,7 +1731,7 @@ EOZ;
 			$msg_class = 'error';
 		} else {
 			//Try to delete the filter
-			$blc_link_query = blcLinkQuery::getInstance();
+			$blc_link_query = & blcLinkQuery::getInstance();
 			if ( $blc_link_query->delete_custom_filter($_POST['filter_id']) ){
 				//Success
 				$message = __('Filter deleted', 'broken-link-checker');
@@ -1882,7 +1882,7 @@ EOZ;
    * @return array Confirmation message and its CSS class.
    */
 	function do_bulk_delete_sources($selected_links){
-		$blc_container_registry = blcContainerRegistry::getInstance();
+		$blc_container_registry = & blcContainerRegistry::getInstance();
 		
 		$message = '';
 		$msg_class = 'updated';
@@ -2462,12 +2462,12 @@ EOZ;
 		
 		//Only check links that have at least one valid instance (i.e. an instance exists and 
 		//it corresponds to one of the currently loaded container/parser types).
-		$containerRegistry = blcContainerRegistry::getInstance();
+		$containerRegistry = & blcContainerRegistry::getInstance();
 		$loaded_containers = array_keys($containerRegistry->get_registered_containers());
 		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
 		$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
 		
-		$parserRegistry = blcParserRegistry::getInstance();
+		$parserRegistry = & blcParserRegistry::getInstance();
 		$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 		$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
 		$loaded_parsers = "'" . implode("', '", $loaded_parsers) . "'";
@@ -2648,7 +2648,7 @@ EOZ;
    */
 	function get_status(){
 		global $wpdb;
-		$blc_link_query = blcLinkQuery::getInstance();
+		$blc_link_query = & blcLinkQuery::getInstance();
 		
 		$check_threshold=date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold=date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);

@@ -823,7 +823,7 @@ class blcLinkQuery {
 		$this->__construct();
 	}
 	
-	function getInstance(){
+	function &getInstance(){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcLinkQuery;
@@ -1011,9 +1011,9 @@ class blcLinkQuery {
 		if ( empty($params['include_invalid']) ){
 			$join_instances = true;
 			
-			$containerRegistry = blcContainerRegistry::getInstance();
+			$containerRegistry = & blcContainerRegistry::getInstance();
 			$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-			$parserRegistry = blcParserRegistry::getInstance();
+			$parserRegistry = & blcParserRegistry::getInstance();
 			$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
 			
 			if ( empty($s_parser_type) ){
@@ -1379,7 +1379,7 @@ class blcLinkQuery {
  * @return int|array Either an array of blcLink objects, or the number of results for the query.
  */
 function blc_get_links($params = null){
-	$instance = blcLinkQuery::getInstance();
+	$instance = & blcLinkQuery::getInstance();
 	return $instance->get_links($params, $purpose);
 }
 

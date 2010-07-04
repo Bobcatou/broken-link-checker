@@ -54,7 +54,7 @@
 			$search_subfilter = $filter_id;
 		}
 		
-		$linkQuery = blcLinkQuery::getInstance();
+		$linkQuery = & blcLinkQuery::getInstance();
 		foreach ($linkQuery->native_filters as $filter => $data){
 			$selected = ($search_subfilter == $filter)?' selected="selected"':'';
 			printf('<option value="%s"%s>%s</option>', $filter, $selected, $data['name']);
