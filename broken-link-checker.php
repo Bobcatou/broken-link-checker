@@ -86,7 +86,8 @@ $blc_config_manager = new blcConfigurationManager(
         'custom_fields' => array(),		//List of custom fields that can contain URLs and should be checked.
         'check_comment_links' => true,	//Whether to check links found in comments
         
-        'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected 
+        'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected
+		'show_link_count_bubble' => true, //Display a notification bubble in the menu when broken links are found 
 		
 		'need_resynch' => false,  		//[Internal flag] True if there are unparsed items.
 		'current_db_version' => 0,		//The currently set-up version of the plugin's tables

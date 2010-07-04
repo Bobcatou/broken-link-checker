@@ -664,6 +664,12 @@ EOZ;
 		$this->optimize_database();
 	}
 
+    /**
+     * Create the plugin's menu items and enqueue their scripts and CSS.
+     * Callback for the 'admin_menu' action. 
+     * 
+     * @return void
+     */
     function admin_menu(){
     	if (current_user_can('manage_options'))
           add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
@@ -675,9 +681,24 @@ EOZ;
             'link-checker-settings',array(&$this, 'options_page')
 		);
 		
+		$menu_title = __('Broken Links', 'broken-link-checker');
+		if ( $this->conf->options['show_link_count_bubble'] ){
+			//To make it easier to notice when broken links appear, display the current number of 
+			//broken links in a little bubble notification in the "Broken Links" menu.  
+			//(Similar to how the number of plugin updates and unmoderated comments is displayed).
+			$blc_link_query = & blcLinkQuery::getInstance();
+			$broken_links = $blc_link_query->get_filter_links('broken', array('count_only' => true));
+			if ( $broken_links > 0 ){
+				//TODO: Appropriating existing CSS classes for my own purposes is hacky. Fix eventually. 
+				$menu_title .= sprintf(
+					' <span class="update-plugins"><span class="update-count blc-menu-bubble">%d</span></span>', 
+					$broken_links
+				);
+			}
+		}		
         $links_page_hook = add_management_page(
 			__('View Broken Links', 'broken-link-checker'), 
-			__('Broken Links', 'broken-link-checker'), 
+			$menu_title, 
 			'edit_others_posts',
             'view-broken-links',array(&$this, 'links_page')
 		);
@@ -1391,11 +1412,12 @@ EOZ;
 <script type='text/javascript'>
 	var blc_current_filter = '<?php echo $filter_id; ?>';
 	var blc_is_broken_filter = <?php
-		if ( ($filter_id == 'broken') || ( isset($current_filter['params']['s_filter']) && ($current_filter['params']['s_filter'] = 'broken') ) ){
-			echo 'true';
-		} else {
-			echo 'false';
-		}
+		//TODO: Simplify this. Maybe overhaul the filter system to let us query the effective filter.
+		$is_broken_filter = 
+			($filter_id == 'broken') 
+			|| ( isset($current_filter['params']['s_filter']) && ($current_filter['params']['s_filter'] == 'broken') )
+			|| ( isset($_GET['s_filter']) && ($_GET['s_filter'] == 'broken') );
+		echo $is_broken_filter ? 'true' : 'false';
 	?>;
 </script>
         

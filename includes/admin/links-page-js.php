@@ -1,9 +1,23 @@
 <script type='text/javascript'>
 
 function alterLinkCounter(factor){
-    cnt = parseInt(jQuery('.current-link-count').eq(0).html());
+    var cnt = parseInt(jQuery('.current-link-count').eq(0).html());
     cnt = cnt + factor;
     jQuery('.current-link-count').html(cnt);
+    
+	if ( blc_is_broken_filter ){
+		//Update the broken link count displayed beside the "Broken Links" menu
+		var menuBubble = jQuery('span.blc-menu-bubble');
+		if ( menuBubble.length > 0 ){
+			cnt = parseInt(menuBubble.eq(0).html());
+			cnt = cnt + factor;
+			if ( cnt > 0 ){
+				menuBubble.html(cnt);
+			} else {
+				menuBubble.parent().hide();
+			}
+		}
+	}    
 }
 
 function replaceLinkId(old_id, new_id){
