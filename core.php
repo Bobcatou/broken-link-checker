@@ -527,7 +527,8 @@ EOD;
 		  
 		  PRIMARY KEY (`instance_id`),
 		  KEY `link_id` (`link_id`),
-		  KEY `source_id` (`container_id`,`container_type`)
+		  KEY `source_id` (`container_type`, `container_id`),
+		  KEY `parser_type` (`parser_type`)
 		) {$charset_collate};
 EOT;
 		if ( $wpdb->query($q) === false ){ 
