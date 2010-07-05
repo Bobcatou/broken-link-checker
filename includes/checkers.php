@@ -98,7 +98,7 @@ class blcCheckerRegistry {
    * @param string $url
    * @return blcChecker|null
    */
-	function get_checker_for($url){
+	function &get_checker_for($url){
 		$parsed = @parse_url($url);
 		
 		foreach($this->registered_checkers as $checker){
@@ -129,7 +129,7 @@ function blc_register_checker($class_name){
  * @param string $url The URL that needs to be checked.
  * @return blcChecker|null 
  */
-function blc_get_checker_for($url){
+function &blc_get_checker_for($url){
 	return $GLOBALS['blc_checker_registry']->get_checker_for($url);
 }
 

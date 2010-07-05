@@ -347,7 +347,7 @@ class blcPostMetaManager extends blcContainerManager {
 		//Set up the parseable fields
 		$fields = array();
 		
-		$conf = blc_get_configuration();
+		$conf = & blc_get_configuration();
 		if ( is_array($conf->options['custom_fields']) ){
 			foreach($conf->options['custom_fields'] as $meta_name){
 				$fields[$meta_name] = 'metadata';
@@ -481,7 +481,7 @@ class blcPostMetaManager extends blcContainerManager {
 		
 		//Metadata changes only matter to us if the modified key 
 		//is one that the user wants checked. 
-		$conf = blc_get_configuration();
+		$conf = & blc_get_configuration();
 		if ( !is_array($conf->options['custom_fields']) ){
 			return;
 		}

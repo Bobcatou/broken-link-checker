@@ -81,7 +81,7 @@ class blcCurlHttp extends blcHttpChecker {
 		$log = '';
 		
 		//Get the BLC configuration. It's used below to set the right timeout values and such.
-		$conf = blc_get_configuration();
+		$conf = & blc_get_configuration();
 		
 		//Init curl.
 	 	$ch = curl_init();
@@ -235,7 +235,7 @@ class blcSnoopyHttp extends blcHttpChecker {
 		$log = '';
 		
 		//Get the timeout setting from the BLC configuration. 
-		$conf = blc_get_configuration();
+		$conf = & blc_get_configuration();
 		$timeout = $conf->options['timeout'];
 		
 		$start_time = microtime_float();

@@ -208,7 +208,7 @@ class blcPostContainerManager extends blcContainerManager {
         add_action('untrash_post', array(&$this,'post_saved'));
         
         //Highlight and nofollow broken links in posts & pages
-        $this->_conf = blc_get_configuration();
+        $this->_conf = & blc_get_configuration();
         if ( $this->_conf->options['mark_broken_links'] || $this->_conf->options['nofollow_broken_links'] ){
         	add_filter( 'the_content', array(&$this,'hook_the_content') );
         	if ( $this->_conf->options['mark_broken_links'] && !empty( $this->_conf->options['broken_link_css'] ) ){
@@ -454,7 +454,7 @@ class blcPostContainerManager extends blcContainerManager {
    * @return void
    */
 	function hook_wp_head(){
-		$conf = blc_get_configuration();
+		$conf = & blc_get_configuration();
 		echo '<style type="text/css">',$conf->options['broken_link_css'],'</style>';
 	}
 }

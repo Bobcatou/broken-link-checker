@@ -399,7 +399,7 @@ jQuery(function($){
 	
 	//Update the checkbox depending on current settings.
 	<?php
-	$conf = blc_get_configuration();
+	$conf = & blc_get_configuration();
 	if ( $conf->options['highlight_permanent_failures'] ){
 		echo 'highlight_permanent_failures_checkbox.attr("checked", "checked");';
 	} else {

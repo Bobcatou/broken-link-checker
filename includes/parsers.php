@@ -61,7 +61,7 @@ class blcParserRegistry {
    * @param string $parser_type
    * @return blcParser|null
    */
-	function get_parser( $parser_type ){
+	function &get_parser( $parser_type ){
 		if ( isset($this->registered_parsers[$parser_type]) ){
 			return $this->registered_parsers[$parser_type];
 		} else {
@@ -355,7 +355,7 @@ function blc_register_parser( $parser_type, $class_name ) {
  * @param string $parser_type
  * @return blcParser|null
  */
-function blc_get_parser( $parser_type ){
+function &blc_get_parser( $parser_type ){
 	$instance = & blcParserRegistry::getInstance();
 	return $instance->get_parser($parser_type);
 }
