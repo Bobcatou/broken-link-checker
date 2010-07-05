@@ -94,7 +94,7 @@ class blcContainerRegistry {
    * @param string $fallback If there is no manager associated with $container_type, return the manager of this container type instead.  
    * @return blcContainerManager|null
    */
-	function get_manager( $container_type, $fallback = '' ){
+	function &get_manager( $container_type, $fallback = '' ){
 		if ( isset($this->registered_managers[$container_type]) ){
 			return $this->registered_managers[$container_type];
 		} elseif ( !empty($fallback) && isset($this->registered_managers[$fallback]) ) {
@@ -222,7 +222,7 @@ class blcContainerRegistry {
 			
 		$results = array();
 		foreach($by_type as $container_type => $entries){
-			$manager = $this->get_manager($container_type, $fallback);
+			$manager = & $this->get_manager($container_type, $fallback);
 			if ( !is_null($manager) ){
 				$partial_results = $manager->get_containers($entries, $purpose, $load_wrapped_objects);
 				$results = array_merge($results, $partial_results);
@@ -279,7 +279,7 @@ class blcContainerRegistry {
    * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
    */
 	function ui_bulk_delete_message($container_type, $n){
-		$manager = $this->get_manager($container_type);
+		$manager = & $this->get_manager($container_type);
 		if ( is_null($manager) ){
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
 		} else {

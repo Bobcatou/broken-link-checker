@@ -310,9 +310,9 @@ class blcLinkInstance {
    *
    * @return blcContainer|null
    */
-	function get_container(){
+	function &get_container(){
 		if( is_null($this->_container) ){
-			$this->_container = blc_get_container( array($this->container_type, $this->container_id) );
+			$this->_container = & blc_get_container( array($this->container_type, $this->container_id) );
 		}
 		
 		return $this->_container;
@@ -344,9 +344,9 @@ class blcLinkInstance {
    *
    * @return blcParser|null
    */
-	function get_parser(){
+	function &get_parser(){
 		if ( is_null($this->_parser) ){
-			$this->_parser = blc_get_parser($this->parser_type);
+			$this->_parser = & blc_get_parser($this->parser_type);
 		}
 		
 		return $this->_parser;
@@ -373,7 +373,7 @@ class blcLinkInstance {
    *
    * @return blcLink|null
    */
-	function get_link(){
+	function &get_link(){
 		if ( !is_null($this->_link) ){
 			return $this->_link;
 		}

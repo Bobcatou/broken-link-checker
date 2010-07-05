@@ -186,7 +186,7 @@ class blcLink {
 		);
         
         
-        $checker = blc_get_checker_for($this->url);
+        $checker = & blc_get_checker_for($this->url);
         
 		if ( is_null($checker) ){
 			//Oops, there are no checker implementations that can handle this link.
