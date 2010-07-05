@@ -159,7 +159,7 @@ function blc_init_containers(){
 	require $blc_directory . '/includes/containers/custom_field.php';
 	require $blc_directory . '/includes/containers/dummy.php';
 	
-	$conf = blc_get_configuration();
+	$conf = & blc_get_configuration();
 	if ( $conf->options['check_comment_links'] ){	
 		require $blc_directory . '/includes/containers/comment.php';
 	}
@@ -238,7 +238,7 @@ function blc_init_all_components(){
  *
  * @return blcConfigurationManager
  */
-function blc_get_configuration(){
+function &blc_get_configuration(){
 	return $GLOBALS['blc_config_manager'];
 }
 
@@ -249,7 +249,7 @@ function blc_get_configuration(){
  * @return void
  */
 function blc_got_unsynched_items(){
-	$conf = blc_get_configuration();
+	$conf = & blc_get_configuration();
 	
 	if ( !$conf->options['need_resynch'] ){
 		$conf->options['need_resynch'] = true;
@@ -333,7 +333,7 @@ add_filter('cron_schedules', 'blc_cron_schedules');
  * @return void
  */
 function blc_print_installation_errors(){
-	$conf = blc_get_configuration();
+	$conf = & blc_get_configuration();
 	if ( !$conf->options['installation_failed'] ){
 		return;
 	}

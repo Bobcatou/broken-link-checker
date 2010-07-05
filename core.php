@@ -32,10 +32,10 @@ class wsBrokenLinkChecker {
    * @param blcConfigurationManager $conf An instance of the configuration manager
    * @return void
    */
-    function wsBrokenLinkChecker ( $loader, $conf ) {
+    function wsBrokenLinkChecker ( $loader, &$conf ) {
         global $wpdb;
         
-        $this->conf = $conf;
+        $this->conf = &$conf;
         $this->loader = $loader;
         $this->my_basename = plugin_basename( $this->loader );
 
