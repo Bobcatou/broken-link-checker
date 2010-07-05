@@ -1,9 +1,10 @@
 === Broken Link Checker ===
 Contributors: whiteshadow
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 2.9.0
 Tested up to: 3.0
-Stable tag: 0.9.4.1
+Stable tag: 0.9.4.2
 
 This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
 
@@ -77,6 +78,18 @@ To upgrade your installation
 == Changelog ==
 
 *This is an automatically generated changelog*
+
+= 0.9.4.2 =
+* Added more debugging data to the "Show debug info" table.
+* Added missing indexes to the instance table.
+* Yet more PHP4 compatibility fixes.
+* Added a notification bubble with the current number of broken links to the Tools -> Broken Links menu item.
+
+= 0.9.4.1 =
+* Fixed PHP 4 incompatibilities introduced in the previous release.
+* Fixed bulk unlink.
+* Updated Italian translation.
+* Updated Danish translation.
 
 = 0.9.4 =
 * Fixed missing post and comment edit links in email notifications.
@@ -405,3 +418,7 @@ To upgrade your installation
 = 0.1 =
 * *There are no release notes for this version*
 
+== Upgrade Notice ==
+
+= 0.9.4.2 =
+Fixes a major PHP4 compatibility problem introduced in version 0.9.4 and adds a notification bubble with the current broken link count to the "Broken Links" menu.
