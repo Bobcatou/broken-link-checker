@@ -709,25 +709,10 @@ class blcContainer {
  * @package Broken Link Checker
  * @access public
  */
-class blcContainerManager {
+class blcContainerManager extends blcModule {
 	
 	var $container_type = '';
 	var $container_class_name = 'blcContainer';
-	
-	function __construct($container_type){
-		$this->container_type = $container_type;
-		$this->init();
-	}
-	
-  /**
-   * blcContainerManager::blcContainerManager()
-   * Old-style class constructor
-   *
-   * @return void
-   */
-	function blcContainerManager($container_type){
-		$this->__construct($container_type);
-	}
 	
   /**
    * Do whatever setup necessary that wasn't already done in the constructor.
@@ -739,7 +724,9 @@ class blcContainerManager {
    * @return void
    */
 	function init(){
-		//Do nothing. Sub-classes might use it to set up hooks, etc.
+		parent::init();
+		$this->container_type = $this->module_id;
+		//Sub-classes might also use it to set up hooks, etc.
 	}
 	
   /**

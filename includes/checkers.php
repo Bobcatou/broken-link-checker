@@ -8,7 +8,7 @@
  * @package Broken Link Checker
  * @access public
  */
-class blcChecker {
+class blcChecker extends blcModule {
 	
   /**
    * Priority determines the order in which the plugin will try all registered checkers 

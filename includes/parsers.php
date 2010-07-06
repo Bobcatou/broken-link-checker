@@ -117,7 +117,7 @@ $GLOBALS['blc_parser_registry'] = & blcParserRegistry::getInstance();
  * @package Broken Link Checker
  * @access public
  */
-class blcParser {
+class blcParser extends blcModule {
 	
 	var $parser_type;
 	var $supported_formats = array();
@@ -141,6 +141,10 @@ class blcParser {
    */
 	function blcParser( $parser_type ){
 		$this->__construct( $parser_type );
+	}
+	
+	function init(){
+		$this->parser_type = $this->module_id;
 	}
 	
   /**

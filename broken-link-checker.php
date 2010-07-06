@@ -106,19 +106,6 @@ $blc_config_manager = new blcConfigurationManager(
 												
 		'installation_complete' => false,
 		'installation_failed' => false,
-		
-		'default_active_modules' => array( //List of modules active by default )
-			'http',             //Link checker for the HTTP(s) protocol
-			'html_link',        //HTML link parser
-			'image',            //HTML image parser
-			'metadata',         //Metadata (custom field) parser
-			'url_field',        //URL field parser
-			'blogroll',         //Blogroll container
-			'comment',          //Comment container
-			'custom_field',     //Post metadata container (aka custom fields)
-			'post',             //Post content container
-			'dummy',            //Dummy container used as a fallback
-		),
    )
 );
 
@@ -376,10 +363,24 @@ add_action('admin_notices', 'blc_print_installation_errors');
 //Load the base classes
 require $blc_directory . '/includes/links.php';
 require $blc_directory . '/includes/instances.php';
-require $blc_directory . '/includes/modules.php';
 
-//Init the plugin manager
-$blc_plugin_manager = & blcModuleManager::getInstance($blc_config_manager->options['default_active_modules']);
+//Load the module subsystem
+require $blc_directory . '/includes/module-manager.php';
+require $blc_directory . '/includes/module-base.php';
+
+$blc_module_manager = & blcModuleManager::getInstance(array( 
+		//List of modules active by default 
+		'http',             //Link checker for the HTTP(s) protocol
+		'link',             //HTML link parser
+		'image',            //HTML image parser
+		'metadata',         //Metadata (custom field) parser
+		'url_field',        //URL field parser
+		'blogroll',         //Blogroll container
+		'comment',          //Comment container
+		'custom_field',     //Post metadata container (aka custom fields)
+		'post',             //Post content container
+		'dummy',            //Dummy container used as a fallback
+));
 
 if ( is_admin() || defined('DOING_CRON') ){
 	
