@@ -4,7 +4,7 @@
 Plugin Name: Broken Link Checker
 Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/
 Description: Checks your blog for broken links and missing images and notifies you on the dashboard if any are found.
-Version: 0.9.4.2
+Version: 0.9.5
 Author: Janis Elsts
 Author URI: http://w-shadow.com/blog/
 Text Domain: broken-link-checker
@@ -106,6 +106,19 @@ $blc_config_manager = new blcConfigurationManager(
 												
 		'installation_complete' => false,
 		'installation_failed' => false,
+		
+		'default_active_modules' => array( //List of modules active by default )
+			'http',             //Link checker for the HTTP(s) protocol
+			'html_link',        //HTML link parser
+			'image',            //HTML image parser
+			'metadata',         //Metadata (custom field) parser
+			'url_field',        //URL field parser
+			'blogroll',         //Blogroll container
+			'comment',          //Comment container
+			'custom_field',     //Post metadata container (aka custom fields)
+			'post',             //Post content container
+			'dummy',            //Dummy container used as a fallback
+		),
    )
 );
 
@@ -154,14 +167,14 @@ function blc_init_containers(){
 	require $blc_directory . '/includes/containers.php';
 	
 	//Load built-in link containers
-	require $blc_directory . '/includes/containers/post.php';
-	require $blc_directory . '/includes/containers/blogroll.php';
-	require $blc_directory . '/includes/containers/custom_field.php';
-	require $blc_directory . '/includes/containers/dummy.php';
+	require $blc_directory . '/modules/containers/post.php';
+	require $blc_directory . '/modules/containers/blogroll.php';
+	require $blc_directory . '/modules/containers/custom_field.php';
+	require $blc_directory . '/modules/containers/dummy.php';
 	
 	$conf = & blc_get_configuration();
 	if ( $conf->options['check_comment_links'] ){	
-		require $blc_directory . '/includes/containers/comment.php';
+		require $blc_directory . '/modules/containers/comment.php';
 	}
 	
 	
@@ -189,10 +202,10 @@ function blc_init_parsers(){
 	require $blc_directory . '/includes/parsers.php';
 	
 	//Load built-in parsers
-	require $blc_directory . '/includes/parsers/html_link.php';
-	require $blc_directory . '/includes/parsers/image.php';
-	require $blc_directory . '/includes/parsers/metadata.php';
-	require $blc_directory . '/includes/parsers/url_field.php';
+	require $blc_directory . '/modules/parsers/html_link.php';
+	require $blc_directory . '/modules/parsers/image.php';
+	require $blc_directory . '/modules/parsers/metadata.php';
+	require $blc_directory . '/modules/parsers/url_field.php';
 	
 	do_action('blc_init_parsers');
 	$done = true;
@@ -216,7 +229,7 @@ function blc_init_checkers(){
 	require $blc_directory . '/includes/checkers.php';
 	
 	//Load built-in checker implementations (only HTTP at the time)
-	require $blc_directory . '/includes/checkers/http.php';
+	require $blc_directory . '/modules/checkers/http.php';
 
 	do_action('blc_init_checkers');
 	$done = true;
@@ -363,6 +376,10 @@ add_action('admin_notices', 'blc_print_installation_errors');
 //Load the base classes
 require $blc_directory . '/includes/links.php';
 require $blc_directory . '/includes/instances.php';
+require $blc_directory . '/includes/modules.php';
+
+//Init the plugin manager
+$blc_plugin_manager = & blcModuleManager::getInstance($blc_config_manager->options['default_active_modules']);
 
 if ( is_admin() || defined('DOING_CRON') ){
 	
