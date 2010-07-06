@@ -476,7 +476,12 @@ class wsBrokenLinkChecker {
 		//Use the character set and collation that's configured for WP tables
 		$charset_collate = '';
 		if ( !empty($wpdb->charset) ){
-			$charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
+			//Some German installs use "utf-8" (invalid) instead of "utf8" (valid). None of 
+			//the charset ids supported by MySQL contain dashes, so we can safely strip them.
+			//See http://dev.mysql.com/doc/refman/5.0/en/charset-charsets.html 
+			$charset = str_replace('-', '', $wpdb->charset);
+			
+			$charset_collate = "DEFAULT CHARACTER SET {$charset}";
 		}
 		if ( !empty($wpdb->collate) ){
 			$charset_collate = " COLLATE {$wpdb->collate}";
