@@ -15,11 +15,12 @@ ModulePriority: -1
 */
 
 //TODO: Rewrite sub-classes as transports, not stand-alone checkers
-class blcHttpChecker extends blcChecker{
-	var $priority = -1;
+class blcHttpChecker extends blcChecker {
 	var $implementation;
 	
-	function blcHttpChecker(){
+	function init(){
+		parent::init();
+		
 		if ( function_exists('curl_init') ) {
 			$this->implementation = new blcCurlHttp();
 		} else {
@@ -58,9 +59,7 @@ class blcHttpChecker extends blcChecker{
  * @package Broken Link Checker
  * @access public
  */
-class blcHttpCheckerBase extends blcChecker{
-	
-	var $priority = -1;
+class blcHttpCheckerBase extends blcChecker {
 	
 	function clean_url($url){
 		$url = html_entity_decode($url);
@@ -353,7 +352,5 @@ class blcSnoopyHttp extends blcHttpCheckerBase {
 	}
 	
 }
-
-blc_register_checker('blcHttpChecker');
 
 ?>

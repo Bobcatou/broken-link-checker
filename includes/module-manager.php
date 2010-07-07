@@ -6,11 +6,12 @@ class blcModuleManager {
 	var $module_dir = '';
 	
 	var $_module_cache;
+	var $_category_cache;
+	var $_category_cache_active;
 	
 	var $loaded;
 	var $instances;
 	var $default_active_modules;
-	
 	
 	
 	/**
@@ -65,6 +66,7 @@ class blcModuleManager {
 			'ModuleContext' => 'all',
 			'ModuleCategory' => 'other',
 			'ModuleLazyInit' => 'false',
+			'ModulePriority' => '0',
 		);
 		
 		$this->_module_cache = array();
@@ -89,11 +91,111 @@ class blcModuleManager {
 			
 			$module_header['ModuleLazyInit'] = trim(strtolower($module_header['ModuleLazyInit']));
 			$module_header['ModuleLazyInit'] = ($module_header['ModuleLazyInit']=='true')?true:false;
+			$module_header['ModulePriority'] = intval($module_header['ModulePriority']);
 			
 			$this->_module_cache[$module_id] = $module_header;			
 		}
 		
+		$this->_category_cache = null;
+		
 		return $this->_module_cache;
+	}
+	
+	/**
+	 * Retrieve modules that match a specific category, or all modules sorted by categories.
+	 * 
+	 * If a category ID is specified, this method returns the modules that have the "ModuleCategory:" 
+	 * file header set to that value, or an empty array if no modules match that category. The 
+	 * return array is indexed by module id :
+	 * [module_id1 => module1_data, module_id1 => module2_data, ...] 
+	 * 
+	 * If category is omitted, this method returns a list of all categories plus the modules 
+	 * they contain. Only categories that have at least one module will be included. The return
+	 * value is an array of arrays, indexed by category ID :  
+	 * [category1 => [module1_id => module1_data, module2_id => module2_data, ...], ...]
+	 *   
+	 * 
+	 * @param string $category Category id, e.g. "parser" or "container". Optional.  
+	 * @return array An array of categories or module data.
+	 */
+	function get_modules_by_category($category = ''){
+		if ( !isset($this->_category_cache) ){
+			$this->_category_cache = $this->sort_into_categories($this->get_modules()); 
+		}
+		
+		if ( empty($category) ){
+			return $this->_category_cache;
+		} else {
+			if ( isset($this->_category_cache[$category]) ){
+				return $this->_category_cache[$category];
+			} else {
+				return array();
+			}
+		}
+	}
+	
+	/**
+	 * Retrieve active modules that match a specific category, or all active modules sorted by categories.
+	 * 
+	 * @see blcModuleManager::get_modules_by_category()
+	 * 
+	 * @param string $category Category id. Optional.
+	 * @return array An associative array of categories or module data.
+	 */
+	function get_active_by_category($category = ''){
+		if ( !isset($this->_category_cache_active) ){
+			$this->_category_cache_active = $this->sort_into_categories($this->get_active_modules());
+		}
+		
+		if ( empty($category) ){
+			return $this->_category_cache_active;
+		} else {
+			if ( isset($this->_category_cache_active[$category]) ){
+				return $this->_category_cache_active[$category];
+			} else {
+				return array();
+			}
+		}
+	}
+	
+	/**
+	 * Sort a list of modules into categories. Inside each category, modules are sorted by priority (descending).
+	 * 
+	 * @access private
+	 * 
+	 * @param array $modules
+	 * @return array
+	 */
+	function sort_into_categories($modules){
+		$categories = array();
+		
+		foreach($modules as $module_id => $module_data){
+			$cat = $module_data['ModuleCategory'];
+			if ( isset($categories[$cat]) ){
+				$categories[$cat][$module_id] = $module_data;
+			} else {
+				$categories[$cat] = array($module_id => $module_data);
+			} 
+		}
+		
+		foreach($categories as $cat => $cat_modules){
+			uasort($categories[$cat], array(&$this, 'compare_priorities'));
+		}
+		
+		return $categories;
+	}
+	
+  /**
+   * Callback for sorting modules by priority.
+   *
+   * @access private
+   *
+   * @param array $a First module header.
+   * @param array $b Second module header.
+   * @return int
+   */
+	function compare_priorities($a, $b){
+		return $b['ModulePriority'] - $a['ModulePriority'];
 	}
 	
 	/**
@@ -119,12 +221,14 @@ class blcModuleManager {
 			}
 		}
 		
-		if ( isset($this->instances[$module_id]) ){
-			return $this->instances[$module_id];
-		} else {
-			$instance = & $this->init_module($module_id);
-			return $instance;
+		if ( !empty($category) ){
+			$data = $this->get_module_data($module_id);
+			if ( $data['ModuleCategory'] != $category ){
+				return null;
+			}
 		}
+		
+		return $this->init_module($module_id);
 	}
 	
 	/**
@@ -135,6 +239,12 @@ class blcModuleManager {
 	 * @return array Associative array of module data, or FALSE if the specified module was not found.
 	 */
 	function get_module_data($module_id){
+		//Check active modules first
+		if ( isset($this->plugin_conf->options['active_modules'][$module_id]) ){
+			return $this->plugin_conf->options['active_modules'][$module_id];
+		}
+		
+		//Otherwise, use the general module cache
 		if ( !isset($this->_module_cache) ){
 			$this->get_modules(); //Populates the cache
 		}
@@ -215,6 +325,8 @@ class blcModuleManager {
 			//Okay, if it loads, we can assume it works.
 			$this->plugin_conf->options['active_modules'][$module_id] = $module_data;
 			$this->plugin_conf->save_options();
+			//Invalidate the per-category active module cache
+			$this->_category_cache_active = null; 
 			
 			//Notify the module that it's been activated
 			$module = & $this->get_module($module_id);
@@ -246,6 +358,7 @@ class blcModuleManager {
 		unset($this->plugin_conf->options['active_modules'][$module_id]);
 		$this->plugin_conf->save_options();
 		
+		$this->_category_cache_active = null; //Invalidate the by-category cache since we just changed something		
 		return true;
 	}
 	
@@ -272,6 +385,9 @@ class blcModuleManager {
 		foreach($activate as $module_id){
 			$this->activate($module_id);
 		}
+		
+		//Invalidate the per-category active module cache
+		$this->_category_cache_active = null;
 	}
 	
 	/**
@@ -302,6 +418,7 @@ class blcModuleManager {
 			}
 		}
 		$this->plugin_conf->save_options();
+		$this->_category_cache_active = null; //Invalidate the by-category active module cache
 		return $this->plugin_conf->options['active_modules'];
 	}
 	
