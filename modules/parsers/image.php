@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: HTML images
 Description: Parses HTML images (e.g. '<img src="http://..." />')
@@ -167,8 +166,5 @@ class blcHTMLImage extends blcParser {
 		return $text;
 	}
 }
-
-blc_register_parser('image', 'blcHTMLImage');
-
 
 ?>

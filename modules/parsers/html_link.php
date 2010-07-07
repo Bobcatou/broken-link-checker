@@ -336,6 +336,4 @@ class blcHTMLLink extends blcParser {
 	}	
 }
 
-blc_register_parser('link', 'blcHTMLLink');
-
 ?>

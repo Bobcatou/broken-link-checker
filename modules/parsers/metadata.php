@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: Custom fields
 Description: Parses metadata (AKA custom fields)
@@ -103,8 +102,5 @@ class blcMetadataParser extends blcParser {
 		);
 	}
 }
-
-blc_register_parser('metadata', 'blcMetadataParser');
-
 
 ?>

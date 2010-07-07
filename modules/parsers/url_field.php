@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: URL fields
 Description: Parses data fields that contain a single, plaintext URL.
@@ -93,8 +92,5 @@ class blcUrlField extends blcParser {
 		return '';
 	}
 }
-
-blc_register_parser('url_field', 'blcUrlField');
-
 
 ?>
