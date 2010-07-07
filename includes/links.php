@@ -186,7 +186,7 @@ class blcLink {
 		);
         
         
-        $checker = & blc_get_checker_for($this->url);
+        $checker = & blcCheckerHelper::get_checker_for($this->url);
         
 		if ( is_null($checker) ){
 			//Oops, there are no checker implementations that can handle this link.
@@ -1011,10 +1011,9 @@ class blcLinkQuery {
 		if ( empty($params['include_invalid']) ){
 			$join_instances = true;
 			
-			$containerRegistry = & blcContainerRegistry::getInstance();
-			$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-			$parserRegistry = & blcParserRegistry::getInstance();
-			$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
+			$module_manager = & blcModuleManager::getInstance();
+			$loaded_containers = array_keys($module_manager->get_active_by_category('container'));
+			$loaded_parsers = array_keys($module_manager->get_active_by_category('parser'));
 			
 			if ( empty($s_parser_type) ){
 				$s_parser_type = $loaded_parsers;

@@ -159,6 +159,28 @@ class blcModuleManager {
 	}
 	
 	/**
+	 * Get the module ids of all active modules that belong to a specific category, 
+	 * quoted and ready for use in SQL.
+	 * 
+	 * @param string $category Category ID. If not specified, a list of all active modules will be returned.
+	 * @return string A comma separated list of single-quoted module ids, e.g. 'module-foo','module-bar','modbaz'
+	 */
+	function get_escaped_ids($category = ''){
+		global $wpdb;
+		
+		if ( empty($category) ){
+			$modules = $this->get_active_modules();
+		} else {
+			$modules = $this->get_active_by_category($category);
+		}
+		
+		$modules = array_map(array(&$wpdb, 'escape'), array_keys($modules));
+		$modules = "'" . implode("', '", $modules) . "'";
+		
+		return $modules;
+	}
+	
+	/**
 	 * Sort a list of modules into categories. Inside each category, modules are sorted by priority (descending).
 	 * 
 	 * @access private
