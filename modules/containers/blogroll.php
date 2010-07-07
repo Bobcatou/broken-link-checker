@@ -10,7 +10,6 @@ ModuleCategory: container
 ModuleClassName: blcBookmarkManager
 */
 
-
 class blcBookmark extends blcContainer{
 	
 	var $fields = array('link_url' => 'url_field');
@@ -168,6 +167,8 @@ class blcBookmarkManager extends blcContainerManager{
    * @return void
    */
 	function init(){
+		parent::init();
+		
         add_action('add_link', array(&$this,'hook_add_link'));
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
@@ -242,7 +243,7 @@ class blcBookmarkManager extends blcContainerManager{
    * @return void
    */
 	function hook_add_link( $link_id ){
-		$container = blc_get_container( array($this->container_type, $link_id) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -264,7 +265,7 @@ class blcBookmarkManager extends blcContainerManager{
    */
 	function hook_delete_link( $link_id ){
 		//Get the container object.
-		$container = blc_get_container( array($this->container_type, $link_id) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		//Get the link(s) associated with it.
 		$links = $container->get_links(); 
 		
@@ -297,7 +298,5 @@ class blcBookmarkManager extends blcContainerManager{
 		);
 	}
 }
-
-blc_register_container('blogroll', 'blcBookmarkManager');
 
 ?>

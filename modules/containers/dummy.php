@@ -72,6 +72,4 @@ class blcDummyManager extends blcContainerManager {
 	}
 }
 
-blc_register_container('dummy', 'blcDummyManager');
-
 ?>

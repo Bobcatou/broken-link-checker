@@ -327,6 +327,8 @@ class blcPostMetaManager extends blcContainerManager {
 	var $meta_type = 'post';
 	
 	function init(){
+		parent::init();
+		
 		//Intercept 2.9+ style metadata modification actions
 		add_action( "added_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "updated_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
@@ -352,8 +354,8 @@ class blcPostMetaManager extends blcContainerManager {
    * @param array $container An associative array of container data.
    * @return blcPostMeta
    */
-	function get_container($container){
-		$container = parent::get_container($container);
+	function &get_container($container){
+		$container = & parent::get_container($container);
 		
 		//Set up the parseable fields
 		$fields = array();
@@ -500,7 +502,7 @@ class blcPostMetaManager extends blcContainerManager {
 			return;
 		}
 		
-		$container = blc_get_container( array($this->container_type, intval($object_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($object_id)) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -512,7 +514,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_deleted($post_id){
 		//Get the associated container object
-		$container = blc_get_container( array($this->container_type, intval($post_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		//Delete it
 		$container->delete();
 		//Clean up any dangling links
@@ -528,7 +530,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_untrashed($post_id){
 		//Get the associated container object
-		$container = blc_get_container( array($this->container_type, intval($post_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -550,7 +552,5 @@ class blcPostMetaManager extends blcContainerManager {
 		return sprintf($delete_msg, $n);
 	}
 }
-
-blc_register_container('custom_field', 'blcPostMetaManager');
 
 ?>

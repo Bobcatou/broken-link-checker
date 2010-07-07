@@ -211,6 +211,8 @@ class blcPostContainerManager extends blcContainerManager {
    * @return void
    */
 	function init(){
+		parent::init();
+		
 		//These hooks update the synch & instance records when posts are added, deleted or modified.
 		add_action('delete_post', array(&$this,'post_deleted'));
         add_action('save_post', array(&$this,'post_saved'));
@@ -236,7 +238,7 @@ class blcPostContainerManager extends blcContainerManager {
    */
 	function post_deleted($post_id){
 		//Get the associated container object
-		$post_container = blc_get_container( array($this->container_type, intval($post_id)) );
+		$post_container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		//Delete it
 		$post_container->delete();
 		//Clean up any dangling links
@@ -252,7 +254,7 @@ class blcPostContainerManager extends blcContainerManager {
 	function post_saved($post_id){
 		//Get the container
 		$args = array($this->container_type, intval($post_id));
-		$post_container = blc_get_container( $args );
+		$post_container = & blcContainerHelper::get_container( $args );
 		
 		//Get the post
 		$post = $post_container->get_wrapped_object();
@@ -409,7 +411,7 @@ class blcPostContainerManager extends blcContainerManager {
 		}
 		
         //Iterate over all HTML links and modify the broken ones
-		$parser = blc_get_parser('link');
+		$parser = & blcParserHelper::get_parser('link');
 		$content = $parser->multi_edit($content, array(&$this, 'highlight_broken_link'), $broken_link_urls);
 		
 		return $content;
@@ -469,7 +471,5 @@ class blcPostContainerManager extends blcContainerManager {
 		echo '<style type="text/css">',$conf->options['broken_link_css'],'</style>';
 	}
 }
-
-blc_register_container('post', 'blcPostContainerManager');
 
 ?>

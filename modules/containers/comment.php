@@ -179,6 +179,8 @@ class blcCommentManager extends blcContainerManager {
 	var $container_class_name = 'blcComment';
 	
 	function init(){
+		parent::init();
+		
 		add_action('edit_comment', array(&$this, 'hook_modified_comment'));
 		add_action('unspammed_comment', array(&$this, 'hook_modified_comment'));
 		add_action('untrashed_comment', array(&$this, 'hook_modified_comment'));
@@ -196,14 +198,14 @@ class blcCommentManager extends blcContainerManager {
 		$comment = get_comment($comment_id);
 		
 		if ( $comment->comment_approved == '1'){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
 	}
 	
 	function hook_wp_insert_comment($comment_id, $comment){
 		if ( $comment->comment_approved == '1'){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
 	}
@@ -214,7 +216,7 @@ class blcCommentManager extends blcContainerManager {
 		}
 		
 		foreach($comment_ids as $comment_id){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->delete();
 		}
 		//Clean up any dangling links
@@ -222,7 +224,7 @@ class blcCommentManager extends blcContainerManager {
 	}
 	
 	function hook_comment_status($new_status, $old_status, $comment){
-		$container = blc_get_container(array($this->container_type, $comment->comment_ID));
+		$container = & blcContainerHelper::get_container(array($this->container_type, $comment->comment_ID));
 		if ( $new_status == 'approved' ){
 			$container->mark_as_unsynched();
 		} else {
@@ -350,5 +352,4 @@ class blcCommentManager extends blcContainerManager {
 	}	
 }
 
-blc_register_container('comment', 'blcCommentManager');
 ?>
