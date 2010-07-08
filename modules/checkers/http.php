@@ -22,7 +22,12 @@ class blcHttpChecker extends blcChecker {
 		parent::init();
 		
 		if ( function_exists('curl_init') ) {
-			$this->implementation = new blcCurlHttp();
+			$this->implementation = new blcCurlHttp(
+				$this->module_id, 
+				$this->cached_header,
+				$this->plugin_conf,
+				$this->module_manager
+			);
 		} else {
 			//Try to load Snoopy.
 			if ( !class_exists('Snoopy') ){
@@ -34,7 +39,12 @@ class blcHttpChecker extends blcChecker {
 			
 			//If Snoopy is available, it will be used in place of CURL.
 			if ( class_exists('Snoopy') ){
-				$this->implementation = new blcSnoopyHttp();
+				$this->implementation = new blcSnoopyHttp(
+					$this->module_id, 
+					$this->cached_header,
+					$this->plugin_conf,
+					$this->module_manager
+				);
 			}
 		}
 	}

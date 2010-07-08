@@ -19,7 +19,7 @@ MySQL 4.0 compatibility by Jeroen (www.yukka.eu)
 				Debugging stuff
 ************************************************/
 
-define('BLC_DEBUG', false);
+define('BLC_DEBUG', true);
 
 
 /***********************************************
@@ -119,7 +119,7 @@ global $blclog;
 $blclog = new blcDummyLogger;
 
 
-/*
+//*
 if ( constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
 	if ( !class_exists('FB') ) {
@@ -177,13 +177,31 @@ function blc_resynch( $forced = false ){
 		$blclog->info('... Resynchronization initiated');
 	}
 	
-	//Delete synch. records for container types that don't exist
-	$blclog->info('... Deleting invalid container records');
-	blcContainerHelper::cleanup_containers();
+	//Remove invalid DB entries
+	blc_cleanup_database();
 	
 	//(Re)create and update synch. records for all container types.
 	$blclog->info('... (Re)creating container records');
 	blcContainerHelper::resynch($forced);
+	
+	$blclog->info('... Setting resync. flags');
+	blc_got_unsynched_items();
+	
+	//All done.
+	$blclog->info('Database resynchronization complete.');
+}
+
+/**
+ * Delete synch. records, instances and links that refer to missing or invalid items.
+ * 
+ * @return void
+ */
+function blc_cleanup_database(){
+	global $blclog;
+	
+	//Delete synch. records for container types that don't exist
+	$blclog->info('... Deleting invalid container records');
+	blcContainerHelper::cleanup_containers();
 	
 	//Delete invalid instances
 	$blclog->info('... Deleting invalid link instances');
@@ -192,12 +210,6 @@ function blc_resynch( $forced = false ){
 	//Delete orphaned links
 	$blclog->info('... Deleting orphaned links');
 	blc_cleanup_links();
-	
-	$blclog->info('... Setting resync. flags');
-	blc_got_unsynched_items();
-	
-	//All done.
-	$blclog->info('Database resynchronization complete.');
 }
 
 /***********************************************

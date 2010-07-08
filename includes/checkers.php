@@ -90,7 +90,7 @@ class blcCheckerHelper {
 		$manager = & blcModuleManager::getInstance();
 		$active_checkers = $manager->get_active_by_category('checker'); 
 		
-		foreach($active_checkers as $module_id){
+		foreach($active_checkers as $module_id => $module_data){
 			$checker = & $manager->get_module($module_id);
 			
 			if ( !$checker ){

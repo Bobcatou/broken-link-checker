@@ -573,6 +573,7 @@ function blc_cleanup_instances(){
  			synch.container_id IS NULL";
 	$rez = $wpdb->query($q);
 	
+	//Delete instances that reference containers and parsers that are no longer active
 	$manager = & blcModuleManager::getInstance();
 	$active_containers = $manager->get_escaped_ids('container');
 	$active_parsers = $manager->get_escaped_ids('parser');
@@ -580,8 +581,8 @@ function blc_cleanup_instances(){
 	$q = "DELETE instances.*
 	      FROM {$wpdb->prefix}blc_instances AS instances
 	      WHERE
-	        instances.container_type NOT IN ({$loaded_containers}) OR
-	        instances.parser_type NOT IN ({$loaded_parsers})";
+	        instances.container_type NOT IN ({$active_containers}) OR
+	        instances.parser_type NOT IN ({$active_parsers})";
 	$rez2 = $wpdb->query($q);
 	
 	return ($rez !== false) && ($rez2 !== false);
