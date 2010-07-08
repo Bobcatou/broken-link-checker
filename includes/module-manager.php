@@ -250,7 +250,8 @@ class blcModuleManager {
 			}
 		}
 		
-		return $this->init_module($module_id);
+		$module = &$this->init_module($module_id);
+		return $module;
 	}
 	
 	/**

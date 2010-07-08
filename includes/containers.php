@@ -734,10 +734,7 @@ class blcContainerHelper {
 		global $wpdb;
 		
 		$module_manager = & blcModuleManager::getInstance();
-		$active_containers = $module_manager->get_active_by_category('container');
-		
-		$active_containers = array_map(array(&$wpdb, 'escape'), array_keys($active_containers));		
-		$active_containers = "'" . implode("', '", $active_containers) . "'";
+		$active_containers = $module_manager->get_escaped_ids('container');
 		
 		$q = "DELETE synch.*
 		      FROM {$wpdb->prefix}blc_synch AS synch

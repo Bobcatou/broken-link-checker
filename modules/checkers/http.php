@@ -70,7 +70,7 @@ class blcHttpCheckerBase extends blcChecker {
 	            '/&amp;/',					//convert improper HTML entities
 	            '/([\?&]sid=\w+)$/i'		//remove another flavour of session ID
 	        ),
-	        array('','','&','',''),
+	        array('','','&',''),
 	        $url
 		);
 	    $url = trim($url);

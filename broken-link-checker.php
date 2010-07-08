@@ -49,7 +49,7 @@ define('BLC_FOR_DISPLAY', 'display');
 //Load and initialize the plugin's configuration
 global $blc_directory;
 $blc_directory = dirname(__FILE__);
-require $blc_directory . '/config-manager.php';
+require $blc_directory . '/includes/config-manager.php';
 
 global $blc_config_manager;
 $blc_config_manager = new blcConfigurationManager(
@@ -113,7 +113,7 @@ $blc_config_manager = new blcConfigurationManager(
 				Logging
 ************************************************/
 
-include 'logger.php';
+include $blc_directory . '/includes/logger.php';
 
 global $blclog;
 $blclog = new blcDummyLogger;
@@ -134,104 +134,6 @@ if ( constant('BLC_DEBUG') ){
 /***********************************************
 				Global functions
 ************************************************/
-
-/**
- * Initialize link containers.
- * 
- * @uses do_action() on 'blc_init_containers' after all built-in link containers have been loaded.
- * @see blcContainer
- *
- * @return void
- */
-function blc_init_containers(){
-	global $blc_directory;
-	
-	//Only init once.
-	static $done = false;
-	if ( $done ) return;
-	
-	//Load the base container classes 
-	require $blc_directory . '/includes/containers.php';
-	
-	//Load built-in link containers
-	require $blc_directory . '/modules/containers/post.php';
-	require $blc_directory . '/modules/containers/blogroll.php';
-	require $blc_directory . '/modules/containers/custom_field.php';
-	require $blc_directory . '/modules/containers/dummy.php';
-	
-	$conf = & blc_get_configuration();
-	if ( $conf->options['check_comment_links'] ){	
-		require $blc_directory . '/modules/containers/comment.php';
-	}
-	
-	
-	//Notify other plugins that they may register their custom containers now.
-	do_action('blc_init_containers');
-	
-	$done = true;
-}
-
-/**
- * Initialize link parsers.
- *
- * @uses do_action() on 'blc_init_parsers' after all built-in parsers have been loaded.
- *
- * @return void
- */
-function blc_init_parsers(){
-	global $blc_directory;
-	
-	//Only init once.
-	static $done = false;
-	if ( $done ) return;
-	
-	//Load the base parser classes
-	require $blc_directory . '/includes/parsers.php';
-	
-	//Load built-in parsers
-	require $blc_directory . '/modules/parsers/html_link.php';
-	require $blc_directory . '/modules/parsers/image.php';
-	require $blc_directory . '/modules/parsers/metadata.php';
-	require $blc_directory . '/modules/parsers/url_field.php';
-	
-	do_action('blc_init_parsers');
-	$done = true;
-}
-
-/**
- * Initialize link checkers.
- *
- * @uses do_action() on 'blc_init_checkers' after all built-in checker implementations have been loaded.
- *
- * @return void
- */
-function blc_init_checkers(){
-	global $blc_directory;
-	
-	//Only init once.
-	static $done = false;
-	if ( $done ) return;	
-	
-	//Load the base classes for link checker algorithms
-	require $blc_directory . '/includes/checkers.php';
-	
-	//Load built-in checker implementations (only HTTP at the time)
-	require $blc_directory . '/modules/checkers/http.php';
-
-	do_action('blc_init_checkers');
-	$done = true;
-}
-
-/**
- * Load and register all containers, parsers and checkers.
- *
- * @return void
- */
-function blc_init_all_components(){
-	blc_init_containers();
-	blc_init_parsers();
-	blc_init_checkers();
-}
 
 /**
  * Get the configuration object used by Broken Link Checker.
@@ -277,11 +179,11 @@ function blc_resynch( $forced = false ){
 	
 	//Delete synch. records for container types that don't exist
 	$blclog->info('... Deleting invalid container records');
-	blc_cleanup_containers(); 
+	blcContainerHelper::cleanup_containers();
 	
 	//(Re)create and update synch. records for all container types.
 	$blclog->info('... (Re)creating container records');
-	blc_resynch_containers($forced);
+	blcContainerHelper::resynch($forced);
 	
 	//Delete invalid instances
 	$blclog->info('... Deleting invalid link instances');
@@ -360,14 +262,13 @@ add_action('admin_notices', 'blc_print_installation_errors');
 				Main functionality
 ************************************************/
 
-//Load the base classes
+//Load the base classes and utilities
 require $blc_directory . '/includes/links.php';
 require $blc_directory . '/includes/instances.php';
+require $blc_directory . '/includes/utility-class.php';
 
 //Load the module subsystem
-require $blc_directory . '/includes/module-manager.php';
-require $blc_directory . '/includes/module-base.php';
-
+require $blc_directory . '/includes/modules.php';
 $blc_module_manager = & blcModuleManager::getInstance(array( 
 		//List of modules active by default 
 		'http',             //Link checker for the HTTP(s) protocol
@@ -382,35 +283,25 @@ $blc_module_manager = & blcModuleManager::getInstance(array(
 		'dummy',            //Dummy container used as a fallback
 ));
 
+//Load the modules that want to be executed in all contexts
+$blc_module_manager->load_modules('all');
+
 if ( is_admin() || defined('DOING_CRON') ){
 	
-	//It's an admin-side or Cron request. Load all plugin components.
-	add_action('plugins_loaded', 'blc_init_all_components');
-	require $blc_directory . '/utility-class.php';
+	//It's an admin-side or Cron request. Load the core.
 	require $blc_directory . '/core.php';
 	$ws_link_checker = new wsBrokenLinkChecker( __FILE__ , $blc_config_manager );
 	
 } else {
 	
 	//This is user-side request, so we don't need to load the core.
-	//We do need to load containers (for the purposes of catching
-	//new comments and such). 
-	add_action('plugins_loaded', 'blc_init_containers');
-	
-	//If broken links need to be marked, we also need to load parsers
-	//(used to find & modify links) and utilities (used by some parsers).
-	if ( $blc_config_manager->options['mark_broken_links'] || $blc_config_manager->options['nofollow_broken_links'] ){
-		require $blc_directory . '/utility-class.php';
-		add_action('plugins_loaded', 'blc_init_parsers');
-	}
-	
-	//And possibly inject the CSS for removed links
+	//We might need to inject the CSS for removed links, though.
 	if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
-		function blc_print_remove_link_css(){
+		function blc_print_removed_link_css(){
 			global $blc_config_manager;
 			echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
 		}
-		add_action('wp_head', 'blc_print_remove_link_css');
+		add_action('wp_head', 'blc_print_removed_link_css');
 	}
 }
 

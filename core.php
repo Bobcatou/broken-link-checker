@@ -333,9 +333,6 @@ class wsBrokenLinkChecker {
         $this->conf->save_options();
         $blclog->info('Installation/update begins.');
         
-        $blclog->info('Initializing components...');
-    	blc_init_all_components();
-    	
     	//Prepare the database.
     	$blclog->info('Upgrading the database...');
         $this->upgrade_database();
@@ -660,9 +657,7 @@ EOZ;
 	 * @return void
 	 */
 	function database_maintenance(){
-		blc_init_all_components();
-		
-		blc_cleanup_containers();
+		blcContainerHelper::cleanup_containers();
 		blc_cleanup_instances();
 		blc_cleanup_links();
 		
@@ -871,7 +866,7 @@ EOZ;
             $this->conf->options['check_comment_links'] = !empty($_POST['check_comment_links']);
             //If comment link checking was just turned on we need to load the comment manager
 			//and re-parse comments for new links. This is quite hack-y.
-			//TODO: More elegant handling of freshly enabled/disabled container types 
+			//TODO: More elegant handling of freshly enabled/disabled modules 
             if ( !$old_setting && $this->conf->options['check_comment_links'] ){
             	include $blc_directory . '/includes/containers/comment.php';
             	$containerRegistry = & blcContainerRegistry::getInstance();
@@ -893,8 +888,7 @@ EOZ;
 			 inefficient.  
 			 */
 			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-				$containerRegistry = & blcContainerRegistry::getInstance();
-				$manager = $containerRegistry->get_manager('custom_field');
+				$manager = & blcContainerHelper::get_manager('custom_field');
 				if ( !is_null($manager) ){
 					$manager->resynch();
 					blc_got_unsynched_items();
@@ -1097,7 +1091,7 @@ EOZ;
         		<input type="checkbox" name="send_email_notifications" id="send_email_notifications"
             	<?php if ($this->conf->options['send_email_notifications']) echo ' checked="checked"'; ?>/>
             	<?php _e('Send me e-mail notifications about newly detected broken links', 'broken-link-checker'); ?>
-			</label><br>
+			</label><br />
 			</p>
         </td>
         </tr>
@@ -1916,8 +1910,6 @@ EOZ;
    * @return array Confirmation message and its CSS class.
    */
 	function do_bulk_delete_sources($selected_links){
-		$blc_container_registry = & blcContainerRegistry::getInstance();
-		
 		$message = '';
 		$msg_class = 'updated';
 		
@@ -1951,7 +1943,7 @@ EOZ;
 			}
 			
 			//Instantiate the containers
-			$containers = blc_get_containers($containers);
+			$containers = blcContainerHelper::get_containers($containers);
 
 			//Delete their associated entities
 			$deleted = array();
@@ -1976,7 +1968,7 @@ EOZ;
 			
 			//Generate delete confirmation messages
 			foreach($deleted as $container_type => $number){
-				$messages[] = $blc_container_registry->ui_bulk_delete_message($container_type, $number);
+				$messages[] = blcContainerHelper::ui_bulk_delete_message($container_type, $number);
 			}
 			
 			if ( count($messages) > 0 ){
@@ -2355,7 +2347,7 @@ EOZ;
 			
 			//FB::log("Looking for containers that need parsing...");
 			
-			while( $containers = blc_get_unsynched_containers(50) ){
+			while( $containers = blcContainerHelper::get_unsynched_containers(50) ){
 				//FB::log($containers, 'Found containers');
 				
 				foreach($containers as $container){
@@ -2496,15 +2488,9 @@ EOZ;
 		
 		//Only check links that have at least one valid instance (i.e. an instance exists and 
 		//it corresponds to one of the currently loaded container/parser types).
-		$containerRegistry = & blcContainerRegistry::getInstance();
-		$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-		$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
-		$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
-		
-		$parserRegistry = & blcParserRegistry::getInstance();
-		$loaded_parsers = array_keys($parserRegistry->get_registered_parsers());
-		$loaded_parsers = array_map(array(&$wpdb, 'escape'), $loaded_parsers);
-		$loaded_parsers = "'" . implode("', '", $loaded_parsers) . "'";
+		$manager = & blcModuleManager::getInstance();
+		$loaded_containers = $manager->get_escaped_ids('container');
+		$loaded_parsers = $manager->get_escaped_ids('parser');
 		
 		//Note : This is a slow query, but AFAIK there is no way to speed it up.
 		//I could put an index on last_check_attempt, but that value is almost 

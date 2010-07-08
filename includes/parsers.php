@@ -97,7 +97,7 @@ class blcParser extends blcModule {
 	
   /**
    * Turn a relative URL into an absolute one.
-   *
+   * 
    * @param string $url Relative URL.
    * @param string $base_url Base URL. If omitted, the blog's root URL will be used.
    * @return string
