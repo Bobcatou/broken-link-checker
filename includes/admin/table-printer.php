@@ -239,9 +239,10 @@ class blcTablePrinter {
 		
 		if ( !empty($instances) ){
 			//Try to find one that matches the selected link type, if any
-			if( !empty($this->search_params['s_link_type']) ){
+			if( !empty($this->current_filter['search_params']['s_link_type']) ){
+				$s_link_type = $this->current_filter['search_params']['s_link_type'];
 				foreach($instances as $candidate){
-					if ( ($candidate->container_type == $this->search_params['s_link_type']) || ($candidate->parser_type == $this->search_params['s_link_type']) ){
+					if ( ($candidate->container_type == $s_link_type) || ($candidate->parser_type == $s_link_type) ){
 						$instance = $candidate;
 						break;
 					}

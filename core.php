@@ -1363,14 +1363,14 @@ EOZ;
 			echo '<div id="message" class="'.$msg_class.' fade"><p>'.$message.'</p></div>';
 		}
 		
+		$start_time = microtime_float();
+		
         //Load custom filters, if any
         $blc_link_query->load_custom_filters();
 		
 		//Calculate the number of links matching each filter
 		$blc_link_query->count_filter_results();
 		
-		$filters = $blc_link_query->get_filters();
-
 		//Get the selected filter (defaults to displaying broken links)
 		$selected_filter_id = isset($_GET['filter_id'])?$_GET['filter_id']:'broken';
 		$current_filter = $blc_link_query->exec_filter($selected_filter_id, 'broken');
@@ -1411,10 +1411,11 @@ EOZ;
 			);
 			$table->print_table('classic');
 
-        }; 
+        };
+		printf('<!-- Total elapsed : %.4f seconds -->', microtime_float() - $start_time);//TODO: Remove debug code 
         
 		//Load assorted JS event handlers and other shinies
-		include dirname($this->loader) . '/includes/admin/links-page-js.php'; 
+		include dirname($this->loader) . '/includes/admin/links-page-js.php';
 		
 		?></div><?php
     } 

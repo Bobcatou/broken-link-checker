@@ -189,8 +189,8 @@ class blcCurlHttp extends blcHttpCheckerBase {
         
         $parts = @parse_url($url);
         if( $parts['scheme'] == 'https' ){
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); //Required to make HTTPS URLs work.
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); //Likewise.
+        	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //Required to make HTTPS URLs work.
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
             $nobody = false; //Can't use HEAD with HTTPS.
         }
         
