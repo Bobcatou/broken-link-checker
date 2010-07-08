@@ -5,8 +5,8 @@ table#blc-links {
 	table-layout: fixed;
 }
 
-td.blc-link-details {
-	width: 100%;
+tr.blc-link-details {
+	display: none;
 }
 
 .blc-detail-container {

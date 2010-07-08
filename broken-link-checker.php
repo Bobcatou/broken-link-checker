@@ -276,6 +276,7 @@ add_action('admin_notices', 'blc_print_installation_errors');
 
 //Load the base classes and utilities
 require $blc_directory . '/includes/links.php';
+require $blc_directory . '/includes/link-query.php';
 require $blc_directory . '/includes/instances.php';
 require $blc_directory . '/includes/utility-class.php';
 

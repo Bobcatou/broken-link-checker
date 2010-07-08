@@ -1372,53 +1372,16 @@ EOZ;
 		$filters = $blc_link_query->get_filters();
 
 		//Get the selected filter (defaults to displaying broken links)
-		$filter_id = isset($_GET['filter_id'])?$_GET['filter_id']:'broken';
-		$current_filter = $blc_link_query->get_filter($filter_id);
-		if ( empty($current_filter) ){
-			$filter_id = 'broken';
-			$current_filter = $blc_link_query->get_filter('broken');
-			
-		}
+		$selected_filter_id = isset($_GET['filter_id'])?$_GET['filter_id']:'broken';
+		$current_filter = $blc_link_query->exec_filter($selected_filter_id, 'broken');
 		
-		//Get the desired page number (must be > 0) 
-		$page = isset($_GET['paged'])?intval($_GET['paged']):'1';
-		if ($page < 1) $page = 1;
-		
-		//Links per page [1 - 200]
-		$per_page = isset($_GET['per_page'])?intval($_GET['per_page']):'30';
-		if ($per_page < 1){
-			$per_page = 30;
-		} else if ($per_page > 200){
-			$per_page = 200;
-		}
-		
-		//Calculate the maximum number of pages.
-		$max_pages = ceil($current_filter['count'] / $per_page);
-		
-		//Select the required links
-		$extra_params = array(
-			'offset' => ( ($page-1) * $per_page ),
-			'max_results' => $per_page,
-			'purpose' => BLC_FOR_DISPLAY,
-		);
-		$links = $blc_link_query->get_filter_links($current_filter, $extra_params);
+		//exec_filter() returns an array with filter data, including the actual filter ID that was used.
+		$filter_id = $current_filter['filter_id'];
 		
 		//Error?		
-		if ( empty($links) && !empty($wpdb->last_error) ){
+		if ( empty($current_filter['links']) && !empty($wpdb->last_error) ){
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
-		
-		//If the current request is a user-initiated search query (either directly or 
-		//via a custom filter), save the search params. They can later be used to pre-fill
-		//the search form or build a new/modified custom filter. 
-		if ( !empty($current_filter['custom']) || ($filter_id == 'search') ){
-			$search_params = $blc_link_query->get_search_params($current_filter);
-		}
-		
-		//Figure out what the "safe" URL to acccess the current page would be.
-		//This is used by the bulk action form. 
-		$special_args = array('_wpnonce', '_wp_http_referer', 'action', 'selected_links');
-		$neutral_current_url = remove_query_arg($special_args);
 		
 		//Add the "Feedback" widget to the screen meta bar
 		$this->print_uservoice_widget();
@@ -1426,288 +1389,35 @@ EOZ;
         
 <script type='text/javascript'>
 	var blc_current_filter = '<?php echo $filter_id; ?>';
-	var blc_is_broken_filter = <?php
-		//TODO: Simplify this. Maybe overhaul the filter system to let us query the effective filter.
-		$is_broken_filter = 
-			($filter_id == 'broken') 
-			|| ( isset($current_filter['params']['s_filter']) && ($current_filter['params']['s_filter'] == 'broken') )
-			|| ( isset($_GET['s_filter']) && ($_GET['s_filter'] == 'broken') );
-		echo $is_broken_filter ? 'true' : 'false';
-	?>;
+	var blc_is_broken_filter = <?php echo $current_filter['is_broken_filter'] ? 'true' : 'false'; ?>;
 </script>
         
 <div class="wrap">
-<h2><?php
-	//Output a header matching the current filter
-	if ( $current_filter['count'] > 0 ){
-		echo $current_filter['heading'] . " (<span class='current-link-count'>{$current_filter['count']}</span>)";
-	} else {
-		echo $current_filter['heading_zero'] . "<span class='current-link-count'></span>";
-	}
-?>
-</h2>
-	<ul class="subsubsub">
-    	<?php
-    		//Construct a submenu of filter types
-    		$items = array();
-			foreach ($filters as $filter => $data){
-				if ( !empty($data['hidden']) ) continue; //skip hidden filters
-																
-				$class = $number_class = '';
-				
-				if ( $filter_id == $filter ) {
-					$class = 'class="current"';
-					$number_class = 'current-link-count';	
-				}
-				
-				$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' $class>
-					{$data['name']}</a> <span class='count'>(<span class='$number_class'>{$data['count']}</span>)</span>";
-			}
-			echo implode(' |</li>', $items);
-			unset($items);
-		?>
-	</ul>
-	
-<?php
+	<?php
+		$blc_link_query->print_filter_heading($current_filter);
+		$blc_link_query->print_filter_menu($filter_id);
+		
 		//Display the "Search" form and associated buttons.
-		//The form requires the $filter_id and $search_params variables to be set.
+		//The form requires the $filter_id and $current_filter variables to be set.
 		include dirname($this->loader) . '/includes/admin/search-form.php';
 
+		//Display the links, if any
+        if( $current_filter['links'] && ( count($current_filter['links']) > 0 ) ) {
+        	
+			include dirname($this->loader) . '/includes/admin/table-printer.php';
+			$table = new blcTablePrinter(
+				$current_filter,
+				$this
+			);
+			$table->print_table('classic');
 
-		//Do we have any links to display?
-        if( $links && ( count($links) > 0 ) ) {
-?>
-<!-- The link list -->
-<form id="blc-bulk-action-form" action="<?php echo $neutral_current_url;  ?>" method="post">
-	<?php 
-		wp_nonce_field('bulk-action');
-		
-		$bulk_actions = array(
-			'-1' => __('Bulk Actions', 'broken-link-checker'),
-			"bulk-recheck" => __('Recheck', 'broken-link-checker'),
-			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
-			"bulk-not-broken" => __('Mark as not broken', 'broken-link-checker'),
-			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
-			"bulk-delete-sources" => __('Delete sources', 'broken-link-checker'),
-		);
-		
-		$bulk_actions_html = '';
-		foreach($bulk_actions as $value => $name){
-			$bulk_actions_html .= sprintf('<option value="%s">%s</option>', $value, $name);
-		} 
-	?>
-	
-	<div class='tablenav'>
-		<div class="alignleft actions">
-			<select name="action" id="blc-bulk-action">
-				<?php echo $bulk_actions_html; ?>
-			</select>
-			<input type="submit" name="doaction" id="doaction" value="<?php echo esc_attr(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
-		</div>
-		<?php
-			//Display pagination links 
-			$page_links = paginate_links( array(
-				'base' => add_query_arg( 'paged', '%#%' ),
-				'format' => '',
-				'prev_text' => __('&laquo;'),
-				'next_text' => __('&raquo;'),
-				'total' => $max_pages,
-				'current' => $page
-			));
-			
-			if ( $page_links ) { 
-				echo '<div class="tablenav-pages">';
-				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
-					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
-					number_format_i18n( min( $page * $per_page, $current_filter['count'] ) ),
-					number_format_i18n( $current_filter['count'] ),
-					$page_links
-				); 
-				echo $page_links_text; 
-				echo '</div>';
-			}
-		?>
-	
-	</div>
-            <table class="widefat" id="blc-links">
-                <thead>
-                <tr>
-
-				<th scope="col" id="cb" class="check-column">
-					<input type="checkbox">
-				</th>
-                <th scope="col" class="column-title blc-column-source"><?php _e('Source', 'broken-link-checker'); ?></th>
-                <th scope="col" class="blc-column-link-text"><?php _e('Link Text', 'broken-link-checker'); ?></th>
-                <th scope="col" class="blc-column-url"><?php _e('URL', 'broken-link-checker'); ?></th>
-                </tr>
-                </thead>
-                <tbody id="the-list">
-            <?php
-            $rowclass = ''; $rownum = 0;
-            foreach ($links as $link) {
-            	$rownum++;
-            	
-            	$rowclass = ($rownum % 2)? 'alternate' : '';
-            	$excluded = $this->is_excluded( $link->url ); 
-            	if ( $excluded ) $rowclass .= ' blc-excluded-link';
-            	
-            	if ( $link->redirect_count > 0){
-					$rowclass .= ' blc-redirect';
-				}
-            	
-            	$days_broken = 0;
-            	if ( $link->broken ){
-					$rowclass .= ' blc-broken-link';
-					
-					//Add a highlight to broken links that appear to be permanently broken
-					$days_broken = intval( (time() - $link->first_failure) / (3600*24) );
-					if ( $days_broken >= $this->conf->options['failure_duration_threshold'] ){
-						$rowclass .= ' blc-permanently-broken';
-						if ( $this->conf->options['highlight_permanent_failures'] ){
-							$rowclass .= ' blc-permanently-broken-hl';
-						}
-					}
-				}
-				
-            	
-                ?>
-                <tr id='<?php echo "blc-row-" . $link->link_id; ?>' class='blc-row <?php echo $rowclass; ?>' days_broken="<?php echo $days_broken; ?>">
-                
-				<th class="check-column" scope="row">
-					<input type="checkbox" name="selected_links[]" value="<?php echo $link->link_id; ?>">
-				</th>
-				                
-                <td class='post-title column-title'>
-                	<span class='blc-link-id' style='display:none;'><?php echo $link->link_id; ?></span> 	
-               <?php
-					
-				//Pick one link instance to display in the table
-				$instance = null;
-				$instances = $link->get_instances();
-				
-				if ( !empty($instances) ){
-					//Try to find one that matches the selected link type, if any
-					if( !empty($search_params['s_link_type']) ){
-						foreach($instances as $candidate){
-							if ( ($candidate->container_type == $search_params['s_link_type']) || ($candidate->parser_type == $search_params['s_link_type']) ){
-								$instance = $candidate;
-								break;
-							}
-						}
-					}
-					//If there's no specific link type set, or no suitable instances were found,
-					//just use the first one.
-					if ( is_null($instance) ){
-						$instance = $instances[0];
-					}
-
-				}
-				
-				//Print the contents of the "Source" column
-				if ( !is_null($instance) ){
-					echo $instance->ui_get_source();
-					
-					$actions = $instance->ui_get_action_links();
-					
-					echo '<div class="row-actions">';
-					echo implode(' | </span>', $actions);
-					echo '</div>';
-					
-				} else {
-					_e("[An orphaned link! This is a bug.]", 'broken-link-checker');
-				}
-
-				  	?>
-				</td>
-                <td class='blc-link-text'><?php
-                //The "Link text" column
-				if ( !is_null($instance) ){
-					echo $instance->ui_get_link_text();
-				} else {
-					echo '<em>N/A</em>';
-				}
-				?>
-				</td>
-                <td class='column-url'>
-                    <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
-                    	<?php print blcUtility::truncate($link->url, 50, ''); ?></a>
-                    <input type='text' id='link-editor-<?php print $rownum; ?>' 
-                    	value="<?php print esc_attr($link->url); ?>" 
-                        class='blc-link-editor' style='display:none' />
-                <?php
-                	//Output inline action links for the link/URL                  	
-                  	$actions = array();
-                  	
-					$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
-                  	
-					$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-						"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
-					
-					if ( $link->broken ){
-						$actions['discard'] = sprintf(
-							'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
-							esc_attr(__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')),
-							__('Not broken', 'broken-link-checker')
-						);
-					}
-					
-					$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
-					
-					echo '<div class="row-actions">';
-					echo implode(' | </span>', $actions);
-					
-					echo "<span style='display:none' class='blc-cancel-button-container'> " .
-						 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
-
-					echo '</div>';
-                ?>
-                </td>
-
-                </tr>
-                <!-- Link details -->
-                <tr id='<?php print "link-details-$rownum"; ?>' style='display:none;' class='blc-link-details'>
-					<td colspan='4'><?php $this->link_details_row($link); ?></td>
-				</tr><?php
-            }
-            ?></tbody></table>
-            
-	<div class="tablenav">			
-		<div class="alignleft actions">
-			<select name="action2"  id="blc-bulk-action2">
-				<?php echo $bulk_actions_html; ?>
-			</select>
-			<input type="submit" name="doaction2" id="doaction2" value="<?php echo esc_attr(__('Apply', 'broken-link-checker')); ?>" class="button-secondary action">
-		</div><?php
-            
-            //Also display pagination links at the bottom
-            if ( $page_links ) {
-				echo '<div class="tablenav-pages">';
-				$page_links_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of <span class="current-link-count">%s</span>', 'broken-link-checker' ) . '</span>%s',
-					number_format_i18n( ( $page - 1 ) * $per_page + 1 ),
-					number_format_i18n( min( $page * $per_page, $current_filter['count'] ) ),
-					number_format_i18n( $current_filter['count'] ),
-					$page_links
-				); 
-				echo $page_links_text; 
-				echo '</div>';
-			}
-?>
-	</div>
-	
-</form>
-<?php
-
-        }; //End of the links table & assorted nav stuff
+        }; 
         
-?>
-
-		<?php
-			//Load assorted JS event handlers and other shinies
-			include dirname($this->loader) . '/includes/admin/links-page-js.php'; 
-		?>
-</div>
-        <?php
-    } //Function ends
+		//Load assorted JS event handlers and other shinies
+		include dirname($this->loader) . '/includes/admin/links-page-js.php'; 
+		
+		?></div><?php
+    } 
     
   /**
    * Create a custom link filter using params passed in $_POST.

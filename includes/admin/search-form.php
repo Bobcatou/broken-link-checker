@@ -1,3 +1,6 @@
+<?php
+	$search_params = $current_filter['search_params'];
+?>
 <div class="search-box">
 	
 	<?php
