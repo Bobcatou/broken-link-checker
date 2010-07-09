@@ -77,10 +77,10 @@ class blcModuleManager {
 		
 		foreach($modules as $module_filename => $module_header){
 			//Figure out the module ID. If not specified, it is equal to module's filename (sans the .php)
-			if ( isset($module_header['ModuleID']) ){
+			if ( !empty($module_header['ModuleID']) ){
 				$module_id = strtolower(trim($module_header['ModuleID']));
 			} else {
-				$module_id = str_replace('.php', '', strtolower(basename($module_filename)));
+				$module_id = strtolower(basename($module_filename, '.php'));
 			}
 			
 			$module_header['ModuleID'] = $module_id;   //Just for consistency
