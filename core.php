@@ -763,14 +763,7 @@ EOZ;
     function options_page(){
     	global $blclog, $blc_directory;
     	
-    	/*
-    	echo '<pre>';//xxxx 
-    	$manager = &blcModuleManager::getInstance();
-    	$modules = $manager->get_escaped_ids('parser');
-    	print_r($modules);
-    	//var_dump($manager);
-    	echo '</pre>';
-    	//*/
+    	$moduleManager = &blcModuleManager::getInstance();;
     	
     	//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -792,6 +785,12 @@ EOZ;
         
         if(isset($_POST['submit'])) {
 			check_admin_referer('link-checker-options');
+			
+			//Activate/deactivate modules
+			if ( !empty($_POST['module']) ){
+				$active = array_keys($_POST['module']);
+				$moduleManager->set_active_modules($active);
+			}
 			
 			//The execution time limit must be above zero
             $new_execution_time = intval($_POST['max_execution_time']);
@@ -869,22 +868,6 @@ EOZ;
 				$this->options['last_notification_sent'] = time();
 			}
             $this->conf->options['send_email_notifications'] = $email_notifications;
-            
-            //Comment link checking on/off
-            $old_setting = $this->conf->options['check_comment_links'];
-            $this->conf->options['check_comment_links'] = !empty($_POST['check_comment_links']);
-            //If comment link checking was just turned on we need to load the comment manager
-			//and re-parse comments for new links. This is quite hack-y.
-			//TODO: More elegant handling of freshly enabled/disabled modules 
-            if ( !$old_setting && $this->conf->options['check_comment_links'] ){
-            	include $blc_directory . '/includes/containers/comment.php';
-            	$containerRegistry = & blcContainerRegistry::getInstance();
-            	$comment_manager = $containerRegistry->get_manager('comment');
-            	if ( $comment_manager ){
-            		$comment_manager->resynch();
-            		blc_got_unsynched_items();
-            	}
-            }
             
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
@@ -1080,19 +1063,6 @@ EOZ;
         </tr>
         
         <tr valign="top">
-        <th scope="row"><?php _e('Comment links', 'broken-link-checker'); ?></th>
-        <td>
-        	<p style="margin-top: 0px;">
-        	<label for='check_comment_links'>
-        		<input type="checkbox" name="check_comment_links" id="check_comment_links"
-            	<?php if ($this->conf->options['check_comment_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e('Check comment links', 'broken-link-checker'); ?>
-			</label><br>
-			</p>
-        </td>
-        </tr>
-        
-        <tr valign="top">
         <th scope="row"><?php _e('E-mail notifications', 'broken-link-checker'); ?></th>
         <td>
         	<p style="margin-top: 0px;">
@@ -1273,6 +1243,26 @@ EOZ;
         </td>
         </tr>
         
+        </table>
+        
+        <h3><?php _e('Modules','broken-link-checker'); ?></h3>
+        
+        <table class="form-table">
+        	<?php
+        	$modules = $moduleManager->get_modules();
+        	
+        	foreach($modules as $module_id => $module_data){
+        		printf(
+        			'<tr valing="top"><th scope="row"><label>'.
+        				'<input type="checkbox" name="module[%s]" id="module-%s"%s /> %s'.
+       				'</label></th></tr>',
+       				$module_id,
+       				$module_id,
+       				$moduleManager->is_active($module_id)?' checked="checked"':'',
+       				$module_data['Name']
+				);
+        	}
+        	?>
         </table>
         
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>

@@ -91,12 +91,23 @@ class blcCheckerHelper {
 		$active_checkers = $manager->get_active_by_category('checker'); 
 		
 		foreach($active_checkers as $module_id => $module_data){
+			//Try the URL pattern in the header first. If it doesn't match,
+			//we can avoid loading the module altogether.
+			if ( !empty($module_data['ModuleCheckerUrlPattern']) ){
+				if ( !preg_match($module_data['ModuleCheckerUrlPattern'], $url) ){
+					continue;
+				}
+			}
+			
 			$checker = & $manager->get_module($module_id);
 			
 			if ( !$checker ){
 				continue;
 			}
 			
+			//The can_check() method can perform more sophisticated filtering,
+			//or just return true if the checker thinks matching the URL regex
+			//is sufficient.
 			if ( $checker->can_check($url, $parsed) ){
 				return $checker;
 			}

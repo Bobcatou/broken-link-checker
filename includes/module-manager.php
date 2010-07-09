@@ -59,6 +59,10 @@ class blcModuleManager {
 		}
 		
 		$relative_path = '/' . plugin_basename($this->module_dir);
+		if ( !function_exists('get_plugins') ){
+			//FIXME: Potentional security flaw/bug. plugin.php is not meant to be loaded outside admin panel.
+			require_once(ABSPATH . 'wp-admin/includes/plugin.php'); 
+		}
 		$modules = get_plugins( $relative_path );
 		
 		//Default values for optional module header fields
@@ -265,11 +269,12 @@ class blcModuleManager {
 	 * Uses cached module info if available.
 	 * 
 	 * @param string $module_id
+	 * @param bool $use_active_cache Check the active module cache first. Defaults to true.
 	 * @return array Associative array of module data, or FALSE if the specified module was not found.
 	 */
-	function get_module_data($module_id){
+	function get_module_data($module_id, $use_active_cache = true){
 		//Check active modules first
-		if ( isset($this->plugin_conf->options['active_modules'][$module_id]) ){
+		if ( $use_active_cache && isset($this->plugin_conf->options['active_modules'][$module_id]) ){
 			return $this->plugin_conf->options['active_modules'][$module_id];
 		}
 		
@@ -344,7 +349,7 @@ class blcModuleManager {
 		}
 		
 		//Retrieve the module header
-		$module_data = $this->get_module_data($module_id);
+		$module_data = $this->get_module_data($module_id, false);
 		if ( !$module_data ){
 			return false;
 		}
@@ -415,6 +420,9 @@ class blcModuleManager {
 			$this->activate($module_id);
 		}
 		
+		//Ensure all active modules have the latest headers
+		$this->refresh_active_module_cache();
+		
 		//Invalidate the per-category active module cache
 		$this->_category_cache_active = null;
 	}
@@ -425,6 +433,10 @@ class blcModuleManager {
 	 * @return void
 	 */
 	function plugin_activated(){
+		//Ensure all active modules have the latest headers
+		$this->refresh_active_module_cache();
+		
+		//Notify them that we've been activated
 		$active = $this->get_active_modules();
 		foreach($active as $module_id => $module_data){
 			$module = & $this->get_module($module_id);
@@ -565,6 +577,7 @@ class blcModuleManager {
 			'ModuleLazyInit',
 			'ModuleClassName',
 			'ModulePriority',
+			'ModuleCheckerUrlPattern',
 		);
 		
 		return array_merge($headers, $module_headers);

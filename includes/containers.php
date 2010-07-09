@@ -96,6 +96,7 @@ class blcContainerManager extends blcModule {
 	 */
 	function activated(){
 		$this->resynch();
+		blc_got_unsynched_items();
 	}
 	
   /**

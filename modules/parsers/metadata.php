@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Custom fields
+Plugin Name: Metadata
 Description: Parses metadata (AKA custom fields)
 Version: 1.0
 Author: Janis Elsts
