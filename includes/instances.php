@@ -125,6 +125,16 @@ class blcLinkInstance {
 			//indicating success.
 			$this->raw_url = $result;
 			return true;
+		} elseif ( is_array($result) ){
+			//More advanced containers/parsers may return an array of values to 
+			//modify several fields at once.
+			$allowed_fields = array('raw_url', 'link_text', 'link_context');
+			foreach($result as $key => $value){
+				if ( in_array($key, $allowed_fields) ){
+					$this->$key = $value;
+				}
+			}
+			return true;
 		} else {
 			//Otherwise, it will return an error object. In this case we'll 
 			//just pass it back to the caller and let them sort it out. 

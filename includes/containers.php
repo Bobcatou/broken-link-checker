@@ -419,7 +419,7 @@ class blcContainer {
    * @param string $new_url
    * @param string $old_url
    * @param string $old_raw_url
-   * @return string|WP_Error The new value of raw_url on success, or an error object if something went wrong.
+   * @return array|WP_Error The new value of raw_url on success, or an error object if something went wrong.
    */
 	function edit_link($field_name, $parser, $new_url, $old_url = '', $old_raw_url = ''){
 		//Ensure we're operating on a consistent copy of the wrapped object.
@@ -458,8 +458,9 @@ class blcContainer {
 			return $update_result;
 		}
 		
-		//Return the new "raw" URL.
-		return $edit_result['raw_url'];
+		//Return the new values to the instance.
+		unset($edit_result['content']); //(Except content, which it doesn't need.)
+		return $edit_result;
 	}
 	
   /**
