@@ -61,7 +61,7 @@ $blc_config_manager = new blcConfigurationManager(
         'check_threshold' => 72, 		//(in hours) Check each link every 72 hours.
         
         'recheck_count' => 3, 			//How many times a broken link should be re-checked. 
-		'recheck_threshold' => 20*60,	//(in seconds) Re-check broken links after 20 minutes.   
+		'recheck_threshold' => 30*60,	//(in seconds) Re-check broken links after 30 minutes.   
 		
 		'run_in_dashboard' => true,		//Run the link checker algo. continuously while the Dashboard is open.
 		'run_via_cron' => true,			//Run it hourly via WordPress pseudo-cron.
