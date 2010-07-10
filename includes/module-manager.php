@@ -390,10 +390,32 @@ class blcModuleManager {
 		}
 		
 		unset($this->plugin_conf->options['active_modules'][$module_id]);
+		//Keep track of when each module was last deactivated. Used for parser resynchronization.
+		if ( isset($this->plugin_conf->options['module_deactivated_when']) ){
+			$this->plugin_conf->options['module_deactivated_when'][$module_id] = current_time('timestamp');
+		} else {
+			$this->plugin_conf->options['module_deactivated_when'] = array(
+				$module_id => current_time('timestamp'),
+			);
+		}
 		$this->plugin_conf->save_options();
 		
 		$this->_category_cache_active = null; //Invalidate the by-category cache since we just changed something		
 		return true;
+	}
+	
+	/**
+	 * Determine when a module was last deactivated.
+	 * 
+	 * @param string $module_id Module ID.
+	 * @return int Timestamp of last deactivation, or 0 if the module has never been deactivated.
+	 */
+	function get_last_deactivation_time($module_id){
+		if ( isset($this->plugin_conf->options['module_deactivated_when'][$module_id]) ){
+			return $this->plugin_conf->options['module_deactivated_when'][$module_id];
+		} else {
+			return 0;
+		}
 	}
 	
 	/**

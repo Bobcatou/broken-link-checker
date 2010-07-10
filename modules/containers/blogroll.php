@@ -12,8 +12,6 @@ ModuleClassName: blcBookmarkManager
 
 class blcBookmark extends blcContainer{
 	
-	var $fields = array('link_url' => 'url_field');
-	
 	function ui_get_source($container_field, $context = 'display'){
 		$bookmark = $this->get_wrapped_object();
 		
@@ -160,6 +158,7 @@ class blcBookmark extends blcContainer{
 
 class blcBookmarkManager extends blcContainerManager{
 	var $container_class_name = 'blcBookmark';
+	var $fields = array('link_url' => 'url_field');
 	
   /**
    * Set up hooks that monitor added/modified/deleted bookmarks.

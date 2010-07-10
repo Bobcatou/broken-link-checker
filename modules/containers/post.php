@@ -12,7 +12,6 @@ ModuleClassName: blcPostContainerManager
 */
 
 class blcPostContainer extends blcContainer {
-	var $fields = array('post_content' => 'html');
 	var $default_field = 'post_content';
 	
   /**
@@ -202,8 +201,10 @@ class blcPostContainer extends blcContainer {
 
 class blcPostContainerManager extends blcContainerManager {
 	var $container_class_name = 'blcPostContainer';
+	var $fields = array('post_content' => 'html');
 	
-	var $_conf; //Keep a local reference to the BLC configuration manager. Yields a minor performance benefit. 
+	var $_conf; //Keep a local reference to the BLC configuration manager. Yields a minor performance benefit.
+	//TODO: Redundant, there's now $plugin_conf 
 	
   /**
    * Set up hooks that monitor added/modified/deleted posts.
@@ -221,7 +222,7 @@ class blcPostContainerManager extends blcContainerManager {
         add_action('untrash_post', array(&$this,'post_saved'));
         
         //Highlight and nofollow broken links in posts & pages
-        $this->_conf = & blc_get_configuration();
+        $this->_conf = & $this->plugin_conf;
         if ( $this->_conf->options['mark_broken_links'] || $this->_conf->options['nofollow_broken_links'] ){
         	add_filter( 'the_content', array(&$this,'hook_the_content') );
         	if ( $this->_conf->options['mark_broken_links'] && !empty( $this->_conf->options['broken_link_css'] ) ){
@@ -411,8 +412,9 @@ class blcPostContainerManager extends blcContainerManager {
 		}
 		
         //Iterate over all HTML links and modify the broken ones
-		$parser = & blcParserHelper::get_parser('link');
-		$content = $parser->multi_edit($content, array(&$this, 'highlight_broken_link'), $broken_link_urls);
+		if ( $parser = & blcParserHelper::get_parser('link') ){
+			$content = $parser->multi_edit($content, array(&$this, 'highlight_broken_link'), $broken_link_urls);
+		}
 		
 		return $content;
 	}

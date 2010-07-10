@@ -11,6 +11,7 @@
 class blcContainerManager extends blcModule {
 	
 	var $container_type = '';
+	var $fields = array();
 	var $container_class_name = 'blcContainer';
 	
   /**
@@ -34,6 +35,7 @@ class blcContainerManager extends blcModule {
    * @return blcContainer
    */
 	function &get_container($container){
+		$container['fields'] = $this->get_parseable_fields();
 		return new $this->container_class_name($container);
 	}
 	
@@ -97,6 +99,15 @@ class blcContainerManager extends blcModule {
 	function activated(){
 		$this->resynch();
 		blc_got_unsynched_items();
+	}
+	
+	/**
+	 * Get a list of the parseable fields and their formats common to all containers of this type. 
+	 * 
+	 * @return array Associative array of formats indexed by field name.
+	 */
+	function get_parseable_fields(){
+		return $this->fields;
 	}
 	
   /**
@@ -724,6 +735,66 @@ class blcContainerHelper {
     			$manager->resynch($forced);
     		}
 		}
+	}
+	
+	/**
+	 * Mark as unparsed all containers that match one of the the specified formats or 
+	 * container types and that were last parsed after a specific timestamp.
+	 * 
+	 * Used by newly activated parsers to force the containers they're interested in 
+	 * to resynchronize and thus let the parser process them.
+	 * 
+	 * @param array $formats Associative array of timestamps, indexed by format IDs.
+	 * @param array $container_types Associative array of timestamps, indexed by container types. 
+	 * @return bool
+	 */
+	function mark_as_unsynched_where($formats, $container_types){
+		global $wpdb;
+		
+		//Find containers that match any of the specified formats and add them to
+		//the list of container types that need to be marked as unsynched.
+		$module_manager = &blcModuleManager::getInstance();
+		$containers = $module_manager->get_active_by_category('container');
+		
+		foreach($containers as $module_id => $module_data){
+			if ( $container_manager = &$module_manager->get_module($module_id) ){
+				$fields = $container_manager->get_parseable_fields();
+				foreach($formats as $format => $timestamp){
+					if ( in_array($format, $fields) ){
+						//Choose the earliest timestamp
+						if ( isset($container_types[$module_id]) ){
+							$container_types[$module_id] = min($timestamp, $container_types[$module_id]);
+						} else {
+							$container_types[$module_id] = $timestamp;
+						}
+					}
+				}
+			};
+		}
+		
+		if ( empty($container_types) ){
+			return true;
+		}
+		
+		//Build the query to update all synch. records that match one of the specified 
+		//container types and have been parsed after the specified time.
+		$q = "UPDATE {$wpdb->prefix}blc_synch SET synched = 0 WHERE ";
+		
+		$pieces = array();
+		foreach($container_types as $container_type => $timestamp){
+			$pieces[] = $wpdb->prepare(
+				'(container_type = %s AND last_synch >= %s)',
+				$container_type,
+				date('Y-m-d H:i:s', $timestamp)
+			);
+		}
+		
+		$q .= implode(' OR ', $pieces);
+		
+		$rez = ($wpdb->query($q) !== false);
+		blc_got_unsynched_items();
+		
+		return $rez;
 	}
 	
 	/**

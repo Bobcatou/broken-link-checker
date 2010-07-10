@@ -12,10 +12,6 @@ ModuleClassName: blcCommentManager
 */
 
 class blcComment extends blcContainer{
-	var $fields = array(
-		'comment_author_url' => 'url_field',
-		'comment_content' => 'html',
-	);
 	
   /**
    * Retrieve the comment wrapped by this container. 
@@ -177,6 +173,11 @@ class blcComment extends blcContainer{
 
 class blcCommentManager extends blcContainerManager {
 	var $container_class_name = 'blcComment';
+	
+	var $fields = array(
+		'comment_author_url' => 'url_field',
+		'comment_content' => 'html',
+	);
 	
 	function init(){
 		parent::init();

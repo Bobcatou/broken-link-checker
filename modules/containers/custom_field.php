@@ -348,27 +348,22 @@ class blcPostMetaManager extends blcContainerManager {
 	}
 
 	
-  /**
-   * Instantiate a link container.
-   *
-   * @param array $container An associative array of container data.
-   * @return blcPostMeta
-   */
-	function &get_container($container){
-		$container = & parent::get_container($container);
-		
-		//Set up the parseable fields
+	/**
+	 * Get a list of parseable fields.
+	 * 
+	 * @return array
+	 */
+	function get_parseable_fields(){
+		//Fields = custom field names as entered by the user.
 		$fields = array();
 		
-		$conf = & blc_get_configuration();
-		if ( is_array($conf->options['custom_fields']) ){
-			foreach($conf->options['custom_fields'] as $meta_name){
+		if ( is_array($this->plugin_conf->options['custom_fields']) ){
+			foreach($this->plugin_conf->options['custom_fields'] as $meta_name){
 				$fields[$meta_name] = 'metadata';
 			}
 		}
 		
-		$container->fields = $fields;
-		return $container;
+		return $fields;
 	}
 	
   /**

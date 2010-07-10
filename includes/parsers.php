@@ -38,6 +38,44 @@ class blcParser extends blcModule {
 		$this->parser_type = $this->module_id;
 	}
 	
+	/**
+	 * Called when the parser is activated.
+	 * 
+	 * @return void
+	 */
+	function activated(){
+		parent::activated();
+		$this->resynch_relevant_containers();
+	}
+	
+	/**
+	 * Mark containers that this parser might be interested in as unparsed.
+	 * 
+	 * @uses blcContainerHelper::mark_as_unsynched_where()
+	 * 
+	 * @param bool $only_return If true, just return the list of formats and container types without actually modifying any synch. records.  
+	 * @return void|array Either nothing or an array in the form [ [format1=>timestamp1, ...], [container_type1=>timestamp1, ...] ]
+	 */
+	function resynch_relevant_containers($only_return = false){
+		$last_deactivated = $this->module_manager->get_last_deactivation_time($this->module_id);
+		
+		$formats = array();
+		foreach($this->supported_formats as $format){
+			$formats[$format] = $last_deactivated;
+		}
+		
+		$container_types = array();
+		foreach($this->supported_containers as $container_type){
+			$container_types[$container_type] = $last_deactivated;
+		}
+		
+		if ( $only_return ){
+			return array($formats, $container_types);
+		} else {
+			blcContainerHelper::mark_as_unsynched_where($formats, $container_types);
+		}
+	}
+	
   /**
    * Parse a string for links.
    *
