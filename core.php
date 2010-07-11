@@ -763,7 +763,7 @@ EOZ;
     function options_page(){
     	global $blclog, $blc_directory;
     	
-    	$moduleManager = &blcModuleManager::getInstance();;
+    	$moduleManager = &blcModuleManager::getInstance();
     	
     	//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {

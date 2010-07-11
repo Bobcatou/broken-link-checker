@@ -238,8 +238,8 @@ class blcModuleManager {
 	 */
 	function &get_module($module_id, $autoload = true, $category=''){
 		if ( !is_string($module_id) ){
-			$backtrace = debug_backtrace();
-			FB::error($backtrace, "get_module called with a non-string argument");
+			//$backtrace = debug_backtrace();
+			//FB::error($backtrace, "get_module called with a non-string argument");
 			return null;
 		}
 		
