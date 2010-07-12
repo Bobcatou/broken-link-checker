@@ -307,6 +307,12 @@ class blcLink {
 		
 		if ( $this->is_new ){
 			
+			//BUG: Technically, there should be a 'LOCK TABLES wp_blc_links WRITE' here. In fact,
+			//the plugin should probably lock all involved tables whenever it parses something, lest
+			//the user (ot another plugin) modify the thing being parsed while we're working.
+			//The problem with table locking, though, is that parsing takes a long time and having 
+			//all of WP freeze while the plugin is working would be a Bad Thing. Food for thought.
+			
 			//Check if there's already a link with this URL present
 			$q = $wpdb->prepare(
 				"SELECT link_id FROM {$wpdb->prefix}blc_links WHERE url = %s",
