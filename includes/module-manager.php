@@ -8,6 +8,7 @@ class blcModuleManager {
 	var $_module_cache;
 	var $_category_cache;
 	var $_category_cache_active;
+	var $_virtual_modules = array();
 	
 	var $loaded;
 	var $instances;
@@ -54,55 +55,34 @@ class blcModuleManager {
 	 * @return array An associative array of module headers indexed by module ID.
 	 */
 	function get_modules(){
-		if ( isset($this->_module_cache) ){
-			return $this->_module_cache;
-		}
-		
-		$relative_path = '/' . plugin_basename($this->module_dir);
-		if ( !function_exists('get_plugins') ){
-			//FIXME: Potentional security flaw/bug. plugin.php is not meant to be loaded outside admin panel.
-			require_once(ABSPATH . 'wp-admin/includes/plugin.php'); 
-		}
-		$modules = get_plugins( $relative_path );
-		
-		//Default values for optional module header fields
-		$defaults = array(
-			'ModuleContext' => 'all',
-			'ModuleCategory' => 'other',
-			'ModuleLazyInit' => 'false',
-			'ModulePriority' => '0',
-		);
-		
-		$this->_module_cache = array();
-		
-		foreach($modules as $module_filename => $module_header){
-			//Figure out the module ID. If not specified, it is equal to module's filename (sans the .php)
-			if ( !empty($module_header['ModuleID']) ){
-				$module_id = strtolower(trim($module_header['ModuleID']));
-			} else {
-				$module_id = strtolower(basename($module_filename, '.php'));
+		if ( !isset($this->_module_cache) ){
+			//Refresh the module cache. 
+			
+			$relative_path = '/' . plugin_basename($this->module_dir);
+			if ( !function_exists('get_plugins') ){
+				//FIXME: Potentional security flaw/bug. plugin.php is not meant to be loaded outside admin panel.
+				require_once(ABSPATH . 'wp-admin/includes/plugin.php'); 
 			}
+			$modules = get_plugins( $relative_path );
 			
-			$module_header['ModuleID'] = $module_id;   //Just for consistency
-			$module_header['file'] = $module_filename; //Used later to load the module
+			$this->_module_cache = array();
 			
-			//Apply defaults
-			foreach($defaults as $field => $default_value){
-				if ( empty($module_header[$field]) ){
-					$module_header[$field] = $default_value;
+			foreach($modules as $module_filename => $module_header){
+				//Figure out the module ID. If not specified, it is equal to module's filename (sans the .php)
+				if ( !empty($module_header['ModuleID']) ){
+					$module_id = strtolower(trim($module_header['ModuleID']));
+				} else {
+					$module_id = strtolower(basename($module_filename, '.php'));
 				}
+				
+				$module_header = $this->normalize_module_header($module_header, $module_id, $module_filename);
+				$this->_module_cache[$module_id] = $module_header;			
 			}
 			
-			$module_header['ModuleLazyInit'] = trim(strtolower($module_header['ModuleLazyInit']));
-			$module_header['ModuleLazyInit'] = ($module_header['ModuleLazyInit']=='true')?true:false;
-			$module_header['ModulePriority'] = intval($module_header['ModulePriority']);
-			
-			$this->_module_cache[$module_id] = $module_header;			
+			$this->_category_cache = null;
 		}
 		
-		$this->_category_cache = null;
-		
-		return $this->_module_cache;
+		return array_merge($this->_module_cache, $this->_virtual_modules);
 	}
 	
 	/**
@@ -269,11 +249,16 @@ class blcModuleManager {
 	 * Uses cached module info if available.
 	 * 
 	 * @param string $module_id
-	 * @param bool $use_active_cache Check the active module cache first. Defaults to true.
+	 * @param bool $use_active_cache Check the active module cache before the general one. Defaults to true.
 	 * @return array Associative array of module data, or FALSE if the specified module was not found.
 	 */
 	function get_module_data($module_id, $use_active_cache = true){
-		//Check active modules first
+		//Check virtual modules
+		if ( isset($this->_virtual_modules[$module_id]) ){
+			return $this->_virtual_modules[$module_id];
+		}
+		
+		//Check active modules
 		if ( $use_active_cache && isset($this->plugin_conf->options['active_modules'][$module_id]) ){
 			return $this->plugin_conf->options['active_modules'][$module_id];
 		}
@@ -493,17 +478,10 @@ class blcModuleManager {
 	 */
 	function load_modules($context = ''){
 		$active = $this->get_active_modules();
+		//Avoid trying to load a virtual module before the module that registered it has been loaded.
+		$active = $this->put_virtual_last($active);  
+		
 		foreach($active as $module_id => $module_data){
-			
-			if ( !empty($this->loaded[$module_id]) ){
-				continue; //No point in loading the same module twice
-			}
-			
-			//Skip invalid and missing modules
-			if ( empty($module_data['file']) ){
-				continue;
-			}
-			
 			//Load the module
 			$should_load = ($module_data['ModuleContext'] == 'all') || (!empty($context) && $module_data['ModuleContext'] == $context);
    			if ( $should_load ){
@@ -522,6 +500,12 @@ class blcModuleManager {
 	 * @return bool True if the module was successfully loaded, false otherwise.
 	 */
 	function load_module($module_id, $module_data = null){
+		
+		//Only load each module once.
+		if ( !empty($this->loaded[$module_id]) ){
+			return true;
+		}
+		
 		if ( !isset($module_data) ){
 			$module_data = $this->get_module_data($module_id);
 			if ( empty($module_data) ){
@@ -529,22 +513,39 @@ class blcModuleManager {
 			}
 		}
 		
-		//Get the full path to the module file
-		if ( empty($module_data['file']) ){
-			return false;
+		//Load a normal module
+		if ( empty($module_data['virtual']) ){
+			
+			//Skip invalid and missing modules
+			if ( empty($module_data['file']) ){
+				return false;
+			}
+			
+			//Get the full path to the module file
+			$filename = $this->module_dir . '/' . $module_data['file'];
+			if ( !file_exists($filename) ){
+				return false;
+			}
+			
+			//Load it
+			include $filename;
+			$this->loaded[$module_id] = true;
+			
+		} else {
+			
+			//Virtual modules don't need to be explicitly loaded, but they must
+			//be registered.
+			if ( !array_key_exists($module_id, $this->_virtual_modules) ) {
+				return false;
+			}
+			
 		}
-		
-		$filename = $this->module_dir . '/' . $module_data['file'];
-		if ( !file_exists($filename) ){
-			return false;
-		}
-		
-		include $filename;
-		$this->loaded[$module_id] = true;
 		
 		//Instantiate the main module class unless lazy init is on (default is off)
-		if ( !$module_data['ModuleLazyInit'] ){
-			$this->init_module($module_id, $module_data);
+		if ( !array_key_exists($module_id, $this->instances) ){ //Only try to instantiate once
+			if ( !$module_data['ModuleLazyInit'] ){
+				$this->init_module($module_id, $module_data);
+			}
 		}
 		
 		return true;
@@ -584,6 +585,52 @@ class blcModuleManager {
 		return null;		
 	}
 	
+	function is_instantiated($module_id){
+		return !empty($this->instances[$module_id]);
+	}
+	
+	/**
+	 * Register a virtual module. 
+	 * 
+	 * Virtual modules are the same as normal modules, except that they can be added
+	 * on the fly, e.g. by other modules.
+	 * 
+	 * @param string $module_id Module Id. 
+	 * @param string $module_data Associative array of module data. All module header fields are allowed, except ModuleID.
+	 * @return void
+	 */
+	function register_virtual_module($module_id, $module_data){
+		$module_data = $this->normalize_module_header($module_data, $module_id);
+		$module_data['virtual'] = true;
+		$this->_virtual_modules[$module_id] = $module_data;
+	}
+	
+	/**
+	 * Sort an array of modules so that all virtual modules are placed at its end.
+	 * 
+	 * @param array $modules Input array, [module_id => module_data, ...].
+	 * @return array Sorted array.
+	 */
+	function put_virtual_last($modules){
+		uasort($modules, array(&$this, 'compare_virtual_flags'));
+		return $modules;
+	}
+	
+	/**
+	 * Callback function for sorting modules by the state of their 'virtual' flag.
+	 * 
+	 * @param array $a Associative array of module A data
+	 * @param array $b Associative array of module B data
+	 * @return int 
+	 */
+	function compare_virtual_flags($a, $b){
+		if ( empty($a['virtual']) ){
+			return empty($b['virtual'])?0:-1;
+		} else {
+			return empty($b['virtual'])?1:0;
+		}
+	}
+	
 	/**
 	 * Add BLC-module specific headers to the list of allowed plugin headers. This
 	 * lets us use get_plugins() to retrieve the list of BLC modules.
@@ -603,6 +650,41 @@ class blcModuleManager {
 		);
 		
 		return array_merge($headers, $module_headers);
+	}
+	
+	/**
+	 * Normalize a module header, using defaults where necessary.
+	 * 
+	 * @param array $module_header Module header, as read from the module's .php file.
+	 * @param string $module_id Module ID. 
+	 * @param string $module_filename Module filename. Optional.
+	 * @return array Normalized module header.
+	 */
+	function normalize_module_header($module_header, $module_id, $module_filename = ''){
+		//Default values for optional module header fields
+		$defaults = array(
+			'ModuleContext' => 'all',
+			'ModuleCategory' => 'other',
+			'ModuleLazyInit' => 'false',
+			'ModulePriority' => '0',
+		);
+		
+		$module_header['ModuleID'] = $module_id;   //Just for consistency
+		$module_header['file'] = $module_filename; //Used later to load the module
+			
+		//Apply defaults
+		foreach($defaults as $field => $default_value){
+			if ( empty($module_header[$field]) ){
+				$module_header[$field] = $default_value;
+			}
+		}
+		
+		//Convert bool/int fields from strings to native datatypes
+		$module_header['ModuleLazyInit'] = trim(strtolower($module_header['ModuleLazyInit']));
+		$module_header['ModuleLazyInit'] = ($module_header['ModuleLazyInit']=='true')?true:false;
+		$module_header['ModulePriority'] = intval($module_header['ModulePriority']);
+			
+		return $module_header;			
 	}	
 }
 

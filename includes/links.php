@@ -307,6 +307,20 @@ class blcLink {
 		
 		if ( $this->is_new ){
 			
+			//Check if there's already a link with this URL present
+			$q = $wpdb->prepare(
+				"SELECT link_id FROM {$wpdb->prefix}blc_links WHERE url = %s",
+				$this->url
+			);
+			$existing_id = $wpdb->get_var($q);
+			
+			if ( !empty($existing_id) ){
+				//Dammit.
+				$this->link_id = $existing_id;
+				$this->is_new = false;
+				return true;
+			}		
+			
 			//Insert a new row
 			$q = sprintf(
 				"INSERT INTO {$wpdb->prefix}blc_links( %s ) VALUES( %s )", 

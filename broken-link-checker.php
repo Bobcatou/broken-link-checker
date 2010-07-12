@@ -120,7 +120,7 @@ $blclog = new blcDummyLogger;
 
 
 //*
-if ( constant('BLC_DEBUG') ){
+if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
 	if ( !class_exists('FB') ) {
 		require_once 'FirePHPCore/fb.php4';
@@ -297,7 +297,7 @@ $blc_module_manager = & blcModuleManager::getInstance(array(
 ));
 
 //Load the modules that want to be executed in all contexts
-$blc_module_manager->load_modules('all');
+$blc_module_manager->load_modules();
 
 if ( is_admin() || defined('DOING_CRON') ){
 	
