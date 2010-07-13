@@ -1,12 +1,12 @@
 <?php
 
 /*
-Plugin Name: Posts and pages
+Plugin Name: Legacy post/page container
 Description: 
 Version: 1.0
 Author: Janis Elsts
 
-ModuleID: post
+ModuleID: post-old
 ModuleCategory: container
 ModuleClassName: blcPostContainerManager
 */

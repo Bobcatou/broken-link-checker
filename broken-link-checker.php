@@ -274,52 +274,42 @@ add_action('admin_notices', 'blc_print_installation_errors');
 				Main functionality
 ************************************************/
 
-//Load the base classes and utilities
-require $blc_directory . '/includes/links.php';
-require $blc_directory . '/includes/link-query.php';
-require $blc_directory . '/includes/instances.php';
-require $blc_directory . '/includes/utility-class.php';
-
-//Load the module subsystem
-require $blc_directory . '/includes/modules.php';
-$blc_module_manager = & blcModuleManager::getInstance(array( 
-		//List of modules active by default 
-		'http',             //Link checker for the HTTP(s) protocol
-		'link',             //HTML link parser
-		'image',            //HTML image parser
-		'metadata',         //Metadata (custom field) parser
-		'url_field',        //URL field parser
-		'blogroll',         //Blogroll container
-		'comment',          //Comment container
-		'custom_field',     //Post metadata container (aka custom fields)
-		'post',             //Post content container
-		'dummy',            //Dummy container used as a fallback
-));
-
-//Load the modules that want to be executed in all contexts
-$blc_module_manager->load_modules();
-
-if ( is_admin() || defined('DOING_CRON') ){
+function blc_init(){
+	global $blc_directory, $blc_module_manager, $blc_config_manager;
 	
-	//It's an admin-side or Cron request. Load the core.
-	require $blc_directory . '/core.php';
-	$ws_link_checker = new wsBrokenLinkChecker( __FILE__ , $blc_config_manager );
+	//Load the base classes and utilities
+	require $blc_directory . '/includes/links.php';
+	require $blc_directory . '/includes/link-query.php';
+	require $blc_directory . '/includes/instances.php';
+	require $blc_directory . '/includes/utility-class.php';
 	
-} else {
+	//Load the module subsystem
+	require $blc_directory . '/includes/modules.php';
 	
-	//This is user-side request, so we don't need to load the core.
-	//We might need to inject the CSS for removed links, though.
-	if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
-		function blc_print_removed_link_css(){
-			global $blc_config_manager;
-			echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
+	//Load the modules that want to be executed in all contexts
+	$blc_module_manager->load_modules();
+	
+	if ( is_admin() || defined('DOING_CRON') ){
+		
+		//It's an admin-side or Cron request. Load the core.
+		require $blc_directory . '/core.php';
+		$ws_link_checker = new wsBrokenLinkChecker( __FILE__ , $blc_config_manager );
+		
+	} else {
+		
+		//This is user-side request, so we don't need to load the core.
+		//We might need to inject the CSS for removed links, though.
+		if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
+			function blc_print_removed_link_css(){
+				global $blc_config_manager;
+				echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
+			}
+			add_action('wp_head', 'blc_print_removed_link_css');
 		}
-		add_action('wp_head', 'blc_print_removed_link_css');
 	}
 }
 
-
-
+add_action('init', 'blc_init', 2000);
 
 
 ?>

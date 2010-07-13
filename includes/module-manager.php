@@ -282,7 +282,7 @@ class blcModuleManager {
 	 * plugin configuration object. If this key is not set, this function will 
 	 * create it and populate it using the list of default active modules passed
 	 * to the module manager's constructor.
-	 * 	  
+	 * 
 	 * @return array Associative array of module data indexed by module ID. 
 	 */
 	function get_active_modules(){
@@ -314,11 +314,7 @@ class blcModuleManager {
 	 * @return bool
 	 */
 	function is_active($module_id){
-		if ( isset($this->plugin_conf->options['active_modules']) ){
-			return array_key_exists($module_id, $this->plugin_conf->options['active_modules']);
-		} else {
-			return false;
-		}
+		return array_key_exists($module_id, $this->get_active_modules());
 	}
 	
 	/**
@@ -538,6 +534,7 @@ class blcModuleManager {
 			if ( !array_key_exists($module_id, $this->_virtual_modules) ) {
 				return false;
 			}
+			$this->loaded[$module_id] = true;
 			
 		}
 		
@@ -629,6 +626,32 @@ class blcModuleManager {
 		} else {
 			return empty($b['virtual'])?1:0;
 		}
+	}
+	
+	/**
+	 * Validate active modules.
+	 * 
+	 * Validates all active modules, deactivates invalid ones and returns
+	 * an array of deactivated modules.
+	 * 
+	 * @return array
+	 */
+	function validate_active_modules(){
+		//TODO: Implement module validation. WP calls it's own only on the "plugins" page,
+		//so we should call ours on the Settings/Broken Links pages.
+	}
+	
+	/**
+	 * Validate module data.
+	 * 
+	 * Checks that the module file exists or that the module 
+	 * is a currently registered virtual module.
+	 * 
+	 * @param array $module_data Associative array of module data.
+	 * @return bool|WP_Error True on success, an error object if the module fails validation
+	 */
+	function validate_module($module_data){
+		return true;
 	}
 	
 	/**

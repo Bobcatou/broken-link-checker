@@ -760,13 +760,14 @@ class blcContainerHelper {
 		foreach($containers as $module_id => $module_data){
 			if ( $container_manager = &$module_manager->get_module($module_id) ){
 				$fields = $container_manager->get_parseable_fields();
+				$container_type = $container_manager->container_type;
 				foreach($formats as $format => $timestamp){
 					if ( in_array($format, $fields) ){
 						//Choose the earliest timestamp
-						if ( isset($container_types[$module_id]) ){
-							$container_types[$module_id] = min($timestamp, $container_types[$module_id]);
+						if ( isset($container_types[$container_type]) ){
+							$container_types[$container_type] = min($timestamp, $container_types[$container_type]);
 						} else {
-							$container_types[$module_id] = $timestamp;
+							$container_types[$container_type] = $timestamp;
 						}
 					}
 				}
