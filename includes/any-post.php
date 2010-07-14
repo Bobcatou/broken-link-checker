@@ -16,6 +16,7 @@ class blcPostTypeOverlord {
 	var $enabled_post_stati = array('publish');
 	 
 	var $plugin_conf;  
+	var $resynch_already_done = false;
 	
   /**
    * Class constructor.
@@ -146,7 +147,14 @@ class blcPostTypeOverlord {
    */
 	function resynch($container_type = '', $forced = false){
 		global $wpdb;
-		//TODO: implement once-only resynch
+		//Resynch is expensive in terms of DB performance. Thus we only do it once, processing
+		//all post types in one go and ignoring any further resynch requests during this pageload.
+		//BUG: This might be a problem if there ever is an actual need to run resynch twice or 
+		//more per pageload.
+		if ( $this->resynch_already_done ){
+			return;
+		}
+		
 		if ( empty($this->enabled_post_types) ){
 			return;
 		}
@@ -210,6 +218,8 @@ class blcPostTypeOverlord {
 			);
 			$wpdb->query($q);	 				
 		}
+		
+		$this->resynch_already_done = true;
 	}
 	
   /**

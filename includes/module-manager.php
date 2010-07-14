@@ -371,6 +371,7 @@ class blcModuleManager {
 		}
 		
 		unset($this->plugin_conf->options['active_modules'][$module_id]);
+		
 		//Keep track of when each module was last deactivated. Used for parser resynchronization.
 		if ( isset($this->plugin_conf->options['module_deactivated_when']) ){
 			$this->plugin_conf->options['module_deactivated_when'][$module_id] = current_time('timestamp');
@@ -637,8 +638,21 @@ class blcModuleManager {
 	 * @return array
 	 */
 	function validate_active_modules(){
-		//TODO: Implement module validation. WP calls it's own only on the "plugins" page,
-		//so we should call ours on the Settings/Broken Links pages.
+		$active = $this->get_active_modules();
+		if ( empty($active) ){
+			return array();
+		}
+		
+		$invalid = array();
+		foreach($active as $module_id => $module_data){
+			$rez = $this->validate_module($module_data);
+			if ( is_wp_error($rez) ){
+				$invalid[$module_id] = $rez;
+				$this->deactivate($module_id);
+			}
+		}
+		
+		return $invalid;
 	}
 	
 	/**
@@ -651,6 +665,35 @@ class blcModuleManager {
 	 * @return bool|WP_Error True on success, an error object if the module fails validation
 	 */
 	function validate_module($module_data){
+		if ( empty($module_data['ModuleID']) ){
+			return new WP_Error('invalid_cached_header', 'The cached module header is invalid');
+		}
+		
+		if ( empty($module_data['virtual']) ){
+			//Normal modules must have a valid filename
+			if ( empty($module_data['file']) ){
+				return new WP_Error('module_not_found', 'Invalid module file');
+			}
+			
+			$filename = $this->module_dir . '/' . $module_data['file'];
+			if ( !file_exists($filename) ){
+				return new WP_Error('module_not_found', 'Module file not found');
+			}
+			
+			//The module file header must be in the proper format. While $module_data comes
+			//from cache and can be assumed to be correct, get_modules() will attempt to load 
+			//the current headers and only return modules with semi-valid headers.
+			$installed = $this->get_modules();
+			if ( !array_key_exists($module_data['ModuleID'], $installed) ){
+				return new WP_Error('invalid_module_header', 'Invalid module header');
+			}
+		} else {
+			//Virtual modules need to be currently registered
+			if ( !array_key_exists($module_data['ModuleID'], $this->_virtual_modules) ){
+				return new WP_Error('module_not_registered', 'The virtual module is not registered');
+			}
+		}
+		
 		return true;
 	}
 	

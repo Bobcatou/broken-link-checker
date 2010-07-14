@@ -898,9 +898,13 @@ EOZ;
         	
         }
         
-		$debug = $this->get_debug_info();
-		
+        //Cull invalid and missing modules
+        $moduleManager->validate_active_modules();
+        
+		//Output the "Feedback" button that links to the plugin's UserVoice forum
 		$this->print_uservoice_widget();
+		
+		$debug = $this->get_debug_info();
 		?>
 		
         <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
@@ -1297,6 +1301,7 @@ EOZ;
 
     function links_page(){
         global $wpdb, $blclog;
+        
         $blc_link_query = & blcLinkQuery::getInstance();
         
         //Sanity check : Make sure the plugin's tables are all set up.
@@ -1313,6 +1318,10 @@ EOZ;
 			echo '<p>', implode('<br>', $blclog->get_messages()), '</p>';
 			return;
 		}
+		
+		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
+        $moduleManager = &blcModuleManager::getInstance();
+        $moduleManager->validate_active_modules();
         
         $action = !empty($_POST['action'])?$_POST['action']:'';
         if ( intval($action) == -1 ){
