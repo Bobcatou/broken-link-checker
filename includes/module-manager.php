@@ -713,6 +713,8 @@ class blcModuleManager {
 			'ModuleClassName',
 			'ModulePriority',
 			'ModuleCheckerUrlPattern',
+			'ModuleHidden',            //Don't show the module in the Settings page
+			'ModuleAlwaysActive',      //Module can't be deactivated.
 		);
 		
 		return array_merge($headers, $module_headers);
@@ -733,6 +735,8 @@ class blcModuleManager {
 			'ModuleCategory' => 'other',
 			'ModuleLazyInit' => 'false',
 			'ModulePriority' => '0',
+			'ModuleHidden' => 'false',
+			'ModuleAlwaysActive' => 'false',
 		);
 		
 		$module_header['ModuleID'] = $module_id;   //Just for consistency
@@ -746,12 +750,18 @@ class blcModuleManager {
 		}
 		
 		//Convert bool/int fields from strings to native datatypes
-		$module_header['ModuleLazyInit'] = trim(strtolower($module_header['ModuleLazyInit']));
-		$module_header['ModuleLazyInit'] = ($module_header['ModuleLazyInit']=='true')?true:false;
+		$module_header['ModuleLazyInit'] = $this->str_to_bool($module_header['ModuleLazyInit']);
+		$module_header['ModuleHidden'] = $this->str_to_bool($module_header['ModuleHidden']);
+		$module_header['ModuleAlwaysActive'] = $this->str_to_bool($module_header['ModuleAlwaysActive']);
 		$module_header['ModulePriority'] = intval($module_header['ModulePriority']);
 			
 		return $module_header;			
-	}	
+	}
+	
+	function str_to_bool($value){
+		$value = trim(strtolower($value));
+		return $value == 'true';
+	}
 }
 
 ?>

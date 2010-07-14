@@ -13,7 +13,7 @@
  */
 class blcPostTypeOverlord {
 	var $enabled_post_types = array();  //Post types currently selected for link checking
-	var $enabled_post_stati = array('publish');
+	var $enabled_post_stati = array('publish'); //Only posts that have one of these statuses shall be checked
 	 
 	var $plugin_conf;  
 	var $resynch_already_done = false;
@@ -27,10 +27,23 @@ class blcPostTypeOverlord {
    * @return void
    */
 	function blcPostTypeOverlord(){
+ 		$this->plugin_conf = &blc_get_configuration();
+ 		
+ 		if ( isset($this->plugin_conf->options['enabled_post_stati']) ){
+ 			$this->enabled_post_stati = $this->plugin_conf->options['enabled_post_stati'];
+ 		}
+		
+		//Register a virtual container module for each enabled post type
 		$module_manager = &blcModuleManager::getInstance();
 		
 		$post_types = get_post_types(array(), 'objects');
+		$exceptions = array('revision', 'nav_menu_item', 'attachment');
+		
 		foreach($post_types as $post_type => $data){
+			if ( in_array($post_type, $exceptions) ){
+				continue;
+			}
+			
 			$module_manager->register_virtual_module(
 				$post_type,
 				array(
@@ -50,7 +63,6 @@ class blcPostTypeOverlord {
         add_action('untrash_post', array(&$this,'post_saved'));
         
         //Highlight and nofollow broken links in posts & pages
-        $this->plugin_conf = &blc_get_configuration();
         if ( $this->plugin_conf->options['mark_broken_links'] || $this->plugin_conf->options['nofollow_broken_links'] ){
         	add_filter( 'the_content', array(&$this, 'hook_the_content') );
         	if ( $this->plugin_conf->options['mark_broken_links'] && !empty( $this->plugin_conf->options['broken_link_css'] ) ){

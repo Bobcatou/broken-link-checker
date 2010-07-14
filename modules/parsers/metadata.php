@@ -10,6 +10,8 @@ ModuleCategory: parser
 ModuleClassName: blcMetadataParser
 ModuleContext: on-demand
 ModuleLazyInit: true
+ModuleAlwaysActive: true
+ModuleHidden: true
 */
 
 class blcMetadataParser extends blcParser {

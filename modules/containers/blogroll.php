@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Blogroll links
+Plugin Name: Blogroll items
 Description: 
 Version: 1.0
 Author: Janis Elsts

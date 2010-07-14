@@ -905,6 +905,18 @@ EOZ;
 		$this->print_uservoice_widget();
 		
 		$debug = $this->get_debug_info();
+		
+		$details_text = __('Details', 'broken-link-checker');
+		add_filter('blc-module-settings-custom_field', array(&$this, 'print_custom_field_input'), 10, 2);
+		
+		$modules = $moduleManager->get_modules_by_category();
+		
+		//Output the custom broken link/removed link styles for example links
+		printf(
+			'<style type="text/css">%s %s</style>', 
+			$this->conf->options['broken_link_css'],
+			$this->conf->options['removed_link_css']
+		);
 		?>
 		
         <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
@@ -916,6 +928,8 @@ EOZ;
 			wp_nonce_field('link-checker-options');
 		?>
 
+		<h3><?php _e('General', 'broken-link-checker'); ?></h3>
+		
         <table class="form-table">
 
         <tr valign="top">
@@ -998,73 +1012,6 @@ EOZ;
 
         </td>
         </tr>
-
-        <tr valign="top">
-        <th scope="row"><?php _e('Broken link CSS','broken-link-checker'); ?></th>
-        <td>
-        	<label for='mark_broken_links'>
-        		<input type="checkbox" name="mark_broken_links" id="mark_broken_links"
-            	<?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e('Apply <em>class="broken_link"</em> to broken links', 'broken-link-checker'); ?>
-			</label>
-			<br/>
-        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
-            if( isset($this->conf->options['broken_link_css']) )
-                echo $this->conf->options['broken_link_css'];
-        ?></textarea>
-
-        </td>
-        </tr>
-        
-        <tr valign="top">
-        <th scope="row"><?php _e('Removed link CSS','broken-link-checker'); ?></th>
-        <td>
-        	<label for='mark_removed_links'>
-        		<input type="checkbox" name="mark_removed_links" id="mark_removed_links"
-            	<?php if ($this->conf->options['mark_removed_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e('Apply <em>class="removed_link"</em> to unlinked links', 'broken-link-checker'); ?>
-			</label>
-			<br/>
-        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'/><?php
-            if( isset($this->conf->options['removed_link_css']) )
-                echo $this->conf->options['removed_link_css'];
-        ?></textarea>
-
-        </td>
-        </tr>
-        
-        <tr valign="top">
-        <th scope="row"><?php _e('Broken link SEO','broken-link-checker'); ?></th>
-        <td>
-        	<label for='nofollow_broken_links'>
-        		<input type="checkbox" name="nofollow_broken_links" id="nofollow_broken_links"
-            	<?php if ($this->conf->options['nofollow_broken_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e('Apply <em>rel="nofollow"</em> to broken links', 'broken-link-checker'); ?>
-			</label>
-        </td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
-        <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
-        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
-            if( isset($this->conf->options['exclusion_list']) )
-                echo implode("\n", $this->conf->options['exclusion_list']);
-        ?></textarea>
-
-        </td>
-        </tr>
-        
-        <tr valign="top">
-        <th scope="row"><?php _e('Custom fields', 'broken-link-checker'); ?></th>
-        <td><?php _e('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker'); ?><br/>
-        <textarea name="blc_custom_fields" id="blc_custom_fields" cols='45' rows='4' /><?php
-            if( isset($this->conf->options['custom_fields']) )
-                echo implode("\n", $this->conf->options['custom_fields']);
-        ?></textarea>
-
-        </td>
-        </tr>
         
         <tr valign="top">
         <th scope="row"><?php _e('E-mail notifications', 'broken-link-checker'); ?></th>
@@ -1078,6 +1025,128 @@ EOZ;
 			</p>
         </td>
         </tr>
+
+        <tr valign="top">
+        <th scope="row"><?php _e('Link tweaks','broken-link-checker'); ?></th>
+        <td>
+        	<p style="margin-top: 0; margin-bottom: 4px;">
+        	<label for='mark_broken_links'>
+        		<input type="checkbox" name="mark_broken_links" id="mark_broken_links"
+            	<?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e('Apply a custom style to broken links', 'broken-link-checker'); ?>
+			</label>
+			|
+			<a id="toggle-broken-link-css-editor" href="#" class="blc-toggle-link">Edit style</a>			
+			</p>
+			
+			<div id="broken-link-css-wrap">
+		        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
+		            if( isset($this->conf->options['broken_link_css']) )
+		                echo $this->conf->options['broken_link_css'];
+		        ?></textarea>
+		        <p class="description">
+            	Example : Lorem ipsum <a href="#" class="broken_link" onclick="return false;">broken link</a>,
+				dolor sit amet.
+	        	Click "Save Changes" to update example output.
+				</p>
+        	</div>
+        	
+        	<p style="margin-top: 10px; margin-bottom: 4px;">
+        	<label for='mark_removed_links'>
+        		<input type="checkbox" name="mark_removed_links" id="mark_removed_links"
+            	<?php if ($this->conf->options['mark_removed_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e("Apply a custom style to removed links", 'broken-link-checker'); ?>
+			</label>
+			|
+			<a id="toggle-removed-link-css-editor" href="#" class="blc-toggle-link">Edit style</a>
+			</p>
+			
+			<div id="removed-link-css-wrap">
+		        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'/><?php
+		            if( isset($this->conf->options['removed_link_css']) )
+		                echo $this->conf->options['removed_link_css'];
+		        ?></textarea>
+		        
+		        <p class="description">
+            		Example : Lorem ipsum <span class="removed_link">removed link</span>, dolor sit amet.
+            		Click "Save Changes" to update example output.
+				</p>
+        	</div>
+        
+        	<p>
+        	<label for='nofollow_broken_links'>
+        		<input type="checkbox" name="nofollow_broken_links" id="nofollow_broken_links"
+            	<?php if ($this->conf->options['nofollow_broken_links']) echo ' checked="checked"'; ?>/>
+            	<?php _e('Stop search engines from following broken links', 'broken-link-checker'); ?>
+			</label>
+			</p>
+
+        </td>
+        </tr>
+        
+        </table>
+        
+        <h3><?php _e('Look For Links In', 'broken-link-checker'); ?></h3>
+		
+        <table class="form-table">
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Link sources', 'broken-link-checker'); ?></th>
+        <td>
+    	<?php
+    	if ( !empty($modules['container']) ){
+    		uasort($modules['container'], create_function('$a, $b', 'return strcasecmp($a["Name"], $b["Name"]);'));
+    		$this->print_module_list($modules['container'], $this->conf->options);
+    	}    	
+    	?>
+    	</td></tr>
+    	
+        </table>
+        
+        <h3><?php _e('Which Links To Check', 'broken-link-checker'); ?></h3>
+		
+        <table class="form-table">
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Link types', 'broken-link-checker'); ?></th>
+        <td>
+        <?php
+        if ( !empty($modules['parser']) ){
+        	$this->print_module_list($modules['parser'], $this->conf->options);
+        } else {
+        	echo __('Error : All link parsers missing!', 'broken-link-checker');
+        }
+    	?>
+    	</td>
+		</tr>
+    	
+    	<tr valign="top">
+        <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
+        <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
+        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
+            if( isset($this->conf->options['exclusion_list']) )
+                echo implode("\n", $this->conf->options['exclusion_list']);
+        ?></textarea>
+
+        </td>
+        </tr>
+        
+        </table>
+        
+        <h3><?php _e('How To Check Them', 'broken-link-checker'); ?></h3>
+		
+        <table class="form-table">
+        
+        <tr valign="top">
+        <th scope="row"><?php _e('Checker algorithms', 'broken-link-checker'); ?></th>
+        <td>
+        <?php
+    	if ( !empty($modules['checker']) ){
+    		$modules['checker'] = array_reverse($modules['checker']);
+        	$this->print_module_list($modules['checker'], $this->conf->options);
+        }
+    	?>
+    	</td></tr>
         
         </table>
         
@@ -1249,26 +1318,6 @@ EOZ;
         
         </table>
         
-        <h3><?php _e('Modules','broken-link-checker'); ?></h3>
-        
-        <table class="form-table">
-        	<?php
-        	$modules = $moduleManager->get_modules();
-        	
-        	foreach($modules as $module_id => $module_data){
-        		printf(
-        			'<tr valing="top"><th scope="row"><label>'.
-        				'<input type="checkbox" name="module[%s]" id="module-%s"%s /> %s'.
-       				'</label></th></tr>',
-       				$module_id,
-       				$module_id,
-       				$moduleManager->is_active($module_id)?' checked="checked"':'',
-       				$module_data['Name']
-				);
-        	}
-        	?>
-        </table>
-        
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
         </form>
         </div>
@@ -1288,10 +1337,87 @@ EOZ;
 					}
 					
 				});
+				
+				$('#toggle-broken-link-css-editor').click(function(){
+					$('#broken-link-css-wrap').toggle();
+					return false;
+				});
+				
+				$('#toggle-removed-link-css-editor').click(function(){
+					$('#removed-link-css-wrap').toggle();
+					return false;
+				});
 			});
 		</script>
         <?php
     }
+    
+    function print_module_list($modules, $current_settings){
+    	$moduleManager = &blcModuleManager::getInstance();
+    	
+    	foreach($modules as $module_id => $module_data){
+			$module_id = $module_data['ModuleID'];
+			
+			$style = $module_data['ModuleHidden']?' style="display:none;"':'';
+			
+			$extra_settings = apply_filters(
+				'blc-module-settings-'.$module_id,
+				'',
+				$current_settings
+			);
+    		
+    		printf(
+    			'<p class="module-container" id="module-container-%s"%s>',
+		   		$module_id,
+   				$style
+			);
+			$this->print_module_checkbox($module_id, $module_data, $moduleManager->is_active($module_id));
+			echo '</p>';
+			echo $extra_settings;
+    	}
+    }
+    
+    function print_module_checkbox($module_id, $module_data, $active = false){
+    	$active = $active || $module_data['ModuleAlwaysActive'];
+		$checked = $active ? ' checked="checked"':'';
+		$name_prefix = 'module';
+		
+		if ( $module_data['ModuleAlwaysActive'] ){
+			$checked .= ' disabled="disabled"';
+			$name_prefix = 'module-always-active';
+		}
+		
+		printf(
+			'<label>
+				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s
+			</label>',
+			$name_prefix,
+	   		esc_attr($module_id),
+			esc_attr($module_id),
+			$checked,
+			$module_data['Name']
+		);
+		
+		if ( $module_data['ModuleAlwaysActive'] ){
+			printf(
+				'<input type="hidden" name="module[%s]" value="on">',
+				esc_attr($module_id)
+			);
+		}
+    }
+    
+    function print_custom_field_input($html, $current_settings){
+    	$html .= '' . 
+					__('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker') .
+				 '';
+    	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4" />';
+        if( isset($current_settings['custom_fields']) )
+            $html .= implode("\n", $current_settings['custom_fields']);
+        $html .= '</textarea>';
+        
+        return $html;
+    }
+    
     
     function options_page_css(){
     	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
@@ -1301,6 +1427,12 @@ EOZ;
 
     function links_page(){
         global $wpdb, $blclog;
+        
+        
+        echo '<pre>';
+        $stati = get_post_stati(array('internal' => false), 'objects');
+        //print_r($stati);//xxx
+        echo '</pre>';
         
         $blc_link_query = & blcLinkQuery::getInstance();
         

@@ -9,6 +9,8 @@ Author: Janis Elsts
 ModuleID: dummy
 ModuleCategory: container
 ModuleClassName: blcDummyManager
+ModuleAlwaysActive: true
+ModuleHidden: true
 */
 
 /**

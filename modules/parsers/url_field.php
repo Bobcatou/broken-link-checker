@@ -10,6 +10,8 @@ ModuleCategory: parser
 ModuleClassName: blcUrlField
 ModuleContext: on-demand
 ModuleLazyInit: true
+ModuleAlwaysActive: true
+ModuleHidden: true
 */
 
 /**

@@ -1,8 +1,8 @@
 <?php
 
 /*
-Plugin Name: HTML links
-Description: Parse normal HTML links (e.g. '<a href="http://...">link text</a>)
+Plugin Name: Standard HTML links
+Description: Example : <code>&lt;a href="http://example.com/"&gt;link text&lt;/a&gt;</code>
 Version: 1.0
 Author: Janis Elsts
 
@@ -11,6 +11,8 @@ ModuleCategory: parser
 ModuleClassName: blcHTMLLink
 ModuleContext: on-demand
 ModuleLazyInit: true
+
+ModulePriority: 1000
 */
 
 class blcHTMLLink extends blcParser {

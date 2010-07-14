@@ -36,3 +36,16 @@
 	
 	border-collapse: collapse;
 }
+
+.blc-toggle-link {
+	/*padding-left: 20px; */
+}
+
+#removed-link-css-wrap, #broken-link-css-wrap {
+	display: none;
+}
+
+p.module-container {
+	margin-top: 0;
+	margin-bottom: 1em; 
+}

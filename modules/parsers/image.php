@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: HTML images
-Description: Parses HTML images (e.g. '<img src="http://..." />')
+Plugin Name: Standard HTML images
+Description: e.g. <code>&lt;img src="http://example.com/fluffy.jpg"&gt;</code>
 Version: 1.0
 Author: Janis Elsts
 
@@ -10,6 +10,8 @@ ModuleCategory: parser
 ModuleClassName: blcHTMLImage
 ModuleContext: on-demand
 ModuleLazyInit: true
+
+ModulePriority: 900
 */
 
 //TODO: Update image parser to use the same HTML tag parsing routine as the HTML link parser. 
