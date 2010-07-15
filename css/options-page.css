@@ -54,3 +54,72 @@
 .form-table td p:first-child, .form-table td .module-container:first-child {
 	margin-top: 0.2em; 
 }
+
+/* Tab navigation */
+ul.ui-tabs-nav {
+	margin-bottom: -1px;
+	padding-left: 1.5em;
+}
+
+ul.ui-tabs-nav li {
+	display: inline-block;
+	margin: 0 0.5em 0 0;
+	
+	border: 1px solid #DFDFDF;
+	border-bottom-width: 0;
+	
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
+	
+	-moz-border-radius-topright: 6px;
+	-moz-border-radius-topleft: 6px;
+	
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	
+	font-weight: bold;
+}
+
+ul.ui-tabs-nav li.ui-tabs-selected {
+	background: white;
+	color: black;
+}
+
+ul.ui-tabs-nav li a {
+	display: inline-block;
+	padding: 0.5em 1em 0.6em 1em;
+	text-decoration: none;
+	color: #C1C1C1;
+}
+
+ul.ui-tabs-nav li.ui-tabs-selected a {
+	color: black;
+} 
+
+/* Tab panels */
+
+.ui-tabs .blc-section {
+	border: 1px solid #DFDFDF;
+	border-top-width: 1px;
+	
+	padding-bottom: 1em;
+	
+	background: white;
+	
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+	
+	-moz-border-radius-topright: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-moz-border-radius-bottomleft: 6px;
+	
+	-webkit-border-top-right-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+}
+

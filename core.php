@@ -972,7 +972,7 @@ EOZ;
 			?>
 		</ul>
 
-		<div id="section-general">
+		<div id="section-general" class="blc-section">
 		<h3 class="hide-if-js"><?php _e($section_names['general']); ?></h3>
 		
         <table class="form-table">
@@ -1116,7 +1116,7 @@ EOZ;
         
         </div>
         
-        <div id="section-where">
+        <div id="section-where" class="blc-section">
 		<h3 class="hide-if-js"><?php _e($section_names['where']); ?></h3>
         
         <table class="form-table">
@@ -1160,7 +1160,7 @@ EOZ;
         </div>
         
         
-        <div id="section-which">
+        <div id="section-which" class="blc-section">
 		<h3 class="hide-if-js"><?php _e($section_names['which']); ?></h3>
 		
         <table class="form-table">
@@ -1192,7 +1192,7 @@ EOZ;
         </table>
         </div>
         
-        <div id="section-how">
+        <div id="section-how" class="blc-section">
 		<h3 class="hide-if-js"><?php _e($section_names['how']); ?></h3>
 		
         <table class="form-table">
@@ -1211,7 +1211,7 @@ EOZ;
         </table>
         </div>
         
-        <div id="section-advanced">
+        <div id="section-advanced" class="blc-section">
 		<h3 class="hide-if-js"><?php _e($section_names['advanced']); ?></h3>
         
         <table class="form-table">
