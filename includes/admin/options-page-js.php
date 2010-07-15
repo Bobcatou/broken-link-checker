@@ -1,6 +1,8 @@
 <script type="text/javascript">
 
 jQuery(function($){
+	$('#blc-tabs').tabs();
+	
 	//Refresh the "Status" box every 10 seconds
 	function blcUpdateStatus(){
 		$.getJSON(

@@ -198,6 +198,7 @@ class wsBrokenLinkChecker {
     	//jQuery UI is used on the settings page
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog');
+        wp_enqueue_script('jquery-ui-tabs');
         wp_enqueue_script('jquery-cookie', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/jquery.cookie.js'); //Used for storing last widget states, etc
 	}
 	
@@ -942,6 +943,14 @@ EOZ;
 			$this->conf->options['broken_link_css'],
 			$this->conf->options['removed_link_css']
 		);
+		
+		$section_names = array(
+			'general' =>  __('General', 'broken-link-checker'),
+			'where' =>    __('Look For Links In', 'broken-link-checker'),
+			'which' =>    __('Which Links To Check', 'broken-link-checker'),
+			'how' =>      __('How To Check Them', 'broken-link-checker'),
+			'advanced' => __('Advanced', 'broken-link-checker'),
+		);
 		?>
 		
         <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
@@ -952,8 +961,19 @@ EOZ;
         <?php 
 			wp_nonce_field('link-checker-options');
 		?>
+		
+		<div id="blc-tabs">
+		
+		<ul class="hide-if-no-js">
+			<?php
+				foreach($section_names as $section_id => $section_name){
+					printf('<li><a href="#section-%s">%s</a></li>', esc_attr($section_id), $section_name);					
+				}
+			?>
+		</ul>
 
-		<h3><?php _e('General', 'broken-link-checker'); ?></h3>
+		<div id="section-general">
+		<h3 class="hide-if-js"><?php _e($section_names['general']); ?></h3>
 		
         <table class="form-table">
 
@@ -1094,8 +1114,11 @@ EOZ;
         
         </table>
         
-        <h3><?php _e('Look For Links In', 'broken-link-checker'); ?></h3>
-		
+        </div>
+        
+        <div id="section-where">
+		<h3 class="hide-if-js"><?php _e($section_names['where']); ?></h3>
+        
         <table class="form-table">
         
         <tr valign="top">
@@ -1134,7 +1157,11 @@ EOZ;
     	
         </table>
         
-        <h3><?php _e('Which Links To Check', 'broken-link-checker'); ?></h3>
+        </div>
+        
+        
+        <div id="section-which">
+		<h3 class="hide-if-js"><?php _e($section_names['which']); ?></h3>
 		
         <table class="form-table">
         
@@ -1163,8 +1190,10 @@ EOZ;
         </tr>
         
         </table>
+        </div>
         
-        <h3><?php _e('How To Check Them', 'broken-link-checker'); ?></h3>
+        <div id="section-how">
+		<h3 class="hide-if-js"><?php _e($section_names['how']); ?></h3>
 		
         <table class="form-table">
         
@@ -1180,8 +1209,10 @@ EOZ;
     	</td></tr>
         
         </table>
+        </div>
         
-        <h3><?php _e('Advanced','broken-link-checker'); ?></h3>
+        <div id="section-advanced">
+		<h3 class="hide-if-js"><?php _e($section_names['advanced']); ?></h3>
         
         <table class="form-table">
         
@@ -1340,6 +1371,9 @@ EOZ;
 		</tr>
         
         </table>
+        </div>
+        
+        </div>
         
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
         </form>
