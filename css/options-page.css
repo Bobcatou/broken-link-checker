@@ -41,11 +41,16 @@
 	/*padding-left: 20px; */
 }
 
-#removed-link-css-wrap, #broken-link-css-wrap {
-	display: none;
+.module-container {
+	margin: 1em 0;
+	font-size: 12px;
+	line-height: 140%; 
 }
 
-p.module-container {
-	margin-top: 0;
-	margin-bottom: 1em; 
+.module-extra-settings {
+	margin-top: 0.5em;
+}
+
+.form-table td p:first-child, .form-table td .module-container:first-child {
+	margin-top: 0.2em; 
 }

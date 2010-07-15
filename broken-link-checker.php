@@ -84,7 +84,7 @@ $blc_config_manager = new blcConfigurationManager(
 		'enable_load_limit' => true,	//Enable/disable load monitoring. 
 		
         'custom_fields' => array(),		//List of custom fields that can contain URLs and should be checked.
-        'check_comment_links' => true,	//Whether to check links found in comments
+        'enabled_post_statuses' => array('publish'), //Only check posts that match one of these statuses
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected
 		'show_link_count_bubble' => true, //Display a notification bubble in the menu when broken links are found 

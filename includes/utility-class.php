@@ -257,6 +257,21 @@ class blcUtility {
 		return $results;
 	}
 	
+	/**
+     * Get the value of a cookie.
+     * 
+     * @param string $cookie_name The name of the cookie to return.
+     * @param string $default_value Optional. If the cookie is not set, this value will be returned instead. Defaults to an empty string.
+     * @return mixed Either the value of the requested cookie, or $default_value.
+     */
+    function get_cookie($cookie_name, $default_value = ''){
+    	if ( isset($_COOKIE[$cookie_name]) ){
+    		return $_COOKIE[$cookie_name];
+    	} else {
+    		return $default_value;
+    	}
+    }
+	
 }//class
 
 }//class_exists

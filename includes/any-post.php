@@ -13,7 +13,7 @@
  */
 class blcPostTypeOverlord {
 	var $enabled_post_types = array();  //Post types currently selected for link checking
-	var $enabled_post_stati = array('publish'); //Only posts that have one of these statuses shall be checked
+	var $enabled_post_statuses = array('publish'); //Only posts that have one of these statuses shall be checked
 	 
 	var $plugin_conf;  
 	var $resynch_already_done = false;
@@ -29,8 +29,8 @@ class blcPostTypeOverlord {
 	function blcPostTypeOverlord(){
  		$this->plugin_conf = &blc_get_configuration();
  		
- 		if ( isset($this->plugin_conf->options['enabled_post_stati']) ){
- 			$this->enabled_post_stati = $this->plugin_conf->options['enabled_post_stati'];
+ 		if ( isset($this->plugin_conf->options['enabled_post_statuses']) ){
+ 			$this->enabled_post_statuses = $this->plugin_conf->options['enabled_post_statuses'];
  		}
 		
 		//Register a virtual container module for each enabled post type
@@ -141,7 +141,7 @@ class blcPostTypeOverlord {
         if ( !in_array($post->post_type, $this->enabled_post_types) ) return;
 		
         //Only check posts that have one of the allowed statuses
-        if ( !in_array($post->post_status, $this->enabled_post_stati) ) return;
+        if ( !in_array($post->post_status, $this->enabled_post_statuses) ) return;
         
     	//Get the container & mark it as unparsed
 		$args = array($post->post_type, intval($post_id));
@@ -172,7 +172,7 @@ class blcPostTypeOverlord {
 		}
 		
 		$escaped_post_types = array_map(array(&$wpdb, 'escape'), $this->enabled_post_types);
-		$escaped_post_stati = array_map(array(&$wpdb, 'escape'), $this->enabled_post_stati);
+		$escaped_post_statuses = array_map(array(&$wpdb, 'escape'), $this->enabled_post_statuses);
 		
 		if ( $forced ){
 			//Create new synchronization records for all posts. 
@@ -184,7 +184,7 @@ class blcPostTypeOverlord {
 	 				AND posts.post_type IN (%s)";
 			$q = sprintf(
 				$q,
-				"'" . implode("', '", $escaped_post_stati) . "'",
+				"'" . implode("', '", $escaped_post_statuses) . "'",
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 	 		$wpdb->query( $q );
@@ -225,7 +225,7 @@ class blcPostTypeOverlord {
 					AND synch.container_id IS NULL";
 			$q = sprintf(
 				$q,
-				"'" . implode("', '", $escaped_post_stati) . "'",
+				"'" . implode("', '", $escaped_post_statuses) . "'",
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 			$wpdb->query($q);	 				

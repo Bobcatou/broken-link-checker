@@ -190,7 +190,7 @@ class wsBrokenLinkChecker {
     }
 
     function admin_print_scripts(){
-        //jQuery is used for AJAX and effects
+        //jQuery is used for triggering the link monitor via AJAX when any admin page is open.
         wp_enqueue_script('jquery');
     }
     
@@ -198,6 +198,7 @@ class wsBrokenLinkChecker {
     	//jQuery UI is used on the settings page
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog');
+        wp_enqueue_script('jquery-cookie', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/jquery.cookie.js'); //Used for storing last widget states, etc
 	}
 	
 	function enqueue_link_page_scripts(){
@@ -779,8 +780,12 @@ EOZ;
 			return;
 		}
     	
-        if (isset($_GET['recheck']) && ($_GET['recheck'] == 'true')) {
+        if (isset($_POST['recheck']) && !empty($_POST['recheck']) ){
             $this->initiate_recheck();
+            
+            //Redirect back to the settings page
+			$base_url = remove_query_arg( array('_wpnonce', 'noheader', 'updated', 'error', 'action', 'message') );
+			wp_redirect( add_query_arg( array( 'recheck-initiated' => true), $base_url ) );
         }
         
         if(isset($_POST['submit'])) {
@@ -791,6 +796,19 @@ EOZ;
 				$active = array_keys($_POST['module']);
 				$moduleManager->set_active_modules($active);
 			}
+			
+			//Only post statuses that actually exist can be selected
+			if ( isset($_POST['enabled_post_statuses']) && is_array($_POST['enabled_post_statuses']) ){
+				$available_statuses = get_post_stati();
+				$enabled_post_statuses = array_intersect($_POST['enabled_post_statuses'], $available_statuses); 
+			} else {
+				$enabled_post_statuses = array();
+			}
+			//At least one status must be enabled; defaults to "Published".
+			if ( empty($enabled_post_statuses) ){
+				$enabled_post_statuses = array('publish');
+			}
+			$this->conf->options['enabled_post_statuses'] = $enabled_post_statuses;
 			
 			//The execution time limit must be above zero
             $new_execution_time = intval($_POST['max_execution_time']);
@@ -898,6 +916,13 @@ EOZ;
         	
         }
         
+        //Show one when recheck is started, too. 
+        if ( !empty($_GET['recheck-initiated']) ){
+        	echo '<div id="message" class="updated fade"><p><strong>',
+			     	__('Complete site recheck started.', 'broken-link-checker'), // -- Yoda 
+			     '</strong></p></div>';
+        }
+        
         //Cull invalid and missing modules
         $moduleManager->validate_active_modules();
         
@@ -943,35 +968,6 @@ EOZ;
         <div id='wsblc_full_status'>
             <br/><br/><br/>
         </div>
-        <script type='text/javascript'>
-        	(function($){
-				
-				function blcUpdateStatus(){
-					$.getJSON(
-						"<?php echo admin_url('admin-ajax.php'); ?>",
-						{
-							'action' : 'blc_full_status'
-						},
-						function (data, textStatus){
-							if ( data && ( typeof(data['text']) != 'undefined' ) ){
-								$('#wsblc_full_status').html(data.text);
-							} else {
-								$('#wsblc_full_status').html('<?php _e('[ Network error ]', 'broken-link-checker'); ?>');
-							}
-							
-							setTimeout(blcUpdateStatus, 10000); //...update every 10 seconds							
-						}
-					);
-				}
-				blcUpdateStatus();//Call it the first time
-				
-			})(jQuery);
-        </script>
-        <?php //JHS: Recheck all posts link: ?>
-        <p><input class="button" type="button" name="recheckbutton" 
-				  value="<?php _e('Re-check all pages', 'broken-link-checker'); ?>" 
-				  onclick="location.replace('<?php echo basename($_SERVER['PHP_SELF']); ?>?page=link-checker-settings&amp;recheck=true')" />
-		</p>
         
         <table id="blc-debug-info">
         <?php
@@ -1029,17 +1025,23 @@ EOZ;
         <tr valign="top">
         <th scope="row"><?php _e('Link tweaks','broken-link-checker'); ?></th>
         <td>
-        	<p style="margin-top: 0; margin-bottom: 4px;">
+        	<p style="margin-top: 0; margin-bottom: 0.5em;">
         	<label for='mark_broken_links'>
         		<input type="checkbox" name="mark_broken_links" id="mark_broken_links"
             	<?php if ($this->conf->options['mark_broken_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e('Apply a custom style to broken links', 'broken-link-checker'); ?>
+            	<?php _e('Apply custom formatting to broken links', 'broken-link-checker'); ?>
 			</label>
 			|
-			<a id="toggle-broken-link-css-editor" href="#" class="blc-toggle-link">Edit style</a>			
+			<a id="toggle-broken-link-css-editor" href="#" class="blc-toggle-link"><?php
+				_e('Edit CSS', 'broken-link-checker');
+			?></a>			
 			</p>
 			
-			<div id="broken-link-css-wrap">
+			<div id="broken-link-css-wrap"<?php 
+				if ( !blcUtility::get_cookie('broken-link-css-wrap', false) ){
+					echo ' class="hidden"';
+				} 
+			?>>
 		        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
 		            if( isset($this->conf->options['broken_link_css']) )
 		                echo $this->conf->options['broken_link_css'];
@@ -1051,17 +1053,23 @@ EOZ;
 				</p>
         	</div>
         	
-        	<p style="margin-top: 10px; margin-bottom: 4px;">
+        	<p style="margin-bottom: 0.5em;">
         	<label for='mark_removed_links'>
         		<input type="checkbox" name="mark_removed_links" id="mark_removed_links"
             	<?php if ($this->conf->options['mark_removed_links']) echo ' checked="checked"'; ?>/>
-            	<?php _e("Apply a custom style to removed links", 'broken-link-checker'); ?>
+            	<?php _e('Apply custom formatting to removed links', 'broken-link-checker'); ?>
 			</label>
 			|
-			<a id="toggle-removed-link-css-editor" href="#" class="blc-toggle-link">Edit style</a>
+			<a id="toggle-removed-link-css-editor" href="#" class="blc-toggle-link"><?php
+				_e('Edit CSS', 'broken-link-checker');
+			?></a>
 			</p>
 			
-			<div id="removed-link-css-wrap">
+			<div id="removed-link-css-wrap" <?php 
+				if ( !blcUtility::get_cookie('removed-link-css-wrap', false) ){
+					echo ' class="hidden"';
+				} 
+			?>>
 		        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'/><?php
 		            if( isset($this->conf->options['removed_link_css']) )
 		                echo $this->conf->options['removed_link_css'];
@@ -1091,13 +1099,36 @@ EOZ;
         <table class="form-table">
         
         <tr valign="top">
-        <th scope="row"><?php _e('Link sources', 'broken-link-checker'); ?></th>
+        <th scope="row"><?php _e('Content to scan for links', 'broken-link-checker'); ?></th>
         <td>
     	<?php
     	if ( !empty($modules['container']) ){
     		uasort($modules['container'], create_function('$a, $b', 'return strcasecmp($a["Name"], $b["Name"]);'));
     		$this->print_module_list($modules['container'], $this->conf->options);
     	}    	
+    	?>
+    	</td></tr>
+    	
+    	<tr valign="top">
+        <th scope="row"><?php _e('Post statuses', 'broken-link-checker'); ?></th>
+        <td>
+    	<?php
+    	    $available_statuses = get_post_stati(array('internal' => false), 'objects');
+    	    
+    	    if ( isset($this->conf->options['enabled_post_statuses']) ){
+    	    	$enabled_post_statuses = $this->conf->options['enabled_post_statuses'];
+    	    } else {
+    	    	$enabled_post_statuses = array();
+    	    }
+    	    
+			foreach($available_statuses as $status => $status_object){
+				printf(
+					'<p><label><input type="checkbox" name="enabled_post_statuses[]" value="%s"%s> %s</label></p>',
+					esc_attr($status),
+					in_array($status, $enabled_post_statuses)?' checked="checked"':'',
+					$status_object->label
+				);
+			}
     	?>
     	</td></tr>
     	
@@ -1121,7 +1152,7 @@ EOZ;
 		</tr>
     	
     	<tr valign="top">
-        <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
+        <th scope="row"><?php _e('URL exceptions', 'broken-link-checker'); ?></th>
         <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
         <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
             if( isset($this->conf->options['exclusion_list']) )
@@ -1179,21 +1210,23 @@ EOZ;
         <tr valign="top">
         <th scope="row"><?php _e('Link monitor', 'broken-link-checker'); ?></th>
         <td>
+        
+        	<p>
 			<label for='run_in_dashboard'>
-				<p>	
+				
 	        		<input type="checkbox" name="run_in_dashboard" id="run_in_dashboard"
 	            	<?php if ($this->conf->options['run_in_dashboard']) echo ' checked="checked"'; ?>/>
 	            	<?php _e('Run continuously while the Dashboard is open', 'broken-link-checker'); ?>
-            	</p>
 			</label>
+			</p>
 			
+			<p>
 			<label for='run_via_cron'>
-				<p>
 	        		<input type="checkbox" name="run_via_cron" id="run_via_cron"
 	            	<?php if ($this->conf->options['run_via_cron']) echo ' checked="checked"'; ?>/>
 	            	<?php _e('Run hourly in the background', 'broken-link-checker'); ?>
-            	</p>
-			</label>		
+			</label>
+			</p>		
 
         </td>
         </tr>
@@ -1272,30 +1305,7 @@ EOZ;
 				$value
 			);
 			
-			?>
-		Current load : <span id='wsblc_current_load'>...</span>
-        <script type='text/javascript'>
-        	(function($){
-				
-				function blcUpdateLoad(){
-					$.get(
-						"<?php echo admin_url('admin-ajax.php'); ?>",
-						{
-							'action' : 'blc_current_load'
-						},
-						function (data, textStatus){
-							$('#wsblc_current_load').html(data);
-							
-							setTimeout(blcUpdateLoad, 10000); //...update every 10 seconds							
-						}
-					);
-				}
-				blcUpdateLoad();//Call it the first time
-				
-			})(jQuery);
-        </script>
-			<?php
-			
+			echo 'Current load : <span id="wsblc_current_load">...</span>';			
 			echo '<br/><span class="description">';
 	        printf(
 	        	__(
@@ -1316,40 +1326,28 @@ EOZ;
         </td>
         </tr>
         
+        <tr valign="top">
+        <th scope="row"><?php _e('Forced recheck', 'broken-link-checker'); ?></th>
+        <td>
+        	<input class="button" type="submit" name="recheck" 
+				  value="<?php _e('Re-check all pages', 'broken-link-checker'); ?>"  />
+			<br />
+  			<span class="description"><?php
+			  _e('The "Nuclear Option". Click this button to make the plugin empty its link database and recheck the entire site from scratch.', 'broken-link-checker');
+			     
+	  		?></span>
+		</td>
+		</tr>
+        
         </table>
         
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
         </form>
         </div>
         
-        <script type='text/javascript'>
-        	jQuery(function($){
-        		var toggleButton = $('#blc-debug-info-toggle'); 
-        		
-				toggleButton.click(function(){
-					
-					var box = $('#blc-debug-info'); 
-					box.toggle();
-					if( box.is(':visible') ){
-						toggleButton.text('<?php _e('Hide debug info', 'broken-link-checker'); ?>');
-					} else {
-						toggleButton.text('<?php _e('Show debug info', 'broken-link-checker'); ?>');
-					}
-					
-				});
-				
-				$('#toggle-broken-link-css-editor').click(function(){
-					$('#broken-link-css-wrap').toggle();
-					return false;
-				});
-				
-				$('#toggle-removed-link-css-editor').click(function(){
-					$('#removed-link-css-wrap').toggle();
-					return false;
-				});
-			});
-		</script>
         <?php
+        //The various JS for this page is stored in a separate file for the purposes readability.
+        include 'includes/admin/options-page-js.php';
     }
     
     function print_module_list($modules, $current_settings){
@@ -1360,20 +1358,43 @@ EOZ;
 			
 			$style = $module_data['ModuleHidden']?' style="display:none;"':'';
 			
+    		printf(
+    			'<div class="module-container" id="module-container-%s"%s>',
+		   		$module_id,
+   				$style
+			);
+			$this->print_module_checkbox($module_id, $module_data, $moduleManager->is_active($module_id));
+			
 			$extra_settings = apply_filters(
 				'blc-module-settings-'.$module_id,
 				'',
 				$current_settings
 			);
-    		
-    		printf(
-    			'<p class="module-container" id="module-container-%s"%s>',
-		   		$module_id,
-   				$style
-			);
-			$this->print_module_checkbox($module_id, $module_data, $moduleManager->is_active($module_id));
-			echo '</p>';
-			echo $extra_settings;
+			
+			if ( !empty($extra_settings) ){
+				
+				printf(
+					' | <a class="blc-toggle-link toggle-module-settings" id="toggle-module-settings-%s" href="#">%s</a>',
+					$module_id,
+					__('Configure', 'broken-link-checker')
+				);
+				
+				//The plugin remembers the last open/closed state of module configuration boxes
+				$box_id = 'module-extra-settings-' . $module_id;		
+				$show = blcUtility::get_cookie(
+					$box_id,
+					$moduleManager->is_active($module_id)
+				);
+								
+				printf(
+					'<div class="module-extra-settings%s" id="%s">%s</div>',
+					$show?'':' hidden',
+					$box_id,
+					$extra_settings
+				);
+			}
+			
+			echo '</div>';
     	}
     }
     
@@ -1407,9 +1428,9 @@ EOZ;
     }
     
     function print_custom_field_input($html, $current_settings){
-    	$html .= '' . 
+    	$html .= '<span class="description">' . 
 					__('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker') .
-				 '';
+				 '</span>';
     	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4" />';
         if( isset($current_settings['custom_fields']) )
             $html .= implode("\n", $current_settings['custom_fields']);
@@ -1417,7 +1438,6 @@ EOZ;
         
         return $html;
     }
-    
     
     function options_page_css(){
     	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
