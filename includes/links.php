@@ -6,6 +6,13 @@
  */
  
 if (!class_exists('blcLink')){
+	
+define('BLC_LINK_STATUS_UNKNOWN', 'unknown');
+define('BLC_LINK_STATUS_OK', 'ok');
+define('BLC_LINK_STATUS_INFO', 'info');
+define('BLC_LINK_STATUS_WARNING', 'warning');
+define('BLC_LINK_STATUS_ERROR', 'error');
+	
 class blcLink {
 	
 	//Object state
@@ -41,6 +48,55 @@ class blcLink {
 	
 	//A cached list of the link's instances
 	var $_instances = null;
+	
+	var $http_status_codes = array(
+        // [Informational 1xx]  
+        100=>'Continue',  
+        101=>'Switching Protocols',  
+        // [Successful 2xx]  
+        200=>'OK',  
+        201=>'Created',  
+        202=>'Accepted',  
+        203=>'Non-Authoritative Information',  
+        204=>'No Content',  
+        205=>'Reset Content',  
+        206=>'Partial Content',  
+        // [Redirection 3xx]  
+        300=>'Multiple Choices',  
+        301=>'Moved Permanently',  
+        302=>'Found',  
+        303=>'See Other',  
+        304=>'Not Modified',  
+        305=>'Use Proxy',  
+        //306=>'(Unused)',  
+        307=>'Temporary Redirect',  
+        // [Client Error 4xx]  
+        400=>'Bad Request',  
+        401=>'Unauthorized',  
+        402=>'Payment Required',  
+        403=>'Forbidden',  
+        404=>'Not Found',  
+        405=>'Method Not Allowed',  
+        406=>'Not Acceptable',  
+        407=>'Proxy Authentication Required',  
+        408=>'Request Timeout',  
+        409=>'Conflict',  
+        410=>'Gone',  
+        411=>'Length Required', 
+        412=>'Precondition Failed',  
+        413=>'Request Entity Too Large',  
+        414=>'Request-URI Too Long',  
+        415=>'Unsupported Media Type',  
+        416=>'Requested Range Not Satisfiable',  
+        417=>'Expectation Failed',  
+        // [Server Error 5xx]  
+        500=>'Internal Server Error',  
+        501=>'Not Implemented',  
+        502=>'Bad Gateway',  
+        503=>'Service Unavailable',  
+        504=>'Gateway Timeout',  
+        505=>'HTTP Version Not Supported',
+	);
 	
 	function __construct($arg = null){
 		global $wpdb;
@@ -763,6 +819,61 @@ class blcLink {
 		
 		return $this->_instances;
 	}
+	
+	/**
+	 * blcLink::analyse_status()
+	 * 
+	 * @return array
+	 */
+	function analyse_status(){
+		$code = BLC_LINK_STATUS_UNKNOWN;
+		$text = __('Unknown', 'broken-link-checker');
+		
+		//Status text
+		if ( isset($this->status_text) && !empty($this->status_text)){
+			
+			//Lucky, the checker module has already set it for us.
+			$text = $this->status_text;
+			//TODO: Use the stored status code, too
+			 
+		} else {
+			
+			if ( $this->broken ){
+				
+				$code = BLC_LINK_STATUS_ERROR;
+				$text = __('Unknown Error', 'broken-link-checker');
+				
+				if ( $this->timeout ){
+					
+					$text = __('Timeout', 'broken-link-checker');
+					$code = BLC_LINK_STATUS_WARNING;
+					
+				} elseif ( $this->http_code ) {
+					//TODO: Differentiate between broken-for-sure and maybe-broken HTTP codes
+					if ( array_key_exists(intval($this->http_code), $this->http_status_codes) ){
+						$text = $this->http_status_codes[intval($this->http_code)];
+					}
+				}
+				
+			} else {
+				
+				if ( $this->redirect_count > 0 ){
+					$text = __('Redirect', 'broken-link-checker');
+					$code = BLC_LINK_STATUS_INFO;
+				} elseif ( !$this->last_check_attempt ) {
+					$text = __('Not checked', 'broken-link-checker');
+					$code = BLC_LINK_STATUS_UNKNOWN;
+				} else {
+					$text = __('OK', 'broken-link-checker');
+					$code = BLC_LINK_STATUS_OK;
+				}
+				
+			}
+		}
+		
+		return compact('text', 'code');
+	}
+	
 }
 
 } //class_exists

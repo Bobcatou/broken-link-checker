@@ -18,16 +18,59 @@ tr.blc-link-details {
 	width: 50%;
 }
 
-.blc-column-source {
-	width: 33%;
+/* Column headers */
+
+th.column-source {
+	/*width: 33%;*/
 }
 
-.blc-column-link-text {
+th.column-link-text {
 	width: 24%;
 }
 
-.blc-column-url {
+th.column-new-link-text {
+	/*width: 24%;*/
+	min-width: 20%;
+}
+
+th.column-url {
+	width: 35%;
+}
+
+th.column-new-url {
 	/*width: 35%;*/
+}
+
+th.column-status {
+	width: 14em;
+}
+
+/* Cells */
+
+td.column-new-url, 
+td.column-used-in
+{
+	/*
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	*/
+}
+
+td.column-new-url .row-actions,
+td.column-url .row-actions
+{
+	margin-left: 16px;
+}
+
+td.column-status .status-text {
+	color: black;
+}
+
+td.column-new-url .mini-status {
+	margin-left: 16px;
+	color: black;
 }
 
 /* Styles for broken links, redirects and other link states or types */
@@ -65,6 +108,8 @@ tr.blc-link-details {
 
 .blc-link-url {
 	padding-left: 16px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .blc-link-editor {
@@ -73,17 +118,78 @@ tr.blc-link-details {
     margin-left: 12px;
 }
 
-.column-url .row-actions {
-	margin-left: 16px;
-}
-
-.blc-link-text {
+td.column-link-text, td.column-new-link-text {
 	cursor: pointer; 
 }
 
 
 .blc-small-image {
 	vertical-align: middle;
+}
+
+/* The "Status" column */
+td.column-status {
+	cursor: pointer;
+}
+
+.mini-status, .mini-status th, .mini-status td {
+	border: 0;
+	font-size: 1em;
+	padding: 0;
+	color: gray;
+}
+
+.mini-status div {
+	display: inline-block;
+}
+
+.mini-status .http-code {
+	font-weight: normal;
+}
+
+/*
+.link-status-unknown th {
+	color: gray;
+}
+
+.link-status-ok th {
+	color: green;
+}
+
+.link-status-info th {
+	color: blue;
+}
+
+.link-status-warning th {
+	color: orange;
+}
+
+.link-status-error th {
+	color: red;
+}
+*/
+
+/* "Compact" view */
+
+.compact td.column-url,
+.compact td.column-status,
+.compact td.column-link-text,
+.compact td.column-used-in,
+.compact td.column-new-url,
+.compact td.column-source,
+.compact td.column-new-link-text
+{
+	overflow:  hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.compact .link-last-checked,
+.compact .link-broken-for,
+.compact .link-text 
+{
+	display: none;
 }
 
 /* Search form */
@@ -131,8 +237,3 @@ div.search-box{
 	margin-left: 0pt;
 }
 
-/* Misc link page styles */
-
-.tools_page_view-broken-links #screen-options-wrap h5 {
-	display: none;
-}

@@ -365,6 +365,13 @@ class blcModuleManager {
 			return true;
 		}
 		
+		//Some modules are supposed to be always active and thus can't be deactivated
+		$module_data = $this->get_module_data($module_id, false);
+		if ( isset($module_data['ModuleAlwaysActive']) && $module_data['ModuleAlwaysActive'] ){
+			return false;
+		}
+		
+		//Notify the module that it's being deactivated
 		$module = & $this->get_module($module_id);
 		if ( $module ){
 			$module->deactivated();

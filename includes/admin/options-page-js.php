@@ -85,6 +85,7 @@ jQuery(function($){
 		return false;
 	});
 	
+	//Show/hide per-module settings
 	$('.toggle-module-settings').click(function(){
 		var settingsBox = $(this).parent().find('.module-extra-settings');
 		if ( settingsBox.length > 0 ){
@@ -98,6 +99,16 @@ jQuery(function($){
 			);
 		}
 		return false;
+	});
+	
+	//When the user ticks the "Custom fields" box, display the field list input
+	//so that they notice that they need to enter the field names. 
+	$('#module-checkbox-custom_field').click(function(){
+		var box = $(this);
+		var fieldList = $('#blc_custom_fields');
+		if ( box.is(':checked') && ( $.trim(fieldList.val()) == '' ) ){
+			$('#module-extra-settings-custom_field').removeClass('hidden');
+		}
 	});
 });
 

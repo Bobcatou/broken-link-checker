@@ -11,6 +11,8 @@ if ( !function_exists( 'microtime_float' ) ) {
 	}
 }
 
+require 'includes/screen-options/screen-options.php';
+
 if (!class_exists('wsBrokenLinkChecker')) {
 
 class wsBrokenLinkChecker {
@@ -61,8 +63,6 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
-        add_action( 'wp_ajax_blc_save_highlight_settings', array(&$this,'ajax_save_highlight_settings') );
-        add_action( 'wp_ajax_blc_disable_widget_highlight', array(&$this,'ajax_disable_widget_highlight') );
         
         //Check if it's possible to create a lockfile and nag the user about it if not.
         if ( $this->lockfile_name() ){
@@ -81,6 +81,16 @@ class wsBrokenLinkChecker {
     	add_action('blc_cron_email_notifications', array( &$this, 'send_email_notifications' ));
 		add_action('blc_cron_check_links', array(&$this, 'cron_check_links'));
 		add_action('blc_cron_database_maintenance', array(&$this, 'database_maintenance'));
+		
+		//Add a "Screen Options" panel to the "Broken Links" page
+		add_screen_options_panel(
+			'blc-screen-options',
+			'',
+			array(&$this, 'screen_options_html'),
+			'tools_page_view-broken-links',
+			array(&$this, 'ajax_save_screen_options'),
+			true
+		);
     }
 
   /**
@@ -721,21 +731,6 @@ EOZ;
         //Add the UserVoice widget to the plugin's pages
         add_action( 'admin_footer-' . $options_page_hook, array(&$this, 'uservoice_widget') );
         add_action( 'admin_footer-' . $links_page_hook, array(&$this, 'uservoice_widget') );
-        
-        /*
-		Display a checkbox in "Screen Options" that lets the user highlight links that 
-		have been broken for a long time. The "Screen Options" panel isn't directly 
-		customizable, so we must resort to ugly hacks using add_meta_box() and JavaScript. 
-		*/ 
-        $input_html = sprintf(
-        	'</label><input style="margin-left: -1em" type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2">',
-        	$this->conf->options['failure_duration_threshold']
-		);
-        $title_html = sprintf(
-			__('Highlight links broken for at least %s days', 'broken-link-checker'),
-			$input_html
-		);
-        add_meta_box('highlight_permanent_failures', $title_html, array(&$this, 'noop'), $links_page_hook);
     }
     
   /**
@@ -933,7 +928,7 @@ EOZ;
 		$debug = $this->get_debug_info();
 		
 		$details_text = __('Details', 'broken-link-checker');
-		add_filter('blc-module-settings-custom_field', array(&$this, 'print_custom_field_input'), 10, 2);
+		add_filter('blc-module-settings-custom_field', array(&$this, 'make_custom_field_input'), 10, 2);
 		
 		$modules = $moduleManager->get_modules_by_category();
 		
@@ -1384,6 +1379,16 @@ EOZ;
         include 'includes/admin/options-page-js.php';
     }
     
+    /**
+     * Output a list of modules and their settings.
+	 *  
+     * Each list entry will contain a checkbox that is checked if the module is 
+     * currently active. 
+     * 
+     * @param array $modules Array of modules to display
+     * @param array $current_settings
+     * @return void
+     */
     function print_module_list($modules, $current_settings){
     	$moduleManager = &blcModuleManager::getInstance();
     	
@@ -1432,6 +1437,19 @@ EOZ;
     	}
     }
     
+    /**
+     * Output a checkbox for a module.
+     * 
+     * Generates a simple checkbox that can be used to mark a module as active/inactive.
+     * If the specified module can't be deactivated (ModuleAlwaysActive = true), the checkbox
+	 * will be displayed in a disabled state and a hidden field will be created to make
+	 * form submissions work correctly.
+     * 
+     * @param string $module_id Module ID.
+     * @param array $module_data Associative array of module data.
+     * @param bool $active If true, the newly created checkbox will start out checked.
+     * @return void
+     */
     function print_module_checkbox($module_id, $module_data, $active = false){
     	$active = $active || $module_data['ModuleAlwaysActive'];
 		$checked = $active ? ' checked="checked"':'';
@@ -1461,7 +1479,16 @@ EOZ;
 		}
     }
     
-    function print_custom_field_input($html, $current_settings){
+    /**
+     * Add extra settings to the "Custom fields" entry on the plugin's config. page.
+	 * 
+	 * Callback for the 'blc-module-settings-custom_field' filter.  
+     * 
+     * @param string $html Current extra HTML
+     * @param array $current_settings The current plugin configuration.
+     * @return string New extra HTML.
+     */
+    function make_custom_field_input($html, $current_settings){
     	$html .= '<span class="description">' . 
 					__('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker') .
 				 '</span>';
@@ -1473,6 +1500,11 @@ EOZ;
         return $html;
     }
     
+    /**
+     * Enqueue CSS file for the plugin's Settings page.
+     * 
+     * @return void
+     */
     function options_page_css(){
     	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
     	wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
@@ -1481,12 +1513,6 @@ EOZ;
 
     function links_page(){
         global $wpdb, $blclog;
-        
-        
-        echo '<pre>';
-        $stati = get_post_stati(array('internal' => false), 'objects');
-        //print_r($stati);//xxx
-        echo '</pre>';
         
         $blc_link_query = & blcLinkQuery::getInstance();
         
@@ -1585,16 +1611,25 @@ EOZ;
 		//Display the "Search" form and associated buttons.
 		//The form requires the $filter_id and $current_filter variables to be set.
 		include dirname($this->loader) . '/includes/admin/search-form.php';
+		
+		//If the user has decided to switch the table to a different mode (compact/full), 
+		//save the new setting.
+		if ( isset($_GET['compact']) ){
+			$this->conf->options['table_compact'] = (bool)$_GET['compact'];
+			$this->conf->save_options();
+		}
 
 		//Display the links, if any
         if( $current_filter['links'] && ( count($current_filter['links']) > 0 ) ) {
         	
 			include dirname($this->loader) . '/includes/admin/table-printer.php';
-			$table = new blcTablePrinter(
+			$table = new blcTablePrinter($this);
+			$table->print_table(
 				$current_filter,
-				$this
+				$this->conf->options['table_layout'], 
+				$this->conf->options['table_visible_columns'],
+				$this->conf->options['table_compact']
 			);
-			$table->print_table('classic');
 
         };
 		printf('<!-- Total elapsed : %.4f seconds -->', microtime_float() - $start_time);//TODO: Remove debug code 
@@ -1983,194 +2018,99 @@ EOZ;
 	}
 	
     
+	/**
+	 * Enqueue CSS files for the "Broken Links" page
+	 * 
+	 * @return void
+	 */
 	function links_page_css(){
 		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css' );
 		wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
 	}
 	
-	function link_details_row($link){
-		?>
-		<div class="blc-detail-container">
-			<div class="blc-detail-block" style="float: left; width: 49%;">
-		    	<ol style='list-style-type: none;'>
-		    	<?php if ( !empty($link->post_date) ) { ?>
-		    	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?> :</strong>
-		    	<span class='post_date'><?php
-					echo date_i18n(get_option('date_format'),strtotime($link->post_date));
-		    	?></span></li>
-		    	<?php } ?>
-		    	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?> :</strong>
-		    	<span class='check_date'><?php
-					$last_check = $link->last_check;
-		    		if ( $last_check < strtotime('-10 years') ){
-						_e('Never', 'broken-link-checker');
-					} else {
-		    			echo date_i18n(get_option('date_format'), $last_check);
-		    		}
-		    	?></span></li>
-		    	
-		    	<li><strong><?php _e('HTTP code', 'broken-link-checker'); ?> :</strong>
-		    	<span class='http_code'><?php 
-		    		print $link->http_code; 
-		    	?></span></li>
-		    	
-		    	<li><strong><?php _e('Response time', 'broken-link-checker'); ?> :</strong>
-		    	<span class='request_duration'><?php 
-		    		printf( __('%2.3f seconds', 'broken-link-checker'), $link->request_duration); 
-		    	?></span></li>
-		    	
-		    	<li><strong><?php _e('Final URL', 'broken-link-checker'); ?> :</strong>
-		    	<span class='final_url'><?php 
-		    		print $link->final_url; 
-		    	?></span></li>
-		    	
-		    	<li><strong><?php _e('Redirect count', 'broken-link-checker'); ?> :</strong>
-		    	<span class='redirect_count'><?php 
-		    		print $link->redirect_count; 
-		    	?></span></li>
-		    	
-		    	<li><strong><?php _e('Instance count', 'broken-link-checker'); ?> :</strong>
-		    	<span class='instance_count'><?php 
-		    		print count($link->get_instances()); 
-		    	?></span></li>
-		    	
-		    	<?php if ( $link->broken && (intval( $link->check_count ) > 0) ){ ?>
-		    	<li><br/>
-				<?php 
-					printf(
-						_n('This link has failed %d time.', 'This link has failed %d times.', $link->check_count, 'broken-link-checker'),
-						$link->check_count
-					);
-					
-					echo '<br>';
-					
-					$delta = time() - $link->first_failure;
-					printf(
-						__('This link has been broken for %s.', 'broken-link-checker'),
-						$this->fuzzy_delta($delta)
-					);
-				?>
-				</li>
-		    	<?php } ?>
-				</ol>
-			</div>
-			
-			<div class="blc-detail-block" style="float: right; width: 50%;">
-		    	<ol style='list-style-type: none;'>
-		    		<li><strong><?php _e('Log', 'broken-link-checker'); ?> :</strong>
-		    	<span class='blc_log'><?php 
-		    		print nl2br($link->log); 
-		    	?></span></li>
-				</ol>
-			</div>
-			
-			<div style="clear:both;"> </div>
-		</div>
-		<?php
-	}
-	
-  /**
-   * Format a time delta using a fuzzy format, e.g. 'less than a minute', '2 days', etc.
-   *
-   * @param int $delta Time period in seconds.
-   * @return string
-   */
-	function fuzzy_delta($delta){
-		$ONE_MINUTE = 60;
-		$ONE_HOUR = 60 * $ONE_MINUTE;
-		$ONE_DAY = 24 * $ONE_HOUR;
-		$ONE_MONTH = $ONE_DAY * 3652425 / 120000;
-		$ONE_YEAR = $ONE_DAY * 3652425 / 10000;
+	/**
+	 * wsBrokenLinkChecker::print_screen_options()
+	 * 
+	 * @return string
+	 */
+	function screen_options_html(){
+		//Let the user show/hide individual table columns
+		$html = '<h5>' . __('Table columns', 'broken-link-checker') . '</h5>';
 		
-		if ( $delta < $ONE_MINUTE ){
-			return __('less than a minute', 'broken-link-checker');
-		}
+		include dirname($this->loader) . '/includes/admin/table-printer.php';
+		$table = new blcTablePrinter($this);
+		$available_columns = $table->get_layout_columns($this->conf->options['table_layout']);
 		
-		if ( $delta < $ONE_HOUR ){
-			$minutes = intval($delta / $ONE_MINUTE);
-			
-			return sprintf(
-				_n(
-					'%d minute',
-					'%d minutes',
-					$minutes,
-					'broken-link-checker'
-				),
-				$minutes
+		$html .= '<div id="blc-column-selector">';
+		
+		foreach( $available_columns as $column_id => $data ){
+			$html .= sprintf(
+				'<label><input type="checkbox" name="visible_columns[%s]"%s>%s</label>',
+				esc_attr($column_id),
+				in_array($column_id, $this->conf->options['table_visible_columns']) ? ' checked="checked"' : '',
+				$data['heading']
 			);
-		}
+		} 
 		
-		if ( $delta < $ONE_DAY ){
-			$hours = intval($delta / $ONE_HOUR);
-			
-			return sprintf(
-				_n(
-					'%d hour',
-					'%d hours',
-					$hours,
-					'broken-link-checker'
-				),
-				$hours
-			);
-		}
+		$html .= '</div>';
 		
-		if ( $delta < $ONE_MONTH ){
-			$days = intval($delta / $ONE_DAY);
-			$hours = intval( ($delta - $days * $ONE_DAY)/$ONE_HOUR );
-			 
-			$ret = sprintf(
-				_n(
-					'%d day',
-					'%d days',
-					$days,
-					'broken-link-checker'
-				),
-				$days
-			);
-			
-			
-			if ( ($days < 2) && ($hours > 0) ){
-				$ret .= ' ' . sprintf(
-					_n(
-						'%d hour',
-						'%d hours',
-						$hours,
-						'broken-link-checker'
-					),
-					$hours
-				); 
-			}
-			
-			return $ret;
-		}
+		/*
+		Display a checkbox in "Screen Options" that lets the user highlight links that 
+		have been broken for at least X days.  
+		*/
+		$html .= '<h5>' . __('Misc', 'broken-link-checker') . '</h5>';
 		
-		
-		$months = intval( $delta / $ONE_MONTH );
-		$days = intval( ($delta - $months * $ONE_MONTH)/$ONE_DAY );
-		 
-		$ret = sprintf(
-			_n(
-				'%d month',
-				'%d months',
-				$months,
-				'broken-link-checker'
-			),
-			$months
+		$html .= sprintf(
+			'<label><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s>',
+			$this->conf->options['highlight_permanent_failures'] ? ' checked="checked"' : ''
 		);
 		
-		if ( $days > 0 ){
-			$ret .= ' ' . sprintf(
-				_n(
-					'%d day',
-					'%d days',
-					$days,
-					'broken-link-checker'
-				),
-				$days
-			); 
+		$input_box = sprintf(
+        	'</label><input style="margin-left: -1em" type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2"><label for="highlight_permanent_failures">',
+        	$this->conf->options['failure_duration_threshold']
+		);
+        $html .= sprintf(
+			__('Highlight links broken for at least %s days', 'broken-link-checker'),
+			$input_box
+		);
+		$html .= '</label>';
+		
+		
+		
+		return $html;
+	}
+	
+	/**
+	 * AJAX callback for saving the "Screen Options" panel settings
+	 * 
+	 * @param array $form
+	 * @return void
+	 */
+	function ajax_save_screen_options($form){
+		if ( !current_user_can('edit_others_posts') ){
+			die( json_encode( array(
+				'error' => __("You're not allowed to do that!", 'broken-link-checker') 
+			 )));
 		}
 		
-		return $ret;
+		$this->conf->options['highlight_permanent_failures'] = !empty($form['highlight_permanent_failures']);
+		
+		$failure_duration_threshold = intval($form['failure_duration_threshold']);
+		if ( $failure_duration_threshold >=1 ){
+			$this->conf->options['failure_duration_threshold'] = $failure_duration_threshold;
+		}
+		
+		if ( isset($form['visible_columns']) && is_array($form['visible_columns']) ){
+			$this->conf->options['table_visible_columns'] = array_keys($form['visible_columns']);
+		}
+		
+		$this->conf->save_options();
+		die('1');
+	}
+	
+	function link_details_row($link){
+		//TODO: Remove
+		echo "wsBrokenLinkChecker::link_details_row is deprecated!!!";
 	}
 	
 	function start_timer(){
@@ -2778,35 +2718,12 @@ EOZ;
 		
 		if ( !$link->is_new ){
 			FB::info($link, 'Link loaded');
-			$this->link_details_row($link);
+			$this->link_details_row($link); //TODO: Replace with the tableprinter's method
 			die();
 		} else {
 			printf( __('Failed to load link details (%s)', 'broken-link-checker'), $wpdb->last_error );
 			die();
 		}
-	}
-	
-  /**
-   * AJAX hook for saving the settings from the "Screen Options" panel in Tools -> Broken Links.
-   *
-   * @return void
-   */
-	function ajax_save_highlight_settings(){
-		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_save_highlight_settings', false, false)){
-			die( json_encode( array(
-				'error' => __("You're not allowed to do that!", 'broken-link-checker') 
-			 )));
-		}
-		
-		$this->conf->options['highlight_permanent_failures'] = !empty($_POST['highlight_permanent_failures']);
-		
-		$failure_duration_threshold = intval($_POST['failure_duration_threshold']);
-		if ( $failure_duration_threshold >=1 ){
-			$this->conf->options['failure_duration_threshold'] = $failure_duration_threshold;
-		}
-		
-		$this->conf->save_options();
-		die('1');
 	}
 	
   /**

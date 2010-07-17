@@ -271,6 +271,180 @@ class blcUtility {
     		return $default_value;
     	}
     }
+    
+	/**
+	 * Format a time delta using a fuzzy format like "15 seconds ago".
+	 * 
+	 * Like blcUtility::fuzzy_delta, but only ever displays one time unit,
+	 * i.e. just minutes or just hours, not hours *and* minutes. Also adds
+	 * the suffix "ago" to the generated fuzzy timestamp. 
+	 * 
+	 * @param int $delta
+	 * @return string
+	 */
+	function fuzzy_ago($delta){
+		$ONE_MINUTE = 60;
+		$ONE_HOUR = 60 * $ONE_MINUTE;
+		$ONE_DAY = 24 * $ONE_HOUR;
+		$ONE_MONTH = $ONE_DAY * 3652425 / 120000;
+		$ONE_YEAR = $ONE_DAY * 3652425 / 10000;
+		
+		if ( $delta < 1 ) {
+			$delta = 1;
+		}
+		
+		if ( $delta < $ONE_MINUTE ){
+			return sprintf(
+				_n(
+					'%d second ago',
+					'%d seconds ago',
+					$delta,
+					'broken-link-checker'
+				),
+				$delta
+			);
+		}
+		
+		if ( $delta < $ONE_HOUR ){
+			$minutes = intval($delta / $ONE_MINUTE);
+			
+			return sprintf(
+				_n(
+					'%d minute ago',
+					'%d minutes ago',
+					$minutes,
+					'broken-link-checker'
+				),
+				$minutes
+			);
+		}
+		
+		if ( $delta < $ONE_DAY ){
+			$hours = intval($delta / $ONE_HOUR);
+			
+			return sprintf(
+				_n(
+					'%d hour ago',
+					'%d hours ago',
+					$hours,
+					'broken-link-checker'
+				),
+				$hours
+			);
+		}
+		
+		if ( $delta < $ONE_MONTH ){
+			$days = intval($delta / $ONE_DAY);
+		 	
+			return sprintf(
+				_n(
+					'%d day ago',
+					'%d days ago',
+					$days,
+					'broken-link-checker'
+				),
+				$days
+			);
+		}
+		
+		
+		$months = intval( $delta / $ONE_MONTH );
+		 
+		return sprintf(
+			_n(
+				'%d month ago',
+				'%d months ago',
+				$months,
+				'broken-link-checker'
+			),
+			$months
+		);
+	}
+	
+  /**
+   * Format a time delta using a fuzzy format, e.g. 'less than a minute', '2 days', etc.
+   *
+   * @param int $delta Time period in seconds.
+   * @return string
+   */
+	function fuzzy_delta($delta){
+		$ONE_MINUTE = 60;
+		$ONE_HOUR = 60 * $ONE_MINUTE;
+		$ONE_DAY = 24 * $ONE_HOUR;
+		$ONE_MONTH = $ONE_DAY * 3652425 / 120000;
+		$ONE_YEAR = $ONE_DAY * 3652425 / 10000;
+		
+		if ( $delta < 1 ) {
+			$delta = 1;
+		}
+		
+		if ( $delta < $ONE_MINUTE ){
+			return sprintf(
+				_n(
+					'%d second',
+					'%d seconds',
+					$delta,
+					'broken-link-checker'
+				),
+				$delta
+			);
+		}
+		
+		if ( $delta < $ONE_HOUR ){
+			$minutes = intval($delta / $ONE_MINUTE);
+			
+			return sprintf(
+				_n(
+					'%d minute',
+					'%d minutes',
+					$minutes,
+					'broken-link-checker'
+				),
+				$minutes
+			);
+		}
+		
+		if ( $delta < $ONE_DAY ){
+			$hours = intval($delta / $ONE_HOUR);
+			
+			return sprintf(
+				_n(
+					'%d hour',
+					'%d hours',
+					$hours,
+					'broken-link-checker'
+				),
+				$hours
+			);
+		}
+		
+		if ( $delta < $ONE_MONTH ){
+			$days = intval($delta / $ONE_DAY);
+		 	
+			return sprintf(
+				_n(
+					'%d day',
+					'%d days',
+					$days,
+					'broken-link-checker'
+				),
+				$days
+			);
+		}
+		
+		
+		$months = intval( $delta / $ONE_MONTH );
+		 
+		return sprintf(
+			_n(
+				'%d month',
+				'%d months',
+				$months,
+				'broken-link-checker'
+			),
+			$months
+		);
+	}
 	
 }//class
 

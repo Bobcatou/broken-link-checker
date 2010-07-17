@@ -44,7 +44,7 @@ function reloadDetailsRow(link_id){
 jQuery(function($){
 	
 	//The details button - display/hide detailed info about a link
-    $(".blc-details-button, .blc-link-text").click(function () {
+    $(".blc-details-button, td.column-link-text, td.column-status, td.column-new-link-text").click(function () {
     	$(this).parents('.blc-row').next('.blc-link-details').toggle();
     });
 	
@@ -394,22 +394,12 @@ jQuery(function($){
 	//------------------------------------------------------------
     // Manipulate highlight settings for permanently broken links
     //------------------------------------------------------------
-    var highlight_permanent_failures_checkbox = $('#highlight_permanent_failures-hide');
+    var highlight_permanent_failures_checkbox = $('#highlight_permanent_failures');
 	var failure_duration_threshold_input = $('#failure_duration_threshold');
-	
-	//Update the checkbox depending on current settings.
-	<?php
-	$conf = & blc_get_configuration();
-	if ( $conf->options['highlight_permanent_failures'] ){
-		echo 'highlight_permanent_failures_checkbox.attr("checked", "checked");';
-	} else {
-		echo 'highlight_permanent_failures_checkbox.removeAttr("checked");';
-	}
-	?>;
 	
     //Apply/remove highlights when the checkbox is (un)checked
     highlight_permanent_failures_checkbox.change(function(){
-    	save_highlight_settings();
+    	//save_highlight_settings();
     	
 		if ( this.checked ){
 			$('#blc-links tr.blc-permanently-broken').addClass('blc-permanently-broken-hl');
@@ -421,7 +411,7 @@ jQuery(function($){
 	//Apply/remove highlights when the duration threshold is changed.
 	failure_duration_threshold_input.change(function(){
 		var new_threshold = parseInt($(this).val());
-		save_highlight_settings();
+		//save_highlight_settings();
 		if (isNaN(new_threshold) || (new_threshold < 1)) {
 			return;
 		}
@@ -441,37 +431,29 @@ jQuery(function($){
 		});
 	});
 	
+	//Show/hide table columns dynamically
+	$('#blc-column-selector input[type="checkbox"]').change(function(){
+		var checkbox = $(this);
+		var column_id = checkbox.attr('name').split(/\[|\]/)[1];
+		if (checkbox.is(':checked')){
+			$('td.column-'+column_id+', th.column-'+column_id, '#blc-links').removeClass('hidden');
+		} else {
+			$('td.column-'+column_id+', th.column-'+column_id, '#blc-links').addClass('hidden');
+		}
+		
+		//Recalculate colspan's for detail rows to take into account the changed number of 
+		//visible columns. Otherwise you can get some ugly layout glitches.
+		$('#blc-links tr.blc-link-details td').attr(
+			'colspan', 
+			$('#blc-column-selector input[type="checkbox"]:checked').length+1
+		);
+	});
+	
 	//Don't let the user manually submit the "Screen Options" form - it wouldn't work properly anyway.
 	$('#adv-settings').submit(function(){
 		return false;	
 	});
-	
-	//Save highlight settings using AJAX
-	function save_highlight_settings(){
-		var $ = jQuery; 
 		
-		var highlight_permanent_failures = highlight_permanent_failures_checkbox.is(':checked');
-		var failure_duration_threshold = parseInt(failure_duration_threshold_input.val());
-		
-		if ( isNaN(failure_duration_threshold) || ( failure_duration_threshold < 1 ) ){
-			failure_duration_threshold = 1;
-		}
-		
-		failure_duration_threshold_input.val(failure_duration_threshold);
-		
-		$.post(
-			"<?php echo admin_url('admin-ajax.php'); ?>",
-			{
-				'action' : 'blc_save_highlight_settings',
-				'failure_duration_threshold' : failure_duration_threshold,
-				'highlight_permanent_failures' : highlight_permanent_failures?1:0,
-				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_save_highlight_settings'));  ?>'
-			}
-		);
-	}
-	
-	
-	
 });
 
 </script>

@@ -87,7 +87,11 @@ $blc_config_manager = new blcConfigurationManager(
         'enabled_post_statuses' => array('publish'), //Only check posts that match one of these statuses
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected
-		'show_link_count_bubble' => true, //Display a notification bubble in the menu when broken links are found 
+		'show_link_count_bubble' => true, //Display a notification bubble in the menu when broken links are found
+		
+		'table_layout' => 'flexible',   //The layout of the link table. Possible values : 'classic', 'flexible'
+		'table_compact' => true,   		//Compact table mode on/off 
+		'table_visible_columns' => array('new-url', 'status', 'used-in', 'new-link-text',), 
 		
 		'need_resynch' => false,  		//[Internal flag] True if there are unparsed items.
 		'current_db_version' => 0,		//The currently set-up version of the plugin's tables

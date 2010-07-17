@@ -55,6 +55,10 @@
 	margin-top: 0.2em; 
 }
 
+#blc-tabs {
+	margin-top: 0.5em;
+}
+
 /* Tab navigation */
 ul.ui-tabs-nav {
 	margin-bottom: -1px;
@@ -66,7 +70,8 @@ ul.ui-tabs-nav li {
 	margin: 0 0.5em 0 0;
 	
 	border: 1px solid #DFDFDF;
-	border-bottom-width: 0;
+	
+	background: none repeat scroll 0 0 #F4F4F4;
 	
 	border-top-right-radius: 6px;
 	border-top-left-radius: 6px;
@@ -78,11 +83,13 @@ ul.ui-tabs-nav li {
 	-webkit-border-top-left-radius: 6px;
 	
 	font-weight: bold;
+	text-shadow: 0 1px 0 #FFFFFF;
 }
 
 ul.ui-tabs-nav li.ui-tabs-selected {
 	background: white;
 	color: black;
+	border-bottom-color: white;
 }
 
 ul.ui-tabs-nav li a {
