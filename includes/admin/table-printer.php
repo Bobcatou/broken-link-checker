@@ -469,7 +469,8 @@ class blcTablePrinter {
 	}
 	
 	function column_source(&$link, &$instance = null){
-		echo '<td class="post-title column-title">',
+		//TODO: Remove <td> here
+		echo '<td class="post-title column-title column-source">',
 				'<span class="blc-link-id" style="display:none;">',
 					$link->link_id,
 				'</span>';
@@ -492,6 +493,7 @@ class blcTablePrinter {
 	}
 	
 	function column_url(&$link){
+		//TODO: Remove <td> here
 		?>
 		<td class='column-url'>
             <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
@@ -617,12 +619,10 @@ class blcTablePrinter {
 	}
 	
 	function column_used_in(&$link, &$instance = null){
-		//echo '<td class="post-title column-title column-used-in">',
 		echo '<span class="blc-link-id" style="display:none;">',
 					$link->link_id,
 				'</span>';
-				 	
-		//Print the contents of the "Source" column
+				
 		if ( !is_null($instance) ){
 			echo $instance->ui_get_source();
 			

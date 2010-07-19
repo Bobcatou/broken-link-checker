@@ -129,7 +129,7 @@ class blcParser extends blcModule {
    * @param blcLinkInstance $instance
    * @return string HTML 
    */
-	function ui_get_link_text($instance, $context = 'display'){
+	function ui_get_link_text(&$instance, $context = 'display'){
 		return $instance->link_text;
 	}
 	

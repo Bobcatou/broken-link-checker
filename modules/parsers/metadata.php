@@ -103,6 +103,32 @@ class blcMetadataParser extends blcParser {
 			'raw_url' => $new_url,
 		);
 	}
+	
+  /**
+   * Get the link text for printing in the "Broken Links" table.
+   * Sub-classes should override this method and display the link text in a way appropriate for the link type.
+   *
+   * @param blcLinkInstance $instance
+   * @return string HTML 
+   */
+	function ui_get_link_text(&$instance, $context = 'display'){
+		$image_html = sprintf(
+			'<img src="%s" class="blc-small-image" title="%2$s" alt="%2$s"> ',
+			esc_attr( plugins_url('/images/script_code.png', blc_get_plugin_file()) ),
+			__('Custom field', 'broken-link-checker')
+		);
+		
+		$field_html = sprintf(
+			'<code>%s</code>',
+			$instance->container_field
+		); 
+		
+		if ( $context != 'email' ){
+			$field_html = $image_html . $field_html;
+		}
+		
+		return $field_html;
+	}
 }
 
 ?>

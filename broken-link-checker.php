@@ -196,6 +196,16 @@ function blc_resynch( $forced = false ){
 }
 
 /**
+ * Retrieve the fully qualified filename of BLC's main PHP file.
+ * 
+ * @return string
+ */
+function blc_get_plugin_file(){
+	//You'd be surprised on how useful this can be. 
+	return __FILE__; 
+}
+
+/**
  * Delete synch. records, instances and links that refer to missing or invalid items.
  * 
  * @return void
