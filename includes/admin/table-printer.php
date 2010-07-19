@@ -18,9 +18,11 @@ class blcTablePrinter {
 	
 	var $bulk_actions_html = '';
 	var $pagination_html = '';
+	var $searched_link_type = '';
 	
 	var $columns;
 	var $layouts;
+	
 	
 	function blcTablePrinter(&$core){
 		$this->core = &$core;
@@ -98,7 +100,7 @@ class blcTablePrinter {
         foreach ($this->current_filter['links'] as $link) {
         	$rownum++;
         	$this->link_row($link, $layout, $visible_columns, $rownum);
-        	$this->link_details_row($link, $layout, $rownum);
+        	$this->link_details_row($link, $visible_columns, $rownum);
        	}
 		echo '</tbody></table>';
 						
@@ -198,7 +200,7 @@ class blcTablePrinter {
 	function setup_layouts(){
 		$this->layouts = array(
 			'classic' =>  array('source', 'link-text', 'url', 'status'),
-			'flexible' => array('new-url', 'status', 'used-in', 'new-link-text', ),
+			'flexible' => array('new-url', 'status', 'new-link-text', 'used-in', ),
 		);
 	}
 	
@@ -308,27 +310,17 @@ class blcTablePrinter {
 			}
 		}
 		
-		//Pick one link instance to display in the table
-		$instance = null;
+		//Retrieve link instances to display in the table
 		$instances = $link->get_instances();
 		
 		if ( !empty($instances) ){
-			//Try to find one that matches the selected link type, if any
-			if( !empty($this->current_filter['search_params']['s_link_type']) ){
+			//Put instances that match the selected link type at the top. Makes search results look better. 
+			if ( !empty($this->current_filter['search_params']['s_link_type']) ){
 				$s_link_type = $this->current_filter['search_params']['s_link_type'];
-				foreach($instances as $candidate){
-					if ( ($candidate->container_type == $s_link_type) || ($candidate->parser_type == $s_link_type) ){
-						$instance = $candidate;
-						break;
-					}
-				}
+			} else {
+				$s_link_type = '';
 			}
-			//If there's no specific link type set, or no suitable instances were found,
-			//just use the first one.
-			if ( is_null($instance) ){
-				$instance = $instances[0];
-			}
-
+			$instances = $this->sort_instances_for_display($instances, $s_link_type);
 		}
 		
 		printf(
@@ -353,7 +345,7 @@ class blcTablePrinter {
 			
 			if ( isset($column['content']) ){
 				if ( is_callable($column['content']) ){
-					call_user_func($column['content'], $link, $instance);
+					call_user_func($column['content'], $link, $instances);
 				} else {
 					echo $column['content'];
 				}
@@ -370,14 +362,16 @@ class blcTablePrinter {
 	/**
 	 * Print the details row for a specific link.
 	 * 
-	 * @param object $link
+	 * @param object $link The link to display.
+	 * @param array $visible_columns List of visible columns.
+	 * @param integer $rownum Table row number.
 	 * @return void
 	 */
-	function link_details_row(&$link, $layout, $rownum = 0){
+	function link_details_row(&$link, $visible_columns, $rownum = 0){
 		?>
 		
 		<tr id='<?php print "link-details-{$rownum}"; ?>' class='blc-link-details'>
-		<td colspan='<?php echo count($layout)+1; ?>'>
+		<td colspan='<?php echo count($visible_columns)+1; ?>'>
 		
 		<div class="blc-detail-container">
 			<div class="blc-detail-block" style="float: left; width: 49%;">
@@ -468,7 +462,7 @@ class blcTablePrinter {
 		<?php
 	}
 	
-	function column_source(&$link, &$instance = null){
+	function column_source(&$link, $instances){
 		//TODO: Remove <td> here
 		echo '<td class="post-title column-title column-source">',
 				'<span class="blc-link-id" style="display:none;">',
@@ -476,7 +470,9 @@ class blcTablePrinter {
 				'</span>';
 				 	
 		//Print the contents of the "Source" column
-		if ( !is_null($instance) ){
+		if ( !empty($instances) ){
+			$instance = reset($instances);
+			
 			echo $instance->ui_get_source();
 			
 			$actions = $instance->ui_get_action_links();
@@ -532,15 +528,16 @@ class blcTablePrinter {
 		<?php
 	}
 	
-	function column_link_text(&$link, &$instance = null){
-		if ( is_null($instance) ){
+	function column_link_text(&$link, $instances){
+		if ( empty($instances) ){
 			echo '<em>N/A</em>';
 		} else {
+			$instance = reset($instances);
 			echo $instance->ui_get_link_text();
 		}
 	}
 	
-	function column_status(&$link, &$instance = null){
+	function column_status(&$link, $instances){
 		echo '<table class="mini-status">';
 		
 		$status = $link->analyse_status();
@@ -618,12 +615,13 @@ class blcTablePrinter {
 		echo '</div>';
 	}
 	
-	function column_used_in(&$link, &$instance = null){
+	function column_used_in(&$link, $instances){
 		echo '<span class="blc-link-id" style="display:none;">',
 					$link->link_id,
 				'</span>';
 				
-		if ( !is_null($instance) ){
+		if ( !empty($instances) ){
+			$instance = reset($instances);
 			echo $instance->ui_get_source();
 			
 			echo '<p class="link-text">', $instance->ui_get_link_text(), '</p>';
@@ -641,12 +639,57 @@ class blcTablePrinter {
 		//echo '</td>';
 	}
 	
-	function column_new_link_text(&$link, &$instance = null){
-		if ( is_null($instance) ){
+	function column_new_link_text(&$link, $instances){
+		if ( empty($instances) ){
 			echo '<em>N/A</em>';
 		} else {
+			$instance = reset($instances);
 			echo $instance->ui_get_link_text();
 		}
+	}
+	
+	/**
+	 * Sort a list of link instances to be displayed in the "Broken Links" page.
+	 * 
+	 * Groups instances by container type and, if $search_link_type is specified,
+	 * puts instances that have a matching container type or parser type at the
+	 * beginning.
+	 * 
+	 * @param array $instances An array of blcLinkInstance objects.
+	 * @param string $searched_link_type Optional. The required container/parser type. 
+	 * @return array Sorted array.
+	 */
+	function sort_instances_for_display($instances, $searched_link_type = ''){
+		$this->searched_link_type = $searched_link_type;
+		usort($instances, array(&$this, 'compare_link_instances'));
+		return $instances;
+	}
+	
+	/**
+	 * Callback function for sorting link instances.
+	 * 
+	 * @see blcTablePrinter::sort_instances_for_display()
+	 * 
+	 * @param blcLinkInstance $a
+	 * @param blcLinkInstance $b
+	 * @return int
+	 */
+	function compare_link_instances($a, $b){
+		if ( !empty($this->searched_link_type) ){
+			if ( ($a->container_type == $this->searched_link_type) || ($a->parser_type == $this->searched_link_type) ){
+				if ( ($b->container_type == $this->searched_link_type) || ($b->parser_type == $this->searched_link_type) ){
+					return 0;
+				} else {
+					return -1;
+				}
+			} else {
+				if ( ($b->container_type == $this->searched_link_type) || ($b->parser_type == $this->searched_link_type) ){
+					return 1;
+				}
+			}
+		}
+		
+		return strcmp($a->container_type, $b->container_type);
 	}
 	
 }

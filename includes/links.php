@@ -857,10 +857,7 @@ class blcLink {
 				
 			} else {
 				
-				if ( $this->redirect_count > 0 ){
-					$text = __('Redirect', 'broken-link-checker');
-					$code = BLC_LINK_STATUS_INFO;
-				} elseif ( !$this->last_check_attempt ) {
+				if ( !$this->last_check ) {
 					$text = __('Not checked', 'broken-link-checker');
 					$code = BLC_LINK_STATUS_UNKNOWN;
 				} else {
