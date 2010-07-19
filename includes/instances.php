@@ -335,8 +335,8 @@ class blcLinkInstance {
    * @param string $field
    * @return void
    */
-	function set_container($new_container, $field = ''){
-		$this->_container = $new_container;
+	function set_container(&$new_container, $field = ''){
+		$this->_container = &$new_container;
 		
 		$this->container_field = $field;
 		
