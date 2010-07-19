@@ -106,7 +106,6 @@ class blcMetadataParser extends blcParser {
 	
   /**
    * Get the link text for printing in the "Broken Links" table.
-   * Sub-classes should override this method and display the link text in a way appropriate for the link type.
    *
    * @param blcLinkInstance $instance
    * @return string HTML 
