@@ -38,7 +38,7 @@ th.column-url {
 }
 
 th.column-new-url {
-	/*width: 35%;*/
+	width: 35%;
 }
 
 th.column-status {
@@ -116,7 +116,31 @@ td.column-new-url .mini-status {
     font-size: 1em;
     width: 95%;
     margin-left: 12px;
+    margin-top: -1px;
 }
+
+.blc-url-editor-buttons {
+	margin-left: 12px;
+	margin-top: 2px;
+	display: none;
+	width: 95%;
+}
+
+img.waiting {
+	float:right;
+	padding:4px 8px 0;
+	vertical-align:top;
+}
+
+/*
+.blc-url-editor-buttons .blc-edit-button {
+	float: right;
+}
+
+.blc-url-editor-buttons .blc-cancel-button {
+	float: left;
+}
+*/
 
 td.column-link-text, td.column-new-link-text {
 	cursor: pointer; 
@@ -126,6 +150,8 @@ td.column-link-text, td.column-new-link-text {
 .blc-small-image {
 	vertical-align: middle;
 }
+
+
 
 /* The "Status" column */
 td.column-status {

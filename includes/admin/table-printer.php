@@ -456,9 +456,7 @@ class blcTablePrinter {
 	
 	function column_checkbox(&$link){
 		?>
-		<th class="check-column" scope="row">
-			<input type="checkbox" name="selected_links[]" value="<?php echo $link->link_id; ?>" />
-		</th>
+		<th scope="row" class="check-column"><input type="checkbox" name="selected_links[]" value="<?php echo $link->link_id; ?>" /></th>
 		<?php
 	}
 	
@@ -595,9 +593,6 @@ class blcTablePrinter {
       	
       	$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
       	
-		$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
-		
 		if ( $link->broken ){
 			$actions['discard'] = sprintf(
 				'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
@@ -606,13 +601,24 @@ class blcTablePrinter {
 			);
 		}
 		
+		$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
+			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
+		
 		echo '<div class="row-actions">';
-		echo implode(' | </span>', $actions);
+		echo implode(' | </span>', $actions) .'</span>';
 		
 		echo "<span style='display:none' class='blc-cancel-button-container'> " .
 			 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
 
 		echo '</div>';
+		
+		?>
+		<div class="blc-url-editor-buttons">
+			<input type="button" class="button-secondary cancel alignleft blc-cancel-button" value="<?php echo esc_attr(__('Cancel')); ?>" />
+			<input type="button" class="button-primary save alignright blc-update-url-button" value="<?php echo esc_attr(__('Update URL', 'broken-link-checker')); ?>" />
+			<img class="waiting" style="display:none;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
+		</div>
+		<?php
 	}
 	
 	function column_used_in(&$link, $instances){
