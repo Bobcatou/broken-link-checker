@@ -1511,6 +1511,11 @@ EOZ;
 	}
 	
 
+    /**
+     * Display the "Broken Links" page, listing links detected by the plugin and their status.
+     * 
+     * @return void
+     */
     function links_page(){
         global $wpdb, $blclog;
         
@@ -1582,9 +1587,14 @@ EOZ;
 		//Calculate the number of links matching each filter
 		$blc_link_query->count_filter_results();
 		
-		//Get the selected filter (defaults to displaying broken links)
+		//Run the selected filter (defaults to displaying broken links)
 		$selected_filter_id = isset($_GET['filter_id'])?$_GET['filter_id']:'broken';
-		$current_filter = $blc_link_query->exec_filter($selected_filter_id, 'broken');
+		$current_filter = $blc_link_query->exec_filter(
+			$selected_filter_id,
+			isset($_GET['paged']) ? intval($_GET['paged']) : 1,
+			$this->conf->options['table_links_per_page'], 
+			'broken'
+		);
 		
 		//exec_filter() returns an array with filter data, including the actual filter ID that was used.
 		$filter_id = $current_filter['filter_id'];
@@ -2029,11 +2039,21 @@ EOZ;
 	}
 	
 	/**
-	 * wsBrokenLinkChecker::print_screen_options()
+	 * Generate the HTML for the plugin's Screen Options panel.
 	 * 
 	 * @return string
 	 */
 	function screen_options_html(){
+		//Update the links-per-page setting when "Apply" is clicked
+		if ( isset($_POST['per_page']) && is_numeric($_POST['per_page']) ) {
+			check_admin_referer( 'screen-options-nonce', 'screenoptionnonce' );
+			$per_page = intval($_POST['per_page']);
+			if ( ($per_page >= 1) && ($per_page <= 500) ){
+				$this->conf->options['table_links_per_page'] = $per_page;
+				$this->conf->save_options();
+			}
+		}
+		
 		//Let the user show/hide individual table columns
 		$html = '<h5>' . __('Table columns', 'broken-link-checker') . '</h5>';
 		
@@ -2041,7 +2061,7 @@ EOZ;
 		$table = new blcTablePrinter($this);
 		$available_columns = $table->get_layout_columns($this->conf->options['table_layout']);
 		
-		$html .= '<div id="blc-column-selector">';
+		$html .= '<div id="blc-column-selector" class="metabox-prefs">';
 		
 		foreach( $available_columns as $column_id => $data ){
 			$html .= sprintf(
@@ -2054,19 +2074,36 @@ EOZ;
 		
 		$html .= '</div>';
 		
+		//TODO: Improve "Screen Options" layout / option grouping and names
+		$html .= '<h5>' . __('Show on screen') . '</h5>';
+		$html .= '<div class="screen-options">';
+		
+		$html .= sprintf(
+			'<input type="text" name="per_page" maxlength="3" value="%d" class="screen-per-page" id="blc_links_per_page" />
+			<label for="blc_links_per_page">%s</label>
+			<input type="button" class="button" value="%s" id="blc-per-page-apply-button" /><br />',
+			$this->conf->options['table_links_per_page'],
+			__('links', 'broken-link-checker'),
+			__('Apply')
+		);
+		
+		$html .= '</div>';
+		
 		/*
 		Display a checkbox in "Screen Options" that lets the user highlight links that 
 		have been broken for at least X days.  
 		*/
 		$html .= '<h5>' . __('Misc', 'broken-link-checker') . '</h5>';
 		
+		$html .= '<div class="screen-options">';
+		
 		$html .= sprintf(
-			'<label><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s>',
+			'<label><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s> ',
 			$this->conf->options['highlight_permanent_failures'] ? ' checked="checked"' : ''
 		);
 		
 		$input_box = sprintf(
-        	'</label><input style="margin-left: -1em" type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2"><label for="highlight_permanent_failures">',
+        	'</label><input type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2"><label for="highlight_permanent_failures">',
         	$this->conf->options['failure_duration_threshold']
 		);
         $html .= sprintf(
@@ -2075,7 +2112,7 @@ EOZ;
 		);
 		$html .= '</label>';
 		
-		
+		$html .= '</div>';
 		
 		return $html;
 	}

@@ -492,9 +492,16 @@ jQuery(function($){
 		);
 	});
 	
-	//Don't let the user manually submit the "Screen Options" form - it wouldn't work properly anyway.
-	$('#adv-settings').submit(function(){
-		return false;	
+	//Unlike other fields in "Screen Options", the links-per-page setting 
+	//is handled using straight form submission (POST), not AJAX.
+	$('#blc-per-page-apply-button').click(function(){
+		$('#adv-settings').submit();	
+	});
+	
+	$('#blc_links_per_page').keypress(function(e){
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			$('#adv-settings').submit();
+		}	
 	});
 		
 });

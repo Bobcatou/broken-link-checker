@@ -92,6 +92,7 @@ $blc_config_manager = new blcConfigurationManager(
 		'table_layout' => 'flexible',   //The layout of the link table. Possible values : 'classic', 'flexible'
 		'table_compact' => true,   		//Compact table mode on/off 
 		'table_visible_columns' => array('new-url', 'status', 'used-in', 'new-link-text',), 
+		'table_links_per_page' => 30,
 		
 		'need_resynch' => false,  		//[Internal flag] True if there are unparsed items.
 		'current_db_version' => 0,		//The currently set-up version of the plugin's tables

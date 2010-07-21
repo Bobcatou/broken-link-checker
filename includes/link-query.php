@@ -660,10 +660,12 @@ class blcLinkQuery {
 	 *  'is_broken_filter' - TRUE if the filter was set to retrieve only broken links, FALSE otherwise.
 	 * 
 	 * @param string $filter_id Filter ID.
+	 * @param int $page Optional. Which page of results to retrieve. Defaults to returning the first page of results.
+	 * @param int $per_page Optional. The number of results per page. Defaults to 30.
 	 * @param string $fallback Optional. Which filter to use if none match the specified $filter_id. Defaults to the native broken link filter.
 	 * @return array Associative array of filter data and the results of its execution.
 	 */
-	function exec_filter($filter_id, $fallback = 'broken'){
+	function exec_filter($filter_id, $page = 1, $per_page = 30, $fallback = 'broken'){
 		
 		//Get the selected filter (defaults to displaying broken links)
 		$current_filter = $this->get_filter($filter_id);
@@ -672,16 +674,14 @@ class blcLinkQuery {
 			$filter_id = $fallback;
 		}
 		
-		//Get the desired page number (must be > 0) 
-		$page = isset($_GET['paged'])?intval($_GET['paged']):1;
+		//Page number must be > 0 
 		if ($page < 1) $page = 1;
 		
-		//Links per page [1 - 200]
-		$per_page = isset($_GET['per_page'])?intval($_GET['per_page']):30;
+		//Links per page [1 - 500]
 		if ($per_page < 1){
 			$per_page = 30;
-		} else if ($per_page > 200){
-			$per_page = 200;
+		} else if ($per_page > 500){
+			$per_page = 500;
 		}
 		
 		//Calculate the maximum number of pages.

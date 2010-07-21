@@ -1,6 +1,6 @@
 <?php
 
-if ( !class_exists('wsScreenOptions10') ):
+if ( !class_exists('wsScreenOptions11') ):
 
 /**
  * Class for adding new panels to the "Screen Options" box.
@@ -9,10 +9,10 @@ if ( !class_exists('wsScreenOptions10') ):
  * 
  * @author Janis Elsts
  * @copyright 2010
- * @version 1.0
+ * @version 1.1
  * @access public
  */
-class wsScreenOptions10 {
+class wsScreenOptions11 {
 	var $registered_panels; //List of custom "Screen Options" panels
 	var $page_panels;       //Index of panels registered for each page ($page => array of panel ids).
 	
@@ -21,7 +21,7 @@ class wsScreenOptions10 {
 	 * 
 	 * @return void
 	 */
-	function wsScreenOptions10(){
+	function wsScreenOptions11(){
 		$this->registered_panels = array();
 		$this->page_panels = array();
 		
@@ -129,7 +129,7 @@ class wsScreenOptions10 {
 			if ( is_callable($panel['callback']) ){
 				$contents = call_user_func($panel['callback']);
 				$classes = array(
-					'metabox-prefs',
+					/*'metabox-prefs',*/
 					'custom-options-panel',
 				);
 				if ( $panel['autosave'] ){
@@ -244,7 +244,7 @@ global $ws_screen_options_versions;
 if ( !isset($ws_screen_options_versions) ){
 	$ws_screen_options_versions = array();
 }
-$ws_screen_options_versions['1.0'] = 'wsScreenOptions10';
+$ws_screen_options_versions['1.1'] = 'wsScreenOptions11';
 
 endif;
 
