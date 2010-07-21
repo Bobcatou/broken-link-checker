@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: Standard HTML links
+Plugin Name: HTML links
 Description: Example : <code>&lt;a href="http://example.com/"&gt;link text&lt;/a&gt;</code>
 Version: 1.0
 Author: Janis Elsts

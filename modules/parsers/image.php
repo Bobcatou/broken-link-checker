@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Standard HTML images
+Plugin Name: HTML images
 Description: e.g. <code>&lt;img src="http://example.com/fluffy.jpg"&gt;</code>
 Version: 1.0
 Author: Janis Elsts

@@ -263,3 +263,11 @@ div.search-box{
 	margin-left: 0pt;
 }
 
+#s_link_type optgroup {
+	font-style: normal;
+	font-size: 13px;
+}
+
+#s_link_type optgroup option {
+	margin-left: 1em;
+}

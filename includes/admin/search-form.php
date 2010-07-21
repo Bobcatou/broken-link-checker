@@ -67,7 +67,33 @@
 	
 	<label for="s_link_type"><?php _e('Link type', 'broken-link-checker'); ?></label>
 	<select name="s_link_type" id="s_link_type">
+		<option value=""><?php _e('Any', 'broken-link-checker'); ?></option>
 		<?php
+		$moduleManager = &blcModuleManager::getInstance();
+		
+		printf('<optgroup label="%s">', esc_attr(__('Links used in', 'broken-link-checker')));
+		$containers = $moduleManager->get_modules_by_category('container');
+		foreach($containers as $container_type => $module_data){
+			if ( !empty($module_data['ModuleHidden']) ){
+				continue;
+			}
+			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $container_type )?' selected="selected"':'';
+			printf('<option value="%s"%s>%s</option>', $container_type, $selected, $module_data['Name']);
+		}
+		echo '</optgroup>';
+		//TODO: Better group labels
+		printf('<optgroup label="%s">', esc_attr(__('Links of type', 'broken-link-checker')));
+		$parsers = $moduleManager->get_modules_by_category('parser');
+		foreach($parsers as $parser_type => $module_data){
+			if ( !empty($module_data['ModuleHidden']) ){
+				continue;
+			}
+			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $parser_type )?' selected="selected"':'';
+			printf('<option value="%s"%s>%s</option>', $parser_type, $selected, $module_data['Name']);
+		}
+		echo '</optgroup>';
+		
+		/*
 		$link_types = array(
 			__('Any', 'broken-link-checker') => '',
 			__('Normal link', 'broken-link-checker') => 'link',
@@ -76,11 +102,7 @@
 			__('Bookmark', 'broken-link-checker') => 'blogroll',
 			__('Comment', 'broken-link-checker') => 'comment',
 		);
-		
-		foreach ($link_types as $name => $value){
-			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $value )?' selected="selected"':'';
-			printf('<option value="%s"%s>%s</option>', $value, $selected, $name);
-		}
+		*/
 		?>
 	</select>
 	
