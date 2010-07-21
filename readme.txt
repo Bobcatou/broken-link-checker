@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 2.9.0
 Tested up to: 3.0
-Stable tag: 0.9.4.2
+Stable tag: 0.9.4.4
 
 This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
 
@@ -78,6 +78,13 @@ To upgrade your installation
 == Changelog ==
 
 *This is an automatically generated changelog*
+
+= 0.9.4.4 =
+* Fixed "Edit URL" and "Unlink" not working on PHP4 servers.
+
+= 0.9.4.3 =
+* Another PHP 4 fix. Considering dropping support for PHP4 in light of the counterintuitive workarounds required to make perfectly valid PHP5 code work in that ghastly thing.
+* Added a partial workaround for sites that have use strange DB\_CHARSET settings.
 
 = 0.9.4.2 =
 * Added more debugging data to the "Show debug info" table.
