@@ -120,7 +120,7 @@ $blclog = new blcDummyLogger;
 
 
 /*
-if ( constant('BLC_DEBUG') ){
+if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
 	if ( !class_exists('FB') ) {
 		require_once 'FirePHPCore/fb.php4';

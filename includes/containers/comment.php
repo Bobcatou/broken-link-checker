@@ -15,9 +15,9 @@ class blcComment extends blcContainer{
    * @param bool $ensure_consistency 
    * @return object The comment.
    */
-	function get_wrapped_object($ensure_consistency = false){
+	function &get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
-			$this->wrapped_object = get_comment($this->container_id);
+			$this->wrapped_object = &get_comment($this->container_id);
 		}		
 		return $this->wrapped_object;
 	}	
@@ -38,6 +38,7 @@ class blcComment extends blcContainer{
 		}
 		
 		$data = (array)$this->wrapped_object;
+		//FB::info($data, sprintf("Attempting to update comment %d with data", $this->container_id));
 		if ( wp_update_comment($data) ){
 			return true;
 		} else {

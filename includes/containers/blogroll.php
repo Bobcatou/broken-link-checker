@@ -54,9 +54,9 @@ class blcBookmark extends blcContainer{
    * @param bool $ensure_consistency Set this to true to ignore the cached $wrapped_object value and retrieve an up-to-date copy of the wrapped object from the DB (or WP's internal cache).
    * @return object Bookmark data.
    */
-	function get_wrapped_object($ensure_consistency = false){
+	function &get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
-			$this->wrapped_object = get_bookmark($this->container_id);
+			$this->wrapped_object = &get_bookmark($this->container_id);
 		}		
 		return $this->wrapped_object;
 	}
