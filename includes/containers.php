@@ -188,7 +188,7 @@ class blcContainer {
 			$field = $this->default_field;
 		}
 		
-		$w = $this->get_wrapped_object();
+		$w = &$this->get_wrapped_object();
 		return $w->$field;
 	}
 	
@@ -204,7 +204,7 @@ class blcContainer {
    * @return bool|WP_Error True on success, an error object if something went wrong.
    */
 	function update_field($field, $new_value, $old_value = ''){
-		$w = $this->get_wrapped_object();
+		$w = &$this->get_wrapped_object();
 		$w->$field = $new_value;
 		return $this->update_wrapped_object();
 	}
@@ -218,7 +218,7 @@ class blcContainer {
    * @param bool $ensure_consistency Set this to true to ignore the cached $wrapped_object value and retrieve an up-to-date copy of the wrapped object from the DB (or WP's internal cache).
    * @return object The wrapped object.
    */
-	function get_wrapped_object($ensure_consistency = false){
+	function &get_wrapped_object($ensure_consistency = false){
 		trigger_error('Function blcContainer::get_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
 	}	
 	
@@ -451,7 +451,7 @@ class blcContainer {
 		if ( is_wp_error($edit_result) ){
 			return $edit_result;
 		}
-		
+			
 		//Update the field with the new value returned by the parser.
 		$update_result = $this->update_field( $field_name, $edit_result['content'], $old_value );
 		if ( is_wp_error($update_result) ){

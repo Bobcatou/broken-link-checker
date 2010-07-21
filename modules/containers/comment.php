@@ -22,9 +22,9 @@ class blcComment extends blcContainer{
    * @param bool $ensure_consistency 
    * @return object The comment.
    */
-	function get_wrapped_object($ensure_consistency = false){
+	function &get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
-			$this->wrapped_object = get_comment($this->container_id);
+			$this->wrapped_object = &get_comment($this->container_id);
 		}		
 		return $this->wrapped_object;
 	}	
