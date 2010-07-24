@@ -1559,21 +1559,39 @@ EOZ;
         $msg_class = 'updated';
         
         //Run the selected bulk action, if any
-        if ( $action == 'create-custom-filter' ){
-        	list($message, $msg_class) = $this->do_create_custom_filter(); 
-		} elseif ( $action == 'delete-custom-filter' ){
-			list($message, $msg_class) = $this->do_delete_custom_filter();
-		} elseif ($action == 'bulk-delete-sources') {
-			list($message, $msg_class) = $this->do_bulk_delete_sources($selected_links);
-		} elseif ($action == 'bulk-unlink') {
-			list($message, $msg_class) = $this->do_bulk_unlink($selected_links);
-		} elseif ($action == 'bulk-deredirect') {
-			list($message, $msg_class) = $this->do_bulk_deredirect($selected_links);
-		} elseif ($action == 'bulk-recheck') {
-			list($message, $msg_class) = $this->do_bulk_recheck($selected_links);
-		} elseif ($action == 'bulk-not-broken') {
-			list($message, $msg_class) = $this->do_bulk_discard($selected_links);
-		}
+        $force_delete = false;
+        switch ( $action ){
+        	case 'create-custom-filter':
+        		list($message, $msg_class) = $this->do_create_custom_filter();
+				break;
+				 
+			case 'delete-custom-filter':
+				list($message, $msg_class) = $this->do_delete_custom_filter();
+				break;
+			
+			case 'bulk-delete-sources':
+				$force_delete = true;
+			case 'bulk-trash-sources':
+				list($message, $msg_class) = $this->do_bulk_delete_sources($selected_links, $force_delete);
+				break;
+				
+			case 'bulk-unlink':
+				list($message, $msg_class) = $this->do_bulk_unlink($selected_links);
+				break;
+				
+			case 'bulk-deredirect':
+				list($message, $msg_class) = $this->do_bulk_deredirect($selected_links);
+				break;
+				
+			case 'bulk-recheck':
+				list($message, $msg_class) = $this->do_bulk_recheck($selected_links);
+				break;
+				
+			case 'bulk-not-broken':
+				list($message, $msg_class) = $this->do_bulk_discard($selected_links);
+				break;
+        }
+        
 		
 		if ( !empty($message) ){
 			echo '<div id="message" class="'.$msg_class.' fade"><p>'.$message.'</p></div>';
@@ -1854,12 +1872,16 @@ EOZ;
 	}
 	
   /**
-   * Delete posts, bookmarks and other items that contain any of the specified links.
+   * Delete or trash posts, bookmarks and other items that contain any of the specified links.
+   * 
+   * Will prefer moving stuff to trash to permanent deletion. If it encounters an item that 
+   * can't be moved to the trash, it will skip that item by default.
    *
    * @param array $selected_links An array of link IDs
+   * @param bool $force_delete Whether to bypass trash and force deletion. Defaults to false.
    * @return array Confirmation message and its CSS class.
    */
-	function do_bulk_delete_sources($selected_links){
+	function do_bulk_delete_sources($selected_links, $force_delete = false){
 		$message = '';
 		$msg_class = 'updated';
 		
@@ -1895,12 +1917,24 @@ EOZ;
 			//Instantiate the containers
 			$containers = blcContainerHelper::get_containers($containers);
 
-			//Delete their associated entities
+			//Delete/trash their associated entities
 			$deleted = array();
+			$skipped = array();
 			foreach($containers as $container){
-				$container_type = $container->container_type;
+				if ( !$container->current_user_can_delete() ){
+					continue;
+				}
 				
-				$rez = $container->delete_wrapped_object();
+				if ( $force_delete ){
+					$rez = $container->delete_wrapped_object();
+				} else {
+					if ( $container->can_be_trashed() ){
+						$rez = $container->trash_wrapped_object();
+					} else {
+						$skipped[] = $container; 
+						continue;
+					}
+				}
 				
 				if ( is_wp_error($rez) ){
 					//Record error messages for later display
@@ -1908,6 +1942,7 @@ EOZ;
 					$msg_class = 'error';
 				} else {
 					//Keep track of how many of each type were deleted.
+					$container_type = $container->container_type;
 					if ( isset($deleted[$container_type]) ){
 						$deleted[$container_type]++;
 					} else {
@@ -1918,11 +1953,38 @@ EOZ;
 			
 			//Generate delete confirmation messages
 			foreach($deleted as $container_type => $number){
-				$messages[] = blcContainerHelper::ui_bulk_delete_message($container_type, $number);
+				if ( $force_delete ){
+					$messages[] = blcContainerHelper::ui_bulk_delete_message($container_type, $number);
+				} else {
+					$messages[] = blcContainerHelper::ui_bulk_trash_message($container_type, $number);
+				}
+				
+			}
+			
+			//If some items couldn't be trashed, let the user know
+			if ( count($skipped) > 0 ){
+				$message = sprintf(
+					_n(
+						"%d item was skipped because it can't be moved to the Trash. You need to delete it manually.",
+						"%d items were skipped because they can't be moved to the Trash. You need to delete them manually.",
+						count($skipped)
+					),
+					count($skipped)
+				);
+				$message .= '<br><ul>';
+				foreach($skipped as $container){
+					$message .= sprintf(
+						'<li>%s</li>',
+						$container->ui_get_source()
+					);
+				}
+				$message .= '</ul>';
+				
+				$messages[] = $message;
 			}
 			
 			if ( count($messages) > 0 ){
-				$message = implode('<br>', $messages);
+				$message = implode('<p>', $messages);
 			} else {
 				$message = __("Didn't find anything to delete!", 'broken-link-checker');
 				$msg_class = 'error';

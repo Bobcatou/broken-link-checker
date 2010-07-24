@@ -377,9 +377,9 @@ class blcAnyPostContainer extends blcContainer {
 			
 			//Trash/Delete link
 			if ( current_user_can( $post_type_object->cap->delete_post, $this->container_id ) ){
-				if ( defined('EMPTY_TRASH_DAYS') && constant('EMPTY_TRASH_DAYS') ) { 
+				if ( $this->can_be_trashed() ) { 
 					$actions['trash'] = sprintf(
-						"<span><a class='submitdelete' title='%s' href='%s'>%s</a>",
+						"<span class='trash'><a class='submitdelete' title='%s' href='%s'>%s</a>",
 						esc_attr(__('Move this item to the Trash')),
 						get_delete_post_link($this->container_id, '', false),
 						__('Trash')
@@ -520,28 +520,86 @@ class blcAnyPostContainer extends blcContainer {
 	}
 	
   /**
-   * Delete the post corresponding to this container.
+   * Delete or trash the post corresponding to this container.
+   * Will always move to trash instead of deleting if trash is enabled.
    *
    * @return bool|WP_error
    */
 	function delete_wrapped_object(){
-		if ( wp_delete_post($this->container_id) ){
-			//Note that we don't need to delete the synch record and instances here - 
-			//wp_delete_post() will run the post_delete hook, which will be caught
-			//by blcPostContainerManager, which will delete anything that needs to be
-			//deleted.
+		//Note that we don't need to delete the synch record and instances here - 
+		//wp_delete_post()/wp_trash_post() will run the post_delete/trash hook, 
+		//which will be caught by blcPostContainerManager, which will in turn 
+		//delete anything that needs to be deleted.
+		if ( EMPTY_TRASH_DAYS ){
+			return $this->trash_wrapped_object();
+		} else {
+			if ( wp_delete_post($this->container_id, true) ){
+				return true;
+			} else {
+				return new WP_Error(
+					'delete_failed',
+					sprintf(
+						__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
+						get_the_title($this->container_id),
+						$this->container_id
+					)
+				);
+			};
+		}
+	}
+	
+	/**
+	 * Move the post corresponding to this container to the Trash.
+	 * 
+	 * @return bool|WP_Error
+	 */
+	function trash_wrapped_object(){
+		if ( !EMPTY_TRASH_DAYS ){
+			return new WP_Error(
+				'trash_disabled',
+				sprintf(
+					__('Can\'t move post "%s" (%d) to the trash because the trash feature is disabled', 'broken-link-checker'),
+					get_the_title($this->container_id),
+					$this->container_id
+				)
+			);
+		}
+		
+		$post = &get_post($this->container_id);
+		if ( $post->post_status == 'trash' ){
+			//Prevent conflicts between post and custom field containers trying to trash the same post.
+			//BUG: Post and custom field containers shouldn't wrap the same object
+			return true;
+		}
+		
+		if ( wp_trash_post($this->container_id) ){
 			return true;
 		} else {
 			return new WP_Error(
-				'delete_failed',
+				'trash_failed',
 				sprintf(
-					__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
+					__('Failed to move post "%s" (%d) to the trash', 'broken-link-checker'),
 					get_the_title($this->container_id),
 					$this->container_id
 				)
 			);
 		};
-	}	
+	}
+	
+	/**
+	 * Check if the current user can delete/trash this post.
+	 * 
+	 * @return bool
+	 */
+	function current_user_can_delete(){
+		$post = &$this->get_wrapped_object();
+		$post_type_object = get_post_type_object($post->post_type);
+		return current_user_can( $post_type_object->cap->delete_post, $this->container_id );
+	}
+	
+	function can_be_trashed(){
+		return defined('EMPTY_TRASH_DAYS') && EMPTY_TRASH_DAYS;
+	}
 }
 
 
@@ -614,7 +672,7 @@ class blcAnyPostContainerManager extends blcContainerManager {
    * Get the message to display after $n posts have been deleted.
    *
    * @param int $n Number of deleted posts.
-   * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
+   * @return string A delete confirmation message, e.g. "5 posts were moved deleted"
    */
 	function ui_bulk_delete_message($n){
 		//Since the "Trash" feature has been introduced, calling wp_delete_post
@@ -622,11 +680,43 @@ class blcAnyPostContainerManager extends blcContainerManager {
 		//just moves it to the trash. So we pick the message accordingly. 
 		//(If possible, BLC *always* moves to trash instead of deleting permanently.)
 		if ( function_exists('wp_trash_post') && EMPTY_TRASH_DAYS ){
-			$delete_msg = _n("%d post moved to the trash", "%d posts moved to the trash", $n, 'broken-link-checker');
+			return blcAnyPostContainerManager::ui_bulk_trash_message($n);
 		} else {
-			$delete_msg = _n("%d post deleted", "%d posts deleted", $n, 'broken-link-checker');
+			$post_type_object = get_post_type_object($this->container_type);
+			$type_name = '';
+			
+			if ( $this->container_type == 'post' || is_null($post_type_object) ){
+				$delete_msg = _n("%d post deleted.", "%d posts deleted.", $n, 'broken-link-checker');
+			} elseif ( $this->container_type == 'page' ){
+				$delete_msg = _n("%d page deleted.", "%d pages deleted.", $n, 'broken-link-checker');
+			} else {
+				$delete_msg = _n('%d "%s" deleted.', '%d "%s" deleted.', $n, 'broken-link-checker');
+				$type_name = ($n == 1 ? $post_type_object->labels->singular_name : $post_type_object->labels->name); 
+			}
+			return sprintf($delete_msg, $n, $type_name);
 		}
-		return sprintf($delete_msg, $n);
+	}
+	
+		
+  /**
+   * Get the message to display after $n posts have been trashed.
+   *
+   * @param int $n Number of deleted posts.
+   * @return string A confirmation message, e.g. "5 posts were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		$post_type_object = get_post_type_object($this->container_type);
+		$type_name = '';
+		
+		if ( $this->container_type == 'post' || is_null($post_type_object) ){
+			$delete_msg = _n("%d post moved to the Trash.", "%d posts moved to the Trash.", $n, 'broken-link-checker');
+		} elseif ( $this->container_type == 'page' ){
+			$delete_msg = _n("%d page moved to the Trash.", "%d pages moved to the Trash.", $n, 'broken-link-checker');
+		} else {
+			$delete_msg = _n('%d "%s" moved to the Trash.', '%d "%s" moved to the Trash.', $n, 'broken-link-checker');
+			$type_name = ($n == 1 ? $post_type_object->labels->singular_name : $post_type_object->labels->name); 
+		}
+		return sprintf($delete_msg, $n, $type_name);
 	}
 }
 

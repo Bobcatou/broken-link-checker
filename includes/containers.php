@@ -128,6 +128,16 @@ class blcContainerManager extends blcModule {
 			$this->container_type
 		);
 	}
+	
+  /**
+   * Get the message to display after $n containers have been moved to the trash.
+   *
+   * @param int $n Number of trashed containers.
+   * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		return $this->ui_bulk_delete_message($n);
+	}
 }
 
 /**
@@ -399,7 +409,7 @@ class blcContainer {
 	}
 	
   /**
-   * Delete the WP entity corresponding to this container.
+   * Delete or trash the WP entity corresponding to this container. Should prefer moving to trash, if possible. 
    * Also remove the synch. record of the container and all associated instances.
    *
    * Must be over-ridden in a sub-class.
@@ -408,6 +418,39 @@ class blcContainer {
    */
 	function delete_wrapped_object(){
 		trigger_error('Function blcContainer::delete_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
+	}
+	
+	/**
+	 * Move the WP entity corresponding to this container to the Trash.
+	 * 
+	 * Must be over-riden in a subclass.
+	 * 
+	 * @return bool|WP_Error
+	 */
+	function trash_wrapped_object(){
+		trigger_error('Function blcContainer::trash_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
+	}
+	
+	/**
+	 * Check if the current user can delete/trash this container.
+	 * 
+	 * Should be over-ridden in a subclass.
+	 * 
+	 * @return bool
+	 */
+	function current_user_can_delete(){
+		return false;
+	}
+	
+	/**
+	 * Determine if this container can be moved to the trash.
+	 * 
+	 * Should be over-ridden in a subclass.
+	 * 
+	 * @return bool
+	 */
+	function can_be_trashed(){
+		return false;
 	}	
 	
 	
@@ -537,6 +580,7 @@ class blcContainer {
 		//Should be over-ridden in a sub-class.
 		return '';
 	}
+	
 }
 
 
@@ -832,6 +876,24 @@ class blcContainerHelper {
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
 		} else {
 			return $manager->ui_bulk_delete_message($n);
+		}
+	}
+	
+	/**
+	 * Get the message to display after $n containers of a specific type have been moved to the trash.
+	 * 
+	 * @see blcContainerHelper::ui_bulk_delete_message()
+	 * 
+	 * @param string $container_type
+	 * @param int $n
+	 * @return string
+	 */
+	function ui_bulk_trash_message($container_type, $n){
+		$manager = & blcContainerHelper::get_manager($container_type);
+		if ( is_null($manager) ){
+			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
+		} else {
+			return $manager->ui_bulk_trash_message($n);
 		}
 	}
 }

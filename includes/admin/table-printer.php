@@ -239,8 +239,12 @@ class blcTablePrinter {
 			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
 			"bulk-not-broken" => __('Mark as not broken', 'broken-link-checker'),
 			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
-			"bulk-delete-sources" => __('Delete sources', 'broken-link-checker'),
 		);
+		if ( EMPTY_TRASH_DAYS ){
+			$bulk_actions["bulk-trash-sources"] = __('Move sources to Trash', 'broken-link-checker');
+		} else {
+			$bulk_actions["bulk-delete-sources"] = __('Delete sources', 'broken-link-checker');
+		}
 		
 		$bulk_actions_html = '';
 		foreach($bulk_actions as $value => $name){
@@ -629,8 +633,6 @@ class blcTablePrinter {
 		if ( !empty($instances) ){
 			$instance = reset($instances);
 			echo $instance->ui_get_source();
-			
-			echo '<p class="link-text">', $instance->ui_get_link_text(), '</p>';
 			
 			$actions = $instance->ui_get_action_links();
 			

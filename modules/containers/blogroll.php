@@ -12,7 +12,7 @@ ModuleClassName: blcBookmarkManager
 
 class blcBookmark extends blcContainer{
 	
-	function ui_get_source($container_field, $context = 'display'){
+	function ui_get_source($container_field = '', $context = 'display'){
 		$bookmark = $this->get_wrapped_object();
 		
 		$image = sprintf(
@@ -37,7 +37,7 @@ class blcBookmark extends blcContainer{
 	
 	function ui_get_action_links($container_field){
 		//Inline action links for bookmarks     
-		$bookmark = $this->get_wrapped_object();
+		$bookmark = &$this->get_wrapped_object();
 		
 		$delete_url = admin_url( wp_nonce_url("link.php?action=delete&link_id={$this->container_id}", 'delete-bookmark_' . $this->container_id) ); 
 		
@@ -132,7 +132,15 @@ class blcBookmark extends blcContainer{
 			
 			return new WP_Error( 'delete_failed', $msg );
 		};
-	}	
+	}
+	
+	function current_user_can_delete(){
+		return current_user_can('manage_links');
+	}
+	
+	function can_be_trashed(){
+		return false;
+	}
 	
   /**
    * Get the default link text. For bookmarks, this is the bookmark name.
@@ -288,8 +296,8 @@ class blcBookmarkManager extends blcContainerManager{
 	function ui_bulk_delete_message($n){
 		return sprintf(
 			_n(
-				"%d blogroll link deleted", 
-				"%d blogroll links deleted", 
+				"%d blogroll link deleted.", 
+				"%d blogroll links deleted.", 
 				$n, 
 				'broken-link-checker'
 			),

@@ -62,17 +62,56 @@ class blcComment extends blcContainer{
    * @return bool|WP_error
    */
 	function delete_wrapped_object(){
-		if ( wp_delete_comment($this->container_id) ){
+		if ( EMPTY_TRASH_DAYS ){
+			return $this->trash_wrapped_object();
+		} else {
+			if ( wp_delete_comment($this->container_id, true) ){
+				return true;
+			} else {
+				return new WP_Error(
+					'delete_failed',
+					sprintf(
+						__('Failed to delete comment %d', 'broken-link-checker'),
+						$this->container_id
+					)
+				);
+			};
+		}
+	}
+	
+  /**
+   * Delete the comment corresponding to this container.
+   * This will actually move the comment to the trash in newer versions of WP.
+   *
+   * @return bool|WP_error
+   */
+	function trash_wrapped_object(){
+		if ( wp_trash_comment($this->container_id) ){
 			return true;
 		} else {
 			return new WP_Error(
-				'delete_failed',
+				'trash_failed',
 				sprintf(
-					__('Failed to delete comment %d', 'broken-link-checker'),
+					__('Can\'t move comment %d to the trash', 'broken-link-checker'),
 					$this->container_id
 				)
 			);
 		};
+	}
+	
+	/**
+	 * Check if the current user can delete/trash this comment.
+	 * 
+	 * @return bool
+	 */
+	function current_user_can_delete(){
+		//TODO: Fix for custom post types? WP itself doesn't care, at least in 3.0.
+		$comment = &$this->get_wrapped_object();
+		return current_user_can('edit_post', $comment->comment_post_ID); 
+	}
+	
+	function can_be_trashed(){
+		return defined('EMPTY_TRASH_DAYS') && EMPTY_TRASH_DAYS;
 	}	
 	
   /**
@@ -129,7 +168,7 @@ class blcComment extends blcContainer{
 		return $actions;
 	}
 	
-	function ui_get_source($container_field, $context = 'display'){
+	function ui_get_source($container_field = '', $context = 'display'){
 		//Display a comment icon. 
 		if ( $container_field == 'comment_author_url' ){
 			$image = 'user_comment.png';
@@ -284,30 +323,40 @@ class blcCommentManager extends blcContainerManager {
    * Get the message to display after $n comments have been deleted.
    *
    * @param int $n Number of deleted comments.
-   * @return string A delete confirmation message, e.g. "5 comments were moved to trash"
+   * @return string A delete confirmation message, e.g. "5 comments were deleted"
    */
 	function ui_bulk_delete_message($n){
 		if ( EMPTY_TRASH_DAYS ){
-			return sprintf(
-				_n(
-					"%d comment moved to the trash",
-					"%d comments moved to the trash",
-					$n,
-					'broken-link-checker'
-				),
-				$n
-			);
+			return $this->ui_bulk_trash_message($n);
 		} else {
 			return sprintf(
 				_n(
-					"%d comment has been deleted",
-					"%d comments have been deleted",
+					"%d comment has been deleted.",
+					"%d comments have been deleted.",
 					$n,
 					'broken-link-checker'
 				),
 				$n
 			);
 		}
+	}
+	
+  /**
+   * Get the message to display after $n comments have been moved to the trash.
+   *
+   * @param int $n Number of trashed comments.
+   * @return string A delete confirmation message, e.g. "5 comments were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		return sprintf(
+			_n(
+				"%d comment moved to the Trash.",
+				"%d comments moved to the Trash.",
+				$n,
+				'broken-link-checker'
+			),
+			$n
+		);
 	}
 	
   /**
