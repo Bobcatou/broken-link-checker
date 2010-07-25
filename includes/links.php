@@ -41,6 +41,9 @@ class blcLink {
 	var $false_positive = false;
 	var $result_hash = '';
 	
+	var $status_text = '';
+	var $status_code = '';
+		
 	var $log = '';
 	
 	//A list of DB fields and their storage formats
@@ -119,6 +122,8 @@ class blcLink {
 			'false_positive' => 'bool',
 			'may_recheck' => 'bool',
 			'being_checked' => 'bool',
+		 	'status_text' => '%s',
+		 	'status_code' => '%s',
 		);
 		
 		if (is_int($arg)){
@@ -239,6 +244,8 @@ class blcLink {
         	'may_recheck' => true,
         	'log' => '',
         	'result_hash' => '',
+        	'status_text' => '',
+        	'status_code' => '',
 		);
         
         
@@ -821,27 +828,27 @@ class blcLink {
 	}
 	
 	/**
-	 * blcLink::analyse_status()
+	 * Determine the status text and status code corresponding to the current state of this link.
 	 * 
-	 * @return array
+	 * @return array Associative array with two keys, 'text' and 'code'.
 	 */
 	function analyse_status(){
 		$code = BLC_LINK_STATUS_UNKNOWN;
-		$text = __('Unknown', 'broken-link-checker');
+		$text = _x('Unknown', 'link status', 'broken-link-checker');
 		
 		//Status text
-		if ( isset($this->status_text) && !empty($this->status_text)){
+		if ( isset($this->status_text) && !empty($this->status_text) && !empty($this->status_code) ){
 			
 			//Lucky, the checker module has already set it for us.
 			$text = $this->status_text;
-			//TODO: Use the stored status code, too
+			$code = $this->status_code;
 			 
 		} else {
 			
 			if ( $this->broken ){
 				
 				$code = BLC_LINK_STATUS_ERROR;
-				$text = __('Unknown Error', 'broken-link-checker');
+				$text = __('Unknown Error', 'link status', 'broken-link-checker');
 				
 				if ( $this->timeout ){
 					
@@ -849,7 +856,14 @@ class blcLink {
 					$code = BLC_LINK_STATUS_WARNING;
 					
 				} elseif ( $this->http_code ) {
-					//TODO: Differentiate between broken-for-sure and maybe-broken HTTP codes
+					
+					//Only 404 (Not Found) and 410 (Gone) are treated as broken-for-sure.
+					if ( in_array($this->http_code, array(404, 410)) ){
+						$code = BLC_LINK_STATUS_ERROR;
+					} else {
+						$code = BLC_LINK_STATUS_WARNING;
+					}
+					
 					if ( array_key_exists(intval($this->http_code), $this->http_status_codes) ){
 						$text = $this->http_status_codes[intval($this->http_code)];
 					}
@@ -860,8 +874,11 @@ class blcLink {
 				if ( !$this->last_check ) {
 					$text = __('Not checked', 'broken-link-checker');
 					$code = BLC_LINK_STATUS_UNKNOWN;
+				} elseif ( $this->false_positive ) {
+					$text = __('False positive', 'broken-link-checker');
+					$code = BLC_LINK_STATUS_UNKNOWN;
 				} else {
-					$text = __('OK', 'broken-link-checker');
+					$text = _x('OK', 'link status', 'broken-link-checker');
 					$code = BLC_LINK_STATUS_OK;
 				}
 				

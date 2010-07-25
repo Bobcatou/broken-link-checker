@@ -123,7 +123,6 @@ include $blc_directory . '/includes/logger.php';
 global $blclog;
 $blclog = new blcDummyLogger;
 
-
 //*
 if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
@@ -284,13 +283,35 @@ function blc_print_installation_errors(){
 }
 add_action('admin_notices', 'blc_print_installation_errors');
 
+/**
+ * A stub function that calls the real activation hook.
+ * 
+ * @return void
+ */
+function blc_activation_hook(){
+	global $ws_link_checker;
+	blc_init();
+	$ws_link_checker->activation();
+}
+
+//Since the main plugin files load during the 'init' action, any activation hooks
+//set therein would never be executed ('init' runs before activation happens). Instead, 
+//we must register the hook(s) immediately after our main plugin file is loaded.
+register_activation_hook(plugin_basename(__FILE__), 'blc_activation_hook');
+
 
 /***********************************************
 				Main functionality
 ************************************************/
 
 function blc_init(){
-	global $blc_directory, $blc_module_manager, $blc_config_manager;
+	global $blc_directory, $blc_module_manager, $blc_config_manager, $ws_link_checker;
+	
+	static $init_done = false;
+	if ( $init_done ){
+		return;
+	}
+	$init_done = true;
 	
 	//Load the base classes and utilities
 	require $blc_directory . '/includes/links.php';

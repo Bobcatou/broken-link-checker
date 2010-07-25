@@ -21,7 +21,7 @@ class wsBrokenLinkChecker {
 	var $loader;
     var $my_basename = '';	
     
-    var $db_version = 4; 		//The required version of the plugin's DB schema.
+    var $db_version = 5; 		//The required version of the plugin's DB schema.
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     var $lockfile_handle = null; 
@@ -41,10 +41,12 @@ class wsBrokenLinkChecker {
         $this->loader = $loader;
         $this->my_basename = plugin_basename( $this->loader );
 
-        register_activation_hook($this->my_basename, array(&$this,'activation'));
-        register_deactivation_hook($this->my_basename, array(&$this, 'deactivation'));
+        $this->load_language();
         
-        add_action('init', array(&$this,'load_language'));
+        //Unlike the activation hook, the deactivation callback *can* be registered in this file
+        //because deactivation happens after this class has already been instantiated (durinng the 
+		//'init' action). 
+        register_deactivation_hook($loader, array(&$this, 'deactivation'));
         
         add_action('admin_menu', array(&$this,'admin_menu'));
 
@@ -338,7 +340,7 @@ class wsBrokenLinkChecker {
     	$blclog = new blcOptionLogger('blc_installation_log');
 		$blclog->clear();
     	
-    	$blclog->info('Plugin activated.');
+    	$blclog->info( sprintf('Plugin activated %s.', date('Y-m-d H:i:s')) );
     	
     	$this->conf->options['installation_complete'] = false;
     	$this->conf->options['installation_failed'] = true;
@@ -397,263 +399,8 @@ class wsBrokenLinkChecker {
    * @return bool
    */
     function upgrade_database($trigger_errors = true){
-		global $wpdb, $blclog;
-		
-		//Do we need to upgrade?
-		if ( $this->db_version == $this->conf->options['current_db_version'] ) {
-			//The DB is up to date, but lets make sure all the required tables are present
-			//in case the user has decided to delete some of them.
-			$blclog->info( sprintf(
-				'The database appears to be up to date (current version : %d).',
-				$this->conf->options['current_db_version']
-			));
-			return $this->maybe_create_tables();	
-		}
-		
-		//Upgrade to DB version 4
-		if ( $this->db_version == 4 ){
-			$blclog->info(sprintf(
-				'Upgrading the database to version %d',
-				$this->db_version
-			));
-			
-			//The 4th version makes a lot of backwards-incompatible changes to the main
-			//BLC tables (in particular, it adds several required fields to blc_instances).
-			//While it would be possible to import data from an older version of the DB,
-			//some things - like link editing - wouldn't work with the old data. 
-			
-			//So we just drop, recreate and repopulate most tables.
-			$blclog->info('Deleting old tables'); 
-			$tables = array(
-				$wpdb->prefix . 'blc_linkdata',
-				$wpdb->prefix . 'blc_postdata',
-				$wpdb->prefix . 'blc_instances',
-				$wpdb->prefix . 'blc_synch',
-				$wpdb->prefix . 'blc_links',
-			);
-			
-			$q = "DROP TABLE IF EXISTS " . implode(', ', $tables);
-			$rez = $wpdb->query( $q );
-			
-			if ( $rez === false ){
-				$error = sprintf(
-					__("Failed to delete old DB tables. Database error : %s", 'broken-link-checker'),
-					$wpdb->last_error
-				); 
-				
-				$blclog->error($error);
-				/*//FIXME: In very rare cases, DROP TABLE IF EXISTS throws an error when the table(s) don't exist. 
-				if ( $trigger_errors ){
-					trigger_error($error, E_USER_ERROR);
-				}
-				return false;
-				//*/
-			}
-			$blclog->info('Done.');
-			
-			//Create new DB tables.
-			if ( !$this->maybe_create_tables($trigger_errors) ){
-				return false;
-			};
-			
-		} else {
-			//This should never happen.
-			$error = sprintf(
-				__(
-					"Unexpected error: The plugin doesn't know how to upgrade its database to version '%d'.",
-					'broken-link-checker'
-				),
-				$this->db_version
-			); 
-			
-			$blclog->error($error);
-			if ( $trigger_errors ){
-				trigger_error($error, E_USER_ERROR);
-			}
-			return false;
-		}
-		
-		//Upgrade was successful.
-		$this->conf->options['current_db_version'] = $this->db_version;
-		$this->conf->save_options();
-		
-		$blclog->info('Database successfully upgraded.');
-		return true;
-	}
-	
-  /**
-   * Create the plugin's DB tables, unless they already exist.
-   *
-   * @return bool
-   */
-	function maybe_create_tables($trigger_errors = true){
-		global $wpdb, $blclog;
-		
-		//Use the character set and collation that's configured for WP tables
-		$charset_collate = '';
-		if ( !empty($wpdb->charset) ){
-			//Some German installs use "utf-8" (invalid) instead of "utf8" (valid). None of 
-			//the charset ids supported by MySQL contain dashes, so we can safely strip them.
-			//See http://dev.mysql.com/doc/refman/5.0/en/charset-charsets.html 
-			$charset = str_replace('-', '', $wpdb->charset);
-			
-			$charset_collate = "DEFAULT CHARACTER SET {$charset}";
-		}
-		if ( !empty($wpdb->collate) ){
-			$charset_collate = " COLLATE {$wpdb->collate}";
-		}
-		
-		$blclog->info('Creating database tables');
-		
-		//Search filters
-		$blclog->info('... Creating the search filter table');
-		$q = <<<EOD
-			CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_filters` (
-			  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-			  `name` varchar(100) NOT NULL,
-			  `params` text NOT NULL,
-			  PRIMARY KEY (`id`)
-			) {$charset_collate}
-EOD;
-		if ( $wpdb->query($q) === false ){
-			$error = sprintf(
-				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-				$wpdb->prefix . 'blc_filters',
-				$wpdb->last_error
-			); 
-			
-			$blclog->error($error);
-			if ( $trigger_errors ){
-				trigger_error(
-					$error,
-					E_USER_ERROR
-				);
-			}
-			return false;
-		}
-		
-		//Link instances (i.e. link occurences inside posts and other items)
-		$blclog->info('... Creating the link instance table');
-		$q = <<<EOT
-		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_instances` (
-		  `instance_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-		  `link_id` int(10) unsigned NOT NULL,
-		  `container_id` int(10) unsigned NOT NULL,
-		  `container_type` varchar(40) NOT NULL DEFAULT 'post',
-		  `link_text` varchar(250) NOT NULL DEFAULT '',
-		  `parser_type` varchar(40) NOT NULL DEFAULT 'link',
-		  `container_field` varchar(250) NOT NULL DEFAULT '',
-		  `link_context` varchar(250) NOT NULL DEFAULT '',
-		  `raw_url` text NOT NULL,
-		  
-		  PRIMARY KEY (`instance_id`),
-		  KEY `link_id` (`link_id`),
-		  KEY `source_id` (`container_type`, `container_id`),
-		  KEY `parser_type` (`parser_type`)
-		) {$charset_collate};
-EOT;
-		if ( $wpdb->query($q) === false ){ 
-			$error = sprintf(
-				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-				$wpdb->prefix . 'blc_instances',
-				$wpdb->last_error
-			);
-			
-			$blclog->error($error);
-			
-			if ( $trigger_errors ){
-				trigger_error(
-					$error,
-					E_USER_ERROR
-				);
-			}
-			return false;
-		}
-		
-		//Links themselves. Note : The 'url' and 'final_url' columns must be collated
-		//in a case-sensitive manner. This is because "http://a.b/cde" may be a page 
-		//very different from "http://a.b/CDe".
-		$blclog->info('... Creating the link table');
-		$q = <<<EOS
-		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_links` (
-		  `link_id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-		  `url` text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
-		  `first_failure` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		  `last_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		  `last_success` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		  `last_check_attempt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		  `check_count` int(4) unsigned NOT NULL DEFAULT '0',
-		  `final_url` text CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
-		  `redirect_count` smallint(5) unsigned NOT NULL DEFAULT '0',
-		  `log` text NOT NULL,
-		  `http_code` smallint(6) NOT NULL DEFAULT '0',
-		  `request_duration` float NOT NULL DEFAULT '0',
-		  `timeout` tinyint(1) unsigned NOT NULL DEFAULT '0',
-		  `broken` tinyint(1) NOT NULL DEFAULT '0',
-		  `may_recheck` tinyint(1) NOT NULL DEFAULT '1',
-		  `being_checked` tinyint(1) NOT NULL DEFAULT '0',
-		  `result_hash` varchar(200) NOT NULL DEFAULT '',
-		  `false_positive` tinyint(1) NOT NULL DEFAULT '0',
-		  
-		  PRIMARY KEY (`link_id`),
-		  KEY `url` (`url`(150)),
-		  KEY `final_url` (`final_url`(150)),
-		  KEY `http_code` (`http_code`),
-		  KEY `broken` (`broken`)
-		) {$charset_collate};
-EOS;
-		if ( $wpdb->query($q) === false ){
-			$error = sprintf(
-				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-				$wpdb->prefix . 'blc_links',
-				$wpdb->last_error
-			);
-			
-			$blclog->error($error);
-			if ( $trigger_errors ){
-				trigger_error(
-					$error,
-					E_USER_ERROR
-				);
-			}
-			return false;
-		}
-		
-		//Synchronization records. This table is used to keep track of if and when various items 
-		//(e.g. posts, comments, etc) were parsed.
-		$blclog->info('... Creating the synch. record table');
-		$q = <<<EOZ
-		CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}blc_synch` (
-		  `container_id` int(20) unsigned NOT NULL,
-		  `container_type` varchar(40) NOT NULL,
-		  `synched` tinyint(3) unsigned NOT NULL,
-		  `last_synch` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-		  
-		  PRIMARY KEY (`container_type`,`container_id`),
-		  KEY `synched` (`synched`)
-		) {$charset_collate};
-EOZ;
-		
-		if ( $wpdb->query($q) === false ){
-			$error = sprintf(
-				__("Failed to create table '%s'. Database error: %s", 'broken-link-checker'),
-				$wpdb->prefix . 'blc_synch',
-				$wpdb->last_error
-			);
-			
-			$blclog->error($error);		
-			if ( $trigger_errors ){
-				trigger_error(
-					$error,
-					E_USER_ERROR
-				);
-			}
-			return false;
-		}
-		
-		//All good.
-		$blclog->info('All database tables successfully created.');
-		return true;
+		require_once 'includes/admin/db-upgrade.php';
+		return blcDatabaseUpgrader::upgrade_database();
 	}
 	
   /**
@@ -2207,11 +1954,6 @@ EOZ;
 		die('1');
 	}
 	
-	function link_details_row($link){
-		//TODO: Remove
-		echo "wsBrokenLinkChecker::link_details_row is deprecated!!!";
-	}
-	
 	function start_timer(){
 		$this->execution_start_time = microtime_float();
 	}
@@ -2596,7 +2338,7 @@ EOZ;
 	function ajax_current_load(){
 		$load = $this->get_server_load();
 		if ( empty($load) ){
-			die('Unknown');
+			die( _x('Unknown', 'current load', 'broken-link-checker') );
 		}
 		
 		$one_minute = reset($load);
@@ -2817,7 +2559,10 @@ EOZ;
 		
 		if ( !$link->is_new ){
 			FB::info($link, 'Link loaded');
-			$this->link_details_row($link); //TODO: Replace with the tableprinter's method
+			if ( !class_exists('blcTablePrinter') ){
+				require 'includes/admin/table-printer.php';
+			}
+			blcTablePrinter::details_row_contents($link);
 			die();
 		} else {
 			printf( __('Failed to load link details (%s)', 'broken-link-checker'), $wpdb->last_error );

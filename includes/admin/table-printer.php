@@ -189,6 +189,21 @@ class blcTablePrinter {
 				'heading' => __('Link Text', 'broken-link-checker'),
 				'content' => array(&$this, 'column_new_link_text'),
 			),
+			
+			'broken-for' => array(
+				'heading' => __('Broken for', 'broken-link-checker'),
+				'content' => array(&$this, 'column_broken_for'),
+			),
+			
+			'last-checked' => array(
+				'heading' => __('Last checked', 'broken-link-checker'),
+				'content' => array(&$this, 'column_last_checked'),
+			),
+			
+			'instance-count' => array(
+				'heading' => __('Seen in', 'broken-link-checker'),
+				'content' => array(&$this, 'column_instance_count'),
+			),
 		);
 	}
 	
@@ -200,7 +215,7 @@ class blcTablePrinter {
 	function setup_layouts(){
 		$this->layouts = array(
 			'classic' =>  array('source', 'link-text', 'url', 'status'),
-			'flexible' => array('new-url', 'status', 'new-link-text', 'used-in', ),
+			'flexible' => array('new-url', 'status', 'last-checked', 'broken-for', 'new-link-text', 'used-in', 'instance-count' ),
 		);
 	}
 	
@@ -302,8 +317,6 @@ class blcTablePrinter {
     	
     	$days_broken = 0;
     	if ( $link->broken ){
-			$rowclass .= ' blc-broken-link';
-			
 			//Add a highlight to broken links that appear to be permanently broken
 			$days_broken = intval( (time() - $link->first_failure) / (3600*24) );
 			if ( $days_broken >= $this->core->conf->options['failure_duration_threshold'] ){
@@ -313,6 +326,9 @@ class blcTablePrinter {
 				}
 			}
 		}
+		
+		$status = $link->analyse_status();
+		$rowclass .= ' link-status-' . $status['code'];
 		
 		//Retrieve link instances to display in the table
 		$instances = $link->get_instances();
@@ -366,17 +382,31 @@ class blcTablePrinter {
 	/**
 	 * Print the details row for a specific link.
 	 * 
+	 * @uses blcTablePrinter::details_row_contents() 
+	 * 
 	 * @param object $link The link to display.
 	 * @param array $visible_columns List of visible columns.
 	 * @param integer $rownum Table row number.
 	 * @return void
 	 */
 	function link_details_row(&$link, $visible_columns, $rownum = 0){
+		printf(
+			'<tr id="link-details-%d" class="blc-link-details"><td colspan="%d">',
+			$link->link_id,
+			count($visible_columns)+1
+		);
+		$this->details_row_contents($link);
+		echo '</td></tr>';
+	}
+	
+	/**
+	 * Print the contents of the details row for a specific link.
+	 * 
+	 * @param object $link
+	 * @return void
+	 */
+	function details_row_contents(&$link){
 		?>
-		
-		<tr id='<?php print "link-details-{$rownum}"; ?>' class='blc-link-details'>
-		<td colspan='<?php echo count($visible_columns)+1; ?>'>
-		
 		<div class="blc-detail-container">
 			<div class="blc-detail-block" style="float: left; width: 49%;">
 		    	<ol style='list-style-type: none;'>
@@ -453,8 +483,6 @@ class blcTablePrinter {
 			
 			<div style="clear:both;"> </div>
 		</div>
-		
-		</td></tr>
 		<?php
 	}
 	
@@ -556,18 +584,16 @@ class blcTablePrinter {
 		);
 		
 		//Last checked...
-		if ( $link->last_check == 0 ){
-			$last_check = __('Never', 'broken-link-checker');
-		} else {
-			$delta = time() - $link->last_check;
-			$last_check = blcUtility::fuzzy_ago($delta);
+		if ( $link->last_check != 0 ){
+			$last_check = _x('Checked', 'checked how long ago', 'broken-link-checker') . ' ';
+			$last_check .= blcUtility::fuzzy_ago(time() - $link->last_check);
+			
+			printf(
+				'<tr class="link-last-checked"><td>%s</td></tr>',
+				$last_check
+			);
 		}
 		
-		printf(
-			'<tr class="link-last-checked"><td>%s %s</td></tr>',
-			__('Checked', 'broken-link-checker'),
-			$last_check
-		);
 		
 		//Broken for...
 		if ( $link->broken ){
@@ -653,6 +679,36 @@ class blcTablePrinter {
 		} else {
 			$instance = reset($instances);
 			echo $instance->ui_get_link_text();
+		}
+	}
+	
+	function column_broken_for(&$link, $instances){
+		if ( $link->broken ){
+			$delta = time() - $link->first_failure;
+			echo blcUtility::fuzzy_delta($delta);
+		}
+	}
+	
+	function column_last_checked(&$link, $instances){
+		//Last checked...
+		if ( $link->last_check == 0 ){
+			_e('Never', 'broken-link-checker');
+		} else {
+			$delta = time() - $link->last_check;
+			echo blcUtility::fuzzy_ago($delta);
+		}
+	}
+	
+	function column_instance_count(&$link, $instances){
+		if ( count($instances) > 1 ){
+			printf(
+				_n(
+					'%d place',
+					'%d places',
+					count($instances)
+				),
+				count($instances)
+			);
 		}
 	}
 	

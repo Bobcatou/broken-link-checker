@@ -25,13 +25,16 @@ function replaceLinkId(old_id, new_id){
 	
 	master.attr('id', 'blc-row-'+new_id);
 	master.find('.blc-link-id').html(new_id);
+	
+	var details_row = jQuery('#link-details-'+old_id);
+	details_row.attr('id', 'link-details-'+new_id);
 }
 
 function reloadDetailsRow(link_id){
-	var master = jQuery('#blc-row-'+link_id);
+	var details_row = jQuery('#link-details-'+link_id);
 	
 	//Load up the new link info                     (so sue me)    
-	master.next('.blc-link-details').find('td').html('<center><?php echo esc_js(__('Loading...' , 'broken-link-checker')); ?></center>').load(
+	details_row.find('td').html('<center><?php echo esc_js(__('Loading...' , 'broken-link-checker')); ?></center>').load(
 		"<?php echo admin_url('admin-ajax.php'); ?>",
 		{
 			'action' : 'blc_link_details',
@@ -44,7 +47,9 @@ jQuery(function($){
 	
 	//The details button - display/hide detailed info about a link
     $(".blc-details-button, td.column-link-text, td.column-status, td.column-new-link-text").click(function () {
-    	$(this).parents('.blc-row').next('.blc-link-details').toggle();
+    	var master = $(this).parents('.blc-row');
+    	var link_id = master.attr('id').split('-')[2];
+		$('#link-details-'+link_id).toggle();
     });
 	
 	//The "Not broken" button - manually mark the link as valid. The link will be checked again later.
@@ -52,7 +57,8 @@ jQuery(function($){
 		var me = $(this);
 		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
 		
-		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
+		var master = me.parents('.blc-row');
+    	var link_id = master.attr('id').split('-')[2];
         
         $.post(
 			"<?php echo admin_url('admin-ajax.php'); ?>",
@@ -63,13 +69,15 @@ jQuery(function($){
 			},
 			function (data, textStatus){
 				if (data == 'OK'){
-					var master = $(me).parents('.blc-row'); 
-					var details = master.next('.blc-link-details');
+					var details = $('#link-details-'+link_id);
 					
-					//Remove the "Not broken" link
+					//Remove the "Not broken" action
 					me.parent().remove();
 					
-					master.removeClass('blc-broken-link');
+					//Set the displayed link status to OK
+					var classNames = master.attr('class');
+					classNames = classNames.replace(/(^|\s)link-status-[^\s]+(\s|$)/, ' ') + ' link-status-ok';
+					master.attr('class', classNames);
 					
 					//Flash the main row green to indicate success, then remove it if the current view
 					//is supposed to show only broken links.
@@ -88,7 +96,7 @@ jQuery(function($){
                     	alterLinkCounter(-1);
                     }
 				} else {
-					$(me).html('<?php echo esc_js(__('Not broken' , 'broken-link-checker'));  ?>');
+					me.html('<?php echo esc_js(__('Not broken' , 'broken-link-checker'));  ?>');
 					alert(data);
 				}
 			}
@@ -186,7 +194,8 @@ jQuery(function($){
 						//Load up the new link info
 						reloadDetailsRow(data.new_link_id);
 						//Remove classes indicating link state - they're probably wrong by now
-						master.removeClass('blc-broken-link').removeClass('blc-redirect');
+						var classNames = master.attr('class').replace(/(^|\s)link-status-[^\s]+(\s|$)/, ' ')+' link-status-unknown';
+						master.attr('class', classNames);
 						
 						//Flash the row green to indicate success
 						var oldColor = master.css('background-color');
@@ -290,7 +299,8 @@ jQuery(function($){
     	var master = $(me).parents('.blc-row');
 		$(me).html('<?php echo esc_js(__('Wait...' , 'broken-link-checker')); ?>');
 		
-		var link_id = $(me).parents('.blc-row').find('.blc-link-id').html();
+		//Find the link ID
+    	var link_id = master.attr('id').split('-')[2];
         
         $.post(
 			"<?php echo admin_url('admin-ajax.php'); ?>",
@@ -309,7 +319,7 @@ jQuery(function($){
 				} else {
 					if ( data.errors.length == 0 ){
 						//The link was successfully removed. Hide its details. 
-						master.next('.blc-link-details').hide();
+						$('#link-details-'+link_id).hide();
 						//Flash the main row green to indicate success, then hide it.
 						var oldColor = master.css('background-color');
 						master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){

@@ -45,6 +45,14 @@ th.column-status {
 	width: 14em;
 }
 
+th.column-last-checked {
+	width: 10em;
+}
+
+th.column-broken-for {
+	width: 10em;
+}
+
 /* Cells */
 
 td.column-new-url, 
@@ -64,10 +72,6 @@ td.column-url .row-actions
 	margin-left: 16px;
 }
 
-td.column-status .status-text {
-	color: black;
-}
-
 td.column-new-url .mini-status {
 	margin-left: 16px;
 	color: black;
@@ -75,20 +79,16 @@ td.column-new-url .mini-status {
 
 /* Styles for broken links, redirects and other link states or types */
 
-.blc-redirect { }
-
 .blc-redirect .blc-link-url {
 	background-image: url("../images/bullet_blue.png");
-	background-position: left center;
-	background-repeat: no-repeat;
 }
 
-.blc-broken-link { }
-
-.blc-broken-link .blc-link-url {
+.link-status-error .blc-link-url {
 	background-image: url("../images/bullet_error.png");
-	background-position: left center;
-	background-repeat: no-repeat;
+}
+
+.link-status-warning .blc-link-url {
+	background-image: url("../images/bullet_error.png");
 }
 
 .blc-excluded-link {
@@ -110,6 +110,10 @@ td.column-new-url .mini-status {
 	padding-left: 16px;
 	white-space: nowrap;
 	overflow: hidden;
+
+	background-image: none;	
+	background-position: left center;
+	background-repeat: no-repeat;
 }
 
 .blc-link-editor {
@@ -170,30 +174,50 @@ td.column-status {
 }
 
 .mini-status .http-code {
+	font-weight: bold;
+}
+
+.mini-status .status-text {
+	color: black;
+	font-weight: bold;
+}
+
+
+/* Status colors */
+.link-status-unknown td.column-status .status-text,
+.link-status-unknown td.column-status .http-code
+{
+	color: gray;
 	font-weight: normal;
 }
-
-/*
-.link-status-unknown th {
-	color: gray;
+.link-status-unknown td.column-status .http-code {
+	display: none;
 }
 
-.link-status-ok th {
+.link-status-ok td.column-status .status-text,
+.link-status-ok td.column-status .http-code
+{
 	color: green;
 }
 
-.link-status-info th {
+.link-status-info td.column-status .status-text,
+.link-status-info td.column-status .http-code
+{
 	color: blue;
 }
 
-.link-status-warning th {
-	color: orange;
+.link-status-warning td.column-status .status-text,
+.link-status-warning td.column-status .http-code
+{
+	color: #FFA500;
 }
 
-.link-status-error th {
+.link-status-error td.column-status .status-text,
+.link-status-error td.column-status .http-code
+{
 	color: red;
 }
-*/
+
 
 /* "Compact" view */
 
