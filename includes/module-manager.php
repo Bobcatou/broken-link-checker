@@ -60,7 +60,7 @@ class blcModuleManager {
 			
 			$relative_path = '/' . plugin_basename($this->module_dir);
 			if ( !function_exists('get_plugins') ){
-				//FIXME: Potentional security flaw/bug. plugin.php is not meant to be loaded outside admin panel.
+				//BUG: Potentional security flaw/bug. plugin.php is not meant to be loaded outside admin panel.
 				require_once(ABSPATH . 'wp-admin/includes/plugin.php'); 
 			}
 			$modules = get_plugins( $relative_path );
@@ -100,18 +100,58 @@ class blcModuleManager {
 	 *   
 	 * 
 	 * @param string $category Category id, e.g. "parser" or "container". Optional.  
+	 * @param bool $markup Apply markup to module headers. Defaults to false.
+	 * @param bool $translate Translate module headers. Defaults to false.
 	 * @return array An array of categories or module data.
 	 */
-	function get_modules_by_category($category = ''){
+	function get_modules_by_category($category = '', $markup = false, $translate = false){
 		if ( !isset($this->_category_cache) ){
 			$this->_category_cache = $this->sort_into_categories($this->get_modules()); 
 		}
 		
 		if ( empty($category) ){
-			return $this->_category_cache;
+			if ( $markup || $translate ){
+				
+				//Translate/apply markup to module headers
+				$processed = array();
+				$blc_plugin_file = blc_get_plugin_file(); 
+				
+				foreach($this->_category_cache as $category_id => $modules){
+					$processed[$category_id] = array();
+					foreach($modules as $module_id => $module_data){
+						$module_data = _get_plugin_data_markup_translate(
+							$blc_plugin_file, //Modules use the same .mo file as BLC itself
+							$module_data,
+							$markup,
+							$translate
+						);
+						$processed[$category_id][$module_id] = $module_data;
+					}
+				}
+				
+				return $processed;				
+			} else {
+				return $this->_category_cache;
+			}
 		} else {
 			if ( isset($this->_category_cache[$category]) ){
-				return $this->_category_cache[$category];
+				if ( $markup || $translate ){
+					//Translate/apply markup to module headers
+					$processed = array();
+					$blc_plugin_file = blc_get_plugin_file(); 
+					foreach($this->_category_cache[$category] as $module_id => $module_data){
+						$module_data = _get_plugin_data_markup_translate(
+							$blc_plugin_file, //Modules use the same .mo file as BLC itself
+							$module_data,
+							$markup,
+							$translate
+						);
+						$processed[$module_id] = $module_data;
+					}
+					return $processed;
+				} else {
+					return $this->_category_cache[$category];
+				}
 			} else {
 				return array();
 			}
@@ -744,6 +784,7 @@ class blcModuleManager {
 			'ModulePriority' => '0',
 			'ModuleHidden' => 'false',
 			'ModuleAlwaysActive' => 'false',
+			'TextDomain' => 'broken-link-checker', //For translating module headers
 		);
 		
 		$module_header['ModuleID'] = $module_id;   //Just for consistency
@@ -765,9 +806,48 @@ class blcModuleManager {
 		return $module_header;			
 	}
 	
+	/**
+	 * Converts the strings "true" and "false" to boolean TRUE and FALSE, respectively.
+	 * Any other string will yield FALSE.
+	 *  
+	 * @param string $value "true" or "false", case-insensitive.
+	 * @return bool
+	 */
 	function str_to_bool($value){
 		$value = trim(strtolower($value));
 		return $value == 'true';
+	}
+	
+	/**
+	 * Generates a PHP script that calls the __() i18n function with
+	 * the name and description of each available module. The generated
+	 * script is used to make module headers show up in the .POT file.
+	 * 
+	 * @access private
+	 * 
+	 * @return string
+	 */
+	function _build_header_translation_code(){
+		$this->_module_cache = null; //Clear the cache
+		$modules = $this->get_modules();
+		
+		$strings = array();
+		foreach($modules as $module_id => $module_header){
+			if ( !empty($module_header['Name']) ){
+				$strings[] = sprintf(
+					'__("%s", "broken-link-checker");',
+					str_replace('"', '\"', $module_header['Name'])
+				);
+			}
+			if ( !empty($module_header['Description']) ){
+				$strings[] = sprintf(
+					'__("%s", "broken-link-checker");',
+					str_replace('"', '\"', $module_header['Description'])
+				);
+			}
+		}
+		
+		return "<?php\n" . implode("\n", $strings) . "\n?>";
 	}
 }
 

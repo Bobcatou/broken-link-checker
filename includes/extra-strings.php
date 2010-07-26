@@ -1,0 +1,36 @@
+<?php
+__("Blogroll items", "broken-link-checker");
+__("Comments", "broken-link-checker");
+__("Custom fields", "broken-link-checker");
+__("Container module for post metadata.", "broken-link-checker");
+__("Dummy", "broken-link-checker");
+__("Embedded DailyMotion videos", "broken-link-checker");
+__("Parse embedded videos from DailyMotion", "broken-link-checker");
+__("Embedded Vimeo videos", "broken-link-checker");
+__("Parse embedded videos from Vimeo", "broken-link-checker");
+__("Embedded YouTube videos", "broken-link-checker");
+__("Parse embedded videos from YouTube", "broken-link-checker");
+__("HTML images", "broken-link-checker");
+__("e.g. <code>&lt;img src=\"http://example.com/fluffy.jpg\"&gt;</code>", "broken-link-checker");
+__("HTML links", "broken-link-checker");
+__("Example : <code>&lt;a href=\"http://example.com/\"&gt;link text&lt;/a&gt;</code>", "broken-link-checker");
+__("HTTP/HTTPS links", "broken-link-checker");
+__("Check all links that have the HTTP/HTTPS protocol.", "broken-link-checker");
+__("MediaFire API (ad-hoc)", "broken-link-checker");
+__("Check links to files hosted on MediaFire.", "broken-link-checker");
+__("MegaUpload API", "broken-link-checker");
+__("Check links to MegaUpload files.", "broken-link-checker");
+__("Metadata", "broken-link-checker");
+__("Parses metadata (AKA custom fields)", "broken-link-checker");
+__("Plaintext URLs", "broken-link-checker");
+__("Parse plaintext URLs as links", "broken-link-checker");
+__("RapidShare API", "broken-link-checker");
+__("Check links to RapidShare files using the RapidShare API.", "broken-link-checker");
+__("URL fields", "broken-link-checker");
+__("Parses data fields that contain a single, plaintext URL.", "broken-link-checker");
+__("YouTube API", "broken-link-checker");
+__("Check links to YouTube videos using the YouTube API.", "broken-link-checker");
+__("Posts", "broken-link-checker");
+__("Pages", "broken-link-checker");
+__("Cool Thingies", "broken-link-checker");
+?>

@@ -72,7 +72,7 @@
 		$moduleManager = &blcModuleManager::getInstance();
 		
 		printf('<optgroup label="%s">', esc_attr(__('Links used in', 'broken-link-checker')));
-		$containers = $moduleManager->get_modules_by_category('container');
+		$containers = $moduleManager->get_modules_by_category('container', false, true);
 		foreach($containers as $container_type => $module_data){
 			if ( !empty($module_data['ModuleHidden']) ){
 				continue;
@@ -83,7 +83,7 @@
 		echo '</optgroup>';
 		//TODO: Better group labels
 		printf('<optgroup label="%s">', esc_attr(__('Links of type', 'broken-link-checker')));
-		$parsers = $moduleManager->get_modules_by_category('parser');
+		$parsers = $moduleManager->get_modules_by_category('parser', false, true);
 		foreach($parsers as $parser_type => $module_data){
 			if ( !empty($module_data['ModuleHidden']) ){
 				continue;
