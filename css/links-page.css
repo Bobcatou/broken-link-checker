@@ -84,7 +84,7 @@ td.column-new-url .mini-status {
 }
 
 .link-status-error .blc-link-url {
-	background-image: url("../images/bullet_error.png");
+	background-image: url("../images/bullet_cross.png");
 }
 
 .link-status-warning .blc-link-url {
@@ -104,16 +104,110 @@ td.column-new-url .mini-status {
 }
 
 
+/* The "Status" column */
+td.column-status {
+	cursor: pointer;
+}
+
+.mini-status, .mini-status th, .mini-status td {
+	border: 0;
+	font-size: 1em;
+	padding: 0;
+	color: gray;
+}
+
+.mini-status div {
+	display: inline-block;
+}
+
+.mini-status .status-text {
+	color: black;
+}
+
+.link-status-unknown td.column-status .http-code {
+	display: none;
+}
+
+
+/* Status colors */
+.color-code-link-status  .mini-status .http-code,
+.color-code-link-status  .mini-status .status-text
+{
+	font-weight: bold;
+}
+
+.color-code-link-status  .link-status-unknown td.column-status .status-text,
+.color-code-link-status  .link-status-unknown td.column-status .http-code
+{
+	color: gray;
+	font-weight: normal;
+}
+
+.color-code-link-status  .link-status-ok td.column-status .status-text,
+.color-code-link-status  .link-status-ok td.column-status .http-code
+{
+	color: green;
+}
+
+.color-code-link-status  .link-status-info td.column-status .status-text,
+.color-code-link-status  .link-status-info td.column-status .http-code
+{
+	color: blue;
+}
+
+.color-code-link-status  .link-status-warning td.column-status .status-text,
+.color-code-link-status  .link-status-warning td.column-status .http-code
+{
+	color: #FF8C00; /*#FFA500*/
+}
+
+.color-code-link-status  .link-status-error td.column-status .status-text,
+.color-code-link-status  .link-status-error td.column-status .http-code
+{
+	color: red;
+}
+
+
+/* "Compact" view */
+
+.compact td.column-url,
+.compact td.column-status,
+.compact td.column-link-text,
+.compact td.column-used-in,
+.compact td.column-new-url,
+.compact td.column-source,
+.compact td.column-new-link-text
+{
+	overflow:  hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	word-wrap: normal;
+}
+
+.compact .link-last-checked,
+.compact .link-broken-for,
+.compact .link-text 
+{
+	display: none;
+}
+
 /* Misc table styles */
 
 .blc-link-url {
 	padding-left: 16px;
-	white-space: nowrap;
 	overflow: hidden;
 
 	background-image: none;	
 	background-position: left center;
 	background-repeat: no-repeat;
+}
+
+td.column-new-url {	/* The URL never wraps */
+	word-wrap: normal;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
 }
 
 .blc-link-editor {
@@ -136,110 +230,12 @@ img.waiting {
 	vertical-align:top;
 }
 
-/*
-.blc-url-editor-buttons .blc-edit-button {
-	float: right;
-}
-
-.blc-url-editor-buttons .blc-cancel-button {
-	float: left;
-}
-*/
-
 td.column-link-text, td.column-new-link-text {
 	cursor: pointer; 
 }
 
-
 .blc-small-image {
 	vertical-align: middle;
-}
-
-
-
-/* The "Status" column */
-td.column-status {
-	cursor: pointer;
-}
-
-.mini-status, .mini-status th, .mini-status td {
-	border: 0;
-	font-size: 1em;
-	padding: 0;
-	color: gray;
-}
-
-.mini-status div {
-	display: inline-block;
-}
-
-.mini-status .http-code {
-	font-weight: bold;
-}
-
-.mini-status .status-text {
-	color: black;
-	font-weight: bold;
-}
-
-
-/* Status colors */
-.link-status-unknown td.column-status .status-text,
-.link-status-unknown td.column-status .http-code
-{
-	color: gray;
-	font-weight: normal;
-}
-.link-status-unknown td.column-status .http-code {
-	display: none;
-}
-
-.link-status-ok td.column-status .status-text,
-.link-status-ok td.column-status .http-code
-{
-	color: green;
-}
-
-.link-status-info td.column-status .status-text,
-.link-status-info td.column-status .http-code
-{
-	color: blue;
-}
-
-.link-status-warning td.column-status .status-text,
-.link-status-warning td.column-status .http-code
-{
-	color: #FFA500;
-}
-
-.link-status-error td.column-status .status-text,
-.link-status-error td.column-status .http-code
-{
-	color: red;
-}
-
-
-/* "Compact" view */
-
-.compact td.column-url,
-.compact td.column-status,
-.compact td.column-link-text,
-.compact td.column-used-in,
-.compact td.column-new-url,
-.compact td.column-source,
-.compact td.column-new-link-text
-{
-	overflow:  hidden;
-	text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.compact .link-last-checked,
-.compact .link-broken-for,
-.compact .link-text 
-{
-	display: none;
 }
 
 /* Search form */

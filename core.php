@@ -1886,7 +1886,6 @@ class wsBrokenLinkChecker {
 		//TODO: Improve "Screen Options" layout / option grouping and names
 		$html .= '<h5>' . __('Show on screen') . '</h5>';
 		$html .= '<div class="screen-options">';
-		
 		$html .= sprintf(
 			'<input type="text" name="per_page" maxlength="3" value="%d" class="screen-per-page" id="blc_links_per_page" />
 			<label for="blc_links_per_page">%s</label>
@@ -1895,22 +1894,18 @@ class wsBrokenLinkChecker {
 			__('links', 'broken-link-checker'),
 			__('Apply')
 		);
-		
 		$html .= '</div>';
 		
+		$html .= '<h5>' . __('Misc', 'broken-link-checker') . '</h5>';
+		$html .= '<div class="screen-options">';
 		/*
 		Display a checkbox in "Screen Options" that lets the user highlight links that 
 		have been broken for at least X days.  
 		*/
-		$html .= '<h5>' . __('Misc', 'broken-link-checker') . '</h5>';
-		
-		$html .= '<div class="screen-options">';
-		
 		$html .= sprintf(
 			'<label><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s> ',
 			$this->conf->options['highlight_permanent_failures'] ? ' checked="checked"' : ''
 		);
-		
 		$input_box = sprintf(
         	'</label><input type="text" name="failure_duration_threshold" id="failure_duration_threshold" value="%d" size="2"><label for="highlight_permanent_failures">',
         	$this->conf->options['failure_duration_threshold']
@@ -1920,6 +1915,13 @@ class wsBrokenLinkChecker {
 			$input_box
 		);
 		$html .= '</label>';
+		
+		//Display a checkbox for turning colourful link status messages on/off
+		$html .= sprintf(
+			'<br/><label><input type="checkbox" id="table_color_code_status" name="table_color_code_status"%s> %s</label>',
+			$this->conf->options['table_color_code_status'] ? ' checked="checked"' : '',
+			__('Color-code link status messages', 'broken-link-checker')
+		);
 		
 		$html .= '</div>';
 		
@@ -1940,6 +1942,7 @@ class wsBrokenLinkChecker {
 		}
 		
 		$this->conf->options['highlight_permanent_failures'] = !empty($form['highlight_permanent_failures']);
+		$this->conf->options['table_color_code_status'] = !empty($form['table_color_code_status']);
 		
 		$failure_duration_threshold = intval($form['failure_duration_threshold']);
 		if ( $failure_duration_threshold >=1 ){

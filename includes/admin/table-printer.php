@@ -66,9 +66,16 @@ class blcTablePrinter {
 		$this->navigation($compact);
 		
 		//Table header
+		$table_classes = array('widefat');
+		if ( $compact ) { 
+			$table_classes[] = 'compact'; 
+		};
+		if ( $this->core->conf->options['table_color_code_status'] ) { 
+			$table_classes[] = 'color-code-link-status'; 
+		};
 		printf(
-			'<table class="widefat%s" id="blc-links"><thead><tr>',
-			$compact ? ' compact' : ''
+			'<table class="%s" id="blc-links"><thead><tr>',
+			implode(' ', $table_classes)
 		);
 		
 		//The select-all checkbox

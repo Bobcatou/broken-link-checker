@@ -513,6 +513,15 @@ jQuery(function($){
 			$('#adv-settings').submit();
 		}	
 	});
+	
+	//Toggle status code colors when the corresponding checkbox is toggled
+	$('#table_color_code_status').click(function(){
+		if ( $(this).is(':checked') ){
+			$('#blc-links').addClass('color-code-link-status');
+		} else {
+			$('#blc-links').removeClass('color-code-link-status');
+		}
+	});
 		
 });
 
