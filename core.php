@@ -1289,6 +1289,8 @@ class wsBrokenLinkChecker {
         $moduleManager->validate_active_modules();
         
         if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
+        	//Make module headers translatable. They need to be formatted corrrectly and 
+        	//placed in a .php file to be visible to the script(s) that generate .pot files.
         	$code = $moduleManager->_build_header_translation_code();
         	file_put_contents( dirname(__FILE__) . '/includes/extra-strings.php', $code );
         }

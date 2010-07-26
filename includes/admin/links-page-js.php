@@ -196,6 +196,7 @@ jQuery(function($){
 						//Remove classes indicating link state - they're probably wrong by now
 						var classNames = master.attr('class').replace(/(^|\s)link-status-[^\s]+(\s|$)/, ' ')+' link-status-unknown';
 						master.attr('class', classNames);
+						master.removeClass('blc-redirect');
 						
 						//Flash the row green to indicate success
 						var oldColor = master.css('background-color');
