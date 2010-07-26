@@ -677,7 +677,8 @@ class wsBrokenLinkChecker {
 		$details_text = __('Details', 'broken-link-checker');
 		add_filter('blc-module-settings-custom_field', array(&$this, 'make_custom_field_input'), 10, 2);
 		
-		$modules = $moduleManager->get_modules_by_category();
+		//Translate and markup-ify module headers for display
+		$modules = $moduleManager->get_modules_by_category('', true, true);
 		
 		//Output the custom broken link/removed link styles for example links
 		printf(
@@ -1286,6 +1287,11 @@ class wsBrokenLinkChecker {
 		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
         $moduleManager = &blcModuleManager::getInstance();
         $moduleManager->validate_active_modules();
+        
+        if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
+        	$code = $moduleManager->_build_header_translation_code();
+        	file_put_contents( dirname(__FILE__) . '/includes/extra-strings.php', $code );
+        }
         
         $action = !empty($_POST['action'])?$_POST['action']:'';
         if ( intval($action) == -1 ){
@@ -1920,7 +1926,7 @@ class wsBrokenLinkChecker {
 		$html .= sprintf(
 			'<br/><label><input type="checkbox" id="table_color_code_status" name="table_color_code_status"%s> %s</label>',
 			$this->conf->options['table_color_code_status'] ? ' checked="checked"' : '',
-			__('Color-code link status messages', 'broken-link-checker')
+			__('Color-code status codes', 'broken-link-checker')
 		);
 		
 		$html .= '</div>';
