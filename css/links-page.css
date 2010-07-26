@@ -244,6 +244,10 @@ td.column-link-text, td.column-new-link-text {
 	background : white !important;
 	border: 3px solid #EEEEEE;
 	padding: 12px;
+	
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
 }
 
 .blc-search-container .ui-dialog-titlebar {
