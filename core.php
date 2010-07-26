@@ -715,7 +715,7 @@ class wsBrokenLinkChecker {
 		</ul>
 
 		<div id="section-general" class="blc-section">
-		<h3 class="hide-if-js"><?php _e($section_names['general']); ?></h3>
+		<h3 class="hide-if-js"><?php echo $section_names['general']; ?></h3>
 		
         <table class="form-table">
 
@@ -859,7 +859,7 @@ class wsBrokenLinkChecker {
         </div>
         
         <div id="section-where" class="blc-section">
-		<h3 class="hide-if-js"><?php _e($section_names['where']); ?></h3>
+		<h3 class="hide-if-js"><?php echo $section_names['where']; ?></h3>
         
         <table class="form-table">
         
@@ -903,7 +903,7 @@ class wsBrokenLinkChecker {
         
         
         <div id="section-which" class="blc-section">
-		<h3 class="hide-if-js"><?php _e($section_names['which']); ?></h3>
+		<h3 class="hide-if-js"><?php echo $section_names['which']; ?></h3>
 		
         <table class="form-table">
         
@@ -935,7 +935,7 @@ class wsBrokenLinkChecker {
         </div>
         
         <div id="section-how" class="blc-section">
-		<h3 class="hide-if-js"><?php _e($section_names['how']); ?></h3>
+		<h3 class="hide-if-js"><?php echo $section_names['how']; ?></h3>
 		
         <table class="form-table">
         
@@ -954,7 +954,7 @@ class wsBrokenLinkChecker {
         </div>
         
         <div id="section-advanced" class="blc-section">
-		<h3 class="hide-if-js"><?php _e($section_names['advanced']); ?></h3>
+		<h3 class="hide-if-js"><?php echo $section_names['advanced']; ?></h3>
         
         <table class="form-table">
         
