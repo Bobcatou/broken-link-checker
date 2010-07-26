@@ -157,9 +157,9 @@ class blcComment extends blcContainer{
 			$delete_url = esc_url( admin_url("comment.php?action=deletecomment&p=$post->ID&c=$comment->comment_ID&$del_nonce") );
 			
 			if ( !constant('EMPTY_TRASH_DAYS') ) {
-				$actions['delete'] = "<a href='$delete_url' class='delete:the-comment-list:comment-$comment->comment_ID::delete=1 delete vim-d vim-destructive'>" . __('Delete Permanently') . '</a>';
+				$actions['delete'] = "<a href='$delete_url' class='delete:the-comment-list:comment-$comment->comment_ID::delete=1 delete vim-d vim-destructive submitdelete'>" . __('Delete Permanently') . '</a>';
 			} else {
-				$actions['trash'] = "<a href='$trash_url' class='delete:the-comment-list:comment-$comment->comment_ID::trash=1 delete vim-d vim-destructive' title='" . esc_attr__( 'Move this comment to the trash' ) . "'>" . _x('Trash', 'verb') . '</a>';
+				$actions['trash'] = "<a href='$trash_url' class='delete:the-comment-list:comment-$comment->comment_ID::trash=1 delete vim-d vim-destructive submitdelete' title='" . esc_attr__( 'Move this comment to the trash' ) . "'>" . _x('Trash', 'verb') . '</a>';
 			}
 		}
 		

@@ -20,6 +20,23 @@ tr.blc-link-details {
 
 /* Column headers */
 
+th.column-new-url {
+	width: 35%;
+}
+
+th.column-status {
+	width: 16em;
+}
+
+th.column-new-link-text {
+	/*width: 24%;*/
+	/*width: 16%;*/
+}
+
+th.column-used-in {
+	/*width: 33%;*/
+}
+
 th.column-source {
 	/*width: 33%;*/
 }
@@ -28,21 +45,8 @@ th.column-link-text {
 	width: 24%;
 }
 
-th.column-new-link-text {
-	/*width: 24%;*/
-	min-width: 20%;
-}
-
 th.column-url {
 	width: 35%;
-}
-
-th.column-new-url {
-	width: 35%;
-}
-
-th.column-status {
-	width: 14em;
 }
 
 th.column-last-checked {
@@ -50,6 +54,10 @@ th.column-last-checked {
 }
 
 th.column-broken-for {
+	width: 10em;
+}
+
+th.column-instance-count {
 	width: 10em;
 }
 

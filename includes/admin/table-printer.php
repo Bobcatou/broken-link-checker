@@ -208,7 +208,7 @@ class blcTablePrinter {
 			),
 			
 			'instance-count' => array(
-				'heading' => __('Seen in', 'broken-link-checker'),
+				'heading' => __('Used in', 'broken-link-checker'),
 				'content' => array(&$this, 'column_instance_count'),
 			),
 		);
@@ -593,7 +593,7 @@ class blcTablePrinter {
 		//Last checked...
 		if ( $link->last_check != 0 ){
 			$last_check = _x('Checked', 'checked how long ago', 'broken-link-checker') . ' ';
-			$last_check .= blcUtility::fuzzy_ago(time() - $link->last_check);
+			$last_check .= blcUtility::fuzzy_delta(time() - $link->last_check, 'ago');
 			
 			printf(
 				'<tr class="link-last-checked"><td>%s</td></tr>',
@@ -630,6 +630,11 @@ class blcTablePrinter {
       	
       	$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
       	
+      	//$actions['details'] = "<span class='details'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
+      	
+      	$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
+			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
+
 		if ( $link->broken ){
 			$actions['discard'] = sprintf(
 				'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
@@ -637,10 +642,7 @@ class blcTablePrinter {
 				__('Not broken', 'broken-link-checker')
 			);
 		}
-		
-		$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
-		
+      	
 		echo '<div class="row-actions">';
 		echo implode(' | </span>', $actions) .'</span>';
 		
@@ -702,21 +704,21 @@ class blcTablePrinter {
 			_e('Never', 'broken-link-checker');
 		} else {
 			$delta = time() - $link->last_check;
-			echo blcUtility::fuzzy_ago($delta);
+			echo blcUtility::fuzzy_delta($delta, 'ago');
 		}
 	}
 	
 	function column_instance_count(&$link, $instances){
-		if ( count($instances) > 1 ){
+		//if ( count($instances) > 1 ){
 			printf(
 				_n(
-					'%d place',
-					'%d places',
+					'%d item',
+					'%d items',
 					count($instances)
 				),
 				count($instances)
 			);
-		}
+		//}
 	}
 	
 	/**
