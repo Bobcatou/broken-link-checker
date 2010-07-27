@@ -38,6 +38,7 @@ class blcPostTypeOverlord {
 		
 		$post_types = get_post_types(array(), 'objects');
 		$exceptions = array('revision', 'nav_menu_item', 'attachment');
+		$built_in = array('post', 'page');
 		
 		foreach($post_types as $post_type => $data){
 			if ( in_array($post_type, $exceptions) ){
@@ -51,6 +52,7 @@ class blcPostTypeOverlord {
 					'ModuleCategory' => 'container',
 					'ModuleContext' => 'all',
 					'ModuleClassName' => 'blcAnyPostContainerManager',
+					'ModuleRequiresPro' => in_array($post_type, $built_in) ? 'false' : 'true',
 				)
 			);
 		}	
