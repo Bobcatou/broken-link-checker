@@ -55,6 +55,10 @@
 	margin-top: 0.2em; 
 }
 
+.module-requires-pro {
+	color: gray;
+}
+
 #blc-tabs {
 	margin-top: 0.5em;
 }

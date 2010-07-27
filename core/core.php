@@ -1201,11 +1201,13 @@ class wsBrokenLinkChecker {
     function print_module_checkbox($module_id, $module_data, $active = false){
     	$disabled = false;
     	$name_prefix = 'module';
+    	$label_class = '';
     	$active = $active || $module_data['ModuleAlwaysActive'];
     	
 		if ( $module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION') ){
     		$active = false;
     		$disabled = true;
+    		$label_class .= ' module-requires-pro';
     	}
     	
 		if ( $module_data['ModuleAlwaysActive'] ){
@@ -1218,16 +1220,19 @@ class wsBrokenLinkChecker {
 			$checked .= ' disabled="disabled"';
 		}
 		
+		$pro_notice = '<span class="pro-notice"></span>';
+		
 		printf(
-			'<label>
+			'<label class="%s">
 				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s %s
 			</label>',
+			esc_attr($label_class),
 			$name_prefix,
 	   		esc_attr($module_id),
 			esc_attr($module_id),
 			$checked,
 			$module_data['Name'],
-			($module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION')) ? '(Pro only)' : ''
+			($module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION')) ? $pro_notice : ''
 		);
 		
 		if ( $module_data['ModuleAlwaysActive'] ){
