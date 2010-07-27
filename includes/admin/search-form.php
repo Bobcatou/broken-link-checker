@@ -74,7 +74,7 @@
 		printf('<optgroup label="%s">', esc_attr(__('Links used in', 'broken-link-checker')));
 		$containers = $moduleManager->get_modules_by_category('container', false, true);
 		foreach($containers as $container_type => $module_data){
-			if ( !empty($module_data['ModuleHidden']) ){
+			if ( !empty($module_data['ModuleHidden']) || !$moduleManager->is_active($container_type) ){
 				continue;
 			}
 			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $container_type )?' selected="selected"':'';
@@ -85,7 +85,7 @@
 		printf('<optgroup label="%s">', esc_attr(__('Links of type', 'broken-link-checker')));
 		$parsers = $moduleManager->get_modules_by_category('parser', false, true);
 		foreach($parsers as $parser_type => $module_data){
-			if ( !empty($module_data['ModuleHidden']) ){
+			if ( !empty($module_data['ModuleHidden']) || !$moduleManager->is_active($parser_type) ){
 				continue;
 			}
 			$selected = ( isset($search_params['s_link_type']) && $search_params['s_link_type'] == $parser_type )?' selected="selected"':'';
