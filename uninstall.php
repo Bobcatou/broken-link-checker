@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @author W-Shadow 
- * @copyright 2009
+ * @author Janis Elsts 
+ * @copyright 2010
  *
  * The terrifying uninstallation script.
  */

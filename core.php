@@ -11,7 +11,7 @@ if ( !function_exists( 'microtime_float' ) ) {
 	}
 }
 
-require 'includes/screen-options/screen-options.php';
+require dirname(blc_get_plugin_file()) . '/includes/screen-options/screen-options.php';
 
 if (!class_exists('wsBrokenLinkChecker')) {
 
@@ -399,7 +399,7 @@ class wsBrokenLinkChecker {
    * @return bool
    */
     function upgrade_database($trigger_errors = true){
-		require_once 'includes/admin/db-upgrade.php';
+		require_once dirname($this->loader) . '/includes/admin/db-upgrade.php';
 		return blcDatabaseUpgrader::upgrade_database();
 	}
 	
@@ -1124,7 +1124,7 @@ class wsBrokenLinkChecker {
         
         <?php
         //The various JS for this page is stored in a separate file for the purposes readability.
-        include 'includes/admin/options-page-js.php';
+        include dirname($this->loader) . '/includes/admin/options-page-js.php';
     }
     
     /**
@@ -1292,7 +1292,7 @@ class wsBrokenLinkChecker {
         	//Make module headers translatable. They need to be formatted corrrectly and 
         	//placed in a .php file to be visible to the script(s) that generate .pot files.
         	$code = $moduleManager->_build_header_translation_code();
-        	file_put_contents( dirname(__FILE__) . '/includes/extra-strings.php', $code );
+        	file_put_contents( dirname($this->loader) . '/includes/extra-strings.php', $code );
         }
         
         $action = !empty($_POST['action'])?$_POST['action']:'';
@@ -2571,7 +2571,7 @@ class wsBrokenLinkChecker {
 		if ( !$link->is_new ){
 			//FB::info($link, 'Link loaded');
 			if ( !class_exists('blcTablePrinter') ){
-				require 'includes/admin/table-printer.php';
+				require dirname($this->loader) . '/includes/admin/table-printer.php';
 			}
 			blcTablePrinter::details_row_contents($link);
 			die();
