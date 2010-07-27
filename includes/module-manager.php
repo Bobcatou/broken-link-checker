@@ -557,6 +557,11 @@ class blcModuleManager {
 			}
 		}
 		
+		//Only load Pro-version modules with BLC Pro
+		if ( $module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION') ){
+			return false;
+		}
+		
 		//Load a normal module
 		if ( empty($module_data['virtual']) ){
 			
