@@ -249,7 +249,6 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		} 
 		
         //Build the log from HTTP code and headers.
-        //TODO: Put some kind of a color-coded error explanation at the top of the log, not a cryptic HTTP code. 
         $log .= '=== ';
         if ( $result['http_code'] ){
 			$log .= sprintf( __('HTTP code : %d', 'broken-link-checker'), $result['http_code']);

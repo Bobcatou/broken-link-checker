@@ -1983,17 +1983,17 @@ class wsBrokenLinkChecker {
 		
 		//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
-    		FB::error("The plugin's database tables are not up to date! Stop.");
+    		//FB::error("The plugin's database tables are not up to date! Stop.");
 			return;
 		}
 		
 		if ( !$this->acquire_lock() ){
-			FB::warn("Another instance of BLC is already working. Stop.");
+			//FB::warn("Another instance of BLC is already working. Stop.");
 			return;
 		}
 		
 		if ( $this->server_too_busy() ){
-			FB::warn("Server is too busy. Stop.");
+			//FB::warn("Server is too busy. Stop.");
 			return;
 		}
 		
@@ -2047,18 +2047,18 @@ class wsBrokenLinkChecker {
 		
 		if ( $still_need_resynch ) {
 			
-			FB::log("Looking for containers that need parsing...");
+			//FB::log("Looking for containers that need parsing...");
 			
 			while( $containers = blcContainerHelper::get_unsynched_containers(50) ){
-				FB::log($containers, 'Found containers');
+				//FB::log($containers, 'Found containers');
 				
 				foreach($containers as $container){
-					FB::log($container, "Parsing container");
+					//FB::log($container, "Parsing container");
 					$container->synch();
 					
 					//Check if we still have some execution time left
 					if( $this->execution_time() > $max_execution_time ){
-						FB::log('The alloted execution time has run out');
+						//FB::log('The alloted execution time has run out');
 						blc_cleanup_links();
 						$this->release_lock();
 						return;
@@ -2066,7 +2066,7 @@ class wsBrokenLinkChecker {
 					
 					//Check if the server isn't overloaded
 					if ( $this->server_too_busy() ){
-						FB::log('Server overloaded, bailing out.');
+						//FB::log('Server overloaded, bailing out.');
 						blc_cleanup_links();
 						$this->release_lock();
 						return;
@@ -2075,11 +2075,11 @@ class wsBrokenLinkChecker {
 				$orphans_possible = true;
 			}
 			
-			FB::log('No unparsed items found.');
+			//FB::log('No unparsed items found.');
 			$still_need_resynch = false;
 			
 		} else {
-			FB::log('Resynch not required.');
+			//FB::log('Resynch not required.');
 		}
 		
 		/******************************************
@@ -2095,19 +2095,19 @@ class wsBrokenLinkChecker {
 		*******************************************/
 		
 		if ( $orphans_possible ) {
-			FB::log('Cleaning up the link table.');
+			//FB::log('Cleaning up the link table.');
 			blc_cleanup_links();
 		}
 		
 		//Check if we still have some execution time left
 		if( $this->execution_time() > $max_execution_time ){
-			FB::log('The alloted execution time has run out');
+			//FB::log('The alloted execution time has run out');
 			$this->release_lock();
 			return;
 		}
 		
 		if ( $this->server_too_busy() ){
-			FB::log('Server overloaded, bailing out.');
+			//FB::log('Server overloaded, bailing out.');
 			$this->release_lock();
 			return;
 		}
@@ -2118,41 +2118,41 @@ class wsBrokenLinkChecker {
 		while ( $links = $this->get_links_to_check(50) ){
 		
 			//Some unchecked links found
-			FB::log("Checking ".count($links)." link(s)");
+			//FB::log("Checking ".count($links)." link(s)");
 			
 			foreach ($links as $link) {
 				//Does this link need to be checked? Excluded links aren't checked, but their URLs are still
 				//tested periodically to see if they're still on the exlusion list.
         		if ( !$this->is_excluded( $link->url ) ) {
         			//Check the link.
-        			FB::log($link->url, "Checking link {$link->link_id}");
+        			//FB::log($link->url, "Checking link {$link->link_id}");
 					$link->check( true );
 				} else {
-					FB::info("The URL {$link->url} is excluded, skipping link {$link->link_id}.");
+					//FB::info("The URL {$link->url} is excluded, skipping link {$link->link_id}.");
 					$link->last_check_attempt = time();
 					$link->save();
 				}
 				
 				//Check if we still have some execution time left
 				if( $this->execution_time() > $max_execution_time ){
-					FB::log('The alloted execution time has run out');
+					//FB::log('The alloted execution time has run out');
 					$this->release_lock();
 					return;
 				}
 				
 				//Check if the server isn't overloaded
 				if ( $this->server_too_busy() ){
-					FB::log('Server overloaded, bailing out.');
+					//FB::log('Server overloaded, bailing out.');
 					$this->release_lock();
 					return;
 				}
 			}
 			
 		}
-		FB::log('No links need to be checked right now.');
+		//FB::log('No links need to be checked right now.');
 		
 		$this->release_lock();
-		FB::log('All done.');
+		//FB::log('All done.');
 	}
 	
   /**
@@ -2180,7 +2180,7 @@ class wsBrokenLinkChecker {
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
 		
-		FB::log('Looking for links to check (threshold : '.$check_threshold.', recheck_threshold : '.$recheck_threshold.')...');
+		//FB::log('Looking for links to check (threshold : '.$check_threshold.', recheck_threshold : '.$recheck_threshold.')...');
 		
 		//Select some links that haven't been checked for a long time or
 		//that are broken and need to be re-checked again. Links that are
@@ -2235,7 +2235,7 @@ class wsBrokenLinkChecker {
 			$this->conf->options['recheck_count'], 
 			$recheck_threshold
 		);
-		FB::log($link_q, "Find links to check");
+		//FB::log($link_q, "Find links to check");
 	
 		//If we just need the number of links, retrieve it and return
 		if ( $count_only ){
@@ -2466,8 +2466,8 @@ class wsBrokenLinkChecker {
 			}
 			
 			//Try and edit the link
-			FB::log($new_url, "Ajax edit");
-			FB::log($_GET, "Ajax edit");
+			//FB::log($new_url, "Ajax edit");
+			//FB::log($_GET, "Ajax edit");
 			$rez = $link->edit($new_url);
 			
 			if ( $rez === false ){
@@ -2552,16 +2552,16 @@ class wsBrokenLinkChecker {
 			die( __("You don't have sufficient privileges to access this information!", 'broken-link-checker') );
 		}
 		
-		FB::log("Loading link details via AJAX");
+		//FB::log("Loading link details via AJAX");
 		
 		if ( isset($_GET['link_id']) ){
-			FB::info("Link ID found in GET");
+			//FB::info("Link ID found in GET");
 			$link_id = intval($_GET['link_id']);
 		} else if ( isset($_POST['link_id']) ){
-			FB::info("Link ID found in POST");
+			//FB::info("Link ID found in POST");
 			$link_id = intval($_POST['link_id']);
 		} else {
-			FB::error('Link ID not specified, you hacking bastard.');
+			//FB::error('Link ID not specified, you hacking bastard.');
 			die( __('Error : link ID not specified', 'broken-link-checker') );
 		}
 		
@@ -2569,7 +2569,7 @@ class wsBrokenLinkChecker {
 		$link = new blcLink($link_id);
 		
 		if ( !$link->is_new ){
-			FB::info($link, 'Link loaded');
+			//FB::info($link, 'Link loaded');
 			if ( !class_exists('blcTablePrinter') ){
 				require 'includes/admin/table-printer.php';
 			}
@@ -2613,7 +2613,7 @@ class wsBrokenLinkChecker {
 			}
 		} else {
 			//Uh oh, can't generate a lockfile name. This is bad.
-			FB::error("Can't find a writable directory to use for my lock file!"); 
+			//FB::error("Can't find a writable directory to use for my lock file!"); 
 			return false;
 		};
 	}
