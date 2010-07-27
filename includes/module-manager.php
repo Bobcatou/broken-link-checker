@@ -762,6 +762,7 @@ class blcModuleManager {
 			'ModuleCheckerUrlPattern',
 			'ModuleHidden',            //Don't show the module in the Settings page
 			'ModuleAlwaysActive',      //Module can't be deactivated.
+			'ModuleRequiresPro',       //Can only be activated in the Pro version
 		);
 		
 		return array_merge($headers, $module_headers);
@@ -784,6 +785,7 @@ class blcModuleManager {
 			'ModulePriority' => '0',
 			'ModuleHidden' => 'false',
 			'ModuleAlwaysActive' => 'false',
+			'ModuleRequiresPro' => 'false',
 			'TextDomain' => 'broken-link-checker', //For translating module headers
 		);
 		
@@ -801,6 +803,7 @@ class blcModuleManager {
 		$module_header['ModuleLazyInit'] = $this->str_to_bool($module_header['ModuleLazyInit']);
 		$module_header['ModuleHidden'] = $this->str_to_bool($module_header['ModuleHidden']);
 		$module_header['ModuleAlwaysActive'] = $this->str_to_bool($module_header['ModuleAlwaysActive']);
+		$module_header['ModuleRequiresPro'] = $this->str_to_bool($module_header['ModuleRequiresPro']);
 		$module_header['ModulePriority'] = intval($module_header['ModulePriority']);
 			
 		return $module_header;			
