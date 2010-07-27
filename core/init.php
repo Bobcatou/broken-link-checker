@@ -273,7 +273,7 @@ function blc_activation_hook(){
 //Since the main plugin files load during the 'init' action, any activation hooks
 //set therein would never be executed ('init' runs before activation happens). Instead, 
 //we must register the hook(s) immediately after our main plugin file is loaded.
-register_activation_hook(plugin_basename(__FILE__), 'blc_activation_hook');
+register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
 
 
 /***********************************************

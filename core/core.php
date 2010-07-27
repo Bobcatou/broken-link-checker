@@ -1199,24 +1199,35 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function print_module_checkbox($module_id, $module_data, $active = false){
+    	$disabled = false;
+    	$name_prefix = 'module';
     	$active = $active || $module_data['ModuleAlwaysActive'];
-		$checked = $active ? ' checked="checked"':'';
-		$name_prefix = 'module';
-		
+    	
+		if ( $module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION') ){
+    		$active = false;
+    		$disabled = true;
+    	}
+    	
 		if ( $module_data['ModuleAlwaysActive'] ){
-			$checked .= ' disabled="disabled"';
+			$disabled = true;
 			$name_prefix = 'module-always-active';
+		}
+		
+		$checked = $active ? ' checked="checked"':'';
+		if ( $disabled ){
+			$checked .= ' disabled="disabled"';
 		}
 		
 		printf(
 			'<label>
-				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s
+				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s %s
 			</label>',
 			$name_prefix,
 	   		esc_attr($module_id),
 			esc_attr($module_id),
 			$checked,
-			$module_data['Name']
+			$module_data['Name'],
+			($module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION')) ? '(Pro only)' : ''
 		);
 		
 		if ( $module_data['ModuleAlwaysActive'] ){
@@ -2656,8 +2667,8 @@ class wsBrokenLinkChecker {
 		}
 		
 		//Try the plugin's own directory.
-		if ( @is_writable( dirname(__FILE__) ) ){
-			return dirname(__FILE__) . '/wp_blc_lock';
+		if ( @is_writable( dirname( blc_get_plugin_file() ) ) ){
+			return dirname( blc_get_plugin_file() ) . '/wp_blc_lock';
 		} else {
 			
 			//Try the system-wide temp directory
@@ -2746,7 +2757,7 @@ class wsBrokenLinkChecker {
 	}
 	
 	function lockfile_warning(){
-		$my_dir =  '/plugins/' . basename(dirname(__FILE__)) . '/';
+		$my_dir =  '/plugins/' . basename(dirname(blc_get_plugin_file())) . '/';
 		$settings_page = admin_url( 'options-general.php?page=link-checker-settings#lockfile_directory' );
 		
 		//Make the notice customized to the current settings
