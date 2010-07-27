@@ -1,4 +1,18 @@
 <?php
+/*
+Plugin Name: HTML images
+Description: e.g. <code>&lt;img src="http://example.com/fluffy.jpg"&gt;</code>
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: image
+ModuleCategory: parser
+ModuleClassName: blcHTMLImage
+ModuleContext: on-demand
+ModuleLazyInit: true
+
+ModulePriority: 900
+*/
 
 //TODO: Update image parser to use the same HTML tag parsing routine as the HTML link parser. 
 class blcHTMLImage extends blcParser {
@@ -142,8 +156,8 @@ class blcHTMLImage extends blcParser {
 		$text = __('Image', 'broken-link-checker'); 
 		
 		$image = sprintf(
-			'<img src="%s/broken-link-checker/images/image.png" class="blc-small-image" alt="%2$s" title="%2$s"> ',
-			WP_PLUGIN_URL, //TODO: Use plugin_dir_url() instead
+			'<img src="%s" class="blc-small-image" alt="%2$s" title="%2$s"> ',
+			esc_attr(plugins_url('/images/image.png', blc_get_plugin_file())),
 			esc_attr($text)
 		);
 		
@@ -154,8 +168,5 @@ class blcHTMLImage extends blcParser {
 		return $text;
 	}
 }
-
-blc_register_parser('image', 'blcHTMLImage');
-
 
 ?>

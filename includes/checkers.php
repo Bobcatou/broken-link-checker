@@ -8,7 +8,7 @@
  * @package Broken Link Checker
  * @access public
  */
-class blcChecker {
+class blcChecker extends blcModule {
 	
   /**
    * Priority determines the order in which the plugin will try all registered checkers 
@@ -63,33 +63,19 @@ class blcChecker {
 	}
 }
 
-class blcCheckerRegistry {
-	var $registered_checkers = array();
+class blcCheckerHelper {
 	
-  /**
-   * Register a link checker.
-   *
-   * @param string $class_name Class name of the checker.
-   * @return void
-   */
-	function register_checker($class_name){
-		$checker = new $class_name;
-		$this->registered_checkers[] = $checker;
-		
-		usort($this->registered_checkers, array(&$this, 'compare_checkers'));
-	}
-	
-  /**
-   * Callback for sorting checkers by priority.
-   *
-   * @access private
-   *
-   * @param blcChecker $a
-   * @param blcChecker $b
-   * @return int
-   */
-	function compare_checkers($a, $b){
-		return $b->priority - $a->priority;
+	/**
+	 * Get a reference to a specific checker.
+	 * 
+	 * @uses blcModuleManager::get_module()
+	 * 
+	 * @param string $checker_id
+	 * @return blcChecker
+	 */
+	function &get_checker($checker_id){
+		$manager = & blcModuleManager::getInstance();
+		return $manager->get_module($checker_id, true, 'checker');
 	}
 	
   /**
@@ -101,7 +87,27 @@ class blcCheckerRegistry {
 	function &get_checker_for($url){
 		$parsed = @parse_url($url);
 		
-		foreach($this->registered_checkers as $checker){
+		$manager = & blcModuleManager::getInstance();
+		$active_checkers = $manager->get_active_by_category('checker'); 
+		
+		foreach($active_checkers as $module_id => $module_data){
+			//Try the URL pattern in the header first. If it doesn't match,
+			//we can avoid loading the module altogether.
+			if ( !empty($module_data['ModuleCheckerUrlPattern']) ){
+				if ( !preg_match($module_data['ModuleCheckerUrlPattern'], $url) ){
+					continue;
+				}
+			}
+			
+			$checker = & $manager->get_module($module_id);
+			
+			if ( !$checker ){
+				continue;
+			}
+			
+			//The can_check() method can perform more sophisticated filtering,
+			//or just return true if the checker thinks matching the URL regex
+			//is sufficient.
 			if ( $checker->can_check($url, $parsed) ){
 				return $checker;
 			}
@@ -110,27 +116,5 @@ class blcCheckerRegistry {
 		return null;
 	}
 }
-
-$GLOBALS['blc_checker_registry'] = new blcCheckerRegistry();
-
-/**
- * Register a new link checker.
- *
- * @param string $class_name
- * @return void
- */
-function blc_register_checker($class_name){
-	return $GLOBALS['blc_checker_registry']->register_checker($class_name);
-}
-
-/**
- * Get the checker algo. implementation that knows how to check a specific URL.
- *
- * @param string $url The URL that needs to be checked.
- * @return blcChecker|null 
- */
-function &blc_get_checker_for($url){
-	return $GLOBALS['blc_checker_registry']->get_checker_for($url);
-}
-
+		
 ?>

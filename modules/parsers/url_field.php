@@ -1,4 +1,18 @@
 <?php
+/*
+Plugin Name: URL fields
+Description: Parses data fields that contain a single, plaintext URL.
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: url_field
+ModuleCategory: parser
+ModuleClassName: blcUrlField
+ModuleContext: on-demand
+ModuleLazyInit: true
+ModuleAlwaysActive: true
+ModuleHidden: true
+*/
 
 /**
  * A "parser" for data fields that contain a single, plaintext URL.
@@ -80,8 +94,5 @@ class blcUrlField extends blcParser {
 		return '';
 	}
 }
-
-blc_register_parser('url_field', 'blcUrlField');
-
 
 ?>

@@ -1,5 +1,18 @@
 <?php
 
+/*
+Plugin Name: Dummy
+Description: 
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: dummy
+ModuleCategory: container
+ModuleClassName: blcDummyManager
+ModuleAlwaysActive: true
+ModuleHidden: true
+*/
+
 /**
  * A "dummy" container class that can be used as a fallback when the real container class can't be found.
  * 
@@ -60,7 +73,5 @@ class blcDummyManager extends blcContainerManager {
 		//Do nothing.
 	}
 }
-
-blc_register_container('dummy', 'blcDummyManager');
 
 ?>

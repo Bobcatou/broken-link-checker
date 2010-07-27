@@ -1,4 +1,18 @@
 <?php
+/*
+Plugin Name: Metadata
+Description: Parses metadata (AKA custom fields)
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: metadata
+ModuleCategory: parser
+ModuleClassName: blcMetadataParser
+ModuleContext: on-demand
+ModuleLazyInit: true
+ModuleAlwaysActive: true
+ModuleHidden: true
+*/
 
 class blcMetadataParser extends blcParser {
 	var $supported_formats = array('metadata');
@@ -89,9 +103,31 @@ class blcMetadataParser extends blcParser {
 			'raw_url' => $new_url,
 		);
 	}
+	
+  /**
+   * Get the link text for printing in the "Broken Links" table.
+   *
+   * @param blcLinkInstance $instance
+   * @return string HTML 
+   */
+	function ui_get_link_text(&$instance, $context = 'display'){
+		$image_html = sprintf(
+			'<img src="%s" class="blc-small-image" title="%2$s" alt="%2$s"> ',
+			esc_attr( plugins_url('/images/script_code.png', blc_get_plugin_file()) ),
+			__('Custom field', 'broken-link-checker')
+		);
+		
+		$field_html = sprintf(
+			'<code>%s</code>',
+			$instance->container_field
+		); 
+		
+		if ( $context != 'email' ){
+			$field_html = $image_html . $field_html;
+		}
+		
+		return $field_html;
+	}
 }
-
-blc_register_parser('metadata', 'blcMetadataParser');
-
 
 ?>

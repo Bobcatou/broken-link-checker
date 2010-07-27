@@ -2,7 +2,7 @@
 
 /**
  * @author W-Shadow
- * @copyright 2009
+ * @copyright 2010
  */
  
  
@@ -35,146 +35,6 @@ if ( !function_exists('sys_get_temp_dir')) {
 if ( !class_exists('blcUtility') ){
 
 class blcUtility {
-	
-    //A regxp for images
-    function img_pattern(){
-	    //        \1                        \2      \3 URL    \4
-	    return '/(<img[\s]+[^>]*src\s*=\s*)([\"\'])([^>]+?)\2([^<>]*>)/i';
-	}
-	
-	//A regexp for links
-	function link_pattern(){
-	    //	      \1                       \2      \3 URL    \4       \5 Text  \6
-	    return '/(<a[\s]+[^>]*href\s*=\s*)([\"\'])([^>]+?)\2([^<>]*>)((?sU).*)(<\/a>)/i';
-	}	
-	
-  /**
-   * blcUtility::normalize_url()
-   *
-   * @param string $url
-   * @params string $base_url (Optional) The base URL is used to convert a relative URL to a fully-qualified one
-   * @return string A normalized URL or FALSE if the URL is invalid
-   */
-	function normalize_url($url, $base_url = ''){
-		//Sometimes links may contain shortcodes. Parse them.
-		$url = do_shortcode($url);
-		
-	    $parts = @parse_url($url);
-	    if(!$parts) return false; //Invalid URL
-	
-	    if(isset($parts['scheme'])) {
-	        //Only HTTP(S) links are checked. Other protocols are not supported.
-	        if ( ($parts['scheme'] != 'http') && ($parts['scheme'] != 'https') )
-	            return false;
-	    }
-	    
-	    $url = html_entity_decode($url);
-	    $url = preg_replace(
-	        array('/([\?&]PHPSESSID=\w+)$/i', //remove session ID
-	              '/(#[^\/]*)$/',			  //and anchors/fragments
-	              '/&amp;/',				  //convert improper HTML entities
-	              '/^(javascript:.*)/i',	  //treat links that contain JS as links with an empty URL 	
-	              '/([\?&]sid=\w+)$/i'		  //remove another flavour of session ID
-	              ),
-	        array('','','&','',''),
-	        $url);
-	    $url = trim($url);
-	
-	    if ( $url=='' ) return false;
-	    
-	    // turn relative URLs into absolute URLs
-	    if ( empty($base_url) ) $base_url = get_option('siteurl');
-	    $url = blcUtility::relative2absolute( $base_url, $url);
-	    return $url;
-	}
-	
-  /**
-   * blcUtility::relative2absolute()
-   * Turns a relative URL into an absolute one given a base URL.
-   *
-   * @param string $absolute Base URL
-   * @param string $relative A relative URL
-   * @return string
-   */
-	function relative2absolute($absolute, $relative) {
-	    $p = @parse_url($relative);
-	    if(!$p) {
-	        //WTF? $relative is a seriously malformed URL
-	        return false;
-	    }
-	    if( isset($p["scheme"]) ) return $relative;
-	    
-	    //If the relative URL is just a query string, simply attach it to the absolute URL and return
-	    if ( substr($relative, 0, 1) == '?' ){
-			return $absolute . $relative;
-		}
-	
-	    $parts=(parse_url($absolute));
-	    
-	    if(substr($relative,0,1)=='/') {
-	    	//Relative URL starts with a slash => ignore the base path and jump straight to the root. 
-	        $path_segments = explode("/", $relative);
-	        array_shift($path_segments);
-	    } else {
-	        if(isset($parts['path'])){
-	            $aparts=explode('/',$parts['path']);
-	            array_pop($aparts);
-	            $aparts=array_filter($aparts);
-	        } else {
-	            $aparts=array();
-	        }
-	        
-	        //Merge together the base path & the relative path
-	        $aparts = array_merge($aparts, explode("/", $relative));
-	        
-	        //Filter the merged path 
-	        $path_segments = array();
-	        foreach($aparts as $part){
-	        	if ( $part == '.' ){
-					continue; //. = "this directory". It's basically a no-op, so we skip it.
-				} elseif ( $part == '..' )  {
-					array_pop($path_segments);	//.. = one directory up. Remove the last seen path segment.
-				} else {
-					array_push($path_segments, $part); //Normal directory -> add it to the path.
-				}
-			}
-	    }
-	    $path = implode("/", $path_segments);
-	
-	    $url = '';
-	    if($parts['scheme']) {
-	        $url = "$parts[scheme]://";
-	    }
-	    if(isset($parts['user'])) {
-	        $url .= $parts['user'];
-	        if(isset($parts['pass'])) {
-	            $url .= ":".$parts['pass'];
-	        }
-	        $url .= "@";
-	    }
-	    if(isset($parts['host'])) {
-	        $url .= $parts['host']."/";
-	    }
-	    $url .= $path;
-	
-	    return $url;
-	}
-	
-	
-  /**
-   * blcUtility::urlencodefix()
-   * Takes an URL and replaces spaces and some other non-alphanumeric characters with their urlencoded equivalents.
-   *
-   * @param string $str
-   * @return string
-   */
-	function urlencodefix($url){
-		return preg_replace_callback(
-			'|[^a-z0-9\+\-\/\\#:.=?&%@]|i', 
-			create_function('$str','return rawurlencode($str[0]);'), 
-			$url
-		 );
-	}
 	
   /**
    * blcUtility::is_safe_mode()
@@ -353,6 +213,131 @@ class blcUtility {
 		}
 	 
 		return $tags;
+	}
+	
+	/**
+	 * Extract <embed> elements from a HTML string.
+	 * 
+	 * This function returns an array of <embed> elements found in the input
+	 * string. Only <embed>'s that are inside <object>'s are considered. Embeds
+	 * without a 'src' attribute are skipped. 
+	 * 
+	 * Each array item has the same basic structure as the array items
+	 * returned by blcUtility::extract_tags(), plus an additional 'wrapper' key 
+	 * that contains similarly structured info about the wrapping <object> tag.  
+	 *  
+	 * @uses blcUtility::extract_tags() This function is a simple wrapper around extract_tags()
+	 * 
+	 * @param string $html
+	 * @return array 
+	 */
+	function extract_embeds($html){
+		$results = array();
+		
+		//remove all <code></code> blocks first
+		$content = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $content);
+		
+		//Find likely-looking <object> elements
+		$objects = blcUtility::extract_tags($html, 'object', false, true);
+		foreach($objects as $candidate){
+			//Find the <embed> tag
+			$embed = blcUtility::extract_tags($candidate['full_tag'], 'embed', false);
+			if ( empty($embed)) continue;
+			$embed = reset($embed); //Take the first (and only) found <embed> element
+			
+			if ( empty($embed['attributes']['src']) ){
+				continue;
+			}
+			
+			$embed['wrapper'] = $candidate;
+			
+			$results[] = $embed;
+		}
+		
+		return $results;
+	}
+	
+	/**
+     * Get the value of a cookie.
+     * 
+     * @param string $cookie_name The name of the cookie to return.
+     * @param string $default_value Optional. If the cookie is not set, this value will be returned instead. Defaults to an empty string.
+     * @return mixed Either the value of the requested cookie, or $default_value.
+     */
+    function get_cookie($cookie_name, $default_value = ''){
+    	if ( isset($_COOKIE[$cookie_name]) ){
+    		return $_COOKIE[$cookie_name];
+    	} else {
+    		return $default_value;
+    	}
+    }
+    
+  /**
+   * Format a time delta using a fuzzy format, e.g. '2 minutes ago', '2 days', etc.
+   *
+   * @param int $delta Time period in seconds.
+   * @param string $type Optional. The output template to use. 
+   * @return string
+   */
+	function fuzzy_delta($delta, $template = 'default'){
+		$ONE_MINUTE = 60;
+		$ONE_HOUR = 60 * $ONE_MINUTE;
+		$ONE_DAY = 24 * $ONE_HOUR;
+		$ONE_MONTH = $ONE_DAY * 3652425 / 120000;
+		$ONE_YEAR = $ONE_DAY * 3652425 / 10000;
+		
+		$templates = array(
+			'seconds' => array(
+				'default' => _n_noop('%d second', '%d seconds'),
+				'ago' => _n_noop('%d second ago', '%d seconds ago'),
+			),
+			'minutes' => array(
+				'default' => _n_noop('%d minute', '%d minutes'),
+				'ago' => _n_noop('%d minute ago', '%d minutes ago'),
+			),
+			'hours' => array(
+				'default' => _n_noop('%d hour', '%d hours'),
+				'ago' => _n_noop('%d hour ago', '%d hours ago'),
+			),
+			'days' => array(
+				'default' => _n_noop('%d day', '%d days'),
+				'ago' => _n_noop('%d day ago', '%d days ago'),
+			),
+			'months' => array(
+				'default' => _n_noop('%d month', '%d months'),
+				'ago' => _n_noop('%d month ago', '%d months ago'),
+			),
+		);
+		
+		if ( $delta < 1 ) {
+			$delta = 1;
+		}
+		
+		if ( $delta < $ONE_MINUTE ){
+			$units = 'seconds';
+		} elseif ( $delta < $ONE_HOUR ){
+			$delta = intval($delta / $ONE_MINUTE);
+			$units = 'minutes';
+		} elseif ( $delta < $ONE_DAY ){
+			$delta = intval($delta / $ONE_HOUR);
+			$units = 'hours';
+		} elseif ( $delta < $ONE_MONTH ){
+			$delta = intval($delta / $ONE_DAY);
+		 	$units = 'days';
+		} else {
+			$delta = intval( $delta / $ONE_MONTH );
+			$units = 'months';
+		}
+		
+		return sprintf(
+			_n(
+				$templates[$units][$template][0],
+				$templates[$units][$template][1],
+				$delta,
+				'broken-link-checker'
+			),
+			$delta
+		);
 	}
 	
 }//class

@@ -1,101 +1,6 @@
 <?php
 
 /**
- * Parser Registry class for managing parsers. Used as a singleton.
- *
- * @see blcParser
- *
- * @package Broken Link Checker
- * @access public
- */
-class blcParserRegistry {
-	
-  /**
-   * @access protected 
-   */
-	var $registered_parsers = array();
-	
-	/**
-	 * Get an instance of the parser registry class.
-	 * 
-	 * @return blcParserRegistry
-	 */
-	function &getInstance(){
-		static $instance = null;
-		if ( is_null($instance) ){
-			$instance = new blcParserRegistry;
-		}
-		return $instance;
-	}
-	
-  /**
-   * Register a new link parser.
-   *
-   * @param string $parser_type A unique string identifying the parser.
-   * @param string $class_name Name of the class implementing the parser.
-   * @return bool True on success, false if this parser type is already registered.
-   */
-	function register_parser( $parser_type, $class_name ){
-		if ( isset($this->registered_parsers[$parser_type]) ){
-			return false;
-		}
-		
-		$parser = new $class_name($parser_type);
-		$this->registered_parsers[$parser_type] = $parser;
-		
-		return true;
-	}
-	
-	/**
-	 * Retrieve a list of all registered parsers.
-	 * 
-	 * @return array An associative array of parser objects indexed by parser ID.
-	 */
-	function get_registered_parsers(){
-		return $this->registered_parsers;
-	}
-	
-  /**
-   * Get the parser matching a parser type ID.
-   *
-   * @param string $parser_type
-   * @return blcParser|null
-   */
-	function &get_parser( $parser_type ){
-		if ( isset($this->registered_parsers[$parser_type]) ){
-			return $this->registered_parsers[$parser_type];
-		} else {
-			return null;
-		}
-	}
-	
-  /**
-   * Get all parsers that support either the specified format or the container type.
-   * If a parser supports both, it will still be included only once.
-   *
-   * @param string $format
-   * @param string $container_type
-   * @return array of blcParser
-   */
-	function get_parsers( $format, $container_type ){
-		$found = array();
-		
-		foreach($this->registered_parsers as $parser){
-			if ( in_array($format, $parser->supported_formats) || in_array($container_type, $parser->supported_containers) ){
-				array_push($found, $parser);
-			}
-		}
-		
-		return $found;
-	}
-			
-}
-
-//Create the parser registry singleton.
-$GLOBALS['blc_parser_registry'] = & blcParserRegistry::getInstance();
-
-
-/**
  * A base class for parsers.
  *
  * In the context of this plugin, a "parser" is a class that knows how to extract or modfify 
@@ -117,30 +22,58 @@ $GLOBALS['blc_parser_registry'] = & blcParserRegistry::getInstance();
  * @package Broken Link Checker
  * @access public
  */
-class blcParser {
+class blcParser extends blcModule {
 	
 	var $parser_type;
 	var $supported_formats = array();
 	var $supported_containers = array();
 	
-  /**
-   * Class construtor.
-   *
-   * @param string $parser_type
-   * @return void
-   */
-	function __construct( $parser_type ){
-		$this->parser_type = $parser_type;
+	/**
+	 * Initialize the parser. Nothing much here.
+	 * 
+	 * @return void
+	 */
+	function init(){
+		parent::init();
+		$this->parser_type = $this->module_id;
 	}
 	
-  /**
-   * PHP4 constructor
-   *
-   * @param string $parser_type
-   * @return void
-   */
-	function blcParser( $parser_type ){
-		$this->__construct( $parser_type );
+	/**
+	 * Called when the parser is activated.
+	 * 
+	 * @return void
+	 */
+	function activated(){
+		parent::activated();
+		$this->resynch_relevant_containers();
+	}
+	
+	/**
+	 * Mark containers that this parser might be interested in as unparsed.
+	 * 
+	 * @uses blcContainerHelper::mark_as_unsynched_where()
+	 * 
+	 * @param bool $only_return If true, just return the list of formats and container types without actually modifying any synch. records.  
+	 * @return void|array Either nothing or an array in the form [ [format1=>timestamp1, ...], [container_type1=>timestamp1, ...] ]
+	 */
+	function resynch_relevant_containers($only_return = false){
+		$last_deactivated = $this->module_manager->get_last_deactivation_time($this->module_id);
+		
+		$formats = array();
+		foreach($this->supported_formats as $format){
+			$formats[$format] = $last_deactivated;
+		}
+		
+		$container_types = array();
+		foreach($this->supported_containers as $container_type){
+			$container_types[$container_type] = $last_deactivated;
+		}
+		
+		if ( $only_return ){
+			return array($formats, $container_types);
+		} else {
+			blcContainerHelper::mark_as_unsynched_where($formats, $container_types);
+		}
 	}
 	
   /**
@@ -196,13 +129,13 @@ class blcParser {
    * @param blcLinkInstance $instance
    * @return string HTML 
    */
-	function ui_get_link_text($instance, $context = 'display'){
+	function ui_get_link_text(&$instance, $context = 'display'){
 		return $instance->link_text;
 	}
 	
   /**
    * Turn a relative URL into an absolute one.
-   *
+   * 
    * @param string $url Relative URL.
    * @param string $base_url Base URL. If omitted, the blog's root URL will be used.
    * @return string
@@ -332,47 +265,57 @@ class blcParser {
 }
 
 /**
- * Register a new link parser.
- *
+ * A helper class for working with parsers. All its methods should be called statically. 
+ *  
  * @see blcParser
- *
- * @uses blcParserRegistry::register_parser() 
- *
- * @param string $parser_type A unique string identifying the parser, e.g. "html_link" 
- * @param string $class_name Name of the class that implements the parser. 
- * @return bool
+ * 
+ * @package Broken Link Checker
+ * @access public
  */
-function blc_register_parser( $parser_type, $class_name ) {
-	$instance = & blcParserRegistry::getInstance(); 
-	return $instance->register_parser($parser_type, $class_name);
+class blcParserHelper {
+	
+  /**
+   * Get the parser matching a parser type ID.
+   * 
+   * @uses blcModuleManager::get_module()
+   *
+   * @param string $parser_type
+   * @return blcParser|null
+   */
+	function &get_parser( $parser_type ){
+		$manager = & blcModuleManager::getInstance();
+		return $manager->get_module($parser_type, true, 'parser');
+	}
+	
+  /**
+   * Get all parsers that support either the specified format or the container type.
+   * If a parser supports both, it will still be included only once.
+   *
+   * @param string $format
+   * @param string $container_type
+   * @return array of blcParser
+   */
+	function get_parsers( $format, $container_type ){
+		$found = array();
+		
+		//Retrieve a list of active parsers
+		$manager = & blcModuleManager::getInstance();
+		$active_parsers = $manager->get_modules_by_category('parser');
+		
+		//Try each one
+		foreach($active_parsers as $module_id => $module_data){
+			$parser = & $manager->get_module($module_id); //Will autoload if necessary
+			if ( !$parser ){
+				continue;
+			}
+			
+			if ( in_array($format, $parser->supported_formats) || in_array($container_type, $parser->supported_containers) ){
+				array_push($found, $parser);
+			}
+		}
+		
+		return $found;
+	}
 }
-
-/**
- * Get the parser matching a parser type id.
- *
- * @uses blcParserRegistry::get_parser() 
- *
- * @param string $parser_type
- * @return blcParser|null
- */
-function &blc_get_parser( $parser_type ){
-	$instance = & blcParserRegistry::getInstance();
-	return $instance->get_parser($parser_type);
-}
-
-/**
- * Get all parsers that support either the specified format or container type.
- *
- * @uses blcParserRegistry::get_parsers()
- *
- * @param string $format
- * @param string $container_type
- * @return array of blcParser
- */
-function blc_get_parsers( $format, $container_type ){
-	$instance = & blcParserRegistry::getInstance(); 
-	return $instance->get_parsers($format, $container_type);
-}
-
 
 ?>

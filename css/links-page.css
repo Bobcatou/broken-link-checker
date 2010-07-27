@@ -5,8 +5,8 @@ table#blc-links {
 	table-layout: fixed;
 }
 
-td.blc-link-details {
-	width: 100%;
+tr.blc-link-details {
+	display: none;
 }
 
 .blc-detail-container {
@@ -18,34 +18,85 @@ td.blc-link-details {
 	width: 50%;
 }
 
-.blc-column-source {
-	width: 33%;
+/* Column headers */
+
+th.column-new-url {
+	width: 35%;
 }
 
-.blc-column-link-text {
+th.column-status {
+	width: 16em;
+}
+
+th.column-new-link-text {
+	/*width: 24%;*/
+	/*width: 16%;*/
+}
+
+th.column-used-in {
+	/*width: 33%;*/
+}
+
+th.column-source {
+	/*width: 33%;*/
+}
+
+th.column-link-text {
 	width: 24%;
 }
 
-.blc-column-url {
-	/*width: 35%;*/
+th.column-url {
+	width: 35%;
+}
+
+th.column-last-checked {
+	width: 10em;
+}
+
+th.column-broken-for {
+	width: 10em;
+}
+
+th.column-instance-count {
+	width: 10em;
+}
+
+/* Cells */
+
+td.column-new-url, 
+td.column-used-in
+{
+	/*
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	*/
+}
+
+td.column-new-url .row-actions,
+td.column-url .row-actions
+{
+	margin-left: 16px;
+}
+
+td.column-new-url .mini-status {
+	margin-left: 16px;
+	color: black;
 }
 
 /* Styles for broken links, redirects and other link states or types */
 
-.blc-redirect { }
-
 .blc-redirect .blc-link-url {
 	background-image: url("../images/bullet_blue.png");
-	background-position: left center;
-	background-repeat: no-repeat;
 }
 
-.blc-broken-link { }
+.link-status-error .blc-link-url {
+	background-image: url("../images/bullet_cross.png");
+}
 
-.blc-broken-link .blc-link-url {
+.link-status-warning .blc-link-url {
 	background-image: url("../images/bullet_error.png");
-	background-position: left center;
-	background-repeat: no-repeat;
 }
 
 .blc-excluded-link {
@@ -61,26 +112,135 @@ td.blc-link-details {
 }
 
 
+/* The "Status" column */
+td.column-status {
+	cursor: pointer;
+}
+
+.mini-status, .mini-status th, .mini-status td {
+	border: 0;
+	font-size: 1em;
+	padding: 0;
+	color: gray;
+}
+
+.mini-status div {
+	display: inline-block;
+}
+
+.mini-status .status-text {
+	color: black;
+}
+
+.link-status-unknown td.column-status .http-code {
+	display: none;
+}
+
+
+/* Status colors */
+.color-code-link-status  .mini-status .http-code,
+.color-code-link-status  .mini-status .status-text
+{
+	font-weight: bold;
+}
+
+.color-code-link-status  .link-status-unknown td.column-status .status-text,
+.color-code-link-status  .link-status-unknown td.column-status .http-code
+{
+	color: gray;
+	font-weight: normal;
+}
+
+.color-code-link-status  .link-status-ok td.column-status .status-text,
+.color-code-link-status  .link-status-ok td.column-status .http-code
+{
+	color: green;
+}
+
+.color-code-link-status  .link-status-info td.column-status .status-text,
+.color-code-link-status  .link-status-info td.column-status .http-code
+{
+	color: blue;
+}
+
+.color-code-link-status  .link-status-warning td.column-status .status-text,
+.color-code-link-status  .link-status-warning td.column-status .http-code
+{
+	color: #FF8C00; /*#FFA500*/
+}
+
+.color-code-link-status  .link-status-error td.column-status .status-text,
+.color-code-link-status  .link-status-error td.column-status .http-code
+{
+	color: red;
+}
+
+
+/* "Compact" view */
+
+.compact td.column-url,
+.compact td.column-status,
+.compact td.column-link-text,
+.compact td.column-used-in,
+.compact td.column-new-url,
+.compact td.column-source,
+.compact td.column-new-link-text
+{
+	overflow:  hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	word-wrap: normal;
+}
+
+.compact .link-last-checked,
+.compact .link-broken-for,
+.compact .link-text 
+{
+	display: none;
+}
+
 /* Misc table styles */
 
 .blc-link-url {
 	padding-left: 16px;
+	overflow: hidden;
+
+	background-image: none;	
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+td.column-new-url {	/* The URL never wraps */
+	word-wrap: normal;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
 }
 
 .blc-link-editor {
     font-size: 1em;
     width: 95%;
     margin-left: 12px;
+    margin-top: -1px;
 }
 
-.column-url .row-actions {
-	margin-left: 16px;
+.blc-url-editor-buttons {
+	margin-left: 12px;
+	margin-top: 2px;
+	display: none;
+	width: 95%;
 }
 
-.blc-link-text {
+img.waiting {
+	float:right;
+	padding:4px 8px 0;
+	vertical-align:top;
+}
+
+td.column-link-text, td.column-new-link-text {
 	cursor: pointer; 
 }
-
 
 .blc-small-image {
 	vertical-align: middle;
@@ -92,6 +252,10 @@ td.blc-link-details {
 	background : white !important;
 	border: 3px solid #EEEEEE;
 	padding: 12px;
+	
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
 }
 
 .blc-search-container .ui-dialog-titlebar {
@@ -131,8 +295,11 @@ div.search-box{
 	margin-left: 0pt;
 }
 
-/* Misc link page styles */
+#s_link_type optgroup {
+	font-style: normal;
+	font-size: 13px;
+}
 
-.tools_page_view-broken-links #screen-options-wrap h5 {
-	display: none;
+#s_link_type optgroup option {
+	margin-left: 1em;
 }

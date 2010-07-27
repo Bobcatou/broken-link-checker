@@ -1,14 +1,75 @@
 <?php
 
+/*
+Plugin Name: HTTP/HTTPS links
+Description: Check all links that have the HTTP/HTTPS protocol.
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: http
+ModuleCategory: checker
+ModuleContext: on-demand
+ModuleLazyInit: true
+ModuleClassName: blcHttpChecker
+ModulePriority: -1
+*/
+
+//TODO: Rewrite sub-classes as transports, not stand-alone checkers
+class blcHttpChecker extends blcChecker {
+	var $implementation;
+	
+	function init(){
+		parent::init();
+		
+		if ( function_exists('curl_init') ) {
+			$this->implementation = new blcCurlHttp(
+				$this->module_id, 
+				$this->cached_header,
+				$this->plugin_conf,
+				$this->module_manager
+			);
+		} else {
+			//Try to load Snoopy.
+			if ( !class_exists('Snoopy') ){
+				$snoopy_file = ABSPATH. WPINC . '/class-snoopy.php';
+				if (file_exists($snoopy_file) ){
+					include $snoopy_file;
+				}
+			}
+			
+			//If Snoopy is available, it will be used in place of CURL.
+			if ( class_exists('Snoopy') ){
+				$this->implementation = new blcSnoopyHttp(
+					$this->module_id, 
+					$this->cached_header,
+					$this->plugin_conf,
+					$this->module_manager
+				);
+			}
+		}
+	}
+	
+	function can_check($url, $parsed){
+		if ( isset($this->implementation) ){
+			return $this->implementation->can_check($url, $parsed);
+		} else {
+			return false;
+		}
+	}
+	
+	function check($url, $use_get = false){
+		return $this->implementation->check($url, $use_get);
+	}
+}
+
+
 /**
  * Base class for checkers that deal with HTTP(S) URLs.
  *
  * @package Broken Link Checker
  * @access public
  */
-class blcHttpChecker extends blcChecker{
-	
-	var $priority = -1;
+class blcHttpCheckerBase extends blcChecker {
 	
 	function clean_url($url){
 		$url = html_entity_decode($url);
@@ -19,7 +80,7 @@ class blcHttpChecker extends blcChecker{
 	            '/&amp;/',					//convert improper HTML entities
 	            '/([\?&]sid=\w+)$/i'		//remove another flavour of session ID
 	        ),
-	        array('','','&','',''),
+	        array('','','&',''),
 	        $url
 		);
 	    $url = trim($url);
@@ -65,8 +126,7 @@ class blcHttpChecker extends blcChecker{
 	
 }
 
-//TODO: Rewrite sub-classes as transports, not stand-alone checkers
-class blcCurlHttp extends blcHttpChecker {
+class blcCurlHttp extends blcHttpCheckerBase {
 	
 	var $last_headers = '';
 	
@@ -129,8 +189,8 @@ class blcCurlHttp extends blcHttpChecker {
         
         $parts = @parse_url($url);
         if( $parts['scheme'] == 'https' ){
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); //Required to make HTTPS URLs work.
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); //Likewise.
+        	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //Required to make HTTPS URLs work.
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
             $nobody = false; //Can't use HEAD with HTTPS.
         }
         
@@ -189,7 +249,6 @@ class blcCurlHttp extends blcHttpChecker {
 		} 
 		
         //Build the log from HTTP code and headers.
-        //TODO: Put some kind of a color-coded error explanation at the top of the log, not a cryptic HTTP code. 
         $log .= '=== ';
         if ( $result['http_code'] ){
 			$log .= sprintf( __('HTTP code : %d', 'broken-link-checker'), $result['http_code']);
@@ -224,7 +283,7 @@ class blcCurlHttp extends blcHttpChecker {
 	
 }
 
-class blcSnoopyHttp extends blcHttpChecker {
+class blcSnoopyHttp extends blcHttpCheckerBase {
 	
 	function check($url){
 		$url = $this->clean_url($url); //Note : Snoopy doesn't work too well with HTTPS URLs.
@@ -302,24 +361,5 @@ class blcSnoopyHttp extends blcHttpChecker {
 	}
 	
 }
-
-if ( function_exists('curl_init') ) {
-	blc_register_checker('blcCurlHttp');
-} else {
-	//Try to load Snoopy.
-	if ( !class_exists('Snoopy') ){
-		$snoopy_file = ABSPATH. WPINC . '/class-snoopy.php';
-		if (file_exists($snoopy_file) ){
-			include $snoopy_file;
-		}
-	}
-	
-	//If Snoopy is available, it will be used in place of CURL.
-	if ( class_exists('Snoopy') ){
-		blc_register_checker('blcSnoopyHttp');
-	}
-}
-
-
 
 ?>

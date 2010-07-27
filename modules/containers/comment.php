@@ -1,10 +1,17 @@
 <?php
 
+/*
+Plugin Name: Comments
+Description: 
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: comment
+ModuleCategory: container
+ModuleClassName: blcCommentManager
+*/
+
 class blcComment extends blcContainer{
-	var $fields = array(
-		'comment_author_url' => 'url_field',
-		'comment_content' => 'html',
-	);
 	
   /**
    * Retrieve the comment wrapped by this container. 
@@ -38,7 +45,6 @@ class blcComment extends blcContainer{
 		}
 		
 		$data = (array)$this->wrapped_object;
-		//FB::info($data, sprintf("Attempting to update comment %d with data", $this->container_id));
 		if ( wp_update_comment($data) ){
 			return true;
 		} else {
@@ -56,17 +62,56 @@ class blcComment extends blcContainer{
    * @return bool|WP_error
    */
 	function delete_wrapped_object(){
-		if ( wp_delete_comment($this->container_id) ){
+		if ( EMPTY_TRASH_DAYS ){
+			return $this->trash_wrapped_object();
+		} else {
+			if ( wp_delete_comment($this->container_id, true) ){
+				return true;
+			} else {
+				return new WP_Error(
+					'delete_failed',
+					sprintf(
+						__('Failed to delete comment %d', 'broken-link-checker'),
+						$this->container_id
+					)
+				);
+			};
+		}
+	}
+	
+  /**
+   * Delete the comment corresponding to this container.
+   * This will actually move the comment to the trash in newer versions of WP.
+   *
+   * @return bool|WP_error
+   */
+	function trash_wrapped_object(){
+		if ( wp_trash_comment($this->container_id) ){
 			return true;
 		} else {
 			return new WP_Error(
-				'delete_failed',
+				'trash_failed',
 				sprintf(
-					__('Failed to delete comment %d', 'broken-link-checker'),
+					__('Can\'t move comment %d to the trash', 'broken-link-checker'),
 					$this->container_id
 				)
 			);
 		};
+	}
+	
+	/**
+	 * Check if the current user can delete/trash this comment.
+	 * 
+	 * @return bool
+	 */
+	function current_user_can_delete(){
+		//TODO: Fix for custom post types? WP itself doesn't care, at least in 3.0.
+		$comment = &$this->get_wrapped_object();
+		return current_user_can('edit_post', $comment->comment_post_ID); 
+	}
+	
+	function can_be_trashed(){
+		return defined('EMPTY_TRASH_DAYS') && EMPTY_TRASH_DAYS;
 	}	
 	
   /**
@@ -112,9 +157,9 @@ class blcComment extends blcContainer{
 			$delete_url = esc_url( admin_url("comment.php?action=deletecomment&p=$post->ID&c=$comment->comment_ID&$del_nonce") );
 			
 			if ( !constant('EMPTY_TRASH_DAYS') ) {
-				$actions['delete'] = "<a href='$delete_url' class='delete:the-comment-list:comment-$comment->comment_ID::delete=1 delete vim-d vim-destructive'>" . __('Delete Permanently') . '</a>';
+				$actions['delete'] = "<a href='$delete_url' class='delete:the-comment-list:comment-$comment->comment_ID::delete=1 delete vim-d vim-destructive submitdelete'>" . __('Delete Permanently') . '</a>';
 			} else {
-				$actions['trash'] = "<a href='$trash_url' class='delete:the-comment-list:comment-$comment->comment_ID::trash=1 delete vim-d vim-destructive' title='" . esc_attr__( 'Move this comment to the trash' ) . "'>" . _x('Trash', 'verb') . '</a>';
+				$actions['trash'] = "<a href='$trash_url' class='delete:the-comment-list:comment-$comment->comment_ID::trash=1 delete vim-d vim-destructive submitdelete' title='" . esc_attr__( 'Move this comment to the trash' ) . "'>" . _x('Trash', 'verb') . '</a>';
 			}
 		}
 		
@@ -123,7 +168,7 @@ class blcComment extends blcContainer{
 		return $actions;
 	}
 	
-	function ui_get_source($container_field, $context = 'display'){
+	function ui_get_source($container_field = '', $context = 'display'){
 		//Display a comment icon. 
 		if ( $container_field == 'comment_author_url' ){
 			$image = 'user_comment.png';
@@ -168,7 +213,14 @@ class blcComment extends blcContainer{
 class blcCommentManager extends blcContainerManager {
 	var $container_class_name = 'blcComment';
 	
+	var $fields = array(
+		'comment_author_url' => 'url_field',
+		'comment_content' => 'html',
+	);
+	
 	function init(){
+		parent::init();
+		
 		add_action('edit_comment', array(&$this, 'hook_modified_comment'));
 		add_action('unspammed_comment', array(&$this, 'hook_modified_comment'));
 		add_action('untrashed_comment', array(&$this, 'hook_modified_comment'));
@@ -186,14 +238,14 @@ class blcCommentManager extends blcContainerManager {
 		$comment = get_comment($comment_id);
 		
 		if ( $comment->comment_approved == '1'){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
 	}
 	
 	function hook_wp_insert_comment($comment_id, $comment){
 		if ( $comment->comment_approved == '1'){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
 	}
@@ -204,7 +256,7 @@ class blcCommentManager extends blcContainerManager {
 		}
 		
 		foreach($comment_ids as $comment_id){
-			$container = blc_get_container(array($this->container_type, $comment_id));
+			$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->delete();
 		}
 		//Clean up any dangling links
@@ -212,7 +264,7 @@ class blcCommentManager extends blcContainerManager {
 	}
 	
 	function hook_comment_status($new_status, $old_status, $comment){
-		$container = blc_get_container(array($this->container_type, $comment->comment_ID));
+		$container = & blcContainerHelper::get_container(array($this->container_type, $comment->comment_ID));
 		if ( $new_status == 'approved' ){
 			$container->mark_as_unsynched();
 		} else {
@@ -271,30 +323,40 @@ class blcCommentManager extends blcContainerManager {
    * Get the message to display after $n comments have been deleted.
    *
    * @param int $n Number of deleted comments.
-   * @return string A delete confirmation message, e.g. "5 comments were moved to trash"
+   * @return string A delete confirmation message, e.g. "5 comments were deleted"
    */
 	function ui_bulk_delete_message($n){
 		if ( EMPTY_TRASH_DAYS ){
-			return sprintf(
-				_n(
-					"%d comment moved to the trash",
-					"%d comments moved to the trash",
-					$n,
-					'broken-link-checker'
-				),
-				$n
-			);
+			return $this->ui_bulk_trash_message($n);
 		} else {
 			return sprintf(
 				_n(
-					"%d comment has been deleted",
-					"%d comments have been deleted",
+					"%d comment has been deleted.",
+					"%d comments have been deleted.",
 					$n,
 					'broken-link-checker'
 				),
 				$n
 			);
 		}
+	}
+	
+  /**
+   * Get the message to display after $n comments have been moved to the trash.
+   *
+   * @param int $n Number of trashed comments.
+   * @return string A delete confirmation message, e.g. "5 comments were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		return sprintf(
+			_n(
+				"%d comment moved to the Trash.",
+				"%d comments moved to the Trash.",
+				$n,
+				'broken-link-checker'
+			),
+			$n
+		);
 	}
 	
   /**
@@ -340,5 +402,4 @@ class blcCommentManager extends blcContainerManager {
 	}	
 }
 
-blc_register_container('comment', 'blcCommentManager');
 ?>

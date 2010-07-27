@@ -1,5 +1,16 @@
 <?php
 
+/*
+Plugin Name: Custom fields
+Description: Container module for post metadata.
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: custom_field
+ModuleCategory: container
+ModuleClassName: blcPostMetaManager
+*/
+
 //Note : If it ever becomes necessary to check metadata on objects other than posts, it will
 //be fairly easy to extract a more general metadata container class from blcPostMeta. 
 
@@ -31,7 +42,7 @@ class blcPostMeta extends blcContainer {
    */
 	function get_wrapped_object($ensure_consistency = false){
 		if ( is_null($this->wrapped_object) || $ensure_consistency ) {
-			$meta = get_metadata($this->meta_type, $this->container_id);
+			$this->wrapped_object = get_metadata($this->meta_type, $this->container_id);
 		}
 		return $this->wrapped_object;
 	}	
@@ -169,22 +180,7 @@ class blcPostMeta extends blcContainer {
 		return $field;
 	}
 	
-	function ui_get_source($container_field, $context = 'display'){
-		$image_html = sprintf(
-			'<img src="%s/broken-link-checker/images/script_code.png" class="blc-small-image" title="%2$s" alt="%2$s"> ',
-			WP_PLUGIN_URL,
-			__('Custom field', 'broken-link-checker')
-		);
-		
-		$field_html = sprintf(
-			'<code>%s</code>',
-			$container_field
-		); 
-		
-		if ( $context != 'email' ){
-			$field_html = $image_html . $field_html;
-		}
-		
+	function ui_get_source($container_field = '', $context = 'display'){
 		$post_html = sprintf(
 			'<a class="row-title" href="%s" title="%s">%s</a>',
 			esc_url($this->get_edit_url()),
@@ -192,7 +188,7 @@ class blcPostMeta extends blcContainer {
 			get_the_title($this->container_id)
 		);
 		
-		return "$post_html &mdash; $field_html";
+		return $post_html;
 	}
 	
 	function ui_get_action_links($container_field){
@@ -200,13 +196,25 @@ class blcPostMeta extends blcContainer {
 		if ( current_user_can('edit_post', $this->container_id) ) {
 			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . esc_attr(__('Edit this item')) . '">' . __('Edit') . '</a>';
 			
-			if ( EMPTY_TRASH_DAYS ) { 
-				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr(__('Move this item to the Trash')) . "' href='" . get_delete_post_link($this->container_id) . "'>" . __('Trash') . "</a>";
-			} else {
-				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr(__('Delete this post permanently')) . "' href='" . wp_nonce_url( admin_url("post.php?action=delete&amp;post=".$this->container_id), 'delete-post_' . $this->container_id) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete."), get_the_title($this->container_id) )) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+			if ( $this->current_user_can_delete() ){
+				if ( $this->can_be_trashed() ) {
+					$actions['trash'] = sprintf(
+						"<span><a class='submitdelete' title='%s' href='%s'>%s</a>",
+						esc_attr(__('Move this item to the Trash')),
+						get_delete_post_link($this->container_id, '', false),
+						__('Trash')
+					);
+				} else {
+					$actions['delete'] = sprintf(
+						"<span><a class='submitdelete' title='%s' href='%s'>%s</a>",
+						esc_attr(__('Delete this item permanently')),
+						get_delete_post_link($this->container_id, '', true),
+						__('Delete')
+					);
+				}
 			}
 		}
-		$actions['view'] = '<span class="view"><a href="' . get_permalink($this->container_id) . '" title="' . esc_attr(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($this->container_id))) . '" rel="permalink">' . __('View') . '</a>';
+		$actions['view'] = '<span class="view"><a href="' . esc_url(get_permalink($this->container_id)) . '" title="' . esc_attr(sprintf(__('View "%s"', 'broken-link-checker'), get_the_title($this->container_id))) . '" rel="permalink">' . __('View') . '</a>';
 		
 		return $actions;
 	}
@@ -227,56 +235,24 @@ class blcPostMeta extends blcContainer {
 		executed by Cron.
 		*/ 
 		
-		if ( !$post = &get_post( $this->container_id ) ){
+		if ( !($post = &get_post( $this->container_id )) ){
 			return '';
 		}
 		
 		$context = 'display';
 		
-		if ( function_exists('get_post_type_object') ){
-			//WP 3.0
-			if ( 'display' == $context )
-				$action = '&amp;action=edit';
-			else
-				$action = '&action=edit';
-		
-			$post_type_object = get_post_type_object( $post->post_type );
-			if ( !$post_type_object ){
-				return '';
-			}
-		
-			return apply_filters( 'get_edit_post_link', admin_url( sprintf($post_type_object->_edit_link . $action, $post->ID) ), $post->ID, $context );
-			
-		} else { 
-			//WP 2.9.x
-			if ( 'display' == $context )
-				$action = 'action=edit&amp;';
-			else
-				$action = 'action=edit&';
-		
-			switch ( $post->post_type ) :
-				case 'page' :
-					$file = 'page';
-					$var  = 'post';
-					break;
-				case 'attachment' :
-					$file = 'media';
-					$var  = 'attachment_id';
-					break;
-				case 'revision' :
-					$file = 'revision';
-					$var  = 'revision';
-					$action = '';
-					break;
-				default :
-					$file = 'post';
-					$var  = 'post';
-					break;
-			endswitch;
-		
-			return apply_filters( 'get_edit_post_link', admin_url("$file.php?{$action}$var=$post->ID"), $post->ID, $context );
-			
+		//WP 3.0
+		if ( 'display' == $context )
+			$action = '&amp;action=edit';
+		else
+			$action = '&action=edit';
+	
+		$post_type_object = get_post_type_object( $post->post_type );
+		if ( !$post_type_object ){
+			return '';
 		}
+	
+		return apply_filters( 'get_edit_post_link', admin_url( sprintf($post_type_object->_edit_link . $action, $post->ID) ), $post->ID, $context );
 	}
 	
   /**
@@ -290,18 +266,60 @@ class blcPostMeta extends blcContainer {
 	}
 	
   /**
-   * Delete the post corresponding to this container.
+   * Delete or trash the post corresponding to this container. If trash is enabled,
+   * will always move the post to the trash instead of deleting.
    *
    * @return bool|WP_error
    */
 	function delete_wrapped_object(){
-		if ( wp_delete_post($this->container_id) ){
+		if ( EMPTY_TRASH_DAYS ){
+			return $this->trash_wrapped_object();
+		} else {
+			if ( wp_delete_post($this->container_id) ){
+				return true;
+			} else {
+				return new WP_Error(
+					'delete_failed',
+					sprintf(
+						__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
+						get_the_title($this->container_id),
+						$this->container_id
+					)
+				);
+			};
+		}
+	}
+	
+	/**
+	 * Move the post corresponding to this custom field to the Trash.
+	 * 
+	 * @return bool|WP_Error
+	 */
+	function trash_wrapped_object(){
+		if ( !EMPTY_TRASH_DAYS ){
+			return new WP_Error(
+				'trash_disabled',
+				sprintf(
+					__('Can\'t move post "%s" (%d) to the trash because the trash feature is disabled', 'broken-link-checker'),
+					get_the_title($this->container_id),
+					$this->container_id
+				)
+			);
+		}
+		
+		$post = &get_post($this->container_id);
+		if ( $post->post_status == 'trash' ){
+			//Prevent conflicts between post and custom field containers trying to trash the same post.
+			return true; 
+		}
+		
+		if ( wp_trash_post($this->container_id) ){
 			return true;
 		} else {
 			return new WP_Error(
-				'delete_failed',
+				'trash_failed',
 				sprintf(
-					__('Failed to delete post "%s" (%d)', 'broken-link-checker'),
+					__('Failed to move post "%s" (%d) to the trash', 'broken-link-checker'),
 					get_the_title($this->container_id),
 					$this->container_id
 				)
@@ -309,6 +327,15 @@ class blcPostMeta extends blcContainer {
 		};
 	}
 	
+	function current_user_can_delete(){
+		$post = &get_post($this->container_id);
+		$post_type_object = get_post_type_object($post->post_type);
+		return current_user_can( $post_type_object->cap->delete_post, $this->container_id );
+	}
+	
+	function can_be_trashed(){
+		return defined('EMPTY_TRASH_DAYS') && EMPTY_TRASH_DAYS;
+	}
 }
 
 class blcPostMetaManager extends blcContainerManager {
@@ -316,6 +343,8 @@ class blcPostMetaManager extends blcContainerManager {
 	var $meta_type = 'post';
 	
 	function init(){
+		parent::init();
+		
 		//Intercept 2.9+ style metadata modification actions
 		add_action( "added_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "updated_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
@@ -335,27 +364,22 @@ class blcPostMetaManager extends blcContainerManager {
 	}
 
 	
-  /**
-   * Instantiate a link container.
-   *
-   * @param array $container An associative array of container data.
-   * @return blcPostMeta
-   */
-	function get_container($container){
-		$container = parent::get_container($container);
-		
-		//Set up the parseable fields
+	/**
+	 * Get a list of parseable fields.
+	 * 
+	 * @return array
+	 */
+	function get_parseable_fields(){
+		//Fields = custom field names as entered by the user.
 		$fields = array();
 		
-		$conf = & blc_get_configuration();
-		if ( is_array($conf->options['custom_fields']) ){
-			foreach($conf->options['custom_fields'] as $meta_name){
+		if ( is_array($this->plugin_conf->options['custom_fields']) ){
+			foreach($this->plugin_conf->options['custom_fields'] as $meta_name){
 				$fields[$meta_name] = 'metadata';
 			}
 		}
 		
-		$container->fields = $fields;
-		return $container;
+		return $fields;
 	}
 	
   /**
@@ -489,7 +513,7 @@ class blcPostMetaManager extends blcContainerManager {
 			return;
 		}
 		
-		$container = blc_get_container( array($this->container_type, intval($object_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($object_id)) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -501,7 +525,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_deleted($post_id){
 		//Get the associated container object
-		$container = blc_get_container( array($this->container_type, intval($post_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		//Delete it
 		$container->delete();
 		//Clean up any dangling links
@@ -517,29 +541,31 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_untrashed($post_id){
 		//Get the associated container object
-		$container = blc_get_container( array($this->container_type, intval($post_id)) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		$container->mark_as_unsynched();
 	}
 	
   /**
    * Get the message to display after $n posts have been deleted.
    *
-   * @see blcPostContainer::ui_bulk_delete_message()
+   * @uses blcAnyPostContainerManager::ui_bulk_delete_message() 
    *
    * @param int $n Number of deleted posts.
    * @return string A delete confirmation message, e.g. "5 posts were moved to the trash"
    */
 	function ui_bulk_delete_message($n){
-		//This is identical 
-		if ( function_exists('wp_trash_post') && EMPTY_TRASH_DAYS ){
-			$delete_msg = _n("%d post moved to the trash", "%d posts moved to the trash", $n, 'broken-link-checker');
-		} else {
-			$delete_msg = _n("%d post deleted", "%d posts deleted", $n, 'broken-link-checker');
-		}
-		return sprintf($delete_msg, $n);
+		return blcAnyPostContainerManager::ui_bulk_delete_message($n);
+	}
+	
+  /**
+   * Get the message to display after $n posts have been trashed.
+   *
+   * @param int $n Number of deleted posts.
+   * @return string A confirmation message, e.g. "5 posts were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		return blcAnyPostContainerManager::ui_bulk_trash_message($n);
 	}
 }
-
-blc_register_container('custom_field', 'blcPostMetaManager');
 
 ?>

@@ -1,297 +1,144 @@
 <?php
 
 /**
- * A class for handling link container types. 
- *  
- * This class keeps track of all registered container types and is used to retrieve and/or  
- * instantiate container objects. Mostly acts as a proxy between various container managers
- * and the rest of plugin code. It does't know anything about how individual containers are 
- * implemented.
- *
- * Used as a singleton.
+ * The base class for link container managers. 
+ * 
+ * Sub-classes should override at least the get_containers() and resynch() methods.
  *
  * @package Broken Link Checker
+ * @access public
  */
-class blcContainerRegistry {
+class blcContainerManager extends blcModule {
 	
-	var $registered_managers;
+	var $container_type = '';
+	var $fields = array();
+	var $container_class_name = 'blcContainer';
 	
   /**
-   * blcContainerRegistry::__construct()
+   * Do whatever setup necessary that wasn't already done in the constructor.
    *
+   * This method was added so that sub-classes would have something "safe" to 
+   * over-ride without having to deal with PHP4/5 constructors.
+   * 
    * @return void
    */
-	function __construct(){
-		$this->registered_managers = array();
+	function init(){
+		parent::init();
+		$this->container_type = $this->module_id;
+		//Sub-classes might also use it to set up hooks, etc.
 	}
 	
   /**
-   * blcContainerRegistry::blcContainerRegistry()
-   * Old-style class constructor
+   * Instantiate a link container.
    *
-   * @return void
+   * @param array $container An associative array of container data.
+   * @return blcContainer
    */
-	function blcContainerRegistry(){
-		$this->__construct();
-	}
-	
-	/**
-	 * Return a singleton instance of this class.
-	 * 
-	 * @return blcContainerRegistry
-	 */
-	function &getInstance(){
-		static $instance = null;
-		if ( is_null($instance) ){
-			$instance = new blcContainerRegistry;
-		}
-		return $instance;
+	function &get_container($container){
+		$container['fields'] = $this->get_parseable_fields();
+		return new $this->container_class_name($container);
 	}
 	
   /**
-   * Register a new container type.
+   * Instantiate multiple containers of the container type managed by this class and optionally
+   * pre-load container data used for display/parsing.
    *
-   * A "container type" comprises three things : 
-   *	- An alphanumeric container type name, e.g. "post"
-   *	- A class representing an individual container. Must inherit from blcContainer.
-   *	- A "manager" class that builds container objects, knows how to retrieve multiple
-   *      containers and their associated data from the database, and handles all other
-   *      ancillary tasks associated with the particular container type (e.g. WP hooks). 
+   * Sub-classes should, if possible, use the $purpose argument to pre-load any extra data required for 
+   * the specified task right away, instead of making multiple DB roundtrips later. For example, if 
+   * $purpose is set to the BLC_FOR_DISPLAY constant, you might want to preload any DB data that the 
+   * container will need in blcContainer::ui_get_source().
    *
-   * When registering a new container type you only need to provide the container type
-   * name and the container manager class name.
+   * @see blcContainer::make_containers()
+   * @see blcContainer::ui_get_source()
+   * @see blcContainer::ui_get_action_links()
    *
-   * @see blcContainer
-   * @see blcContainerManager
-   *
-   * @param string $container_type
-   * @param string $manager_class
-   * @return bool True on success, false if the container type is already registered. 
-   */
-	function register_container( $container_type, $manager_class ){
-		if ( isset($this->registered_managers[$container_type]) ){
-			return false;
-		}
-		
-		$this->registered_managers[$container_type] = new $manager_class($container_type);
-		
-		return true;
-	}
-	
-	/**
-	 * Retrieve a list of all registered container types and their managers.
-	 * 
-	 * @return array An associative array of container manager objects indexed by container type.
-	 */
-	function get_registered_containers(){
-		return $this->registered_managers;
-	}
-	
-  /**
-   * Get the manager associated with a container type.
-   *
-   * @param string $container_type
-   * @param string $fallback If there is no manager associated with $container_type, return the manager of this container type instead.  
-   * @return blcContainerManager|null
-   */
-	function &get_manager( $container_type, $fallback = '' ){
-		if ( isset($this->registered_managers[$container_type]) ){
-			return $this->registered_managers[$container_type];
-		} elseif ( !empty($fallback) && isset($this->registered_managers[$fallback]) ) {
-			return $this->registered_managers[$fallback];
-		} else {
-			return null;
-		}
-	}
-	
-  /**
-   * Retrieve or instantiate a container object.
-   *
-   * Pass an array containing the container type (string) and ID (int) to retrieve the container
-   * from the database. Alternatively, pass an associative array to create a new container object
-   * from the data in the array. 
-   *
-   * @param array $container Either [container_type, container_id], or an assoc. array of container data. 
-   * @return blcContainer|null
-   */
-	function get_container( $container ){
-		global $wpdb;
-		
-		if ( !is_array($container) || ( count($container) < 2 ) ){
-			return null;
-		}
-		
-		if ( is_string($container[0]) && is_numeric($container[1]) ){
-			//The argument is in the [container_type, id] format
-			//Fetch the container's synch record.
-			$q = "SELECT * FROM {$wpdb->prefix}blc_synch WHERE container_type = %s AND container_id = %d";
-			$q = $wpdb->prepare($q, $container[0], $container[1]);
-			$rez = $wpdb->get_row($q, ARRAY_A);
-			
-			if ( empty($rez) ){
-				//The container wasn't found, so we'll create a new one.
-				$container = array(
-					'container_type' => $container[0],
-					'container_id' => $container[1],
-				);				
-			} else {
-				$container = $rez;
-			}
-		}
-		
-		if ( !isset($this->registered_managers[$container['container_type']]) ){
-			return null;
-		}
-		
-		$manager = $this->registered_managers[$container['container_type']];
-		
-		return $manager->get_container($container);
-	}
-	
-  /**
-   * Retrieve or instantiate multiple link containers.
-   *
-   * Takes an array of container specifications and returns an array of container objects.
-   * Each input array entry should be an array and consist either of a container type (string)
-   * and container ID (int), or name => value pairs describing a container object.    
-   *
-   * @see blcContainerRegistry::get_container()
-   *
-   * @param array $containers 
-   * @param string $purpose Optional code indicating how the retrieved containers will be used.
-   * @param string $fallback The fallback container type to use for unrecognized containers.
-   * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose.
+   * @param array $containers Array of assoc. arrays containing container data.
+   * @param string $purpose An optional code indicating how the retrieved containers will be used.
+   * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose. 
+   * 
    * @return array of blcContainer indexed by "container_type|container_id"
    */
-	function get_containers( $containers, $purpose = '', $fallback = '', $load_wrapped_objects = false ){
-		global $wpdb;
-		
-		//If the input is invalid or empty, return an empty array.
-		if ( !is_array($containers) || (count($containers) < 1) ) {
-			return array();
-		}
-		
-		$first = reset($containers);
-		if ( !is_array($first) ){
-			return array();
-		}
-		
-		if ( isset($first[0]) && is_string($first[0]) && is_numeric($first[1]) ){
-			//The argument is an array of [container_type, id].
-			//Divide the container IDs by container type.
-			$by_type = array();
-			
-			foreach($containers as $container){
-				if ( isset($by_type[$container[0]]) ){
-					array_push($by_type[$container[0]], intval($container[1]));
-				} else {
-					$by_type[$container[0]] = array( intval($container[1]) );
-				}
-			}
-			
-			//Build the SQL to fetch all the specified containers
-			$q = "SELECT *
-			      FROM {$wpdb->prefix}blc_synch
-				  WHERE";
-				
-			$pieces = array();
-			foreach($by_type as $container_type => $container_ids){
-				$pieces[] = '( container_type = "'. $wpdb->escape($container_type) .'" AND container_id IN ('. implode(', ', $container_ids) .') )'; 
-			}
-			
-			$q .= implode("\n\t OR ", $pieces);
-			
-			//Fetch the container synch. records from the DB.
-			$containers = $wpdb->get_results($q, ARRAY_A);			
-		}
-		
-		/*
-		Divide the inputs into separate arrays by container type (again), then invoke 
-		the appropriate manager for each type to instantiate the container objects.
-		*/
-		
-		//At this point, $containers is an array of assoc. arrays comprising container data.
-		$by_type = array();
-		foreach($containers as $container){
-			if ( isset($by_type[$container['container_type']]) ){
-				array_push($by_type[$container['container_type']], $container);
-			} else {
-				$by_type[$container['container_type']] = array($container);
-			}
-		}
-			
+	function get_containers($containers, $purpose = '', $load_wrapped_objects = false){
+		return $this->make_containers($containers);
+	}
+	
+  /**
+   * Instantiate multiple containers of the container type managed by this class
+   *
+   * @param array $containers Array of assoc. arrays containing container data.
+   * @return array of blcContainer indexed by "container_type|container_id"
+   */
+	function make_containers($containers){
 		$results = array();
-		foreach($by_type as $container_type => $entries){
-			$manager = & $this->get_manager($container_type, $fallback);
-			if ( !is_null($manager) ){
-				$partial_results = $manager->get_containers($entries, $purpose, $load_wrapped_objects);
-				$results = array_merge($results, $partial_results);
-			}
+		foreach($containers as $container){
+			$key = $container['container_type'] . '|' . $container['container_id'];
+			$results[ $key ] = & $this->get_container($container);
 		}
-		
 		return $results;
 	}
 	
   /**
-   * Retrieve link containers that need to be synchronized (parsed).
+   * Create or update synchronization records for all containers managed by this class.
    *
-   * @param integer $max_results The maximum number of containers to return. Defaults to returning all unsynched containers. 
-   * @return array of blcContainer
-   */
-	function get_unsynched_containers($max_results = 0){
-		global $wpdb;
-		
-		$q = "SELECT * FROM {$wpdb->prefix}blc_synch WHERE synched = 0";
-		if ( $max_results > 0 ){
-			$q .= " LIMIT $max_results";
-		}
-		
-		$container_data = $wpdb->get_results($q, ARRAY_A);
-		//FB::log($container_data, "Unsynched containers");
-		if( empty($container_data) ){
-			return array();
-		}
-		
-		$containers = $this->get_containers($container_data, BLC_FOR_PARSING, 'dummy');
-		return $containers;
-	}
-	
-  /**
-   * (Re)create and update synchronization records for all supported containers.
-   * Calls the resynch() method of all registered managers.
+   * Must be over-ridden in subclasses.
    *
-   * @param bool $forced If true, assume that no synch. records exist and build all of them from scratch.
+   * @param bool $forced If true, assume that all synch. records are gone and will need to be recreated from scratch. 
    * @return void
    */
 	function resynch($forced = false){
-		global $wpdb;
-    	
-    	foreach($this->registered_managers as $manager){
-			$manager->resynch($forced);
-		}
+		trigger_error('Function blcContainerManager::resynch() must be over-ridden in a sub-class', E_USER_ERROR);
+	}
+	
+	/**
+	 * Resynch when activated.
+	 * 
+	 * @uses blcContainerManager::resynch()
+	 * 
+	 * @return void
+	 */
+	function activated(){
+		$this->resynch();
+		blc_got_unsynched_items();
+	}
+	
+	/**
+	 * Get a list of the parseable fields and their formats common to all containers of this type. 
+	 * 
+	 * @return array Associative array of formats indexed by field name.
+	 */
+	function get_parseable_fields(){
+		return $this->fields;
 	}
 	
   /**
-   * Get the message to display after $n containers of a specific type have been deleted.
+   * Get the message to display after $n containers have been deleted.
    *
-   * @param string $container_type 
    * @param int $n Number of deleted containers.
    * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
    */
-	function ui_bulk_delete_message($container_type, $n){
-		$manager = & $this->get_manager($container_type);
-		if ( is_null($manager) ){
-			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
-		} else {
-			return $manager->ui_bulk_delete_message($n);
-		}
+	function ui_bulk_delete_message($n){
+		return sprintf(
+			_n(
+				"%d '%s' has been deleted",
+				"%d '%s' have been deleted",
+				$n,
+				'broken-link-checker'
+			),
+			$n,
+			$this->container_type
+		);
+	}
+	
+  /**
+   * Get the message to display after $n containers have been moved to the trash.
+   *
+   * @param int $n Number of trashed containers.
+   * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
+   */
+	function ui_bulk_trash_message($n){
+		return $this->ui_bulk_delete_message($n);
 	}
 }
-
-//Init the container registry & make it global
-$GLOBALS['blc_container_registry'] = & blcContainerRegistry::getInstance();
-
- 
 
 /**
  * The base class for link containers. All containers should extend this class.
@@ -423,7 +270,7 @@ class blcContainer {
 			//FB::log($name, "Parsing field");
 			
 			//Get all parsers applicable to this field
-			$parsers = blc_get_parsers( $format, $this->container_type );
+			$parsers = blcParserHelper::get_parsers( $format, $this->container_type );
 			//FB::log($parsers, "Applicable parsers");
 			
 			if ( empty($parsers) ) continue;
@@ -562,7 +409,7 @@ class blcContainer {
 	}
 	
   /**
-   * Delete the WP entity corresponding to this container.
+   * Delete or trash the WP entity corresponding to this container. Should prefer moving to trash, if possible. 
    * Also remove the synch. record of the container and all associated instances.
    *
    * Must be over-ridden in a sub-class.
@@ -571,6 +418,39 @@ class blcContainer {
    */
 	function delete_wrapped_object(){
 		trigger_error('Function blcContainer::delete_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
+	}
+	
+	/**
+	 * Move the WP entity corresponding to this container to the Trash.
+	 * 
+	 * Must be over-riden in a subclass.
+	 * 
+	 * @return bool|WP_Error
+	 */
+	function trash_wrapped_object(){
+		trigger_error('Function blcContainer::trash_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
+	}
+	
+	/**
+	 * Check if the current user can delete/trash this container.
+	 * 
+	 * Should be over-ridden in a subclass.
+	 * 
+	 * @return bool
+	 */
+	function current_user_can_delete(){
+		return false;
+	}
+	
+	/**
+	 * Determine if this container can be moved to the trash.
+	 * 
+	 * Should be over-ridden in a subclass.
+	 * 
+	 * @return bool
+	 */
+	function can_be_trashed(){
+		return false;
 	}	
 	
 	
@@ -582,7 +462,7 @@ class blcContainer {
    * @param string $new_url
    * @param string $old_url
    * @param string $old_raw_url
-   * @return string|WP_Error The new value of raw_url on success, or an error object if something went wrong.
+   * @return array|WP_Error The new value of raw_url on success, or an error object if something went wrong.
    */
 	function edit_link($field_name, $parser, $new_url, $old_url = '', $old_raw_url = ''){
 		//Ensure we're operating on a consistent copy of the wrapped object.
@@ -614,15 +494,16 @@ class blcContainer {
 		if ( is_wp_error($edit_result) ){
 			return $edit_result;
 		}
-		
+			
 		//Update the field with the new value returned by the parser.
 		$update_result = $this->update_field( $field_name, $edit_result['content'], $old_value );
 		if ( is_wp_error($update_result) ){
 			return $update_result;
 		}
 		
-		//Return the new "raw" URL.
-		return $edit_result['raw_url'];
+		//Return the new values to the instance.
+		unset($edit_result['content']); //(Except content, which it doesn't need.)
+		return $edit_result;
 	}
 	
   /**
@@ -634,7 +515,7 @@ class blcContainer {
    * @param string $raw_url
    * @return bool|WP_Error True on success, or an error object if something went wrong.
    */
-	function unlink($field_name, $parser, $url, $raw_url =''){
+	function unlink($field_name, &$parser, $url, $raw_url =''){
 		//Ensure we're operating on a consistent copy of the wrapped object.
 		$this->get_wrapped_object(true);
 		
@@ -699,232 +580,322 @@ class blcContainer {
 		//Should be over-ridden in a sub-class.
 		return '';
 	}
+	
 }
 
+
 /**
- * The base class for link container manager. 
- * 
- * Sub-classes should override at least the get_containers() and resynch() methods.
- *
+ * An utility class for working with link container types.
+ * All methods of this class should be called statically.  
+ *  
  * @package Broken Link Checker
- * @access public
  */
-class blcContainerManager {
-	
-	var $container_type = '';
-	var $container_class_name = 'blcContainer';
-	
-	function __construct($container_type){
-		$this->container_type = $container_type;
-		$this->init();
-	}
+class blcContainerHelper {
 	
   /**
-   * blcContainerManager::blcContainerManager()
-   * Old-style class constructor
+   * Get the manager associated with a container type.
    *
-   * @return void
+   * @param string $container_type
+   * @param string $fallback If there is no manager associated with $container_type, return the manager of this container type instead.  
+   * @return blcContainerManager|null
    */
-	function blcContainerManager($container_type){
-		$this->__construct($container_type);
-	}
-	
-  /**
-   * Do whatever setup necessary that wasn't already done in the constructor.
-   *
-   * This method was added so that sub-classes would have something "safe" to 
-   * over-ride without having to deal with PHP4/5 constructors and remember to 
-   * call the parent constructor.  
-   * 
-   * @return void
-   */
-	function init(){
-		//Do nothing. Sub-classes might use it to set up hooks, etc.
-	}
-	
-  /**
-   * Instantiate a link container.
-   *
-   * @param array $container An associative array of container data.
-   * @return blcContainer
-   */
-	function get_container($container){
-		return new $this->container_class_name($container);
-	}
-	
-  /**
-   * Instantiate multiple containers of the container type managed by this class and optionally
-   * pre-load container data used for display/parsing.
-   *
-   * Sub-classes should, if possible, use the $purpose argument to pre-load any extra data required for 
-   * the specified task right away, instead of making multiple DB roundtrips later. For example, if 
-   * $purpose is set to the BLC_FOR_DISPLAY constant, you might want to preload any DB data that the 
-   * container will need in blcContainer::ui_get_source().
-   *
-   * @see blcContainer::make_containers()
-   * @see blcContainer::ui_get_source()
-   * @see blcContainer::ui_get_action_links()
-   *
-   * @param array $containers Array of assoc. arrays containing container data.
-   * @param string $purpose An optional code indicating how the retrieved containers will be used.
-   * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose. 
-   * 
-   * @return array of blcContainer indexed by "container_type|container_id"
-   */
-	function get_containers($containers, $purpose = '', $load_wrapped_objects = false){
-		return $this->make_containers($containers);
-	}
-	
-  /**
-   * Instantiate multiple containers of the container type managed by this class
-   *
-   * @param array $containers Array of assoc. arrays containing container data.
-   * @return array of blcContainer indexed by "container_type|container_id"
-   */
-	function make_containers($containers){
-		$results = array();
-		foreach($containers as $container){
-			$key = $container['container_type'] . '|' . $container['container_id'];
-			$results[ $key ] = $this->get_container($container);
+	function &get_manager( $container_type, $fallback = '' ){
+		$module_manager = & blcModuleManager::getInstance();
+		$container_manager = null;
+		
+		if ( $container_manager = & $module_manager->get_module($container_type, true, 'container') ){
+			return $container_manager;
+		} elseif ( !empty($fallback) && ( $container_manager = & $module_manager->get_module($fallback, true, 'container') ) ) {
+			return $container_manager;
+		} else {
+			return null;
 		}
+	}
+	
+  /**
+   * Retrieve or instantiate a container object.
+   *
+   * Pass an array containing the container type (string) and ID (int) to retrieve the container
+   * from the database. Alternatively, pass an associative array to create a new container object
+   * from the data in the array. 
+   *
+   * @param array $container Either [container_type, container_id], or an assoc. array of container data. 
+   * @return blcContainer|null
+   */
+	function &get_container( $container ){
+		global $wpdb;
+		
+		if ( !is_array($container) || ( count($container) < 2 ) ){
+			return null;
+		}
+		
+		if ( is_string($container[0]) && is_numeric($container[1]) ){
+			//The argument is in the [container_type, id] format
+			//Fetch the container's synch record.
+			$q = "SELECT * FROM {$wpdb->prefix}blc_synch WHERE container_type = %s AND container_id = %d";
+			$q = $wpdb->prepare($q, $container[0], $container[1]);
+			$rez = $wpdb->get_row($q, ARRAY_A);
+			
+			if ( empty($rez) ){
+				//The container wasn't found, so we'll create a new one.
+				$container = array(
+					'container_type' => $container[0],
+					'container_id' => $container[1],
+				);				
+			} else {
+				$container = $rez;
+			}
+		}
+		
+		if ( !($manager = & blcContainerHelper::get_manager($container['container_type'])) ){
+			return null;
+		}
+		
+		return $manager->get_container($container);
+	}
+	
+  /**
+   * Retrieve or instantiate multiple link containers.
+   *
+   * Takes an array of container specifications and returns an array of container objects.
+   * Each input array entry should be an array and consist either of a container type (string)
+   * and container ID (int), or name => value pairs describing a container object.    
+   *
+   * @see blcContainerHelper::get_container()
+   *
+   * @param array $containers 
+   * @param string $purpose Optional code indicating how the retrieved containers will be used.
+   * @param string $fallback The fallback container type to use for unrecognized containers.
+   * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose.
+   * @return array of blcContainer indexed by "container_type|container_id"
+   */
+	function get_containers( $containers, $purpose = '', $fallback = '', $load_wrapped_objects = false ){
+		global $wpdb;
+		
+		//If the input is invalid or empty, return an empty array.
+		if ( !is_array($containers) || (count($containers) < 1) ) {
+			return array();
+		}
+		
+		$first = reset($containers);
+		if ( !is_array($first) ){
+			return array();
+		}
+		
+		if ( isset($first[0]) && is_string($first[0]) && is_numeric($first[1]) ){
+			//The argument is an array of [container_type, id].
+			//Divide the container IDs by container type.
+			$by_type = array();
+			
+			foreach($containers as $container){
+				if ( isset($by_type[$container[0]]) ){
+					array_push($by_type[$container[0]], intval($container[1]));
+				} else {
+					$by_type[$container[0]] = array( intval($container[1]) );
+				}
+			}
+			
+			//Build the SQL to fetch all the specified containers
+			$q = "SELECT *
+			      FROM {$wpdb->prefix}blc_synch
+				  WHERE";
+				
+			$pieces = array();
+			foreach($by_type as $container_type => $container_ids){
+				$pieces[] = '( container_type = "'. $wpdb->escape($container_type) .'" AND container_id IN ('. implode(', ', $container_ids) .') )'; 
+			}
+			
+			$q .= implode("\n\t OR ", $pieces);
+			
+			//Fetch the container synch. records from the DB.
+			$containers = $wpdb->get_results($q, ARRAY_A);			
+		}
+		
+		/*
+		Divide the inputs into separate arrays by container type (again), then invoke 
+		the appropriate manager for each type to instantiate the container objects.
+		*/
+		
+		//At this point, $containers is an array of assoc. arrays comprising container data.
+		$by_type = array();
+		foreach($containers as $container){
+			if ( isset($by_type[$container['container_type']]) ){
+				array_push($by_type[$container['container_type']], $container);
+			} else {
+				$by_type[$container['container_type']] = array($container);
+			}
+		}
+			
+		$results = array();
+		foreach($by_type as $container_type => $entries){
+			$manager = & blcContainerHelper::get_manager($container_type, $fallback);
+			if ( !is_null($manager) ){
+				$partial_results = $manager->get_containers($entries, $purpose, $load_wrapped_objects);
+				$results = array_merge($results, $partial_results);
+			}
+		}
+		
 		return $results;
 	}
 	
   /**
-   * Create or update synchronization records for all containers managed by this class.
+   * Retrieve link containers that need to be synchronized (parsed).
    *
-   * Must be over-ridden in subclasses.
-   *
-   * @param bool $forced If true, assume that all synch. records are gone and will need to be recreated from scratch. 
-   * @return void
+   * @param integer $max_results The maximum number of containers to return. Defaults to returning all unsynched containers. 
+   * @return array of blcContainer
    */
-	function resynch($forced = false){
-		trigger_error('Function blcContainerManager::resynch() must be over-ridden in a sub-class', E_USER_ERROR);
+	function get_unsynched_containers($max_results = 0){
+		global $wpdb;
+		
+		$q = "SELECT * FROM {$wpdb->prefix}blc_synch WHERE synched = 0";
+		if ( $max_results > 0 ){
+			$q .= " LIMIT $max_results";
+		}
+		
+		$container_data = $wpdb->get_results($q, ARRAY_A);
+		//FB::log($container_data, "Unsynched containers");
+		if( empty($container_data) ){
+			return array();
+		}
+		
+		$containers = blcContainerHelper::get_containers($container_data, BLC_FOR_PARSING, 'dummy');
+		return $containers;
 	}
 	
   /**
-   * Get the message to display after $n containers have been deleted.
+   * (Re)create and update synchronization records for all supported containers.
+   * Calls the resynch() method of all registered managers.
    *
+   * @param bool $forced If true, assume that no synch. records exist and build all of them from scratch.
+   * @return void
+   */
+	function resynch($forced = false){
+		global $wpdb;
+    	
+		$module_manager = & blcModuleManager::getInstance();
+		$active_managers = $module_manager->get_active_by_category('container');    	
+    	foreach($active_managers as $module_id => $module_data){
+    		$manager = & $module_manager->get_module($module_id);
+    		if ( $manager ){
+    			$manager->resynch($forced);
+    		}
+		}
+	}
+	
+	/**
+	 * Mark as unparsed all containers that match one of the the specified formats or 
+	 * container types and that were last parsed after a specific timestamp.
+	 * 
+	 * Used by newly activated parsers to force the containers they're interested in 
+	 * to resynchronize and thus let the parser process them.
+	 * 
+	 * @param array $formats Associative array of timestamps, indexed by format IDs.
+	 * @param array $container_types Associative array of timestamps, indexed by container types. 
+	 * @return bool
+	 */
+	function mark_as_unsynched_where($formats, $container_types){
+		global $wpdb;
+		
+		//Find containers that match any of the specified formats and add them to
+		//the list of container types that need to be marked as unsynched.
+		$module_manager = &blcModuleManager::getInstance();
+		$containers = $module_manager->get_active_by_category('container');
+		
+		foreach($containers as $module_id => $module_data){
+			if ( $container_manager = &$module_manager->get_module($module_id) ){
+				$fields = $container_manager->get_parseable_fields();
+				$container_type = $container_manager->container_type;
+				foreach($formats as $format => $timestamp){
+					if ( in_array($format, $fields) ){
+						//Choose the earliest timestamp
+						if ( isset($container_types[$container_type]) ){
+							$container_types[$container_type] = min($timestamp, $container_types[$container_type]);
+						} else {
+							$container_types[$container_type] = $timestamp;
+						}
+					}
+				}
+			};
+		}
+		
+		if ( empty($container_types) ){
+			return true;
+		}
+		
+		//Build the query to update all synch. records that match one of the specified 
+		//container types and have been parsed after the specified time.
+		$q = "UPDATE {$wpdb->prefix}blc_synch SET synched = 0 WHERE ";
+		
+		$pieces = array();
+		foreach($container_types as $container_type => $timestamp){
+			$pieces[] = $wpdb->prepare(
+				'(container_type = %s AND last_synch >= %s)',
+				$container_type,
+				date('Y-m-d H:i:s', $timestamp)
+			);
+		}
+		
+		$q .= implode(' OR ', $pieces);
+		
+		$rez = ($wpdb->query($q) !== false);
+		blc_got_unsynched_items();
+		
+		return $rez;
+	}
+	
+	/**
+	 * Remove synch. records that reference container types not currently loaded
+	 * 
+	 * @return bool
+	 */
+	function cleanup_containers(){
+		global $wpdb;
+		
+		$module_manager = & blcModuleManager::getInstance();
+		$active_containers = $module_manager->get_escaped_ids('container');
+		
+		$q = "DELETE synch.*
+		      FROM {$wpdb->prefix}blc_synch AS synch
+		      WHERE
+	      	    synch.container_type NOT IN ({$active_containers})";
+		$rez = $wpdb->query($q);
+		
+		return $rez !== false;
+	}
+	
+  /**
+   * Get the message to display after $n containers of a specific type have been deleted.
+   *
+   * @param string $container_type 
    * @param int $n Number of deleted containers.
    * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
    */
-	function ui_bulk_delete_message($n){
-		return sprintf(
-			_n(
-				"%d '%s' has been deleted",
-				"%d '%s' have been deleted",
-				$n,
-				'broken-link-checker'
-			),
-			$n,
-			$this->container_type
-		);
+	function ui_bulk_delete_message($container_type, $n){
+		$manager = & blcContainerHelper::get_manager($container_type);
+		if ( is_null($manager) ){
+			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
+		} else {
+			return $manager->ui_bulk_delete_message($n);
+		}
 	}
-}
-
-/**
- * Register a new link container.
- *
- * Each container type is implemented by two related classes - the container manager class, and the 
- * container class itself. The container manager handles tasks like creating new instances of the container
- * class, loading & filtering them to the database, handling WordPress hooks relevant to the container
- * type, and so on. The container class handles the synchronization, parsing and modification of 
- * individual link containers (e.g. posts or comments). 
- *
- * @see blcContainer
- * @see blcContainerManager 
- *
- * @param string $container_type A unique string identifying the container, e.g. "post" or "comment".
- * @param string $manager_class Class name of the container manager corresponding to the container type you want to register. 
- * @return bool	True if the container was successfully registered, false otherwise.
- */
-function blc_register_container( $container_type, $manager_class ){
-	$instance = & blcContainerRegistry::getInstance();
-	return $instance->register_container($container_type, $manager_class);
-}
-
-/**
- * Retrieve or create a link container.
- *
- * @param array $container Either (container type, id), or an assoc. array of container data.
- * @return blcContainer|null Returns null if the container type is unrecognized.
- */
-function blc_get_container($container){
-	$instance = & blcContainerRegistry::getInstance();
-	return $instance->get_container($container);
-}
-
-/**
- * Retrieve multiple link containers.
- *
- * If you specify the optional $purpose argument, the relevant container managers might be 
- * able to use it to (pre)load container data more efficiently - e.g. loading all posts associated
- * with the selected batch of containers in one go, instead of running a separate DB query for 
- * each individual container later.
- *
- * There are several predefined constants that can be used for the $purpose argument :
- * BLC_FOR_EDITING, BLC_FOR_PARSING, BLC_FOR_DISPLAY
- *
- * For containers not found in the DB, the behaviour of this function depends on the format
- * of the $containers argument. If $containers is an array of [container_type, container_id] pairs,
- * only existing containers will be returned. If it's an array of assoc. arrays specifying container
- * data, the function will create and return container objects for all specified containers.
- *
- * @see blc_get_container() 
- *
- * @param array $containers Array of (container_type, id) pairs, or assoc. arrays with container data.
- * @param string $purpose Optional code indicating how the retrieved containers are going to be used.
- * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose.  
- * @return array of blcContainer indexed by 'container_type|container_id'
- */
-function blc_get_containers( $containers, $purpose = '', $load_wrapped_objects = false ){
-	$instance = & blcContainerRegistry::getInstance();
-	return $instance->get_containers($containers, $purpose, '', $load_wrapped_objects);
-}
-
-/**
- * Retrieve link containers that need to be synchronized (parsed).
- *
- * @param integer $max_results The maximum number of containers to return. Defaults to returning all unsynched containers. 
- * @return array of blcContainer
- */
-function blc_get_unsynched_containers($max_results = 0){
-	$instance = & blcContainerRegistry::getInstance();
-	return $instance->get_unsynched_containers($max_results);
-}
-
-/**
- * (Re)create and update synchronization records for all supported containers.
- * Calls the resynch() method of all registered managers.
- *
- * @param bool $forced If true, assume that no synch. records exist and build all of them from scratch.
- * @return void
- */
-function blc_resynch_containers($forced = false){
-	$instance = & blcContainerRegistry::getInstance();
-	$instance->resynch($forced);
-}
-
-/**
- * Remove synch. records that reference container types not currently loaded
- * 
- * @return bool
- */
-function blc_cleanup_containers(){
-	global $wpdb;
 	
-	$containerRegistry = & blcContainerRegistry::getInstance();
-	$loaded_containers = array_keys($containerRegistry->get_registered_containers());
-	$loaded_containers = array_map(array(&$wpdb, 'escape'), $loaded_containers);
-	$loaded_containers = "'" . implode("', '", $loaded_containers) . "'";
-	
-	$q = "DELETE synch.*
-	      FROM {$wpdb->prefix}blc_synch AS synch
-	      WHERE
-      	    synch.container_type NOT IN ({$loaded_containers})";
-	$rez = $wpdb->query($q);
-	
-	return $rez !== false;
+	/**
+	 * Get the message to display after $n containers of a specific type have been moved to the trash.
+	 * 
+	 * @see blcContainerHelper::ui_bulk_delete_message()
+	 * 
+	 * @param string $container_type
+	 * @param int $n
+	 * @return string
+	 */
+	function ui_bulk_trash_message($container_type, $n){
+		$manager = & blcContainerHelper::get_manager($container_type);
+		if ( is_null($manager) ){
+			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
+		} else {
+			return $manager->ui_bulk_trash_message($n);
+		}
+	}
 }
 
 ?>

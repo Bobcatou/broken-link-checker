@@ -1,5 +1,20 @@
 <?php
 
+/*
+Plugin Name: HTML links
+Description: Example : <code>&lt;a href="http://example.com/"&gt;link text&lt;/a&gt;</code>
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: link
+ModuleCategory: parser
+ModuleClassName: blcHTMLLink
+ModuleContext: on-demand
+ModuleLazyInit: true
+
+ModulePriority: 1000
+*/
+
 class blcHTMLLink extends blcParser {
 	var $supported_formats = array('html');
 	
@@ -322,7 +337,5 @@ class blcHTMLLink extends blcParser {
 		return $link;
 	}	
 }
-
-blc_register_parser('link', 'blcHTMLLink');
 
 ?>

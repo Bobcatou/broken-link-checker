@@ -1,10 +1,18 @@
 <?php
+/*
+Plugin Name: Blogroll items
+Description: 
+Version: 1.0
+Author: Janis Elsts
+
+ModuleID: blogroll
+ModuleCategory: container
+ModuleClassName: blcBookmarkManager
+*/
 
 class blcBookmark extends blcContainer{
 	
-	var $fields = array('link_url' => 'url_field');
-	
-	function ui_get_source($container_field, $context = 'display'){
+	function ui_get_source($container_field = '', $context = 'display'){
 		$bookmark = $this->get_wrapped_object();
 		
 		$image = sprintf(
@@ -29,7 +37,7 @@ class blcBookmark extends blcContainer{
 	
 	function ui_get_action_links($container_field){
 		//Inline action links for bookmarks     
-		$bookmark = $this->get_wrapped_object();
+		$bookmark = &$this->get_wrapped_object();
 		
 		$delete_url = admin_url( wp_nonce_url("link.php?action=delete&link_id={$this->container_id}", 'delete-bookmark_' . $this->container_id) ); 
 		
@@ -124,7 +132,15 @@ class blcBookmark extends blcContainer{
 			
 			return new WP_Error( 'delete_failed', $msg );
 		};
-	}	
+	}
+	
+	function current_user_can_delete(){
+		return current_user_can('manage_links');
+	}
+	
+	function can_be_trashed(){
+		return false;
+	}
 	
   /**
    * Get the default link text. For bookmarks, this is the bookmark name.
@@ -150,6 +166,7 @@ class blcBookmark extends blcContainer{
 
 class blcBookmarkManager extends blcContainerManager{
 	var $container_class_name = 'blcBookmark';
+	var $fields = array('link_url' => 'url_field');
 	
   /**
    * Set up hooks that monitor added/modified/deleted bookmarks.
@@ -157,6 +174,8 @@ class blcBookmarkManager extends blcContainerManager{
    * @return void
    */
 	function init(){
+		parent::init();
+		
         add_action('add_link', array(&$this,'hook_add_link'));
         add_action('edit_link', array(&$this,'hook_edit_link'));
         add_action('delete_link', array(&$this,'hook_delete_link'));
@@ -231,7 +250,7 @@ class blcBookmarkManager extends blcContainerManager{
    * @return void
    */
 	function hook_add_link( $link_id ){
-		$container = blc_get_container( array($this->container_type, $link_id) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -253,7 +272,7 @@ class blcBookmarkManager extends blcContainerManager{
    */
 	function hook_delete_link( $link_id ){
 		//Get the container object.
-		$container = blc_get_container( array($this->container_type, $link_id) );
+		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		//Get the link(s) associated with it.
 		$links = $container->get_links(); 
 		
@@ -277,8 +296,8 @@ class blcBookmarkManager extends blcContainerManager{
 	function ui_bulk_delete_message($n){
 		return sprintf(
 			_n(
-				"%d blogroll link deleted", 
-				"%d blogroll links deleted", 
+				"%d blogroll link deleted.", 
+				"%d blogroll links deleted.", 
 				$n, 
 				'broken-link-checker'
 			),
@@ -286,7 +305,5 @@ class blcBookmarkManager extends blcContainerManager{
 		);
 	}
 }
-
-blc_register_container('blogroll', 'blcBookmarkManager');
 
 ?>
