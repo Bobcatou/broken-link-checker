@@ -347,6 +347,19 @@ class wsBrokenLinkChecker {
         $this->conf->save_options();
         $blclog->info('Installation/update begins.');
         
+        $moduleManager = & blcModuleManager::getInstance();
+        
+        //If upgrading, activate/deactivate custom field and comment containers based on old ver. settings
+        if ( isset($this->conf->options['check_comment_links']) ){
+        	if ( !$this->conf->options['check_comment_links'] ){
+        		$moduleManager->deactivate('comment');
+        	}
+        	unset($this->conf->options['check_comment_links']);
+        }
+        if ( empty($this->conf->options['custom_fields']) ){
+       		$moduleManager->deactivate('custom_field');
+        }
+        
     	//Prepare the database.
     	$blclog->info('Upgrading the database...');
         $this->upgrade_database();
@@ -358,7 +371,6 @@ class wsBrokenLinkChecker {
 		//Notify modules that the plugin has been activated. This will cause container
 		//modules to create and update synch. records for all new/modified posts and other items.
 		$blclog->info('Notifying modules...'); 
-		$moduleManager = & blcModuleManager::getInstance();
 		$moduleManager->plugin_activated();
 		blc_got_unsynched_items();
 		
@@ -1270,7 +1282,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/options-page.css' );
+    	wp_enqueue_style('blc-options-page', plugin_dir_url($this->loader) . 'css/options-page.css', array(), '0.9.5' );
     	wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
 	}
 	
@@ -1867,7 +1879,7 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css' );
+		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css', array(), '0.9.5' );
 		wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
 	}
 	
