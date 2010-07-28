@@ -210,9 +210,9 @@ class blcTableDelta {
 							
 						if ( $definition ){
 							if ( $definition['index'] ){
-								$indices[ $definition['index_definition'] ] = $definition;
+								$indices[ $definition['index_definition'] ] = $definition; //Index
 							} else {
-								$cfields[ $definition['name'] ] = $definition;
+								$cfields[ $definition['name'] ] = $definition; //Column
 							}
 						}
 					}
@@ -224,7 +224,7 @@ class blcTableDelta {
 	
 					// For every field in the table
 					foreach ($tablefields as $tablefield) {
-						$field_name = strtolower($tablefield->Field);
+						$field_name = strtolower($tablefield->Field); //Field names are case-insensitive in MySQL
 						
 						// If the table field exists in the field array...
 						if (array_key_exists($field_name, $cfields)) {
@@ -301,7 +301,7 @@ class blcTableDelta {
 								unset($indices[$index_string]);
 							} else {
 								//echo "Didn't find index $index_string<br>";
-								if ( $drop_indexes ){
+								if ( $drop_indexes ){ 
 									if ( $index_name == 'primary' ){
 										$cqueries[] = "ALTER TABLE `{$table}` DROP PRIMARY KEY";
 									} else {
@@ -336,8 +336,8 @@ class blcTableDelta {
 			if ( $execute ) {
 				$log_item['success'] = ($wpdb->query($query) !== false);
 				$log_item['error_message'] = $wpdb->last_error;
-				$execution_log[] = $log_item;
 			}
+			$query_log[] = $log_item;
 		}
 	
 		return array($for_update, $query_log);
