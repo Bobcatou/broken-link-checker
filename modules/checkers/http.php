@@ -304,7 +304,7 @@ class blcSnoopyHttp extends blcHttpCheckerBase {
         $snoopy->read_timeout = $timeout; //read timeout in seconds
         $snoopy->agent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"; //masquerade as IE 7
         $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
-        $snoopy->fetch($url);
+        $snoopy->fetch( $this->urlencodefix($url) );
         
         $result['request_duration'] = microtime_float() - $start_time;
 
