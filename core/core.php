@@ -708,7 +708,7 @@ class wsBrokenLinkChecker {
 		);
 		?>
 		
-        <div class="wrap"><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
+        <div class="wrap"><?php screen_icon(); ?><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		
         <form name="link_checker_options" method="post" action="<?php 
 			echo admin_url('options-general.php?page=link-checker-settings&noheader=1'); 
@@ -1414,7 +1414,7 @@ class wsBrokenLinkChecker {
 	var blc_is_broken_filter = <?php echo $current_filter['is_broken_filter'] ? 'true' : 'false'; ?>;
 </script>
         
-<div class="wrap">
+<div class="wrap"><?php screen_icon(); ?>
 	<?php
 		$blc_link_query->print_filter_heading($current_filter);
 		$blc_link_query->print_filter_menu($filter_id);
