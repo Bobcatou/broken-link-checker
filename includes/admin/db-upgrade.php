@@ -236,7 +236,7 @@ class blcTableDelta {
 								( $definition['collation'] && ($tablefield->Collation != $definition['collation']) ) ||
 								( $definition['null_allowed'] && ($tablefield->Null == 'NO') ) ||
 								( !$definition['null_allowed'] && ($tablefield->Null == 'YES') ) ||
-								( $tablefield->Default != $definition['default'] ); 
+								( $tablefield->Default !== $definition['default'] ); 
 							
 							// Add a query to change the column type
 							if ( $different ) {
@@ -355,7 +355,7 @@ class blcTableDelta {
 	function parse_create_definition($line){
 		$line = preg_replace('@[,\r\n\s]+$@', '', $line); //Strip the ", " line separator
 		
-		$pieces = preg_split('@\s+@', $line, -1, PREG_SPLIT_NO_EMPTY);
+		$pieces = preg_split('@\s+|(?=\()@', $line, -1, PREG_SPLIT_NO_EMPTY);
 		if ( empty($pieces) ){
 			return null;
 		}
@@ -470,20 +470,30 @@ class blcTableDelta {
 		$data_type = '';
 		$regexp = '
 		@
-			^\w+                         # type name
-				(\s* \( [^()]* \) )?     # optional length or a list of enum values
-				(\s+                     # various type modifiers/keywords 
-					(
-						BINARY | 
-						UNSIGNED | 
-						ZEROFILL
-					) 
-				)*
+			(?P<type_name>^\w+)          # type name
 				
+				(?:\s* 
+					\(
+						\s*	(?P<length>[^()]+) \s* # optional length or a list of enum values
+					\) 
+				)?     
+				
+				                     # various type modifiers/keywords
+				(?P<keywords> 
+					(?:\s+
+						(?: BINARY | UNSIGNED |	ZEROFILL )
+					)*
+				)?
 		@xi';
 		
 		if ( preg_match($regexp, $line, $matches) ){
-			$data_type = strtolower($matches[0]);
+			$data_type = strtolower($matches['type_name']);
+			if ( !empty($matches['length']) ){
+				$data_type .= '(' . trim($matches['length']) . ')';
+			}
+			if ( !empty($matches['keywords']) ){
+				$data_type .= preg_replace('@\s+@', ' ', $matches['keywords']);
+			}
 			$line = substr($line, strlen($data_type));
 		}
 		
