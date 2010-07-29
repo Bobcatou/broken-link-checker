@@ -470,15 +470,16 @@ class blcTableDelta {
 		$data_type = '';
 		$regexp = '
 		@
-			(?P<type_name>^\w+)          # type name
+			(?P<type_name>^\w+)
 				
+				# followed by an optional length or a list of enum values
 				(?:\s* 
 					\(
-						\s*	(?P<length>[^()]+) \s* # optional length or a list of enum values
+						\s*	(?P<length>[^()]+) \s* 
 					\) 
-				)?     
+				)?
 				
-				                     # various type modifiers/keywords
+   				# various type modifiers/keywords
 				(?P<keywords> 
 					(?:\s+
 						(?: BINARY | UNSIGNED |	ZEROFILL )
@@ -492,7 +493,7 @@ class blcTableDelta {
 				$data_type .= '(' . trim($matches['length']) . ')';
 			}
 			if ( !empty($matches['keywords']) ){
-				$data_type .= preg_replace('@\s+@', ' ', $matches['keywords']);
+				$data_type .= preg_replace('@\s+@', ' ', $matches['keywords']); //Collapse spaces
 			}
 			$line = substr($line, strlen($data_type));
 		}
