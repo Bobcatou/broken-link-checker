@@ -48,7 +48,6 @@ class blcTablePrinter {
 	 * @return void
 	 */
 	function print_table($current_filter, $layout = 'flexible', $visible_columns = null, $compact = false){
-		
 		$this->current_filter = $current_filter;
 		$this->page = $current_filter['page'];
 		$this->per_page = $current_filter['per_page'];
@@ -57,6 +56,8 @@ class blcTablePrinter {
 		if ( empty($visible_columns) ){
 			$visible_columns = $layout;
 		}
+		//Only allow columns actually present in this layout
+		$visible_columns = array_intersect($visible_columns, $layout);  
 		
 		echo '<form id="blc-bulk-action-form" action="', $this->neutral_current_url, '" method="post">';
 		wp_nonce_field('bulk-action');
@@ -221,8 +222,8 @@ class blcTablePrinter {
 	 */
 	function setup_layouts(){
 		$this->layouts = array(
-			'classic' =>  array('source', 'link-text', 'url', 'status'),
-			'flexible' => array('new-url', 'status', 'last-checked', 'broken-for', 'new-link-text', 'used-in', 'instance-count' ),
+			'classic' =>  array('used-in', 'new-link-text', 'new-url'),
+			'flexible' => array('new-url', 'status', 'new-link-text', 'used-in',),
 		);
 	}
 	
