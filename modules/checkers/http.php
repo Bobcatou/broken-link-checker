@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: HTTP/HTTPS links
+Plugin Name: Basic HTTP
 Description: Check all links that have the HTTP/HTTPS protocol.
 Version: 1.0
 Author: Janis Elsts
@@ -303,6 +303,7 @@ class blcSnoopyHttp extends blcHttpCheckerBase {
         $snoopy = new Snoopy;
         $snoopy->read_timeout = $timeout; //read timeout in seconds
         $snoopy->agent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"; //masquerade as IE 7
+        $snoopy->referer = get_option('home'); //valid referer helps circumvent some hotlink protection schemes
         $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
         $snoopy->fetch( $this->urlencodefix($url) );
         
