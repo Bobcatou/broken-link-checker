@@ -21,11 +21,12 @@ tr.blc-link-details {
 /* Column headers */
 
 th.column-new-url {
-	width: 30%;
+	width: 35%;
 }
 
 th.column-status {
-	width: 16em;
+	/*width: 16em;*/
+	width: 12em;
 }
 
 th.column-new-link-text {
@@ -42,7 +43,7 @@ th.column-source {
 }
 
 th.column-link-text {
-	width: 24%;
+	/*width: 24%;*/
 }
 
 th.column-url {
