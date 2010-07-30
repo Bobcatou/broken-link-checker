@@ -703,7 +703,7 @@ class wsBrokenLinkChecker {
 			'general' =>  __('General', 'broken-link-checker'),
 			'where' =>    __('Look For Links In', 'broken-link-checker'),
 			'which' =>    __('Which Links To Check', 'broken-link-checker'),
-			'how' =>      __('How To Check Them', 'broken-link-checker'),
+			'how' =>      __('Protocols & APIs', 'broken-link-checker'),
 			'advanced' => __('Advanced', 'broken-link-checker'),
 		);
 		?>
@@ -877,7 +877,7 @@ class wsBrokenLinkChecker {
         <table class="form-table">
         
         <tr valign="top">
-        <th scope="row"><?php _e('Content to scan for links', 'broken-link-checker'); ?></th>
+        <th scope="row"><?php _e('Look for links in', 'broken-link-checker'); ?></th>
         <td>
     	<?php
     	if ( !empty($modules['container']) ){
