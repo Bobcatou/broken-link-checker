@@ -25,25 +25,23 @@ th.column-new-url {
 }
 
 th.column-status {
-	/*width: 16em;*/
-	width: 12em;
+	width: 16em;
 }
 
 th.column-new-link-text {
-	/*width: 24%;*/
-	/*width: 16%;*/
+	
 }
 
 th.column-used-in {
-	/*width: 33%;*/
+	
 }
 
 th.column-source {
-	/*width: 33%;*/
+	width: 33%;
 }
 
 th.column-link-text {
-	/*width: 24%;*/
+	width: 24%;
 }
 
 th.column-url {
