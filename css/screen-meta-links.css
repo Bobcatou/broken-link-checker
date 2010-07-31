@@ -1,4 +1,6 @@
-#blc-feedback-widget-wrap {
+#blc-feedback-widget-wrap,
+#blc-news-link-wrap
+{
 	float: right;
 	height: 22px;
 	padding: 0;
@@ -18,9 +20,14 @@
 	-webkit-border-bottom-right-radius: 3px;
 }
 
-#blc-feedback-widget-wrap a.show-settings {
+#blc-feedback-widget-wrap a.show-settings,
+#blc-news-link-wrap a.show-settings
+{
 	background-image: none;
 	padding:0 6px 0 6px;
+}
+
+#blc-feedback-widget-wrap a.show-settings {
 	font-weight: bold;
 }
 
