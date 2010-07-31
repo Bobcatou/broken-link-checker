@@ -19,14 +19,20 @@ class blcPostTypeOverlord {
 	var $resynch_already_done = false;
 	
   /**
-   * Class constructor.
+   * Class "constructor". Can't use an actual constructor due to how PHP4 handles object references.
+   * 
+   * Specifically, this class is a singleton. The function needs to pass $this to several other 
+   * functions (to set up hooks), which will store the reference for later use. However, it appears 
+   * that in PHP4 the actual value of $this is thrown away right after the constructor finishes, and
+   * `new` returns a *copy* of $this. The result is that means getInstance() won't be returning a ref.
+   * to the same object as is used for hook callbacks. And that's horrible.   
    * 
    * Sets up hooks that monitor added/modified/deleted posts and registers
    * virtual modules for all post types.
    *
    * @return void
    */
-	function blcPostTypeOverlord(){
+	function init(){
  		$this->plugin_conf = &blc_get_configuration();
  		
  		if ( isset($this->plugin_conf->options['enabled_post_statuses']) ){
@@ -82,6 +88,7 @@ class blcPostTypeOverlord {
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcPostTypeOverlord;
+			$instance->init();
 		}
 		return $instance;
 	}
