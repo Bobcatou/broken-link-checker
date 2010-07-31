@@ -847,7 +847,7 @@ class blcLink {
 			
 			if ( $this->broken ){
 				
-				$code = BLC_LINK_STATUS_ERROR;
+				$code = BLC_LINK_STATUS_WARNING;
 				$text = __('Unknown Error', 'link status', 'broken-link-checker');
 				
 				if ( $this->timeout ){

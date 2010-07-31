@@ -16,12 +16,12 @@ class blcModuleManager {
 	
 	
 	/**
-	 * Class constructor.
+	 * Class "constructor".
 	 * 
 	 * @param array $default_active_modules An array of module ids specifying which modules are active by default.
 	 * @return void
 	 */
-	function blcModuleManager($default_active_modules = null){
+	function init($default_active_modules = null){
 		$this->module_dir = realpath(dirname(__FILE__) . '/../modules');
 		
 		$this->plugin_conf = & blc_get_configuration();
@@ -42,7 +42,8 @@ class blcModuleManager {
 	function &getInstance($default_active_modules = null){
 		static $instance = null;
 		if ( is_null($instance) ){
-			$instance = new blcModuleManager($default_active_modules);
+			$instance = new blcModuleManager();
+			$instance->init($default_active_modules);
 		}
 		return $instance;
 	}

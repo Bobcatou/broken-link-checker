@@ -21,7 +21,7 @@ class wsScreenOptions11 {
 	 * 
 	 * @return void
 	 */
-	function wsScreenOptions11(){
+	function init(){
 		$this->registered_panels = array();
 		$this->page_panels = array();
 		
@@ -272,6 +272,7 @@ if ( !function_exists('add_screen_options_panel') ){
 			uksort($ws_screen_options_versions, 'version_compare');
 			$className = end($ws_screen_options_versions);
 			$instance = new $className;
+			$instance->init();
 		}
 		
 		return $instance->add_screen_options_panel($id, $title, $callback, $page, $save_callback, $autosave);
