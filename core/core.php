@@ -1234,7 +1234,11 @@ class wsBrokenLinkChecker {
 			$checked .= ' disabled="disabled"';
 		}
 		
-		$pro_notice = '<span class="pro-notice"></span>';
+		$pro_notice = sprintf(
+			'<span class="pro-notice"><a href="%s" title="%s">Pro</a></span>',
+			esc_attr('#'),
+			esc_attr(__('Upgrade to Pro to enable this feature', 'broken-link-checker'))
+		);
 		
 		printf(
 			'<label class="%s">
@@ -1446,7 +1450,7 @@ class wsBrokenLinkChecker {
 			);
 
         };
-		printf('<!-- Total elapsed : %.4f seconds -->', microtime_float() - $start_time);//TODO: Remove debug code 
+		printf('<!-- Total elapsed : %.4f seconds -->', microtime_float() - $start_time); 
         
 		//Load assorted JS event handlers and other shinies
 		include dirname($this->loader) . '/includes/admin/links-page-js.php';
