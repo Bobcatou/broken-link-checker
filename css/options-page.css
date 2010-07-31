@@ -134,3 +134,12 @@ ul.ui-tabs-nav li.ui-tabs-selected a {
 	-webkit-border-bottom-left-radius: 6px;
 }
 
+/* "Upgrade to Pro" stuff */
+
+.pro-notice {
+	
+}
+
+.pro-notice a {
+	font-style: italic;
+}
