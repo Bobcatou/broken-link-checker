@@ -212,11 +212,9 @@ class blcCurlHttp extends blcHttpCheckerBase {
         $measured_request_duration = microtime_float() - $start_time;
         
 		$info = curl_getinfo($ch);
-		curl_close($ch);
 		
 		//Store the results
         $result['http_code'] = intval( $info['http_code'] );
-        $result['timeout'] = ($result['http_code'] == 0); //If the code is 0 then it's probably a timeout
         $result['final_url'] = $info['url'];
         $result['request_duration'] = $info['total_time'];
         $result['redirect_count'] = $info['redirect_count'];
@@ -228,7 +226,37 @@ class blcCurlHttp extends blcHttpCheckerBase {
         }
         
         //Determine if the link counts as "broken"
-		$result['broken'] = $this->is_error_code($result['http_code']) || $result['timeout'];
+        if ( $result['http_code'] == 0 ){
+        	$result['broken'] = true;
+        	
+        	$error_code = curl_errno($ch);
+        	$log .= sprintf( "%s [Error #%d]\n", curl_error($ch), $error_code );
+        	
+        	//We only handle a couple of CURL error codes; most are highly esoteric.
+        	switch( $error_code ) {
+        		case CURLE_COULDNT_RESOLVE_HOST:
+		        	$result['status_code'] = BLC_LINK_STATUS_WARNING;
+		        	$result['status_text'] = __('Domain Not Found', 'broken-link-checker');
+		        	break;
+		        	
+		        case CURLE_OPERATION_TIMEDOUT:
+		        	$result['timeout'] = true;
+		        	break;
+		        	
+	        	case CURLE_COULDNT_CONNECT:
+	        		$result['status_code'] = BLC_LINK_STATUS_WARNING;
+	        		$result['status_text'] = __('Connection Failed', 'broken-link-checker');
+	        		break;
+	        		
+        		default:
+	        		$result['status_code'] = BLC_LINK_STATUS_WARNING;
+	        		$result['status_text'] = __('Unknown Error', 'broken-link-checker');
+        	}
+	        
+        } else {
+        	$result['broken'] = $this->is_error_code($result['http_code']);
+        }
+        curl_close($ch);
         
         if ( $nobody && $result['broken'] ){
 			//The site in question might be expecting GET instead of HEAD, so lets retry the request 
