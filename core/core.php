@@ -83,6 +83,7 @@ class wsBrokenLinkChecker {
     	add_action('blc_cron_email_notifications', array( &$this, 'send_email_notifications' ));
 		add_action('blc_cron_check_links', array(&$this, 'cron_check_links'));
 		add_action('blc_cron_database_maintenance', array(&$this, 'database_maintenance'));
+		add_action('blc_cron_check_news', array(&$this, 'check_news'));
 		
 		//Add a "Screen Options" panel to the "Broken Links" page
 		add_screen_options_panel(
@@ -403,6 +404,7 @@ class wsBrokenLinkChecker {
 		wp_clear_scheduled_hook('blc_cron_check_links');
 		wp_clear_scheduled_hook('blc_cron_email_notifications');
 		wp_clear_scheduled_hook('blc_cron_database_maintenance');
+		wp_clear_scheduled_hook('blc_cron_check_news');
 	}
 	
   /**
@@ -1283,7 +1285,7 @@ class wsBrokenLinkChecker {
      */
     function options_page_css(){
     	wp_enqueue_style('blc-options-page', plugin_dir_url($this->loader) . 'css/options-page.css', array(), '0.9.5' );
-    	wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
+    	wp_enqueue_style('blc-screen-meta-links', plugin_dir_url($this->loader) . 'css/screen-meta-links.css' );
 	}
 	
 
@@ -1407,6 +1409,7 @@ class wsBrokenLinkChecker {
 		
 		//Add the "Feedback" widget to the screen meta bar
 		$this->print_uservoice_widget();
+		$this->display_plugin_news_link();
         ?>
         
 <script type='text/javascript'>
@@ -1880,7 +1883,7 @@ class wsBrokenLinkChecker {
 	 */
 	function links_page_css(){
 		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css', array(), '0.9.5' );
-		wp_enqueue_style('blc-uservoice', plugin_dir_url($this->loader) . 'css/uservoice.css' );
+		wp_enqueue_style('blc-screen-meta-links', plugin_dir_url($this->loader) . 'css/screen-meta-links.css' );
 	}
 	
 	/**
@@ -1919,7 +1922,6 @@ class wsBrokenLinkChecker {
 		
 		$html .= '</div>';
 		
-		//TODO: Improve "Screen Options" layout / option grouping and names
 		$html .= '<h5>' . __('Show on screen') . '</h5>';
 		$html .= '<div class="screen-options">';
 		$html .= sprintf(
@@ -3110,6 +3112,11 @@ class wsBrokenLinkChecker {
 		if ( !wp_next_scheduled('blc_cron_database_maintenance') ){
 			wp_schedule_event(time(), 'bimonthly', 'blc_cron_database_maintenance');
 		}
+		
+		//Check for news notices related to this plugin
+		if ( !wp_next_scheduled('blc_cron_check_news') ){
+			wp_schedule_event(time(), 'daily', 'blc_cron_check_news');
+		}
 	} 
 	
   /**
@@ -3119,6 +3126,62 @@ class wsBrokenLinkChecker {
    */
 	function load_language(){
 		load_plugin_textdomain( 'broken-link-checker', false, basename(dirname($this->loader)) . '/languages' );
+	}
+	
+	/**
+	 * Check if there's a "news" link to display on the plugin's pages.
+	 * 
+	 * @return void
+	 */
+	function check_news(){
+		$url = 'http://w-shadow.com/plugin-news/';
+		if ( defined('BLC_PRO_VERSION') && BLC_PRO_VERSION ){
+			$url .= 'broken-link-checker-pro-news.txt';
+		} else {
+			$url .= 'broken-link-checker-news.txt';
+		}
+		
+		//Retrieve the appropriate "news" file
+		$res = wp_remote_get($url);
+		if ( is_wp_error($res) ){
+			return;
+		}
+		
+		//Anything there?
+		if ( isset($res['response']['code']) && ($res['response']['code'] == 200) && isset($res['body']) ) {
+			//The file should contain two lines - a title and an URL
+			$news = explode("\n", trim($res['body']));
+			if ( count($news) == 2 ){
+				//Save for later. 
+				$this->conf->options['plugin_news'] = $news;
+			} else {
+				$this->conf->options['plugin_news'] = null;
+			}
+			$this->conf->save_options();
+		}		
+	}
+	
+	/**
+	 * Display a link to the latest blog post/whatever about this plugin, if any.
+	 * 
+	 * @return void
+	 */
+	function display_plugin_news_link(){
+		if ( !isset($this->conf->options['plugin_news']) || empty($this->conf->options['plugin_news']) ){
+			return;
+		}  
+		$news = $this->conf->options['plugin_news'];
+		?>
+		<script type="text/javascript">
+		(function($){
+			var wrapper = $('<div id="blc-news-link-wrap" class="hide-if-no-js screen-meta-toggle"></div>').appendTo('#screen-meta-links');
+			$('<a id="blc-plugin-news-link" class="show-settings"></a>')
+				.attr('href', '<?php echo esc_js($news[1]); ?>')
+				.html('<?php echo esc_js($news[0]) ?>')
+				.appendTo(wrapper);
+		})(jQuery);
+		</script>
+		<?php
 	}
 
 }//class ends here
