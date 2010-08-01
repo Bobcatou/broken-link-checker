@@ -543,6 +543,7 @@ class wsBrokenLinkChecker {
             //Redirect back to the settings page
 			$base_url = remove_query_arg( array('_wpnonce', 'noheader', 'updated', 'error', 'action', 'message') );
 			wp_redirect( add_query_arg( array( 'recheck-initiated' => true), $base_url ) );
+			die();
         }
         
         if(isset($_POST['submit'])) {
@@ -712,7 +713,7 @@ class wsBrokenLinkChecker {
 		
         <div class="wrap"><?php screen_icon(); ?><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		
-        <form name="link_checker_options" method="post" action="<?php 
+        <form name="link_checker_options" id="link_checker_options" method="post" action="<?php 
 			echo admin_url('options-general.php?page=link-checker-settings&noheader=1'); 
 		?>">
         <?php 
@@ -1117,8 +1118,9 @@ class wsBrokenLinkChecker {
         <tr valign="top">
         <th scope="row"><?php _e('Forced recheck', 'broken-link-checker'); ?></th>
         <td>
-        	<input class="button" type="submit" name="recheck" 
+        	<input class="button" type="button" name="start-recheck" id="start-recheck" 
 				  value="<?php _e('Re-check all pages', 'broken-link-checker'); ?>"  />
+  			<input type="hidden" name="recheck" value="" id="recheck" />
 			<br />
   			<span class="description"><?php
 			  _e('The "Nuclear Option". Click this button to make the plugin empty its link database and recheck the entire site from scratch.', 'broken-link-checker');
