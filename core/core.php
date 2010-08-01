@@ -936,7 +936,7 @@ class wsBrokenLinkChecker {
 		</tr>
     	
     	<tr valign="top">
-        <th scope="row"><?php _e('URL exceptions', 'broken-link-checker'); ?></th>
+        <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
         <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
         <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
             if( isset($this->conf->options['exclusion_list']) )
@@ -955,7 +955,7 @@ class wsBrokenLinkChecker {
         <table class="form-table">
         
         <tr valign="top">
-        <th scope="row"><?php _e('Checker algorithms', 'broken-link-checker'); ?></th>
+        <th scope="row"><?php _e('Check links using', 'broken-link-checker'); ?></th>
         <td>
         <?php
     	if ( !empty($modules['checker']) ){
