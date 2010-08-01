@@ -110,6 +110,12 @@ jQuery(function($){
 			$('#module-extra-settings-custom_field').removeClass('hidden');
 		}
 	});
+	
+	//Handle the "Recheck" button
+	$('#start-recheck').click(function(){
+		$('#recheck').val('1'); //populate the hidden field
+		$('#link_checker_options input[name="submit"]').click(); //.submit() didn't work for some reason	
+	});
 });
 
 </script>
