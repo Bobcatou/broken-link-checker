@@ -8,7 +8,8 @@ jQuery(function($){
 		$.getJSON(
 			"<?php echo admin_url('admin-ajax.php'); ?>",
 			{
-				'action' : 'blc_full_status'
+				'action' : 'blc_full_status',
+				'random' : Math.random()
 			},
 			function (data, textStatus){
 				if ( data && ( typeof(data['text']) != 'undefined' ) ){
