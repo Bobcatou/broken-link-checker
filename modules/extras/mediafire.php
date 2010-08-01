@@ -12,6 +12,6 @@ ModuleAlwaysActive: false
 ModuleRequiresPro: true
 Version: 1.0
 Description: Check links to files hosted on MediaFire.
-Plugin Name: MediaFire ad-hoc API
+Plugin Name: MediaFire API
 */
 ?>
