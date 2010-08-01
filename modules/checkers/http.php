@@ -314,10 +314,12 @@ class blcCurlHttp extends blcHttpCheckerBase {
 class blcSnoopyHttp extends blcHttpCheckerBase {
 	
 	function check($url){
-		$url = $this->clean_url($url); //Note : Snoopy doesn't work too well with HTTPS URLs.
+		$url = $this->clean_url($url); 
+		//Note : Snoopy doesn't work too well with HTTPS URLs.
 		
 		$result = array(
 			'broken' => false,
+			'timeout' => false,
 		);
 		$log = '';
 		
