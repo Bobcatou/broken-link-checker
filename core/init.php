@@ -1,10 +1,19 @@
 <?php
+//To prevent conflicts, only one version of the plugin can be activated at any given time.
+if ( defined('BLC_ACTIVE') ){
+	trigger_error(
+		'Another version of Broken Link Checker is already active. Please deactivate it before activating this one.',
+		E_USER_ERROR
+	);
+}
+define('BLC_ACTIVE', true);
 
 /***********************************************
 				Debugging stuff
 ************************************************/
 
 //define('BLC_DEBUG', true);
+
 
 
 /***********************************************
