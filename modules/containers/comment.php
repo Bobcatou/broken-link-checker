@@ -232,6 +232,9 @@ class blcCommentManager extends blcContainerManager {
 		add_action('trashed_comment', array(&$this, 'hook_deleted_comment'));
 		
 		add_action('transition_comment_status', array(&$this, 'hook_comment_status'), 10, 3);
+		
+		add_action('trashed_post_comments', array(&$this, 'hook_trashed_post_comments'), 10, 2);
+		add_action('untrash_post_comments', array(&$this, 'hook_untrash_post_comments'));
 	}
 	
 	function hook_modified_comment($comment_id){
@@ -273,6 +276,27 @@ class blcCommentManager extends blcContainerManager {
 		}
 	}
 	
+	function hook_trashed_post_comments($post_id, $statuses){
+		$comment_ids = array_keys($statuses);
+		$this->hook_deleted_comment($comment_ids);
+	}
+	
+	function hook_untrash_post_comments($post_id){
+		//Unlike with the 'trashed_post_comments' hook, WP doesn't pass the list of (un)trashed
+		//comments to callbacks assigned to the 'untrash_post_comments' and 'untrashed_post_comments'
+		//actions. Therefore, we must read it from the appropriate metadata entry.
+		$statuses = get_post_meta($post_id, '_wp_trash_meta_comments_status', true);
+		if ( empty($statuses) || !is_array($statuses) ) return;
+		
+		$comment_ids = array();
+		foreach ( $statuses as $comment_id => $comment_status ){
+			if ( $comment_status == '1' ){ //if approved
+				$container = & blcContainerHelper::get_container(array($this->container_type, $comment_id));
+				$container->mark_as_unsynched();
+			}
+		}
+	}
+	
   /**
    * Create or update synchronization records for all comments.
    *
@@ -291,13 +315,15 @@ class blcCommentManager extends blcContainerManager {
 				  	{$wpdb->comments}.comment_approved = '1'";
 	 		$wpdb->query( $q );
  		} else {
- 			//Delete synch records corresponding to comments that no longer exist.
+ 			//Delete synch records corresponding to comments that no longer exist 
+			//or have been trashed/spammed/unapproved.
  			$q = "DELETE synch.*
 				  FROM 
 					 {$wpdb->prefix}blc_synch AS synch LEFT JOIN {$wpdb->comments} AS comments
 					 ON comments.comment_ID = synch.container_id
 				  WHERE 
-					 synch.container_type = '{$this->container_type}' AND comments.comment_ID IS NULL";
+					 synch.container_type = '{$this->container_type}' 
+					 AND (comments.comment_ID IS NULL OR comments.comment_approved <> '1')";
 			$wpdb->query( $q );
 			
 			//Create synch. records for comments that don't have them.
