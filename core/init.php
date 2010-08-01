@@ -5,7 +5,8 @@ if ( defined('BLC_ACTIVE') ){
 		'Another version of Broken Link Checker is already active. Please deactivate it before activating this one.',
 		E_USER_ERROR
 	);
-}
+} else {
+	
 define('BLC_ACTIVE', true);
 
 /***********************************************
@@ -332,5 +333,5 @@ function blc_init(){
 
 add_action('init', 'blc_init', 2000);
 
-
+}
 ?>
