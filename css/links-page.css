@@ -91,11 +91,11 @@ td.column-new-url .mini-status {
 }
 
 .link-status-error .blc-link-url {
-	background-image: url("../images/exclamation-small.png");
+	background-image: url("../images/bullet_error.png");
 }
 
 .link-status-warning .blc-link-url {
-	background-image: url("../images/bullet_error.png");
+	background-image: url("../images/bullet_warning.png");
 }
 
 .blc-excluded-link {
