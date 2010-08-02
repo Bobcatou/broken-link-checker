@@ -122,7 +122,7 @@ $blclog = new blcDummyLogger;
 //*
 if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
-	if ( !class_exists('FB') ) {
+	if ( !class_exists('FB') && file_exists($blc_directory . '/FirePHPCore/fb.php4') ) {
 		require_once $blc_directory . '/FirePHPCore/fb.php4';
 	}
 	//FB::setEnabled(false);
