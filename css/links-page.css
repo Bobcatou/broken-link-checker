@@ -302,3 +302,9 @@ div.search-box{
 #s_link_type optgroup option {
 	margin-left: 1em;
 }
+
+/* Screen options */
+
+#blc-screen-options .blc-less-padding {
+	padding-right: 2px;
+}
