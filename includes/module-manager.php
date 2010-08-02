@@ -842,16 +842,13 @@ class blcModuleManager {
 		
 		$strings = array();
 		foreach($modules as $module_id => $module_header){
+			if ( $module_header['ModuleHidden'] || ($module_id == 'write-module-placeholders')) {
+				continue;
+			}
 			if ( !empty($module_header['Name']) ){
 				$strings[] = sprintf(
-					'__("%s", "broken-link-checker");',
+					'_x("%s", "module name", "broken-link-checker");',
 					str_replace('"', '\"', $module_header['Name'])
-				);
-			}
-			if ( !empty($module_header['Description']) ){
-				$strings[] = sprintf(
-					'__("%s", "broken-link-checker");',
-					str_replace('"', '\"', $module_header['Description'])
 				);
 			}
 		}
