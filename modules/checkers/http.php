@@ -233,17 +233,19 @@ class blcCurlHttp extends blcHttpCheckerBase {
         	$log .= sprintf( "%s [Error #%d]\n", curl_error($ch), $error_code );
         	
         	//We only handle a couple of CURL error codes; most are highly esoteric.
+        	//libcurl "CURLE_" constants can't be used here because some of them have 
+        	//different names or values in PHP.
         	switch( $error_code ) {
-        		case CURLE_COULDNT_RESOLVE_HOST:
+        		case 6: //CURLE_COULDNT_RESOLVE_HOST
 		        	$result['status_code'] = BLC_LINK_STATUS_WARNING;
 		        	$result['status_text'] = __('Domain Not Found', 'broken-link-checker');
 		        	break;
 		        	
-		        case CURLE_OPERATION_TIMEDOUT:
+		        case 28: //CURLE_OPERATION_TIMEDOUT
 		        	$result['timeout'] = true;
 		        	break;
 		        	
-	        	case CURLE_COULDNT_CONNECT:
+	        	case 7: //CURLE_COULDNT_CONNECT
 	        		$result['status_code'] = BLC_LINK_STATUS_WARNING;
 	        		$result['status_text'] = __('Connection Failed', 'broken-link-checker');
 	        		break;
