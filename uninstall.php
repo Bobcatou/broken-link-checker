@@ -9,8 +9,9 @@
 
 if( defined( 'ABSPATH') && defined('WP_UNINSTALL_PLUGIN') ) {
 
-	//Remove the plugin's settings
+	//Remove the plugin's settings & installation log
 	delete_option('wsblc_options');
+	delete_option('blc_installation_log');
 
 	//Remove the database tables
 	$mywpdb = $GLOBALS['wpdb'];    
