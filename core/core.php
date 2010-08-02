@@ -158,7 +158,8 @@ class wsBrokenLinkChecker {
 					$.getJSON(
 						"<?php echo admin_url('admin-ajax.php'); ?>",
 						{
-							'action' : 'blc_dashboard_status'
+							'action' : 'blc_dashboard_status',
+							'random' : Math.random()
 						},
 						function (data, textStatus){
 							if ( data && ( typeof(data.text) != 'undefined' ) ) {
