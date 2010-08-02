@@ -501,11 +501,9 @@ class blcTablePrinter {
 	}
 	
 	function column_source(&$link, $instances){
-		//TODO: Remove <td> here
-		echo '<td class="post-title column-title column-source">',
-				'<span class="blc-link-id" style="display:none;">',
-					$link->link_id,
-				'</span>';
+		echo '<span class="blc-link-id" style="display:none;">',
+				$link->link_id,
+			 '</span>';
 				 	
 		//Print the contents of the "Source" column
 		if ( !empty($instances) ){
@@ -522,48 +520,41 @@ class blcTablePrinter {
 		} else {
 			_e("[An orphaned link! This is a bug.]", 'broken-link-checker');
 		}
-
-		echo '</td>';
 	}
 	
 	function column_url(&$link){
-		//TODO: Remove <td> here
 		?>
-		<td class='column-url'>
-            <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
-            	<?php print $link->url; ?></a>
-            <input type='text' id='link-editor-<?php print $link->link_id; ?>' 
-            	value="<?php print esc_attr($link->url); ?>" 
-                class='blc-link-editor' style='display:none' />
-        <?php
-        	//Output inline action links for the link/URL                  	
-          	$actions = array();
-          	
-			$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
-          	
-			$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-				"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
-			
-			if ( $link->broken ){
-				$actions['discard'] = sprintf(
-					'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
-					esc_attr(__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')),
-					__('Not broken', 'broken-link-checker')
-				);
-			}
-			
-			$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
-			
-			echo '<div class="row-actions">';
-			echo implode(' | </span>', $actions);
-			
-			echo "<span style='display:none' class='blc-cancel-button-container'> " .
-				 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
+        <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
+        	<?php print $link->url; ?></a>
+        <input type='text' id='link-editor-<?php print $link->link_id; ?>' 
+        	value="<?php print esc_attr($link->url); ?>" 
+            class='blc-link-editor' style='display:none' />
+    	<?php
+    	//Output inline action links for the link/URL                  	
+      	$actions = array();
+      	
+		$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
+      	
+		$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
+			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
+		
+		if ( $link->broken ){
+			$actions['discard'] = sprintf(
+				'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
+				esc_attr(__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')),
+				__('Not broken', 'broken-link-checker')
+			);
+		}
+		
+		$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
+		
+		echo '<div class="row-actions">';
+		echo implode(' | </span>', $actions);
+		
+		echo "<span style='display:none' class='blc-cancel-button-container'> " .
+			 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
 
-			echo '</div>';
-        ?>
-        </td>
-		<?php
+		echo '</div>';
 	}
 	
 	function column_link_text(&$link, $instances){
