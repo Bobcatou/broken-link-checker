@@ -22,6 +22,7 @@ $blc_module_manager = & blcModuleManager::getInstance(array(
 		'comment',          //Comment container
 		'custom_field',     //Post metadata container (aka custom fields)
 		'post',             //Post content container
+		'page',             //Page content container
 		'dummy',            //Dummy container used as a fallback
 ));
 
