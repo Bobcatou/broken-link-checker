@@ -59,6 +59,10 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 
 *Note: Some translations are not entirely up to date with the latest release, so parts of the interface may appear untranslated.*
 
+**Other Credits**
+
+This plugin uses one or more icons from the beautiful ["Silk" icon set](http://www.famfamfam.com/lab/icons/silk/).
+
 == Installation ==
 
 To do a new installation of the plugin, please follow these steps
