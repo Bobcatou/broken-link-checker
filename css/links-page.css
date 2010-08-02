@@ -91,7 +91,7 @@ td.column-new-url .mini-status {
 }
 
 .link-status-error .blc-link-url {
-	background-image: url("../images/bullet_cross.png");
+	background-image: url("../images/exclamation-small.png");
 }
 
 .link-status-warning .blc-link-url {
