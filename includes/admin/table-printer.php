@@ -576,7 +576,10 @@ class blcTablePrinter {
 	}
 	
 	function column_status(&$link, $instances){
-		echo '<table class="mini-status">';
+		printf(
+			'<table class="mini-status" title="%s">',
+			esc_attr(__('Show more info about this link', 'broken-link-checker'))
+		);
 		
 		$status = $link->analyse_status();
 		
