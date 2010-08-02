@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.1-alpha
 Stable tag: 0.9.4.4
 
-This plugin will check your posts, comments and other places for broken links and missing images and notify you if any are found. 
+This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
 == Description ==
 This plugin will monitor your blog looking for broken links and let you know if any are found.
@@ -14,32 +14,31 @@ This plugin will monitor your blog looking for broken links and let you know if 
 **Features**
 
 * Monitors links in your posts, pages, comments, the blogroll, and custom fields (optional).
-* Detects links that don't work and missing images.
-* Notifies you on the Dashboard if any are found.
-* Also detects redirected links.
+* Detects links that don't work, missing images and redirects.
+* Notifies you either via the Dashboard or by email.
 * Makes broken links display differently in posts (optional).
-* Link checking intervals can be configured.
-* New/modified posts are checked ASAP.
-* You view broken links, redirects, and a complete list of links used on your site, in the *Tools -> Broken Links* tab. 
-* Searching and filtering links by URL, anchor text and so on is also possible.
-* Each link can be edited or unlinked directly via the plugin's page, without manually editing each post.
+* Prevents search engines from following broken links (optional).
+* You can search and filter links by URL, anchor text and so on.
+* Links can be edited directly from the plugin's page, without manually updating each post.
+* Highly configurable.
 
 [Suggest new features and improvements here](http://feedback.w-shadow.com/forums/58400-broken-link-checker)
 
 **Basic Usage**
 
-Once installed, the plugin will begin parsing your posts, bookmarks (AKA blogroll), etc and looking for links. Depending on the size of your site this can take from a few minutes to several hours. When parsing is complete, the plugin will start checking each link to see if it works. Again, how long this takes depends on how big your site is and how many links there are. You can monitor the progress and tweak various link checking options in *Settings -> Link Checker*.
+Once installed, the plugin will begin parsing your posts, bookmarks (AKA blogroll) and other content and looking for links. Depending on the size of your site this can take from a few minutes up to an hour or more. When parsing is complete, the plugin will start checking each link to see if it works. Again, how long this takes depends on how big your site is and how many links there are. You can monitor the progress and tweak various link checking options in *Settings -> Link Checker*.
 
-The broken links, if any are found, will show up in a new tab of the WP admin panel - *Tools -> Broken Links*. A notification will also appear in the "Broken Link Checker" widget on the Dashboard. To save display space, you can keep the widget closed and configure it to expand automatically when problematic links are detected.
+The broken links, if any are found, will show up in a new tab of the WP admin panel - *Tools -> Broken Links*. A notification will also appear in the "Broken Link Checker" widget on the Dashboard. To save display space, you can keep the widget closed and configure it to expand automatically when problematic links are detected. E-mail notifications need to be enabled separately (in *Settings -> Link Checker*).
 
 The "Broken Links" tab will by default display a list of broken links that have been detected so far. However, you can use the links on that page to view redirects or see a listing of all links - working or not - instead. You can also create new link filters by performing a search and clicking the "Create Custom Filter" button. For example, this can be used to create a filter that only shows comment links.
 
 There are several actions associated with each link. They show up when you move your mouse over to one of the links listed the aforementioned tab -
 
-* "Details" shows more info about the link. You can also toggle link details by clicking on the "link text" cell.
-* "Edit URL" lets you change the URL of that link. If the link is present in more than one place (e.g. both in a post and in the blogroll) then all occurrences of that URL will be changed.
+* "Edit URL" lets you change the URL of that link. If the link is present in more than one place (e.g. both in a post and in the blogroll), all occurrences of that URL will be changed.
 * "Unlink" removes the link but leaves the link text intact.
 * "Not broken" lets you manually mark a "broken" link as working. This is useful if you know it was incorrectly detected as broken due to a network glitch or a bug. The marked link will still be checked periodically, but the plugin won't consider it broken unless it gets a new result.
+
+You can also click on the contents of the "Status" or "Link Text" columns to get more info about the status of each link.
 
 **Translations**
 
@@ -58,16 +57,18 @@ There are several actions associated with each link. They show up when you move 
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
 
+*Note: Some translations are not entirely up to date with the latest release, so parts of the interface may appear untranslated.*
+
 == Installation ==
 
 To do a new installation of the plugin, please follow these steps
 
-1. Download the broken-link-checker.zip file to your local machine.
+1. Download the broken-link-checker.zip file to your computer.
 1. Unzip the file 
 1. Upload `broken-link-checker` folder to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
-That's it.
+To enable/disable various features and tweak the plugin's configuration go to *Settings -> Link Checker*.
 
 To upgrade your installation
 
