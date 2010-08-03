@@ -119,10 +119,10 @@ jQuery(function($){
     	
     	var url_el = master.find('a.blc-link-url').hide();
     	
-    	master.find('div.row-actions').hide();
     	master.find('div.blc-url-editor-buttons').show();
-    	
-        master.find('input.blc-link-editor').val( url_el.attr('href') ).show().focus().select();
+        master.find('input.blc-link-editor')
+			.val( url_el.attr('href') ).show().focus().select()
+			.parents('td').find('div.row-actions').hide();
     }
     
    /**

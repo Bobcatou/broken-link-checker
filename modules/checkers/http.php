@@ -238,7 +238,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
         	switch( $error_code ) {
         		case 6: //CURLE_COULDNT_RESOLVE_HOST
 		        	$result['status_code'] = BLC_LINK_STATUS_WARNING;
-		        	$result['status_text'] = __('Domain Not Found', 'broken-link-checker');
+		        	$result['status_text'] = __('Server Not Found', 'broken-link-checker');
 		        	break;
 		        	
 		        case 28: //CURLE_OPERATION_TIMEDOUT
