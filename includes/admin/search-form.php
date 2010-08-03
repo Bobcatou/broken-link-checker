@@ -82,7 +82,7 @@
 		}
 		echo '</optgroup>';
 		//TODO: Better group labels
-		printf('<optgroup label="%s">', esc_attr(__('Links of type', 'broken-link-checker')));
+		printf('<optgroup label="%s">', esc_attr(__('Link type', 'broken-link-checker')));
 		$parsers = $moduleManager->get_modules_by_category('parser', false, true);
 		foreach($parsers as $parser_type => $module_data){
 			if ( !empty($module_data['ModuleHidden']) || !$moduleManager->is_active($parser_type) ){
