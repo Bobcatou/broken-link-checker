@@ -84,6 +84,20 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.9.5 =
+* Added the ability to check scheduled, draft and private posts.
+* Added a way to individually enable/disable the monitoring of posts, pages, comments, the blogroll, and so on.
+* New "Status" column in the "Broken Links" table.
+* Visible table columns and the number of links per page can now be selected in the "Screen Options" panel.
+* Replaced the "Delete sources" action with "Move sources to Trash" (except on blogs where Trash is disabled).
+* New URL editor interface, now more consistent with the look-n-feel of the inline editor for posts.
+* New status icon to help distinguish "maybe broken" and "definitely broken" links.
+* Tweaked table layout - links first, posts/etc last.
+* Added "Compact" and "Detailed" table views (for now, the differences are quite minor).
+* Split the settings page into several tabs.
+* Removed the "Details" links as redundant. To display link details, click the contents of the "Status" or "Link text" columns instead.
+* Added a way to individually enable/disable the monitoring of various link types, e.g. HTML links, images, etc.
+
 = 0.9.4.4 =
 * Fixed "Edit URL" and "Unlink" not working on PHP4 servers.
 
