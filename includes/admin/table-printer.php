@@ -197,21 +197,6 @@ class blcTablePrinter {
 				'heading' => __('Link Text', 'broken-link-checker'),
 				'content' => array(&$this, 'column_new_link_text'),
 			),
-			
-			'broken-for' => array(
-				'heading' => __('Broken for', 'broken-link-checker'),
-				'content' => array(&$this, 'column_broken_for'),
-			),
-			
-			'last-checked' => array(
-				'heading' => __('Last checked', 'broken-link-checker'),
-				'content' => array(&$this, 'column_last_checked'),
-			),
-			
-			'instance-count' => array(
-				'heading' => __('Used in', 'broken-link-checker'),
-				'content' => array(&$this, 'column_instance_count'),
-			),
 		);
 	}
 	
@@ -625,8 +610,6 @@ class blcTablePrinter {
       	
       	$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
       	
-      	//$actions['details'] = "<span class='details'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
-      	
       	$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
 			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
 
@@ -648,7 +631,7 @@ class blcTablePrinter {
 		
 		?>
 		<div class="blc-url-editor-buttons">
-			<input type="button" class="button-secondary cancel alignleft blc-cancel-button" value="<?php echo esc_attr(__('Cancel')); ?>" />
+			<input type="button" class="button-secondary cancel alignleft blc-cancel-button" value="<?php echo esc_attr(__('Cancel', 'broken-link-checker')); ?>" />
 			<input type="button" class="button-primary save alignright blc-update-url-button" value="<?php echo esc_attr(__('Update URL', 'broken-link-checker')); ?>" />
 			<img class="waiting" style="display:none;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
 		</div>
@@ -657,8 +640,8 @@ class blcTablePrinter {
 	
 	function column_used_in(&$link, $instances){
 		echo '<span class="blc-link-id" style="display:none;">',
-					$link->link_id,
-				'</span>';
+				$link->link_id,
+			 '</span>';
 				
 		if ( !empty($instances) ){
 			$instance = reset($instances);
@@ -673,8 +656,6 @@ class blcTablePrinter {
 		} else {
 			_e("[An orphaned link! This is a bug.]", 'broken-link-checker');
 		}
-
-		//echo '</td>';
 	}
 	
 	function column_new_link_text(&$link, $instances){
@@ -684,36 +665,6 @@ class blcTablePrinter {
 			$instance = reset($instances);
 			echo $instance->ui_get_link_text();
 		}
-	}
-	
-	function column_broken_for(&$link, $instances){
-		if ( $link->broken ){
-			$delta = time() - $link->first_failure;
-			echo blcUtility::fuzzy_delta($delta);
-		}
-	}
-	
-	function column_last_checked(&$link, $instances){
-		//Last checked...
-		if ( $link->last_check == 0 ){
-			_e('Never', 'broken-link-checker');
-		} else {
-			$delta = time() - $link->last_check;
-			echo blcUtility::fuzzy_delta($delta, 'ago');
-		}
-	}
-	
-	function column_instance_count(&$link, $instances){
-		//if ( count($instances) > 1 ){
-			printf(
-				_n(
-					'%d item',
-					'%d items',
-					count($instances)
-				),
-				count($instances)
-			);
-		//}
 	}
 	
 	/**
