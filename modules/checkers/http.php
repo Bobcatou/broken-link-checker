@@ -165,6 +165,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
         
         //Set the timeout
         curl_setopt($ch, CURLOPT_TIMEOUT, $conf->options['timeout']);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $conf->options['timeout']);
         
         //Set the proxy configuration. The user can provide this in wp-config.php 
         if (defined('WP_PROXY_HOST')) {
@@ -246,8 +247,15 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		        	break;
 		        	
 	        	case 7: //CURLE_COULDNT_CONNECT
-	        		$result['status_code'] = BLC_LINK_STATUS_WARNING;
-	        		$result['status_text'] = __('Connection Failed', 'broken-link-checker');
+	        		//More often than not, this error code indicates that the connection attempt 
+					//timed out. This heuristic tries to distinguish between connections that fail 
+					//due to timeouts and those that fail due to other causes.
+	        		if ( $result['request_duration'] >= 0.9*$conf->options['timeout'] ){
+	        			$result['timeout'] = true;
+	        		} else {
+	        			$result['status_code'] = BLC_LINK_STATUS_WARNING;
+	        			$result['status_text'] = __('Connection Failed', 'broken-link-checker');
+	        		}
 	        		break;
 	        		
         		default:
