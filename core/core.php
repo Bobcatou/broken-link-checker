@@ -1238,8 +1238,8 @@ class wsBrokenLinkChecker {
 		}
 		
 		$pro_notice = sprintf(
-			'<span class="pro-notice"><a href="%s" title="%s">N/A</a></span>',
-			esc_attr('javascript:alert("Sorry, this stuff is not available yet!");'),
+			'<span class="pro-notice"><a href="%s" title="%s">Pro</a></span>',
+			esc_attr('http://wpplugins.com/plugin/173/broken-link-checker-pro'),
 			esc_attr(__('Upgrade to Pro to enable this feature', 'broken-link-checker'))
 		);
 		
