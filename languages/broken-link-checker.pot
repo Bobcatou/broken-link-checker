@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Broken Link Checker 0.9.5-alpha\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2010-08-03 10:59+0000\n"
+"POT-Creation-Date: 2010-08-04 07:17+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -754,7 +754,7 @@ msgstr ""
 msgid "Link status"
 msgstr ""
 
-#: includes/admin/search-form.php:68
+#: includes/admin/search-form.php:68 includes/admin/search-form.php:85
 msgid "Link type"
 msgstr ""
 
@@ -764,10 +764,6 @@ msgstr ""
 
 #: includes/admin/search-form.php:74
 msgid "Links used in"
-msgstr ""
-
-#: includes/admin/search-form.php:85
-msgid "Links of type"
 msgstr ""
 
 #: includes/admin/search-form.php:112
@@ -1322,7 +1318,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/checkers/http.php:241
-msgid "Domain Not Found"
+msgid "Server Not Found"
 msgstr ""
 
 #: modules/checkers/http.php:250
