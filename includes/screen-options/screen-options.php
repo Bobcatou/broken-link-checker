@@ -129,7 +129,6 @@ class wsScreenOptions12 {
 			if ( is_callable($panel['callback']) ){
 				$contents = call_user_func($panel['callback']);
 				$classes = array(
-					/*'metabox-prefs',*/
 					'custom-options-panel',
 				);
 				if ( $panel['autosave'] ){
