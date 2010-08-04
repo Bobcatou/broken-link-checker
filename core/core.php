@@ -1948,7 +1948,7 @@ class wsBrokenLinkChecker {
 		have been broken for at least X days.  
 		*/
 		$html .= sprintf(
-			'<label class="blc-less-padding"><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s> ',
+			'<label><input type="checkbox" id="highlight_permanent_failures" name="highlight_permanent_failures"%s> ',
 			$this->conf->options['highlight_permanent_failures'] ? ' checked="checked"' : ''
 		);
 		$input_box = sprintf(
