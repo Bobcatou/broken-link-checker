@@ -140,6 +140,7 @@ class blcTablePrinter {
 			echo $this->pagination_html;
 		}
 		
+		//Display the view switch (only in the top nav. area)
 		if ( empty($suffix) ){		
 		?>
 		
