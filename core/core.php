@@ -1107,7 +1107,7 @@ class wsBrokenLinkChecker {
 	        echo '</span>';
         
         } else {
-        	echo '<input type="text" disabled="disabled" value="Not available" size="13"/><br>';
+        	echo '<input type="text" disabled="disabled" value="', esc_attr(__('Not available', 'broken-link-checker')), '" size="13"/><br>';
         	echo '<span class="description">';
 			_e('Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible.', 'broken-link-checker');
 			echo '</span>';
