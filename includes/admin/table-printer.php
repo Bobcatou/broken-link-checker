@@ -189,7 +189,7 @@ class blcTablePrinter {
 			),
 			
 			'used-in' => array(
-				'heading' => __('Used in', 'broken-link-checker'),
+				'heading' => __('Source', 'broken-link-checker'),
 				'class' => 'column-title',
 				'content' => array(&$this, 'column_used_in'), 
 			),
@@ -250,7 +250,7 @@ class blcTablePrinter {
 			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
 		);
 		if ( EMPTY_TRASH_DAYS ){
-			$bulk_actions["bulk-trash-sources"] = __('Move items to Trash', 'broken-link-checker');
+			$bulk_actions["bulk-trash-sources"] = __('Move sources to Trash', 'broken-link-checker');
 		} else {
 			$bulk_actions["bulk-delete-sources"] = __('Delete sources', 'broken-link-checker');
 		}
