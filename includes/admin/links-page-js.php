@@ -442,6 +442,15 @@ jQuery(function($){
 			if ( !confirm(message) ){
 				return false;
 			}
+		} else if ( action == 'bulk-unlink' ){
+			var message = '<?php 
+				echo esc_js(  
+					__("Are you sure you want to remove the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to remove", 'broken-link-checker')
+				); 
+			?>'; 
+			if ( !confirm(message) ){
+				return false;
+			}
 		}
 	});
 	
