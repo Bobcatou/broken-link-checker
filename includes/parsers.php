@@ -152,9 +152,10 @@ class blcParser extends blcModule {
 	    }
 	    if( isset($p["scheme"]) ) return $url;
 	    
-	    //If the relative URL is just a query string, simply attach it to the absolute URL and return
-	    if ( substr($relative, 0, 1) == '?' ){
-			return $absolute . $relative;
+	    //If the relative URL is just a query string or anchor, simply attach it to the absolute URL and return
+	    $first_char = substr($url, 0, 1); 
+	    if ( ($first_char == '?') || ($first_char == '#') ){
+			return $base_url . $url;
 		}
 	
 	    $parts=(parse_url($base_url));
