@@ -91,7 +91,7 @@ class blcHttpCheckerBase extends blcChecker {
 	function is_error_code($http_code){
 		/*"Good" response codes are anything in the 2XX range (e.g "200 OK") and redirects  - the 3XX range.
           HTTP 401 Unauthorized is a special case that is considered OK as well. Other errors - the 4XX range -
-          are treated as "page doesn't exist'". */
+          are treated as such. */
 		$good_code = ( ($http_code >= 200) && ($http_code < 400) ) || ( $http_code == 401 );
 		return !$good_code;
 	}
