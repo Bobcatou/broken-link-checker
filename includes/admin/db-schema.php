@@ -16,7 +16,7 @@ function blc_get_db_schema(){
 		$charset_collate = "DEFAULT CHARACTER SET {$charset}";
 	}
 	if ( !empty($wpdb->collate) ){
-		$charset_collate = " COLLATE {$wpdb->collate}";
+		$charset_collate .= " COLLATE {$wpdb->collate}";
 	}
 	
 	$blc_db_schema = <<<EOM
