@@ -214,13 +214,13 @@ class wsBrokenLinkChecker {
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog');
         wp_enqueue_script('jquery-ui-tabs');
-        wp_enqueue_script('jquery-cookie', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/jquery.cookie.js'); //Used for storing last widget states, etc
+        wp_enqueue_script('jquery-cookie', plugins_url('js/jquery.cookie.js', blc_get_plugin_file())); //Used for storing last widget states, etc
 	}
 	
 	function enqueue_link_page_scripts(){
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog'); //Used for the search form
-        wp_enqueue_script('sprintf', WP_PLUGIN_URL . '/' . dirname($this->my_basename) . '/js/sprintf.js'); //Used in error messages
+        wp_enqueue_script('sprintf', plugins_url('js/sprintf.js', blc_get_plugin_file())); //Used in error messages
 	}
 	
   /**
@@ -1292,8 +1292,8 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugin_dir_url($this->loader) . 'css/options-page.css', array(), '0.9.5' );
-    	wp_enqueue_style('blc-screen-meta-links', plugin_dir_url($this->loader) . 'css/screen-meta-links.css' );
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.5' );
+    	wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()) );
 	}
 	
 
@@ -1890,8 +1890,8 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugin_dir_url($this->loader) . 'css/links-page.css', array(), '0.9.5' );
-		wp_enqueue_style('blc-screen-meta-links', plugin_dir_url($this->loader) . 'css/screen-meta-links.css' );
+		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '0.9.5' );
+		wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', $this->loader));
 	}
 	
 	/**
