@@ -16,12 +16,12 @@ ModulePriority: -1
 
 //TODO: Rewrite sub-classes as transports, not stand-alone checkers
 class blcHttpChecker extends blcChecker {
-	var $implementation;
+	var $implementation = null;
 	
 	function init(){
 		parent::init();
 		
-		if ( function_exists('curl_init') ) {
+		if ( function_exists('curl_init') || is_callable('curl_init') ) {
 			$this->implementation = new blcCurlHttp(
 				$this->module_id, 
 				$this->cached_header,
