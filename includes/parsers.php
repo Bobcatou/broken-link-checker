@@ -57,6 +57,9 @@ class blcParser extends blcModule {
 	 * @return void|array Either nothing or an array in the form [ [format1=>timestamp1, ...], [container_type1=>timestamp1, ...] ]
 	 */
 	function resynch_relevant_containers($only_return = false){
+		global $blclog;
+		$blclog->log(sprintf('...... Parser "%s" is marking relevant items as unsynched', $this->module_id));
+		
 		$last_deactivated = $this->module_manager->get_last_deactivation_time($this->module_id);
 		
 		$formats = array();

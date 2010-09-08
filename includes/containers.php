@@ -795,6 +795,7 @@ class blcContainerHelper {
 	 */
 	function mark_as_unsynched_where($formats, $container_types){
 		global $wpdb;
+		global $blclog;
 		
 		//Find containers that match any of the specified formats and add them to
 		//the list of container types that need to be marked as unsynched.
@@ -836,8 +837,11 @@ class blcContainerHelper {
 		}
 		
 		$q .= implode(' OR ', $pieces);
+		$blclog->log('...... Executing query: ' . $q);
 		
 		$rez = ($wpdb->query($q) !== false);
+		$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));
+		
 		blc_got_unsynched_items();
 		
 		return $rez;

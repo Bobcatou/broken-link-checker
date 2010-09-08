@@ -170,15 +170,19 @@ class blcPostTypeOverlord {
    */
 	function resynch($container_type = '', $forced = false){
 		global $wpdb;
+		global $blclog;
+		
 		//Resynch is expensive in terms of DB performance. Thus we only do it once, processing
 		//all post types in one go and ignoring any further resynch requests during this pageload.
 		//BUG: This might be a problem if there ever is an actual need to run resynch twice or 
 		//more per pageload.
 		if ( $this->resynch_already_done ){
+			$blclog->log(sprintf('...... Skipping "%s" resyncyh since all post types were already synched.', $container_type));
 			return;
 		}
 		
 		if ( empty($this->enabled_post_types) ){
+			$blclog->warn(sprintf('...... Skipping "%s" resyncyh since no post types are enabled.', $container_type));
 			return;
 		}
 		
@@ -187,6 +191,7 @@ class blcPostTypeOverlord {
 		
 		if ( $forced ){
 			//Create new synchronization records for all posts. 
+			$blclog->log('...... Creating synch records for these post types: '.implode(', ', $escaped_post_types) . ' that have one of these statuses: ' . implode(', ', $escaped_post_statuses));
 	    	$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT posts.id, posts.post_type, 0
 				  FROM {$wpdb->posts} AS posts
@@ -199,8 +204,10 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 	 		$wpdb->query( $q );
+	 		$blclog->log(sprintf('...... %d rows inserted', $wpdb->rows_affected));
  		} else {
  			//Delete synch records corresponding to posts that no longer exist.
+ 			$blclog->log('...... Deleting synch records for removed posts');
  			$q = "DELETE synch.*
 				  FROM 
 					 {$wpdb->prefix}blc_synch AS synch LEFT JOIN {$wpdb->posts} AS posts
@@ -212,9 +219,11 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 			$wpdb->query( $q );
+			$blclog->log(sprintf('... ... %d rows deleted', $wpdb->rows_affected));
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.
+			$blclog->log('...... Marking changed posts as unsynched');
 			$q = "UPDATE 
 					{$wpdb->prefix}blc_synch AS synch
 					JOIN {$wpdb->posts} AS posts ON (synch.container_id = posts.ID and synch.container_type=posts.post_type)
@@ -223,8 +232,10 @@ class blcPostTypeOverlord {
 				  WHERE
 					synch.last_synch < posts.post_modified";
 			$wpdb->query( $q );
+			$blclog->log(sprintf('...... %d rows updated', $wpdb->rows_affected));
 			
 			//Create synch. records for posts that don't have them.
+			$blclog->log('...... Creating synch records for new posts');
 			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT posts.id, posts.post_type, 0
 				  FROM 
@@ -239,7 +250,8 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_statuses) . "'",
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
-			$wpdb->query($q);	 				
+			$wpdb->query($q);
+			$blclog->log(sprintf('...... %d rows inserted', $wpdb->rows_affected)); 				
 		}
 		
 		$this->resynch_already_done = true;

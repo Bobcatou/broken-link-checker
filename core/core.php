@@ -407,6 +407,14 @@ class wsBrokenLinkChecker {
 		wp_clear_scheduled_hook('blc_cron_email_notifications');
 		wp_clear_scheduled_hook('blc_cron_database_maintenance');
 		wp_clear_scheduled_hook('blc_cron_check_news');
+		//Note the deactivation time for each module. This will help them 
+		//synch up propely if/when the plugin is reactivated.
+		$moduleManager = & blcModuleManager::getInstance();
+		$the_time = current_time('timestamp');
+		foreach($moduleManager->get_active_modules() as $module_id => $module){
+			$this->conf->options['module_deactivated_when'][$module_id] = $the_time;
+		}
+		$this->conf->save_options();
 	}
 	
   /**

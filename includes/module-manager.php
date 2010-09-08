@@ -485,15 +485,21 @@ class blcModuleManager {
 	 * @return void
 	 */
 	function plugin_activated(){
+		global $blclog;
+		
 		//Ensure all active modules have the latest headers
+		$blclog->log('... Updating module cache');
 		$this->refresh_active_module_cache();
 		
 		//Notify them that we've been activated
 		$active = $this->get_active_modules();
 		foreach($active as $module_id => $module_data){
+			$blclog->log( sprintf('... Notifying module "%s"', $module_id) );
 			$module = & $this->get_module($module_id);
 			if ( $module ){
 				$module->activated();
+			} else {
+				$blclog->warn(sprintf('... Module "%s" failed to load!', $module_id));
 			}
 		}
 	}
