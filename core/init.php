@@ -9,6 +9,15 @@ if ( defined('BLC_ACTIVE') ){
 	
 define('BLC_ACTIVE', true);
 
+//Fail fast if the WP version is unsupported. The $wp_version variable may be obfuscated by other
+//plugins, so use function detection to determine the version. get_post_stati was introduced in WP 3.0.0
+if ( !function_exists('get_post_stati') ){
+	trigger_error(
+		'This version of Broken Link Checker requires WordPress 3.0 or later!',
+		E_USER_ERROR
+	);
+}
+
 /***********************************************
 				Debugging stuff
 ************************************************/

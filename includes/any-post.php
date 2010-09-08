@@ -219,7 +219,7 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 			$wpdb->query( $q );
-			$blclog->log(sprintf('... ... %d rows deleted', $wpdb->rows_affected));
+			$blclog->log(sprintf('...... %d rows deleted', $wpdb->rows_affected));
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.

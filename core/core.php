@@ -343,7 +343,7 @@ class wsBrokenLinkChecker {
     	$blclog = new blcOptionLogger('blc_installation_log');
 		$blclog->clear();
     	
-    	$blclog->info( sprintf('Plugin activated %s.', date('Y-m-d H:i:s')) );
+    	$blclog->info( sprintf('Plugin activated %s.', date_i18n('Y-m-d H:i:s')) );
     	
     	$this->conf->options['installation_complete'] = false;
     	$this->conf->options['installation_failed'] = true;

@@ -854,6 +854,7 @@ class blcContainerHelper {
 	 */
 	function cleanup_containers(){
 		global $wpdb;
+		global $blclog;
 		
 		$module_manager = & blcModuleManager::getInstance();
 		$active_containers = $module_manager->get_escaped_ids('container');
@@ -863,6 +864,7 @@ class blcContainerHelper {
 		      WHERE
 	      	    synch.container_type NOT IN ({$active_containers})";
 		$rez = $wpdb->query($q);
+		$blclog->log(sprintf('... %d synch records deleted', $wpdb->rows_affected));
 		
 		return $rez !== false;
 	}

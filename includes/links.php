@@ -902,6 +902,7 @@ class blcLink {
  */
 function blc_cleanup_links( $link_id = null ){
 	global $wpdb;
+	global $blclog;
 	
 	$q = "DELETE FROM {$wpdb->prefix}blc_links 
 			USING {$wpdb->prefix}blc_links LEFT JOIN {$wpdb->prefix}blc_instances 
@@ -916,7 +917,10 @@ function blc_cleanup_links( $link_id = null ){
 		$q .= " AND {$wpdb->prefix}blc_links.link_id IN (" . implode(', ', $link_id) . ')';
 	}
 	
-	return $wpdb->query( $q ) !== false;
+	$rez = $wpdb->query( $q );
+	$blclog->log(sprintf('... %d links deleted', $wpdb->rows_affected));
+	
+	return $rez !== false;	
 }
 
 ?>
