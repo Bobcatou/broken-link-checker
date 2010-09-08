@@ -24,7 +24,7 @@ class blcPostTypeOverlord {
    * Specifically, this class is a singleton. The function needs to pass $this to several other 
    * functions (to set up hooks), which will store the reference for later use. However, it appears 
    * that in PHP4 the actual value of $this is thrown away right after the constructor finishes, and
-   * `new` returns a *copy* of $this. The result is that means getInstance() won't be returning a ref.
+   * `new` returns a *copy* of $this. The result is that getInstance() won't be returning a ref.
    * to the same object as is used for hook callbacks. And that's horrible.   
    * 
    * Sets up hooks that monitor added/modified/deleted posts and registers
@@ -46,7 +46,9 @@ class blcPostTypeOverlord {
 		$exceptions = array('revision', 'nav_menu_item', 'attachment');
 		$built_in = array('post', 'page');
 		
-		foreach($post_types as $post_type => $data){
+		foreach($post_types as $data){
+			$post_type = $data->name;
+			
 			if ( in_array($post_type, $exceptions) ){
 				continue;
 			}
