@@ -2979,6 +2979,21 @@ class wsBrokenLinkChecker {
 			);
 		}		
 		
+		//Installation log
+		$logger = new blcOptionLogger('blc_installation_log');
+		$installation_log = $logger->get_messages();
+		if ( !empty($installation_log) ){
+			$debug['Installation log'] = array(
+				'state' => $this->conf->options['installation_complete'] ? 'ok' : 'error',
+				'value' => implode("<br>\n", $installation_log),
+			);
+		} else {
+			$debug['Installation log'] = array(
+				'state' => 'warning',
+				'value' => 'No installation log found found.',
+			);
+		}
+		
 		return $debug;
 	}
 	
