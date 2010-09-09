@@ -115,7 +115,6 @@ $blc_config_manager = new blcConfigurationManager(
 		'highlight_feedback_widget' => true, //Highlight the "Feedback" button in vivid orange
 												
 		'installation_complete' => false,
-		'installation_failed' => false,
    )
 );
 
@@ -128,7 +127,7 @@ include $blc_directory . '/includes/logger.php';
 global $blclog;
 $blclog = new blcDummyLogger;
 
-//*
+/*
 if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
 	if ( !class_exists('FB') && file_exists($blc_directory . '/FirePHPCore/fb.php4') ) {
@@ -257,7 +256,7 @@ add_filter('cron_schedules', 'blc_cron_schedules');
  */
 function blc_print_installation_errors(){
 	$conf = & blc_get_configuration();
-	if ( !$conf->options['installation_failed'] ){
+	if ( $conf->options['installation_complete'] ){
 		return;
 	}
 	
@@ -290,8 +289,9 @@ function blc_activation_hook(){
 }
 
 //Since the main plugin files load during the 'init' action, any activation hooks
-//set therein would never be executed ('init' runs before activation happens). Instead, 
-//we must register the hook(s) immediately after our main plugin file is loaded.
+//set therein would never be executed ('init' runs before the to-be-activated plugin
+//is loadeda). Instead, we must register the hook(s) immediately after our main plugin
+//file is loaded.
 register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
 
 

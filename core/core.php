@@ -346,7 +346,6 @@ class wsBrokenLinkChecker {
     	$blclog->info( sprintf('Plugin activated %s.', date_i18n('Y-m-d H:i:s')) );
     	
     	$this->conf->options['installation_complete'] = false;
-    	$this->conf->options['installation_failed'] = true;
         $this->conf->save_options();
         $blclog->info('Installation/update begins.');
         
@@ -390,7 +389,6 @@ class wsBrokenLinkChecker {
 		
 		$blclog->info('Completing installation...');
         $this->conf->options['installation_complete'] = true;
-        $this->conf->options['installation_failed'] = false;
         $this->conf->save_options();
         
         $blclog->info('Installation/update successfully completed.');
