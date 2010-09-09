@@ -1,5 +1,6 @@
 #blc-feedback-widget-wrap,
-#blc-news-link-wrap
+#blc-news-link-wrap,
+.blc-meta-button
 {
 	float: right;
 	height: 22px;
@@ -21,7 +22,8 @@
 }
 
 #blc-feedback-widget-wrap a.show-settings,
-#blc-news-link-wrap a.show-settings
+#blc-news-link-wrap a.show-settings,
+#screen-meta .blc-meta-button a.show-settings
 {
 	background-image: none;
 	padding:0 6px 0 6px;
@@ -43,4 +45,9 @@
 
 .blc-feedback-highlighted a.show-settings:hover {
 	color: black !important;
+}
+
+/* "Upgrade to Pro" button */
+#blc-upgrade-to-pro-wrap a.show-settings {
+	font-weight: bold;
 }

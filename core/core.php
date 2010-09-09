@@ -604,6 +604,8 @@ class wsBrokenLinkChecker {
         
 		//Output the "Feedback" button that links to the plugin's UserVoice forum
 		$this->print_uservoice_widget();
+		//Output the "Upgrade to Pro" button
+		$this->display_pro_link();
 		
 		$debug = $this->get_debug_info();
 		
@@ -1208,8 +1210,8 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.5' );
-    	wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()) );
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.6' );
+    	wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()), array(), '0.9.6' );
 	}
 	
 
@@ -1325,9 +1327,10 @@ class wsBrokenLinkChecker {
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
 		
-		//Add the "Feedback" widget to the screen meta bar
+		//Add "Feedback", "Upgrade to Pro" and an optional "[Plugin news]" button to screen meta
 		$this->print_uservoice_widget();
 		$this->display_plugin_news_link();
+		$this->display_pro_link();
         ?>
         
 <script type='text/javascript'>
@@ -1800,8 +1803,8 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '0.9.5' );
-		wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', $this->loader));
+		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '0.9.6' );
+		wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()), array(), '0.9.5' );
 	}
 	
 	/**
@@ -3078,6 +3081,28 @@ class wsBrokenLinkChecker {
 			$('<a id="blc-plugin-news-link" class="show-settings"></a>')
 				.attr('href', '<?php echo esc_js($news[1]); ?>')
 				.html('<?php echo esc_js($news[0]) ?>')
+				.appendTo(wrapper);
+		})(jQuery);
+		</script>
+		<?php
+	}
+	
+	/**
+	 * Display the "Upgrade to Pro" button unless already running the Pro version
+	 * 
+	 * @return void
+	 */
+	function display_pro_link(){
+		if ( defined('BLC_PRO_VERSION') && BLC_PRO_VERSION ){
+			return;
+		}
+		?>
+		<script type="text/javascript">
+		(function($){
+			var wrapper = $('<div id="blc-upgrade-to-pro-wrap" class="hide-if-no-js screen-meta-toggle blc-meta-button"></div>').appendTo('#screen-meta-links');
+			$('<a id="blc-upgrade-to-pro-link" class="show-settings"></a>')
+				.attr('href', 'http://wpplugins.com/plugin/173/broken-link-checker-pro')
+				.html('Upgrade to Pro')
 				.appendTo(wrapper);
 		})(jQuery);
 		</script>
