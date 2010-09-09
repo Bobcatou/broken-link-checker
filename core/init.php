@@ -249,98 +249,72 @@ function blc_cron_schedules($schedules){
 }
 add_filter('cron_schedules', 'blc_cron_schedules');
 
-/**
- * Display installation errors (if any) on the Dashboard.
- *
- * @return void
- */
-function blc_print_installation_errors(){
-	$conf = & blc_get_configuration();
-	if ( $conf->options['installation_complete'] ){
-		return;
-	}
-	
-	$logger = new blcOptionLogger('blc_installation_log');
-	$log = $logger->get_messages();
-	
-	$message = array(
-		'<strong>' . __('Broken Link Checker installation failed', 'broken-link-checker') . '</strong>',
-		'',
-		'<em>Installation log follows :</em>',
-	);
-	foreach($log as $entry){
-		array_push($message, $entry);
-	}
-	$message = implode("<br>\n", $message);
-	
-	echo "<div class='error'><p>$message</p></div>";
-}
-add_action('admin_notices', 'blc_print_installation_errors');
-
-/**
- * A stub function that calls the real activation hook.
- * 
- * @return void
- */
-function blc_activation_hook(){
-	global $ws_link_checker;
-	blc_init();
-	$ws_link_checker->activation();
-}
-
-//Since the main plugin files load during the 'init' action, any activation hooks
-//set therein would never be executed ('init' runs before the to-be-activated plugin
-//is loadeda). Instead, we must register the hook(s) immediately after our main plugin
-//file is loaded.
-register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
-
-
 /***********************************************
 				Main functionality
 ************************************************/
 
-function blc_init(){
-	global $blc_directory, $blc_module_manager, $blc_config_manager, $ws_link_checker;
-	
-	static $init_done = false;
-	if ( $init_done ){
-		return;
-	}
-	$init_done = true;
-	
-	//Load the base classes and utilities
-	require $blc_directory . '/includes/links.php';
-	require $blc_directory . '/includes/link-query.php';
-	require $blc_directory . '/includes/instances.php';
-	require $blc_directory . '/includes/utility-class.php';
-	
-	//Load the module subsystem
-	require $blc_directory . '/includes/modules.php';
-	
-	//Load the modules that want to be executed in all contexts
-	$blc_module_manager->load_modules();
-	
-	if ( is_admin() || defined('DOING_CRON') ){
+//Execute the installation/upgrade script when the plugin is activated.
+function blc_activation_hook(){
+	global $blc_directory;
+	require $blc_directory . '/includes/activation.php';
+}
+register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
+
+//Load the plugin if installed successfully
+if ( $blc_config_manager->options['installation_complete'] ){
+	function blc_init(){
+		global $blc_directory, $blc_module_manager, $blc_config_manager, $ws_link_checker;
 		
-		//It's an admin-side or Cron request. Load the core.
-		require $blc_directory . '/core/core.php';
-		$ws_link_checker = new wsBrokenLinkChecker( blc_get_plugin_file() , $blc_config_manager );
+		static $init_done = false;
+		if ( $init_done ){
+			return;
+		}
+		$init_done = true;
 		
-	} else {
+		//Load the base classes and utilities
+		require $blc_directory . '/includes/links.php';
+		require $blc_directory . '/includes/link-query.php';
+		require $blc_directory . '/includes/instances.php';
+		require $blc_directory . '/includes/utility-class.php';
 		
-		//This is user-side request, so we don't need to load the core.
-		//We might need to inject the CSS for removed links, though.
-		if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
-			function blc_print_removed_link_css(){
-				global $blc_config_manager;
-				echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
+		//Load the module subsystem
+		require $blc_directory . '/includes/modules.php';
+		
+		//Load the modules that want to be executed in all contexts
+		$blc_module_manager->load_modules();
+		
+		if ( is_admin() || defined('DOING_CRON') ){
+			
+			//It's an admin-side or Cron request. Load the core.
+			require $blc_directory . '/core/core.php';
+			$ws_link_checker = new wsBrokenLinkChecker( blc_get_plugin_file() , $blc_config_manager );
+			
+		} else {
+			
+			//This is user-side request, so we don't need to load the core.
+			//We might need to inject the CSS for removed links, though.
+			if ( $blc_config_manager->options['mark_removed_links'] && !empty($blc_config_manager->options['removed_link_css']) ){
+				function blc_print_removed_link_css(){
+					global $blc_config_manager;
+					echo '<style type="text/css">',$blc_config_manager->options['removed_link_css'],'</style>';
+				}
+				add_action('wp_head', 'blc_print_removed_link_css');
 			}
-			add_action('wp_head', 'blc_print_removed_link_css');
 		}
 	}
+	add_action('init', 'blc_init', 2000);	
+} else {
+	//Display installation errors (if any) on the Dashboard.
+	function blc_print_installation_errors(){
+		$logger = new blcCachedOptionLogger('blc_installation_log');
+		$messages = array_merge(
+			array('<strong>' . __('Broken Link Checker installation failed', 'broken-link-checker') . '</strong>', '', '<em>Installation log follows :</em>'),
+			$logger->get_messages()
+		);
+		echo "<div class='error'><p>", implode("<br>\n", $messages), "</p></div>";
+	}
+	add_action('admin_notices', 'blc_print_installation_errors');
 }
-
-add_action('init', 'blc_init', 2000);
 
 }
 ?>

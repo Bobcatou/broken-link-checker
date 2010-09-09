@@ -340,6 +340,50 @@ class blcUtility {
 		);
 	}
 	
+  /**
+   * Optimize the plugin's tables
+   *
+   * @return void
+   */
+	function optimize_database(){
+		global $wpdb;
+		
+		$wpdb->query("OPTIMIZE TABLE {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_synch");
+	}
+	
+  /**
+   * Get the server's load averages.
+   *
+   * Returns an array with three samples - the 1 minute avg, the 5 minute avg, and the 15 minute avg.
+   *
+   * @param integer $cache How long the load averages may be cached, in seconds. Set to 0 to get maximally up-to-date data.
+   * @return array|null Array, or NULL if retrieving load data is impossible (e.g. when running on a Windows box). 
+   */
+	function get_server_load($cache = 5){
+		static $cached_load = null;
+		static $cached_when = 0;
+		
+		if ( !empty($cache) && ((time() - $cached_when) <= $cache) ){
+			return $cached_load;
+		}
+		
+		$load = null;
+		
+		if ( function_exists('sys_getloadavg') ){
+			$load = sys_getloadavg();
+		} else {
+			$loadavg_file = '/proc/loadavg';
+	        if (@is_readable($loadavg_file)) {
+	            $load = explode(' ',file_get_contents($loadavg_file));
+	            $load = array_map('floatval', $load);
+	        }
+		}
+		
+		$cached_load = $load;
+		$cached_when = time();
+		return $load;
+	}
+	
 }//class
 
 }//class_exists

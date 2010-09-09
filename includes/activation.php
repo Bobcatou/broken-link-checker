@@ -1,0 +1,75 @@
+<?php
+global $blc_directory, $blclog, $blc_config_manager, $wpdb;
+$queryCnt = $wpdb->num_queries;
+
+//Log installation progress to a DB option
+$blclog = new blcCachedOptionLogger('blc_installation_log');
+register_shutdown_function(array(&$blclog, 'save')); //Make sure the log is saved even if the plugin crashes
+
+$blclog->clear();
+$blclog->info( sprintf('Plugin activated at %s.', date_i18n('Y-m-d H:i:s')) );
+
+//Reset the "installation_complete" flag
+$blc_config_manager->options['installation_complete'] = false;
+$blc_config_manager->save_options();
+$blclog->info('Installation/update begins.');
+
+//Load the base classes and utilities
+require $blc_directory . '/includes/links.php';
+require $blc_directory . '/includes/link-query.php';
+require $blc_directory . '/includes/instances.php';
+require $blc_directory . '/includes/utility-class.php';
+
+//Load the module subsystem
+require $blc_directory . '/includes/modules.php';
+$moduleManager = & blcModuleManager::getInstance();	
+       
+//If upgrading, activate/deactivate custom field and comment containers based on old ver. settings
+if ( isset($blc_config_manager->options['check_comment_links']) ){
+	if ( !$blc_config_manager->options['check_comment_links'] ){
+		$moduleManager->deactivate('comment');
+	}
+	unset($blc_config_manager->options['check_comment_links']);
+}
+if ( empty($blc_config_manager->options['custom_fields']) ){
+	$moduleManager->deactivate('custom_field');
+}
+
+//Prepare the database.
+$blclog->info('Upgrading the database...');
+require_once $blc_directory . '/includes/admin/db-upgrade.php';
+blcDatabaseUpgrader::upgrade_database();
+
+//Remove invalid DB entries
+$blclog->info('Cleaning up the database...');
+blc_cleanup_database();
+
+//Notify modules that the plugin has been activated. This will cause container
+//modules to create and update synch. records for all new/modified posts and other items.
+$blclog->info('Notifying modules...'); 
+$moduleManager->plugin_activated();
+blc_got_unsynched_items();
+
+//Turn off load limiting if it's not available on this server.
+$blclog->info('Updating server load limit settings...');
+$load = blcUtility::get_server_load();
+if ( empty($load) ){
+	$blc_config_manager->options['enable_load_limit'] = false;
+}
+
+//And optimize my DB tables, too (for good measure)
+$blclog->info('Optimizing the database...'); 
+blcUtility::optimize_database();
+
+$blclog->info('Completing installation...');
+$blc_config_manager->options['installation_complete'] = true;
+$blc_config_manager->save_options();
+
+$blclog->info(sprintf(
+	'Installation/update completed at %s with %d queries executed.', 
+	date_i18n('Y-m-d H:i:s'),
+	$wpdb->num_queries - $queryCnt
+));
+$blclog->save();
+
+?>

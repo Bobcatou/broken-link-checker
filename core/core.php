@@ -331,70 +331,6 @@ class wsBrokenLinkChecker {
 	}
 
   /**
-   * This is a hook that's executed when the plugin is activated. 
-   * It set's up and populates the plugin's DB tables & performs
-   * other installation tasks.
-   *
-   * @return void
-   */
-    function activation(){
-    	global $blclog;
-    	
-    	$blclog = new blcOptionLogger('blc_installation_log');
-		$blclog->clear();
-    	
-    	$blclog->info( sprintf('Plugin activated %s.', date_i18n('Y-m-d H:i:s')) );
-    	
-    	$this->conf->options['installation_complete'] = false;
-        $this->conf->save_options();
-        $blclog->info('Installation/update begins.');
-        
-        $moduleManager = & blcModuleManager::getInstance();
-        
-        //If upgrading, activate/deactivate custom field and comment containers based on old ver. settings
-        if ( isset($this->conf->options['check_comment_links']) ){
-        	if ( !$this->conf->options['check_comment_links'] ){
-        		$moduleManager->deactivate('comment');
-        	}
-        	unset($this->conf->options['check_comment_links']);
-        }
-        if ( empty($this->conf->options['custom_fields']) ){
-       		$moduleManager->deactivate('custom_field');
-        }
-        
-    	//Prepare the database.
-    	$blclog->info('Upgrading the database...');
-        $this->upgrade_database();
-        
-        //Remove invalid DB entries
-		$blclog->info('Cleaning up the database...'); 
-		blc_cleanup_database();
-
-		//Notify modules that the plugin has been activated. This will cause container
-		//modules to create and update synch. records for all new/modified posts and other items.
-		$blclog->info('Notifying modules...'); 
-		$moduleManager->plugin_activated();
-		blc_got_unsynched_items();
-		
-		//Turn off load limiting if it's not available on this server.
-		$blclog->info('Updating server load limit settings...');
-		$load = $this->get_server_load();
-		if ( empty($load) ){
-			$this->conf->options['enable_load_limit'] = false;
-		}
-		
-		//And optimize my DB tables, too (for good measure)
-		$blclog->info('Optimizing the database...'); 
-        $this->optimize_database();
-		
-		$blclog->info('Completing installation...');
-        $this->conf->options['installation_complete'] = true;
-        $this->conf->save_options();
-        
-        $blclog->info('Installation/update successfully completed.');
-    }
-    
-  /**
    * A hook executed when the plugin is deactivated.
    *
    * @return void
@@ -415,27 +351,6 @@ class wsBrokenLinkChecker {
 		$this->conf->save_options();
 	}
 	
-  /**
-   * Create and/or upgrade the plugin's database tables.
-   *
-   * @return bool
-   */
-    function upgrade_database($trigger_errors = true){
-		require_once dirname($this->loader) . '/includes/admin/db-upgrade.php';
-		return blcDatabaseUpgrader::upgrade_database();
-	}
-	
-  /**
-   * Optimize the plugin's tables
-   *
-   * @return void
-   */
-	function optimize_database(){
-		global $wpdb;
-		
-		$wpdb->query("OPTIMIZE TABLE {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_synch");
-	}
-	
 	/**
 	 * Perform various database maintenance tasks on the plugin's tables.
 	 * 
@@ -449,7 +364,7 @@ class wsBrokenLinkChecker {
 		blc_cleanup_instances();
 		blc_cleanup_links();
 		
-		$this->optimize_database();
+		blcUtility::optimize_database();
 	}
 
     /**
@@ -538,11 +453,6 @@ class wsBrokenLinkChecker {
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
-			
-			$blclog = new blcMemoryLogger();
-			$this->upgrade_database(false);
-			echo '<p>', implode('<br>', $blclog->get_messages()), '</p>';
-			return;
 		}
     	
         if (isset($_POST['recheck']) && !empty($_POST['recheck']) ){
@@ -1092,7 +1002,7 @@ class wsBrokenLinkChecker {
         <td>
 		<?php
 		
-		$load = $this->get_server_load();
+		$load = blcUtility::get_server_load();
 		$available = !empty($load);
 		
 		if ( $available ){
@@ -1320,12 +1230,6 @@ class wsBrokenLinkChecker {
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
-			
-			
-			$blclog = new blcMemoryLogger();
-			$this->upgrade_database(false);
-			echo '<p>', implode('<br>', $blclog->get_messages()), '</p>';
-			return;
 		}
 		
 		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
@@ -2391,7 +2295,7 @@ class wsBrokenLinkChecker {
    * @return void
    */
 	function ajax_current_load(){
-		$load = $this->get_server_load();
+		$load = blcUtility::get_server_load();
 		if ( empty($load) ){
 			die( _x('Unknown', 'current load', 'broken-link-checker') );
 		}
@@ -2731,46 +2635,13 @@ class wsBrokenLinkChecker {
 			return false;
 		}
 		
-		$loads = $this->get_server_load();
+		$loads = blcUtility::get_server_load();
 		if ( empty($loads) ){
 			return false;
 		}
 		$one_minute = floatval(reset($loads));
 		
 		return $one_minute > $this->conf->options['server_load_limit'];
-	}
-	
-  /**
-   * Get the server's load averages.
-   *
-   * Returns an array with three samples - the 1 minute avg, the 5 minute avg, and the 15 minute avg.
-   *
-   * @param integer $cache How long the load averages may be cached, in seconds. Set to 0 to get maximally up-to-date data.
-   * @return array|null Array, or NULL if retrieving load data is impossible (e.g. when running on a Windows box). 
-   */
-	function get_server_load($cache = 5){
-		static $cached_load = null;
-		static $cached_when = 0;
-		
-		if ( !empty($cache) && ((time() - $cached_when) <= $cache) ){
-			return $cached_load;
-		}
-		
-		$load = null;
-		
-		if ( function_exists('sys_getloadavg') ){
-			$load = sys_getloadavg();
-		} else {
-			$loadavg_file = '/proc/loadavg';
-	        if (@is_readable($loadavg_file)) {
-	            $load = explode(' ',file_get_contents($loadavg_file));
-	            $load = array_map('floatval', $load);
-	        }
-		}
-		
-		$cached_load = $load;
-		$cached_when = time();
-		return $load;
 	}
 	
 	/**
@@ -2986,7 +2857,7 @@ class wsBrokenLinkChecker {
 		}		
 		
 		//Installation log
-		$logger = new blcOptionLogger('blc_installation_log');
+		$logger = new blcCachedOptionLogger('blc_installation_log');
 		$installation_log = $logger->get_messages();
 		if ( !empty($installation_log) ){
 			$debug['Installation log'] = array(
