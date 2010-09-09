@@ -65,7 +65,6 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
-        add_action( 'wp_ajax_blc_disable_widget_highlight', array(&$this,'ajax_disable_widget_highlight') );
         
         //Check if it's possible to create a lockfile and nag the user about it if not.
         if ( $this->lockfile_name() ){
@@ -229,38 +228,16 @@ class wsBrokenLinkChecker {
    * @return void
    */
 	function print_uservoice_widget(){
-		$highlight = '';
-		if ( $this->conf->options['highlight_feedback_widget'] ){
-			$highlight = 'blc-feedback-highlighted';
-		}; 
 		?>
 		<script type="text/javascript">
 		(function($){
 			$('#screen-meta-links').append(
-				'<div id="blc-feedback-widget-wrap" class="hide-if-no-js screen-meta-toggle <?php echo $highlight; ?>">' +
+				'<div id="blc-feedback-widget-wrap" class="hide-if-no-js screen-meta-toggle">' +
 					'<a href="#" id="blc-feedback-widget" class="show-settings">Feedback</a>' +
 				'</div>'
 			);
 			
 			$('#blc-feedback-widget').click(function(){
-				<?php
-				if($this->conf->options['highlight_feedback_widget']):
-				?>
-				
-				//Return the "Feedback" button to the boring gray state
-				$(this).parent().animate({ backgroundColor: "#E3E3E3" }, 500).removeClass('blc-feedback-highlighted');
-				$.post(
-					"<?php echo admin_url('admin-ajax.php'); ?>",
-					{
-						'action' : 'blc_disable_widget_highlight',
-						'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_disable_widget_highlight'));  ?>'
-					}
-				);
-				
-				<?php
-				endif;
-				?>
-				
 				//Launch UserVoice
 				UserVoice.Popin.show(uservoiceOptions); 
 				return false;
@@ -296,22 +273,6 @@ class wsBrokenLinkChecker {
 		<?php
 	}
 	
-  /**
-   * Turn off the widget highlight. Expected to be called via AJAX.
-   * 
-   * @return void
-   */
-	function ajax_disable_widget_highlight(){
-		check_ajax_referer('blc_disable_widget_highlight');
-		
-		if ( current_user_can('edit_others_posts') || current_user_can('manage_options') ){
-			$this->conf->options['highlight_feedback_widget'] = false;
-			$this->conf->save_options();
-			die('OK');
-		}
-		die('-2');
-	}
-
   /**
    * Initiate a full recheck - reparse everything and check all links anew. 
    *

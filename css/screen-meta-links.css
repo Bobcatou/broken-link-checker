@@ -33,21 +33,17 @@
 	font-weight: bold;
 }
 
-/* Hackety-hack */
-.blc-feedback-highlighted {
+/* "Upgrade to Pro" button */
+#blc-upgrade-to-pro-wrap {
 	background-color: #FFB64F !important;
 }
 
-.blc-feedback-highlighted a.show-settings {
+#blc-upgrade-to-pro-wrap a.show-settings {
+	font-weight: bold;
 	color: white !important;
 	text-shadow: none !important;
 }
 
-.blc-feedback-highlighted a.show-settings:hover {
+#blc-upgrade-to-pro-wrap a.show-settings:hover {
 	color: black !important;
-}
-
-/* "Upgrade to Pro" button */
-#blc-upgrade-to-pro-wrap a.show-settings {
-	font-weight: bold;
 }
