@@ -379,15 +379,6 @@ class wsBrokenLinkChecker {
     }
     
   /**
-   * Dummy callback for the non-existent 'highlight_permanent_failures' meta box. Does nothing.
-   *
-   * @return void
-   */
-    function noop(){
-		//Do nothing.
-	}
-
-  /**
    * plugin_action_links()
    * Handler for the 'plugin_action_links' hook. Adds a "Settings" link to this plugin's entry
    * on the plugin list.
