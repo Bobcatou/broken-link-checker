@@ -5,7 +5,7 @@ $queryCnt = $wpdb->num_queries;
 
 //Completing the installation/upgrade is required for the plugin to work, so make sure 
 //the script doesn't get aborted by (for example) the browser timing out.
-set_time_limit(300);
+set_time_limit(300);  //5 minutes should be plenty, anything more would probably indicate an infinite loop or a deadlock 
 ignore_user_abort(true);
 
 //Log installation progress to a DB option
