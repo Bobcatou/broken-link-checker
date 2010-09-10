@@ -1,6 +1,12 @@
 <?php
+
 global $blc_directory, $blclog, $blc_config_manager, $wpdb;
 $queryCnt = $wpdb->num_queries;
+
+//Completing the installation/upgrade is required for the plugin to work, so make sure 
+//the script doesn't get aborted by (for example) the browser timing out.
+set_time_limit(300);
+ignore_user_abort(true);
 
 //Log installation progress to a DB option
 $blclog = new blcCachedOptionLogger('blc_installation_log');
