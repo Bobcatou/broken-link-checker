@@ -84,6 +84,22 @@ To upgrade your installation
 
 *This is an automatically generated changelog*
 
+= 0.9.6 =
+* Updated Danish translation.
+* Updated Italian translation.
+* Updated Portuguese translation
+* Fixed incorrect parsing of relative URLs that consist solely of a query string or #fragment.
+* Fixed superfluous resynchronization requests being issued when the plugin is re-activated.
+* Fixed only one of character set and collation being specified for the plugin's tables.
+* Added default status text for HTTP codes 509 and 510.
+* Added the installation log to debug info output.
+* Added lots of logging to routines called on activation.
+* Added an "Upgrade to Pro" button to the plugin's pages.
+* Removed the highlight on the "Feedback" button.
+* Fail fast if trying to activate on an unsupported version of WordPress.
+* Ensure PHP and browser timeouts don't prematurely terminate the installation/upgrade script.
+* Plugin JavaScript and CSS files are now loaded using HTTPS when FORCE_ADMIN_SSL is on.
+
 = 0.9.5 =
 * Added the ability to check scheduled, draft and private posts.
 * Added a way to individually enable/disable the monitoring of posts, pages, comments, the blogroll, and so on.
