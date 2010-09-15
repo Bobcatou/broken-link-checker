@@ -668,17 +668,9 @@ class blcLink {
 		}
 		
 		if ( ($this->redirect_count <= 0) || empty($this->final_url) ){
-			return array(
-				'new_link_id' => $this->link_id,
-				'new_link' => $this,
-				'cnt_okay' => 0,
-				'cnt_error' => 0, 
-				'errors' => array(
-					new WP_Error(
-						'not_redirect',
-						__("This link is not a redirect", 'broken-link-checker')
-					)
-				),
+			return new WP_Error(
+				'not_redirect',
+				__("This link is not a redirect", 'broken-link-checker')
 			);
 		}
 		
