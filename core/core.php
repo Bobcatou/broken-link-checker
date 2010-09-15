@@ -1428,7 +1428,7 @@ class wsBrokenLinkChecker {
 				//Deredirect all selected links
 				foreach($links as $link){
 					$rez = $link->deredirect();
-					if ( !is_wp_error($rez) ){
+					if ( !is_wp_error($rez) && empty($rez['errors'] )){
 						$processed_links++;
 					} else {
 						$failed_links++;
