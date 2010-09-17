@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.0
 Tested up to: 3.1-alpha
-Stable tag: 0.9.5
+Stable tag: 0.9.6
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -88,7 +88,7 @@ To upgrade your installation
 * Updated Danish translation.
 * Updated Italian translation.
 * Updated Portuguese translation
-* Fixed incorrect parsing of relative URLs that consist solely of a query string or #fragment.
+* Fixed incorrect parsing of relative URLs that consist solely of a query string or \#fragment.
 * Fixed superfluous resynchronization requests being issued when the plugin is re-activated.
 * Fixed only one of character set and collation being specified for the plugin's tables.
 * Added default status text for HTTP codes 509 and 510.
