@@ -5,20 +5,6 @@
  * @copyright 2010
  */
  
- 
-if ( is_admin() && !function_exists('json_encode') ){
-	//Load JSON functions for PHP < 5.2
-	if (!class_exists('Services_JSON')){
-		require 'JSON.php';
-	}
-	
-	//Backwards compatible json_encode
-	function json_encode($data) {
-	    $json = new Services_JSON();
-	    return( $json->encode($data) );
-	}
-}
-
 if ( !function_exists('sys_get_temp_dir')) {
   function sys_get_temp_dir() {
     if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
