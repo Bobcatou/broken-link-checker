@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Language: Portuguese\n"
 "X-Poedit-Country: PORTUGAL\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_n;_e;_x\n"
+"X-Poedit-KeywordsList: __;_n;_e;_x;esc_attr_e\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -714,10 +714,10 @@ msgstr "Erro ao apagar o post \"%s\" (%d)"
 
 #: includes/any-post.php:698
 #, php-format
-msgid "%d post deleted"
-msgid_plural "%d posts deleted"
-msgstr[0] "%d post apagado"
-msgstr[1] "%d posts apagados"
+msgid "%d post deleted."
+msgid_plural "%d posts deleted."
+msgstr[0] "%d post apagado."
+msgstr[1] "%d posts apagados."
 
 #: includes/any-post.php:700
 #, php-format
@@ -1039,6 +1039,14 @@ msgstr ""
 msgid "Hide debug info"
 msgstr "Ocultar informação"
 
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Gravar esta Procura como um filtro"
+
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "Apagar este post definitivamente"
+
 #: includes/admin/search-form.php:42
 msgid "Link text"
 msgstr "Texto do link"
@@ -1070,6 +1078,10 @@ msgstr "Qualquer"
 #: includes/admin/search-form.php:74
 msgid "Links used in"
 msgstr "Links utilizados em"
+
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Procurar"
 
 #: includes/admin/table-printer.php:148
 msgid "Compact View"
@@ -1323,17 +1335,17 @@ msgstr "Comentário"
 
 #: modules/containers/comment.php:360
 #, php-format
-msgid "%d comment has been deleted"
-msgid_plural "%d comments have been deleted"
-msgstr[0] "%d comentário foi apagado"
-msgstr[1] "%d comentários foram apagados"
+msgid "%d comment has been deleted."
+msgid_plural "%d comments have been deleted."
+msgstr[0] "%d comentário foi apagado."
+msgstr[1] "%d comentários foram apagados."
 
 #: modules/containers/comment.php:379
 #, php-format
-msgid "%d comment moved to the trash"
-msgid_plural "%d comments moved to the trash"
-msgstr[0] "%d comentário movido para o lixo"
-msgstr[1] "%d comentários movidos para o lixo"
+msgid "%d comment moved to the trash."
+msgid_plural "%d comments moved to the trash."
+msgstr[0] "%d comentário movido para o lixo."
+msgstr[1] "%d comentários movidos para o lixo."
 
 #: modules/containers/custom_field.php:84
 #, php-format
