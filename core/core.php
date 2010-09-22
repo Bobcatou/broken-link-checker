@@ -2852,7 +2852,7 @@ class wsBrokenLinkChecker {
 		//Prepare email message
 		$subject = sprintf(
 			__("[%s] Broken links detected", 'broken-link-checker'),
-			get_option('blogname')
+			html_entity_decode(get_option('blogname'), ENT_QUOTES)
 		);
 		
 		$body = sprintf(
