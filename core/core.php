@@ -966,7 +966,10 @@ class wsBrokenLinkChecker {
 				$value
 			);
 			
-			echo 'Current load : <span id="wsblc_current_load">...</span>';			
+			printf(
+				__('Current load : %s', 'broken-link-checker'),
+				'<span id="wsblc_current_load">...</span>'
+			);
 			echo '<br/><span class="description">';
 	        printf(
 	        	__(
