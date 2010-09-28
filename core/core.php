@@ -471,7 +471,7 @@ class wsBrokenLinkChecker {
                 
             //Parse the custom field list
             $new_custom_fields = array_filter( 
-				preg_split( '/[\s\r\n]+/', $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY )
+				preg_split( '/[\r\n]+/', $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY )
 			);
             
 			//Calculate the difference between the old custom field list and the new one (used later)
