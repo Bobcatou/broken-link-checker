@@ -208,6 +208,11 @@ class blcComment extends blcContainer{
 	function get_edit_url(){
 		return esc_url(admin_url("comment.php?action=editcomment&c={$this->container_id}"));
 	}
+	
+	function base_url(){
+		$comment_permalink = get_comment_link($this->container_id);
+		return substr($comment_permalink, 0, strpos($comment_permalink, '#'));
+	}
 }
 
 class blcCommentManager extends blcContainerManager {
