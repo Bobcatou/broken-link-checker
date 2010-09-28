@@ -101,7 +101,7 @@ class blcModuleManager {
 	 *   
 	 * 
 	 * @param string $category Category id, e.g. "parser" or "container". Optional.  
-	 * @param bool $markup Apply markup to module headers. Defaults to false.
+	 * @param bool $markup Apply markup to module headers. Not implemented.
 	 * @param bool $translate Translate module headers. Defaults to false.
 	 * @return array An array of categories or module data.
 	 */
@@ -115,17 +115,12 @@ class blcModuleManager {
 				
 				//Translate/apply markup to module headers
 				$processed = array();
-				$blc_plugin_file = blc_get_plugin_file(); 
-				
 				foreach($this->_category_cache as $category_id => $modules){
 					$processed[$category_id] = array();
 					foreach($modules as $module_id => $module_data){
-						$module_data = _get_plugin_data_markup_translate(
-							$blc_plugin_file, //Modules use the same .mo file as BLC itself
-							$module_data,
-							$markup,
-							$translate
-						);
+						if ( $translate ){
+							$module_data['Name'] = _x($module_data['Name'], 'module name', 'broken-link-checker');
+						}
 						$processed[$category_id][$module_id] = $module_data;
 					}
 				}
@@ -139,14 +134,10 @@ class blcModuleManager {
 				if ( $markup || $translate ){
 					//Translate/apply markup to module headers
 					$processed = array();
-					$blc_plugin_file = blc_get_plugin_file(); 
 					foreach($this->_category_cache[$category] as $module_id => $module_data){
-						$module_data = _get_plugin_data_markup_translate(
-							$blc_plugin_file, //Modules use the same .mo file as BLC itself
-							$module_data,
-							$markup,
-							$translate
-						);
+						if ( $translate ){
+							$module_data['Name'] = _x($module_data['Name'], 'module name', 'broken-link-checker');
+						}
 						$processed[$module_id] = $module_data;
 					}
 					return $processed;
