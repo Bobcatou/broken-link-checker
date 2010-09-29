@@ -184,7 +184,11 @@ class blcHTMLLink extends blcParser {
 		$config = & blc_get_configuration();
 		if ( $config->options['mark_removed_links'] ){
 			//Leave only the anchor text + the removed_link CSS class
-			return '<span class="removed_link">' . $link['#link_text'] . '</span>'; 
+			return sprintf(
+				'<span class="removed_link" title="%s">%s</span>',
+				esc_attr($link['href']),
+				$link['#link_text']
+			); 
 		} else {
 			//Just the anchor text
 			return $link['#link_text']; 
