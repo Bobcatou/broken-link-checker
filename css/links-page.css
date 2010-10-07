@@ -245,6 +245,49 @@ td.column-link-text, td.column-new-link-text {
 	vertical-align: middle;
 }
 
+/* Bulk edit form */
+#bulk-edit {
+	display: none;
+}
+
+#bulk-edit-wrap {
+	max-width: 600px;
+}
+
+#bulk-edit fieldset {
+	font-size: 12px;
+}
+
+#bulk-edit label {
+	display: block;
+	margin-bottom: 0.2em;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0.2em;
+}
+
+#bulk-edit .title {
+	display: block;
+	float: left;
+	width: 15%;
+	font-size: 12px;
+	line-height: 1.8em;
+}
+
+#bulk-edit input.text {
+	display: block;
+	width: 84%;
+}
+
+#bulk-edit-options label {
+	float: left;
+	margin-right: 2em;
+}
+
+#bulk-edit p.submit {
+	padding-top: 0.5em;
+}
+
 /* Search form */
 
 .blc-search-container {
