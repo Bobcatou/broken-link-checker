@@ -432,8 +432,8 @@ jQuery(function($){
 			var action = $('#blc-bulk-action2').val(); 
 		}
     	
-    	//Convey the gravitas of deleting link sources.
     	if ( action == 'bulk-delete-sources' ){
+    		//Convey the gravitas of deleting link sources.
     		var message = '<?php 
 				echo esc_js(  
 					__("Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
@@ -443,6 +443,7 @@ jQuery(function($){
 				return false;
 			}
 		} else if ( action == 'bulk-unlink' ){
+			//Likewise for unlinking.
 			var message = '<?php 
 				echo esc_js(  
 					__("Are you sure you want to remove the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to remove", 'broken-link-checker')
@@ -532,7 +533,39 @@ jQuery(function($){
 			$('#blc-links').removeClass('color-code-link-status');
 		}
 	});
+	
+	//Show the bulk edit/find & replace form when the user applies the appropriate bulk action 
+	$('#doaction, #doaction2').click(function(e){
+		var n = $(this).attr('id').substr(2);
+		if ( $('select[name="'+n+'"]').val() == 'bulk-edit' ) {
+			e.preventDefault();
+			//Any links selected?
+			if ($('tbody th.check-column input:checked').length > 0){
+				$('#bulk-edit').show();
+			};
+		}
+	});
+	
+	//Hide the bulk edit/find & replace form when "Cancel" is clicked
+	$('#bulk-edit .cancel').click(function(){
+		$('#bulk-edit').hide();
+		return false;
+	});
+	
+	//Minimal input validation for the bulk edit form
+	$('#bulk-edit input[type="submit"]').click(function(e){
+		if( $('#bulk-edit input[name="search"]').val() == '' ){
+			alert('<?php echo esc_js(__('Enter a search string first.', 'broken-link-checker')); ?>');
+			$('#bulk-edit input[name="search"]').focus();
+			e.preventDefault();
+			return;
+		}
 		
+		if ($('tbody th.check-column input:checked').length == 0){
+			alert('<?php echo esc_js(__('Select one or more links to edit.', 'broken-link-checker')); ?>');
+			e.preventDefault();
+		};
+	});
 });
 
 </script>

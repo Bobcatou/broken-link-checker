@@ -82,6 +82,7 @@ class blcTablePrinter {
 		//The select-all checkbox
 		echo '<th scope="col" class="column-checkbox check-column" id="cb"><input type="checkbox" /></th>';
 		
+		//Column headers
 		foreach($layout as $column_id){
 			$column = $this->columns[$column_id];
 			
@@ -104,6 +105,7 @@ class blcTablePrinter {
 		
 		//Table body
 		echo '<tbody id="the-list">';
+		$this->bulk_edit_form($visible_columns);
 		$rownum = 0;
         foreach ($this->current_filter['links'] as $link) {
         	$rownum++;
@@ -244,6 +246,7 @@ class blcTablePrinter {
 		//so we can do it once and reuse the generated HTML.
 		$bulk_actions = array(
 			'-1' => __('Bulk Actions', 'broken-link-checker'),
+			"bulk-edit" => __('Edit URL', 'broken-link-checker'),
 			"bulk-recheck" => __('Recheck', 'broken-link-checker'),
 			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
 			"bulk-not-broken" => __('Mark as not broken', 'broken-link-checker'),
@@ -254,6 +257,11 @@ class blcTablePrinter {
 		} else {
 			$bulk_actions["bulk-delete-sources"] = __('Delete sources', 'broken-link-checker');
 		}
+		
+		//Bulk editing is only available in the Pro version
+		if ( !defined('BLC_PRO_VERSION') || !BLC_PRO_VERSION ){
+			unset($bulk_actions['bulk-edit']);
+		}		
 		
 		$bulk_actions_html = '';
 		foreach($bulk_actions as $value => $name){
@@ -286,6 +294,50 @@ class blcTablePrinter {
 		} else {
 			$this->pagination_html = '';
 		}
+	}
+	
+	/**
+	 * Print the bulk edit form.
+	 * 
+	 * @param array $visible_columns List of visible columns.
+	 * @return void
+	 */
+	function bulk_edit_form($visible_columns){
+		?>
+		<tr id="bulk-edit" class="inline-edit-rows"><td colspan="<?php echo count($visible_columns)+1; ?>">
+		<div id="bulk-edit-wrap">
+		<fieldset>
+			<label>
+				<span class="title"><?php _e('Find', 'broken-link-checker'); ?></span>
+				<input type="text" name="search" class="text">
+			</label>
+			<label>
+				<span class="title"><?php _e('Replace with', 'broken-link-checker'); ?></span>
+				<input type="text" name="replace" class="text">
+			</label>
+			
+			<div id="bulk-edit-options">
+				<span class="title">&nbsp;</span>
+				<label>
+					<input type="checkbox" name="case_sensitive">
+					<?php _e('Case sensitive', 'broken-link-checker'); ?>
+				</label>
+				<label>
+					<input type="checkbox" name="regex">
+					<?php _e('Use regular expressions', 'broken-link-checker'); ?>
+				</label>
+			</div>
+		</fieldset>			
+		
+		<p class="submit inline-edit-save">
+			<a href="#bulk-edit" class="button-secondary cancel alignleft" title="<?php echo esc_attr(__('Cancel', 'broken-link-checker')); ?>" accesskey="c"><?php _e('Cancel', 'broken-link-checker'); ?></a>
+			<input type="submit" name="bulk_edit" class="button-primary alignright" value="<?php 
+				_e('Update', 'broken-link-checker'); 
+			?>" accesskey="s">
+		</p>
+		</div>
+		</td></tr>
+		<?php	
 	}
 	
 	/**
