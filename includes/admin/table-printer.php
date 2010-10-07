@@ -324,7 +324,7 @@ class blcTablePrinter {
 				</label>
 				<label>
 					<input type="checkbox" name="regex">
-					<?php _e('Use regular expressions', 'broken-link-checker'); ?>
+					<?php _e('Regular expression', 'broken-link-checker'); ?>
 				</label>
 			</div>
 		</fieldset>			
