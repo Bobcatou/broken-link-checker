@@ -758,7 +758,7 @@ class blcLinkQuery {
  */
 function blc_get_links($params = null){
 	$instance = & blcLinkQuery::getInstance();
-	return $instance->get_links($params, $purpose);
+	return $instance->get_links($params);
 }
 
 ?>
