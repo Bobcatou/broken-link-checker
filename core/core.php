@@ -1250,6 +1250,10 @@ class wsBrokenLinkChecker {
 			case 'bulk-not-broken':
 				list($message, $msg_class) = $this->do_bulk_discard($selected_links);
 				break;
+
+			case 'bulk-edit':
+				list($message, $msg_class) = $this->do_bulk_edit($selected_links);
+				break;
         }
         
 		
@@ -1462,6 +1466,102 @@ class wsBrokenLinkChecker {
 				}
 			} else {
 				$message = __('None of the selected links are redirects!', 'broken-link-checker');
+			}
+		}
+		
+		return array($message, $msg_class);
+	}
+	
+  /**
+   * Edit multiple links in one go.
+   *
+   * @param array $selected_links
+   * @return array The message to display and its CSS class.
+   */
+	function do_bulk_edit($selected_links){
+		$message = '';
+		$msg_class = 'updated';
+			
+		check_admin_referer( 'bulk-action' );
+		
+		$post = $_POST;
+		if ( function_exists('wp_magic_quotes') ){
+			$post = stripslashes_deep($post); //Ceterum censeo, WP shouldn't mangle superglobals.
+		}
+		
+		$search = isset($post['search']) ? $post['search'] : '';
+		$replace = isset($post['replace']) ? $post['replace'] : ''; 
+		$use_regex = !empty($post['regex']);
+		$case_sensitive = !empty($post['case_sensitive']);
+		
+		$delimiter = '`'; //Pick a char that's uncommon in URLs so that escaping won't usually be a problem
+		if ( $use_regex ){
+			$search = $delimiter . str_replace($delimiter, '\\' . $delimiter, $search) . $delimiter;
+			if ( !$case_sensitive ){
+				$search .= 'i';
+			}
+		} elseif ( !$case_sensitive ) {
+			//str_ireplace() would be more appropriate for case-insensitive, non-regexp replacement,
+			//but that's only available in PHP5.
+			$search = $delimiter . str_replace($delimiter, '\\' . $delimiter, preg_quote($search)) . $delimiter . 'i';
+			$use_regex = true;
+		}
+		
+		if ( count($selected_links) > 0 ) {	
+			//Fetch all the selected links
+			$links = blc_get_links(array(
+				'link_ids' => $selected_links,
+				'purpose' => BLC_FOR_EDITING,
+			));
+			
+			if ( count($links) > 0 ) {
+				$processed_links = 0;
+				$failed_links = 0;
+				$skipped_links = 0;
+				
+				//Edit the links
+				foreach($links as $link){
+					if ( $use_regex ){
+						$new_url = preg_replace($search, $replace, $link->url);
+					} else {
+						$new_url = str_replace($search, $replace, $link->url);
+					}
+					
+					if ( $new_url == $link->url ){
+						$skipped_links++;
+						continue;
+					}
+					
+					$rez = $link->edit($new_url);
+					if ( !is_wp_error($rez) && empty($rez['errors'] )){
+						$processed_links++;
+					} else {
+						$failed_links++;
+					}
+				}	
+				
+				$message .= sprintf(
+					_n(
+						'%d link updated.',
+						'%d links updated.',
+						$processed_links, 
+						'broken-link-checker'
+					),
+					$processed_links
+				);
+				
+				if ( $failed_links > 0 ) {
+					$message .= '<br>' . sprintf(
+						_n(
+							'Failed to update %d link.', 
+							'Failed to update %d links.',
+							$failed_links,
+							'broken-link-checker'
+						),
+						$failed_links
+					);
+					$msg_class = 'error';
+				}
 			}
 		}
 		
