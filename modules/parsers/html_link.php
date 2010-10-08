@@ -280,12 +280,6 @@ class blcHTMLLink extends blcParser {
 		//Just reuse map() + a little helper func. to apply the callback to all links and get modified links
 		$modified_links = $this->map($content, array(&$this, 'execute_edit_callback'), array($callback, $extra));
 		
-		//Need to know the charset to properly encode IDNs and other non-ascii strings in link attributes.
-		$charset = get_bloginfo('charset');
-		if ( empty($charset) ){
-			$charset = 'UTF-8';
-		}
-		
 		//Replace each old link with the modified one
 		$offset = 0;
 		foreach($modified_links as $link){
@@ -301,7 +295,7 @@ class blcHTMLLink extends blcParser {
 						continue; 
 					}
 					
-					$new_html .= sprintf(' %s="%s"', $name, htmlentities( $value, ENT_QUOTES, $charset )); 
+					$new_html .= sprintf(' %s="%s"', $name, esc_attr( $value )); 
 				}
 				$new_html .= '>' . $link['#link_text'] . '</a>';
 			}
