@@ -251,7 +251,7 @@ class blcLink {
 		);
         
         
-        $checker = & blcCheckerHelper::get_checker_for($this->url);
+        $checker = & blcCheckerHelper::get_checker_for($this->get_ascii_url());
         
 		if ( is_null($checker) ){
 			//Oops, there are no checker implementations that can handle this link.
@@ -268,7 +268,7 @@ class blcLink {
 		}
 		
 		//Check the link
-		$rez = $checker->check($this->url);
+		$rez = $checker->check($this->get_ascii_url());
 		//FB::info($rez, "Check results");
 		
 		//Filter the returned array to leave only the restricted set of keys that we're interested in.
@@ -882,6 +882,14 @@ class blcLink {
 		return compact('text', 'code');
 	}
 	
+	/**
+	 * Get the link URL in ASCII-compatible encoding.
+	 * 
+	 * @return string
+	 */
+	function get_ascii_url(){
+		return blcUtility::idn_to_ascii($this->url);
+	}
 }
 
 } //class_exists

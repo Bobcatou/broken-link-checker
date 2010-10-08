@@ -18,6 +18,16 @@ if ( !function_exists('sys_get_temp_dir')) {
   }
 }
 
+//Include the internationalized domain name converter (requires PHP 5)
+if ( defined('BLC_PRO_VERSION') && version_compare(phpversion(), '5.0.0', '>=') && !class_exists('idna_convert') ){
+	$blc_directory = dirname(blc_get_plugin_file()); 
+	include $blc_directory . '/idn/idna_convert.class.php';
+	if ( !function_exists('encode_utf8') ){
+		include $blc_directory . '/idn/transcode_wrapper.php';
+	}
+}
+
+
 if ( !class_exists('blcUtility') ){
 
 class blcUtility {
@@ -368,6 +378,56 @@ class blcUtility {
 		$cached_load = $load;
 		$cached_when = time();
 		return $load;
+	}
+	
+	/**
+	 * Convert an internationalized domain name or URL to ASCII-compatible encoding.
+	 * 
+	 * @param string $url Either a domain name or a complete URL. 
+	 * @param string $charset The character encoding of the $url parameter. Defaults to the encoding set in Settings -> Reading.
+	 * @return string
+	 */
+	function idn_to_ascii($url, $charset = ''){
+		$idn = blcUtility::get_idna_converter();
+		if ( $idn != null ){
+			if ( empty($charset) ){
+				$charset = get_bloginfo('charset');
+			}
+			if ( (strtoupper($charset) != 'UTF-8') && (strtoupper($charset) != 'UTF8') ){
+				$url = encode_utf8($url, $charset, true);
+			}			
+			$url = $idn->encode($url);
+		}
+		
+		return $url;
+	}
+
+	/**
+	 * Convert an internationalized domain name (or URL) from ASCII-compatible encoding to UTF8.
+	 * 
+	 * @param string $url
+	 * @return string
+	 */
+	function idn_to_utf8($url){
+		$idn = blcUtility::get_idna_converter();		
+		if ( $idn != null ){
+			$url = $idn->decode($url);
+		}
+		
+		return $url;
+	}
+	
+	/**
+	 * Get an instance of idna_converter
+	 * 
+	 * @return object Either an instance of idna_converter, or NULL if the converter class is not available
+	 */
+	function get_idna_converter(){
+		static $idn = null;
+		if ( ($idn == null) && class_exists('idna_convert') ){
+			$idn = new idna_convert();
+		}
+		return $idn;
 	}
 	
 }//class
