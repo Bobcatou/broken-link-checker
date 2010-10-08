@@ -1508,6 +1508,8 @@ class wsBrokenLinkChecker {
 		}
 		
 		if ( count($selected_links) > 0 ) {	
+			set_time_limit(300); //In case the user decides to edit hundreds of links at once
+			
 			//Fetch all the selected links
 			$links = blc_get_links(array(
 				'link_ids' => $selected_links,
