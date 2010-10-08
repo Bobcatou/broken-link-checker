@@ -164,22 +164,6 @@ class blcTablePrinter {
 	 */
 	function setup_columns(){
 		$this->columns = array(
-			'source' => array(
-				'heading' => __('Source', 'broken-link-checker'),
-				'class' => 'column-title',
-				'content' => array(&$this, 'column_source'), 
-			),
-			
-			'link-text' => array(
-				'heading' => __('Link Text', 'broken-link-checker'),
-				'content' => array(&$this, 'column_link_text'),
-			),
-			
-			'url' => array(
-		 		'heading' => __('URL', 'broken-link-checker'),
-		 		'content' => array(&$this, 'column_url'),
-			),
-			
 			'status' => array(
 				'heading' => __('Status', 'broken-link-checker'),
 				'content' => array(&$this, 'column_status'),
@@ -537,72 +521,6 @@ class blcTablePrinter {
 		?>
 		<th scope="row" class="check-column"><input type="checkbox" name="selected_links[]" value="<?php echo $link->link_id; ?>" /></th>
 		<?php
-	}
-	
-	function column_source(&$link, $instances){
-		echo '<span class="blc-link-id" style="display:none;">',
-				$link->link_id,
-			 '</span>';
-				 	
-		//Print the contents of the "Source" column
-		if ( !empty($instances) ){
-			$instance = reset($instances);
-			
-			echo $instance->ui_get_source();
-			
-			$actions = $instance->ui_get_action_links();
-			
-			echo '<div class="row-actions">';
-			echo implode(' | </span>', $actions);
-			echo '</div>';
-			
-		} else {
-			_e("[An orphaned link! This is a bug.]", 'broken-link-checker');
-		}
-	}
-	
-	function column_url(&$link){
-		?>
-        <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
-        	<?php print $link->url; ?></a>
-        <input type='text' id='link-editor-<?php print $link->link_id; ?>' 
-        	value="<?php print esc_attr($link->url); ?>" 
-            class='blc-link-editor' style='display:none' />
-    	<?php
-    	//Output inline action links for the link/URL                  	
-      	$actions = array();
-      	
-		$actions['details'] = "<span class='view'><a class='blc-details-button' href='javascript:void(0)' title='". esc_attr(__('Show more info about this link', 'broken-link-checker')) . "'>". __('Details', 'broken-link-checker') ."</a>";
-      	
-		$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
-		
-		if ( $link->broken ){
-			$actions['discard'] = sprintf(
-				'<span><a href="#" title="%s" class="blc-discard-button">%s</a>',
-				esc_attr(__('Remove this link from the list of broken links and mark it as valid', 'broken-link-checker')),
-				__('Not broken', 'broken-link-checker')
-			);
-		}
-		
-		$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
-		
-		echo '<div class="row-actions">';
-		echo implode(' | </span>', $actions);
-		
-		echo "<span style='display:none' class='blc-cancel-button-container'> " .
-			 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
-
-		echo '</div>';
-	}
-	
-	function column_link_text(&$link, $instances){
-		if ( empty($instances) ){
-			echo '<em>N/A</em>';
-		} else {
-			$instance = reset($instances);
-			echo $instance->ui_get_link_text();
-		}
 	}
 	
 	function column_status(&$link, $instances){
