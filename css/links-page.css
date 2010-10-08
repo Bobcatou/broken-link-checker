@@ -252,10 +252,16 @@ td.column-link-text, td.column-new-link-text {
 
 #bulk-edit-wrap {
 	max-width: 600px;
+	padding-left: 0.3em;
 }
 
 #bulk-edit fieldset {
 	font-size: 12px;
+}
+
+#bulk-edit h4 {
+	margin: 0.4em 0 0.8em;
+	/*display: none;*/
 }
 
 #bulk-edit label {
