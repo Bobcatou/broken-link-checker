@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.0
 Tested up to: 3.1-alpha
-Stable tag: 0.9.6
+Stable tag: 0.9.7
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -82,7 +82,16 @@ To upgrade your installation
 
 == Changelog ==
 
-*This is an automatically generated changelog*
+= 0.9.7 =
+* Allow custom field names with spaces.
+* Updated German translation.
+* Updated Portuguese translation
+* Made the "Current load" label localizeable.
+* Fixed a translation-related bug where the various checkboxes in the "Link types" and "Look for links in" sections would appear in English even when a valid translation was available.
+* Fixed non-ASCII URLs being mangled when links are automatically marked with the "broken_link" CSS class.
+* Fixed blog names that include quotes being displayed incorrectly in email notifications.
+* When removing a link via the "Unlink" action, add the old URL as the title attribute of the now-unlinked anchor text.
+* When resolving relative URLs posted in comments, use the comment's permalink as the base (previously the blog's homepage URL was used).
 
 = 0.9.6 =
 * Updated Danish translation.
