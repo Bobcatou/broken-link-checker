@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Broken Link Checker 0.9.5\n"
+"Project-Id-Version: Broken Link Checker 0.9.7.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-14 01:31+0100\n"
+"POT-Creation-Date: 2010-10-10 21:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Team Blogos <wordpress@blogos.dk>\n"
 "Language-Team: Team Blogos <wordpress@blogos.dk>\n"
@@ -17,730 +17,749 @@ msgstr ""
 "X-Poedit-Basepath: d:\\wordpress\\plugins\\broken-link-checker\n"
 "X-Poedit-SearchPath-0: d:\\wordpress\\plugins\\broken-link-checker\n"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:153
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:152
 msgid "Loading..."
 msgstr "Indlæser ..."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:177
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:176
 msgid "[ Network error ]"
 msgstr "[ Network-fejl ]"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:202
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:201
 msgid "Automatically expand the widget if broken links have been detected"
 msgstr "Automatisk udvid widgetten, hvis der er fundet døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:460
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:342
 msgid "Link Checker Settings"
 msgstr "Link Checker-indstillinger"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:461
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:343
 msgid "Link Checker"
 msgstr "Link Checker"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:466
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:348
 #: d:\wordpress\plugins\broken-link-checker/includes/link-query.php:26
 msgid "Broken Links"
 msgstr "Døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:482
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:364
 msgid "View Broken Links"
 msgstr "Se døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:519
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:392
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:531
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1313
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:404
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1186
 #, php-format
 msgid "Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)"
 msgstr "Fejl: Pluginnets databasetabeller er ikke up-to-date! (Nuværende version: %d; forventet: %d)"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:675
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:543
 msgid "Settings saved."
 msgstr "Indstillinger gemt."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:682
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:550
 msgid "Complete site recheck started."
 msgstr "Fuldstændig ny tjek af site påbegyndt."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:694
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2807
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:564
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2744
 msgid "Details"
 msgstr "Detaljer"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:708
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:578
 msgid "General"
 msgstr "Generel"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:709
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:579
 msgid "Look For Links In"
 msgstr "Se efter links i"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:710
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:580
 msgid "Which Links To Check"
 msgstr "Hvilke links der skal tjekkes"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:711
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:581
 msgid "Protocols & APIs"
 msgstr "Protokoller & API'er"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:712
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:582
 msgid "Advanced"
 msgstr "Avanceret"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:716
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:586
 msgid "Broken Link Checker Options"
 msgstr "Indstillinger for Broken Link Checker"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:742
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:612
 msgid "Status"
 msgstr "Status"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:744
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:614
 msgid "Show debug info"
 msgstr "Vis debug-info"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:772
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:642
 msgid "Check each link"
 msgstr "Tjek hvert link"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:777
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:647
 #, php-format
 msgid "Every %s hours"
 msgstr "hver %s timer"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:786
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:656
 msgid "Existing links will be checked this often. New links will usually be checked ASAP."
 msgstr "Eksisterende links vil blive tjekket med dette mellemrum. Nye links tjekkes normalt så hurtigt som muligt."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:793
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:663
 msgid "E-mail notifications"
 msgstr "E-mail-meddelelser"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:799
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:669
 msgid "Send me e-mail notifications about newly detected broken links"
 msgstr "Send mig e-mail-meddelelser om nyligt opdagede døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:806
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:676
 msgid "Link tweaks"
 msgstr "Linktilpasninger"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:812
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:682
 msgid "Apply custom formatting to broken links"
 msgstr "Anvend egen formattering på døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:816
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:844
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:686
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:714
 msgid "Edit CSS"
 msgstr "Redigér CSS"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:840
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:710
 msgid "Apply custom formatting to removed links"
 msgstr "Anvend egen formattering på links, der er fjernet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:868
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:738
 msgid "Stop search engines from following broken links"
 msgstr "Forhindr søgemaskiner i at følge døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:885
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:755
 msgid "Look for links in"
 msgstr "Se efter links i"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:896
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:766
 msgid "Post statuses"
 msgstr "Indlægsstatusser"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:929
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:799
 msgid "Link types"
 msgstr "Linktyper"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:935
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:805
 msgid "Error : All link parsers missing!"
 msgstr "Fejl: Alle linkparsers mangler!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:942
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:812
 msgid "Exclusion list"
 msgstr "Eksklusionsliste"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:943
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:813
 msgid "Don't check links where the URL contains any of these words (one per line) :"
 msgstr "Tjek ikke links, hvor URL&#39;en indeholder et af disse ord (et ord per linje):"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:961
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:831
 msgid "Check links using"
 msgstr "Tjek link med"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:980
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:855
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:850
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:849
 msgid "Timeout"
 msgstr "Timeout"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:986
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1032
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2934
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:856
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:902
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2871
 #, php-format
 msgid "%s seconds"
 msgstr "%s sekunder"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:995
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:865
 msgid "Links that take longer than this to load will be marked as broken."
 msgstr "Links, som tager længere tid at tjekke end dette, vil blive markeret som døde."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1002
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:872
 msgid "Link monitor"
 msgstr "Linkovervågning"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1010
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:880
 msgid "Run continuously while the Dashboard is open"
 msgstr "Kør kontinuerligt, når kontrolpanelet er åbent"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1018
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:888
 msgid "Run hourly in the background"
 msgstr "Kør hver time i baggrunden"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1026
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:896
 msgid "Max. execution time"
 msgstr "Max udførelsestid"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1043
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:913
 msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
 msgstr "Pluginnet fungerer ved med mellemrum at oprette et job i baggrunden, som undersøger dine indlæg for links, tjekker de fundne URL&#39;er og foretager andre tidskrævende opgaver. Her kan du angive, hvor længe linkovervågningen max må køre hver gang, inden den skal stoppe."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1053
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:923
 msgid "Custom temporary directory"
 msgstr "Brugerdefineret tmp-mappe"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1062
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:881
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:932
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:875
 msgid "OK"
 msgstr "OK"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1065
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:935
 msgid "Error : This directory isn't writable by PHP."
 msgstr "Fejl: Denne mappe er ikke skrivbar for PHP."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1070
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:940
 msgid "Error : This directory doesn't exist."
 msgstr "Fejl: Denne mappe eksisterer ikke."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1078
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:948
 msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
 msgstr "Sæt dette felt, hvis du ønsker, at pluginnet skal bruge en brugerdefineret mappe til sine lock-filer. Ellers skal det ikke udfyldes."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1085
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:955
 msgid "Server load limit"
 msgstr "Begrænsning på serverbelastning"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1103
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:970
+#, php-format
+msgid "Current load : %s"
+msgstr "Aktuel belastning: %s"
+
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:976
 #, php-format
 msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
 msgstr "Linktjekning vil blive midlertidigt afbrudt, hvis den gennemsnitlige <a href=\"%s\">serverbelastning</a> er større end dette tal. Lad feltet stå tomt, hvis du vil deaktivere begrænsning af belastningen."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1111
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:984
 msgid "Not available"
 msgstr "Ikke tilgængelig"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1113
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:986
 msgid "Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible."
 msgstr "Begrænsning af belastning virker kun på Linux-lignende systemer, hvor <code>/proc/loadavg</code> findes og er tilgængelig."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1121
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:994
 msgid "Forced recheck"
 msgstr "Tvungen nytjek"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1124
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:997
 msgid "Re-check all pages"
 msgstr "Tjek alle sider igen"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1128
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1001
 msgid "The \"Nuclear Option\". Click this button to make the plugin empty its link database and recheck the entire site from scratch."
 msgstr "\"Bombe\"-indstilling. Klik på denne knap for at få pluginnet til at tømme dets linkdatabase og tjekke hele siten igen helt forfra."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1139
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1012
 msgid "Save Changes"
 msgstr "Gem ændringer"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1184
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1057
 msgid "Configure"
 msgstr "Konfigurér"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1244
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1117
 msgid "Upgrade to Pro to enable this feature"
 msgstr "Opgradér til Pro for at aktivere denne funktion"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1279
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1152
 msgid "Check URLs entered in these custom fields (one per line) :"
 msgstr "Tjek URL&#39;er i disse Egne felter (en per linje):"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1415
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1498
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1530
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1286
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1370
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1402
 #, php-format
 msgid "Database error : %s"
 msgstr "Database-fejl : %s"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1480
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1352
 msgid "You must enter a filter name!"
 msgstr "Du <i>skal</i> indtaste et filternavn!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1484
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1356
 msgid "Invalid search query."
 msgstr "Ugyldig søgeforespørgsel."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1493
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1365
 #, php-format
 msgid "Filter \"%s\" created"
 msgstr "Filter \"%s\" oprettet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1520
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1392
 msgid "Filter ID not specified."
 msgstr "Filter-id ikke angivet."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1527
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1399
 msgid "Filter deleted"
 msgstr "Filter slettet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1575
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1447
 #, php-format
 msgid "Replaced %d redirect with a direct link"
 msgid_plural "Replaced %d redirects with direct links"
 msgstr[0] "Erstattede %d redirigeret link med et direkte link"
 msgstr[1] "Erstattede %d redirigerede links med direkte links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1586
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1458
 #, php-format
 msgid "Failed to fix %d redirect"
 msgid_plural "Failed to fix %d redirects"
 msgstr[0] "Det lykkedes ikke at fixe %d redirigeret link"
 msgstr[1] "Det lykkedes ikke at fixe %d redirigerede links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1596
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1468
 msgid "None of the selected links are redirects!"
 msgstr "Ingen af de valgte links er redirigerede links!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1642
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1547
+#, php-format
+msgid "%d link updated."
+msgid_plural "%d links updated."
+msgstr[0] "%d link opdateret."
+msgstr[1] "%d links opdateret."
+
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1558
+#, php-format
+msgid "Failed to update %d link."
+msgid_plural "Failed to update %d links."
+msgstr[0] "Det mislykkedes at opdatere %d link."
+msgstr[1] "Det mislykkedes at opdatere %d links."
+
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1612
 #, php-format
 msgid "%d link removed"
 msgid_plural "%d links removed"
 msgstr[0] "%d link fjernet"
 msgstr[1] "%d links fjernet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1653
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1623
 #, php-format
 msgid "Failed to remove %d link"
 msgid_plural "Failed to remove %d links"
 msgstr[0] "Det mislykkedes for pluginnet at fjerne %d link."
 msgstr[1] "Det mislykkedes for pluginnet at fjerne %d links."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1762
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1732
 #, php-format
 msgid "%d item was skipped because it can't be moved to the Trash. You need to delete it manually."
 msgid_plural "%d items were skipped because they can't be moved to the Trash. You need to delete them manually."
 msgstr[0] "%d link blev skippet, fordi det ikke kan flyttes til papirkurven. Du er nødt til at slette den selv."
 msgstr[1] "%d link blev skippet, fordi de ikke kan flyttes til papirkurven. Du er nødt til at slette dem selv."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1783
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1753
 msgid "Didn't find anything to delete!"
 msgstr "Fandt ikke noget, der kan slettes!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1811
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1781
 #, php-format
 msgid "%d link scheduled for rechecking"
 msgid_plural "%d links scheduled for rechecking"
 msgstr[0] "%d link er planlagt til at blive tjekket igen"
 msgstr[1] "%d links er planlagt til at blive tjekket igen"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1856
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2461
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1826
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2431
 msgid "This link was manually marked as working by the user."
 msgstr "Dette link blev markeret manuelt som et aktivt link af brugeren."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1863
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1833
 #, php-format
 msgid "Couldn't modify link %d"
 msgstr "Kunne ikke ændre linket %d"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1874
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1844
 #, php-format
 msgid "%d link marked as not broken"
 msgid_plural "%d links marked as not broken"
 msgstr[0] "Et link markeret som ikke-dødt"
 msgstr[1] "%d links markeret som ikke-døde"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1914
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1884
 msgid "Table columns"
 msgstr "Tabelkolonner"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1933
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1903
 msgid "Show on screen"
 msgstr "Vis på skærm"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1940
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1910
 msgid "links"
 msgstr "links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1941
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1911
 msgid "Apply"
 msgstr "Anvend"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1945
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1915
 msgid "Misc"
 msgstr "Diverse"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1960
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1930
 #, php-format
 msgid "Highlight links broken for at least %s days"
 msgstr "Fremhæv links, der har været døde i mindst %s dage"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1969
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1939
 msgid "Color-code status codes"
 msgstr "Kod statuskoder med farver"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:1986
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2446
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2482
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2545
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:1956
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2416
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2452
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2515
 msgid "You're not allowed to do that!"
 msgstr "Du har ikke lov til at gøre dette!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2327
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2297
 msgid "View broken links"
 msgstr "Se døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2328
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2298
 #, php-format
 msgid "Found %d broken link"
 msgid_plural "Found %d broken links"
 msgstr[0] "Har fundet %d dødt link"
 msgstr[1] "Har fundet %d døde links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2334
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2304
 msgid "No broken links found."
 msgstr "Ingen døde links fundet."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2341
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2311
 #, php-format
 msgid "%d URL in the work queue"
 msgid_plural "%d URLs in the work queue"
 msgstr[0] "%d URL i arbejdskøen"
 msgstr[1] "%d URL&#39;er i arbejdskøen"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2344
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2314
 msgid "No URLs in the work queue."
 msgstr "Ingen URL&#39;er i arbejdskøen"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2350
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2320
 #, php-format
 msgid "Detected %d unique URL"
 msgid_plural "Detected %d unique URLs"
 msgstr[0] "Fandt %d unik URL"
 msgstr[1] "Fandt %d unikke URL&#39;er"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2351
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2321
 #, php-format
 msgid "in %d link"
 msgid_plural "in %d links"
 msgstr[0] "i %d link"
 msgstr[1] "i %d links"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2356
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2326
 msgid "and still searching..."
 msgstr "og leder stadig ..."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2362
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2332
 msgid "Searching your blog for links..."
 msgstr "Gennemsøger din blog for links ..."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2364
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2334
 msgid "No links detected."
 msgstr "Ingen links fundet."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2390
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:837
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2360
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:831
 msgid "Unknown"
 msgstr "Ukendt"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2454
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2492
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2555
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2424
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2462
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2525
 #, php-format
 msgid "Oops, I can't find the link %d"
 msgstr "Ups. Jeg kan ikke finde linket %d"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2467
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2437
 msgid "Oops, couldn't modify the link!"
 msgstr "Ups, kunne ikke ændre linket!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2470
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2581
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2440
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2551
 msgid "Error : link_id not specified"
 msgstr "Fejl: link_id ikke angivet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2502
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2472
 msgid "Oops, the new URL is invalid!"
 msgstr "Ups. Den nye URL er ugyldig!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2513
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2564
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2483
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2534
 msgid "An unexpected error occured!"
 msgstr "En uventet fejl opstod!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2531
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2501
 msgid "Error : link_id or new_url not specified"
 msgstr "Fejl: link_id eller new_url ikke angivet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2590
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2560
 msgid "You don't have sufficient privileges to access this information!"
 msgstr "Du har ikke tilstrækkelige rettigheder til at tilgå denne information!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2603
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2573
 msgid "Error : link ID not specified"
 msgstr "Fejl: link-id ikke angivet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2617
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2587
 #, php-format
 msgid "Failed to load link details (%s)"
 msgstr "Det mislykkedes at indlæse link-detaljer (%s)"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2779
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2716
 msgid "Broken Link Checker"
 msgstr "Broken Link Checker"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2793
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2730
 #, php-format
 msgid "The current temporary directory is not accessible; please <a href=\"%s\">set a different one</a>."
 msgstr "Der er ikke adgang til den aktuelle tmp-mappe; angiv venligst <a href=\"%s\">en anden</a>."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2798
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2735
 #, php-format
 msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
 msgstr "Gør venligst mappen <code>%1$s</code> skrivbar for pluginnet eller <a href=\"%2$s\">angiv en brugerdefineret tmp-mappe</a>."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2805
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2742
 msgid "Broken Link Checker can't create a lockfile."
 msgstr "Broken Link Checker kan ikke oprette en lock-fil."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2810
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2747
 msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
 msgstr "Pluginnet bruger en filbaseret lock-mekanisme for at sikre, at kun én instans af den ressourcekrævende linktjekningsalgoritme kører på én gang. Desværre kan BLC ikke finde en skrivbar mappe til at gemme lock-filen i. Det mislykkedes at finde placeringen af din servers tmp-mappe, og pluginnets egen mappe er ikke skrivbar for PHP. For at løse dette problem skal du gøre pluginnets mappe skrivbar eller indtaste en brugerdefineret tmp-mappe i pluginnets indstillinger."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2829
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2766
 msgid "PHP version"
 msgstr "PHP version"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2835
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2772
 msgid "MySQL version"
 msgstr "MySQL version"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2848
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2785
 msgid "You have an old version of CURL. Redirect detection may not work properly."
 msgstr "Du har en gammel version af cURL. Det er ikke sikkert, at detektion af redirigeringer fungerer ordentligt."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2860
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2876
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2881
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2797
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2813
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2818
 msgid "Not installed"
 msgstr "Ikke installeret"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2863
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2800
 msgid "CURL version"
 msgstr "cURL version"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2869
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2806
 msgid "Installed"
 msgstr "Installeret"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2882
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2819
 msgid "You must have either CURL or Snoopy installed for the plugin to work!"
 msgstr "Du skal have enten cURL eller Snoopy installeret, hvis pluginnet skal virke!"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2893
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2830
 msgid "On"
 msgstr "Til"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2894
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2831
 msgid "Redirects may be detected as broken links when safe_mode is on."
 msgstr "Redirigeringer kan (fejlagtigt) blive bestemt som døde links, når safe_mode er til."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2899
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2913
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2836
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2850
 msgid "Off"
 msgstr "Fra"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2907
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2844
 #, php-format
 msgid "On ( %s )"
 msgstr "Fra ( %s )"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2908
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2845
 msgid "Redirects may be detected as broken links when open_basedir is on."
 msgstr "Redirigeringer kan (fejlagtigt) blive bestemt som døde links, når open_basedir er til."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2927
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2864
 msgid "Can't create a lockfile. Please specify a custom temporary directory."
 msgstr "Kan ikke oprette lock-fil. Angiv venligst en brugerdefineret tmp-mappe."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:2951
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2888
 msgid "If this value is zero even after several page reloads you have probably encountered a bug."
 msgstr "Hvis denne værdi er nul selv efter adskillige genindlæsninger af siden har du sandsynligvis opdaget en bug."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3007
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2959
 #, php-format
 msgid "[%s] Broken links detected"
 msgstr "[%s] døde links fundet"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3013
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2965
 #, php-format
 msgid "Broken Link Checker has detected %d new broken link on your site."
 msgid_plural "Broken Link Checker has detected %d new broken links on your site."
 msgstr[0] "Broken Link Checker har opdaget %d nyt dødt link på din site."
 msgstr[1] "Broken Link Checker har opdaget %d nye døde links på din site."
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3028
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2980
 #, php-format
 msgid "Here's a list of the first %d broken links:"
 msgid_plural "Here's a list of the first %d broken links:"
 msgstr[0] "Her er en liste med det første døde link:"
 msgstr[1] "Her er en liste med de første %d døde links:"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3036
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:2988
 msgid "Here's a list of the new broken links: "
 msgstr "Her er en liste med de nye døde links: "
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3048
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:3000
 #, php-format
 msgid "Link text : %s"
 msgstr "Linktekst: %s"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3049
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:3001
 #, php-format
 msgid "Link URL : <a href=\"%s\">%s</a>"
 msgstr "Link-URL: <a href=\"%s\">%s</a>"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3050
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:3002
 #, php-format
 msgid "Source : %s"
 msgstr "Kilde: %s"
 
-#: d:\wordpress\plugins\broken-link-checker/core/core.php:3064
+#: d:\wordpress\plugins\broken-link-checker/core/core.php:3016
 msgid "You can see all broken links here:"
 msgstr "Du kan se alle de døde links her:"
 
-#: d:\wordpress\plugins\broken-link-checker/core/init.php:230
+#: d:\wordpress\plugins\broken-link-checker/core/init.php:236
 msgid "Once Weekly"
 msgstr "Engang om ugen"
 
-#: d:\wordpress\plugins\broken-link-checker/core/init.php:236
+#: d:\wordpress\plugins\broken-link-checker/core/init.php:242
 msgid "Twice a Month"
 msgstr "To gange om måneden"
 
-#: d:\wordpress\plugins\broken-link-checker/core/init.php:259
+#: d:\wordpress\plugins\broken-link-checker/core/init.php:309
 msgid "Broken Link Checker installation failed"
 msgstr "Installation af Broken Link Checker mislykkedes"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:384
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:398
 msgid "Edit"
 msgstr "Redigér"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:392
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:406
 msgid "Move this item to the Trash"
 msgstr "Flyt denne til papirkurven"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:394
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:408
 msgid "Trash"
 msgstr "Papirkurv"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:399
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:413
 msgid "Delete this item permanently"
 msgstr "Slet dette indlæg permanent"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:401
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:415
 msgid "Delete"
 msgstr "Slet"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:414
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:428
 #, php-format
 msgid "Preview &#8220;%s&#8221;"
 msgstr "Preview &#8220;%s&#8221;"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:415
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:429
 msgid "Preview"
 msgstr "Preview"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:422
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:436
 #, php-format
 msgid "View &#8220;%s&#8221;"
 msgstr "Vis &#8220;%s&#8221;"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:423
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:437
 msgid "View"
 msgstr "Se"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:442
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:456
 msgid "Edit this item"
 msgstr "Redigér denne"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:506
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:520
 msgid "Nothing to update"
 msgstr "Intet at opdatere"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:516
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:530
 #, php-format
 msgid "Updating post %d failed"
 msgstr "Opdatering af indlægget %d mislykkedes"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:551
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:565
 #, php-format
 msgid "Failed to delete post \"%s\" (%d)"
 msgstr "Det mislykkedes at slette indlægget \"%s\" (%d)"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:570
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:584
 #, php-format
 msgid "Can't move post \"%s\" (%d) to the trash because the trash feature is disabled"
 msgstr "Kan ikke flytte indlægget \"%s\" (%d) til papirkurven, fordi papirkurvsfunktionen er deaktiveret"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:590
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:604
 #, php-format
 msgid "Failed to move post \"%s\" (%d) to the trash"
 msgstr "Det mislykkedes at flytte indlægget \"%s\" (%d) til papirkurven"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:698
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:712
 #, php-format
 msgid "%d post deleted."
 msgid_plural "%d posts deleted."
 msgstr[0] "%d indlæg slettet"
 msgstr[1] "%d indlæg slettet"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:700
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:714
 #, php-format
 msgid "%d page deleted."
 msgid_plural "%d pages deleted."
 msgstr[0] "%d side slettet"
 msgstr[1] "%d sider slettet"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:702
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:716
 #, php-format
 msgid "%d \"%s\" deleted."
 msgid_plural "%d \"%s\" deleted."
 msgstr[0] "%d \"%s\" slettet."
 msgstr[1] "%d \"%s\" slettet."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:721
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:735
 #, php-format
 msgid "%d post moved to the Trash."
 msgid_plural "%d posts moved to the Trash."
 msgstr[0] "%d indlæg flyttet til papirkurven"
 msgstr[1] "%d indlæg flyttet til papirkurven"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:723
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:737
 #, php-format
 msgid "%d page moved to the Trash."
 msgid_plural "%d pages moved to the Trash."
 msgstr[0] "%d side flyttet til papirkurven"
 msgstr[1] "%d side flyttet til papirkurven"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:725
+#: d:\wordpress\plugins\broken-link-checker/includes/any-post.php:739
 #, php-format
 msgid "%d \"%s\" moved to the Trash."
 msgid_plural "%d \"%s\" moved to the Trash."
@@ -754,8 +773,8 @@ msgid_plural "%d '%s' have been deleted"
 msgstr[0] "%d '%s' er blevet slettet"
 msgstr[1] "%d '%s' er blevet slettede"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/containers.php:876
-#: d:\wordpress\plugins\broken-link-checker/includes/containers.php:894
+#: d:\wordpress\plugins\broken-link-checker/includes/containers.php:882
+#: d:\wordpress\plugins\broken-link-checker/includes/containers.php:900
 #, php-format
 msgid "Container type '%s' not recognized"
 msgstr "Container-type '%s' ikke genkendt"
@@ -881,131 +900,131 @@ msgstr "Søgeresultater"
 msgid "No links found for your query"
 msgstr "Din forespørgsel returnerede ingen links"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:213
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:215
 msgid "The plugin script was terminated while trying to check the link."
 msgstr "Pluginskriptet blev afbrudt, mens det prøvede at tjekke et link."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:259
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:261
 msgid "The plugin doesn't know how to check this type of link."
 msgstr "Pluginnet ved ikke, hvordan det skal tjekke denne type links."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:347
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:349
 msgid "Link is valid."
 msgstr "Link er aktivt."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:349
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:351
 msgid "Link is broken."
 msgstr "Link er dødt."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:562
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:664
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:699
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:564
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:666
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:693
 msgid "Link is not valid"
 msgstr "Link er ikke gyldigt"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:579
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:581
 msgid "This link can not be edited because it is not used anywhere on this site."
 msgstr "Dette link kan ikke redigeres, fordi det ikke bruges noget steds på denne site."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:605
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:607
 msgid "Failed to create a DB entry for the new URL."
 msgstr "Det mislykkedes at oprette en databasepost for den nye URL."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:677
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:673
 msgid "This link is not a redirect"
 msgstr "Dette link er ikke en redirect"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:726
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:763
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:720
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:757
 msgid "Couldn't delete the link's database record"
 msgstr "Kunne ikke slette linkets databasepost"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:851
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:845
 msgid "Unknown Error"
 msgstr "Ukendt fejl"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:875
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:869
 msgid "Not checked"
 msgstr "Ikke tjekket"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/links.php:878
+#: d:\wordpress\plugins\broken-link-checker/includes/links.php:872
 msgid "False positive"
 msgstr "Falsk positiv"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/parsers.php:106
+#: d:\wordpress\plugins\broken-link-checker/includes/parsers.php:109
 #, php-format
 msgid "Editing is not implemented in the '%s' parser"
 msgstr "Redigering er ikke implementeret i '%s'-parser"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/parsers.php:121
+#: d:\wordpress\plugins\broken-link-checker/includes/parsers.php:124
 #, php-format
 msgid "Unlinking is not implemented in the '%s' parser"
 msgstr "Fjernelse af links er ikke implementeret i '%s'-parseren"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:291
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:287
 #, php-format
 msgid "%d second"
 msgid_plural "%d seconds"
 msgstr[0] "%d sekund"
 msgstr[1] "%d sekunder"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:292
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:288
 #, php-format
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
 msgstr[0] "%d sekund siden"
 msgstr[1] "%d sekunder siden"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:295
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:291
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d minut"
 msgstr[1] "%d minutter"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:296
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:292
 #, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "%d minut siden"
 msgstr[1] "%d minutter siden"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:299
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:295
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d time"
 msgstr[1] "%d timer"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:300
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:296
 #, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
 msgstr[0] "%d time siden"
 msgstr[1] "%d timer siden"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:303
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:299
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d dag"
 msgstr[1] "%d dage"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:304
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:300
 #, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d dag siden"
 msgstr[1] "%d dage siden"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:307
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:303
 #, php-format
 msgid "%d month"
 msgid_plural "%d months"
 msgstr[0] "%d måned"
 msgstr[1] "%d måneder"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:308
+#: d:\wordpress\plugins\broken-link-checker/includes/utility-class.php:304
 #, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
@@ -1023,8 +1042,7 @@ msgid "Wait..."
 msgstr "Vent ..."
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:99
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:531
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:621
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:592
 msgid "Not broken"
 msgstr "Ikke død"
 
@@ -1062,9 +1080,8 @@ msgid "The plugin failed to remove the link."
 msgstr "Det mislykkedes for pluginnet at fjerne linket."
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:361
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:250
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:525
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:615
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:237
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:586
 msgid "Unlink"
 msgstr "Fjern link"
 
@@ -1088,13 +1105,21 @@ msgstr ""
 "Er du sikker på, at du ønsker at slette alle indlæg, bogmærker og andre ting, der indeholder et af de valgte links? Denne handling kan ikke fortrydes.\n"
 "'Annullér' for at stoppe, 'OK' for at slette"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:448
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:449
 msgid ""
 "Are you sure you want to remove the selected links? This action can't be undone.\n"
 "'Cancel' to stop, 'OK' to remove"
 msgstr ""
 "Er du sikker på, at du ønsker at fjerne de valgte links? Denne handling kan ikke fortrydes.\n"
 "'Annullér' for at stoppe, 'OK' for at slette"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:558
+msgid "Enter a search string first."
+msgstr "Indtast først en søgestreng."
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/links-page-js.php:565
+msgid "Select one or more links to edit."
+msgstr "Vælg en eller flere links, der skal redigeres."
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/options-page-js.php:54
 msgid "Hide debug info"
@@ -1113,13 +1138,12 @@ msgid "Link text"
 msgstr "Linktekst"
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/search-form.php:45
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:177
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:187
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:173
 msgid "URL"
 msgstr "URL"
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/search-form.php:48
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:423
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:460
 msgid "HTTP code"
 msgstr "HTTP-kode"
 
@@ -1145,162 +1169,178 @@ msgid "Search Links"
 msgstr "Søg links"
 
 #: d:\wordpress\plugins\broken-link-checker/includes/admin/search-form.php:113
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:541
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:629
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:635
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:318
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:600
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:606
 msgid "Cancel"
 msgstr "Annullér"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:148
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:150
 msgid "Compact View"
 msgstr "Kompakt visning"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:149
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:151
 msgid "Detailed View"
 msgstr "Detaljeret visning"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:166
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:192
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:178
 msgid "Source"
 msgstr "Kilde"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:172
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:198
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:184
 msgid "Link Text"
 msgstr "Linktekst"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:246
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:232
 msgid "Bulk Actions"
 msgstr "Massehandlinger"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:247
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:233
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:583
+msgid "Edit URL"
+msgstr "Redigér URL"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:234
 msgid "Recheck"
 msgstr "Tjek igen"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:248
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:235
 msgid "Fix redirects"
 msgstr "Fix redirigerede"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:249
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:236
 msgid "Mark as not broken"
 msgstr "Markér som ikke-død"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:253
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:240
 msgid "Move sources to Trash"
 msgstr "Flyt kilder til papirkurven"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:255
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:242
 msgid "Delete sources"
 msgstr "Slet kilder"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:270
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:262
 msgid "&laquo;"
 msgstr "&laquo;"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:271
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:263
 msgid "&raquo;"
 msgstr "&raquo;"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:279
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:271
 #, php-format
 msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
 msgstr "Viser %s&#8211;%s af <span class=\"current-link-count\">%s</span>"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:408
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:294
+msgid "Bulk Edit URLs"
+msgstr "Masseredigér URL&#39;er"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:296
+msgid "Find"
+msgstr "Find"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:300
+msgid "Replace with"
+msgstr "Erstat med"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:308
+msgid "Case sensitive"
+msgstr "Der skelnes mellem små og store bogstaver"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:312
+msgid "Regular expression"
+msgstr "Regular expression"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:320
+msgid "Update"
+msgstr "Opdatér"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:445
 msgid "Post published on"
 msgstr "Indlæg udgivet den"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:413
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:450
 msgid "Link last checked"
 msgstr "Link sidst tjekket"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:417
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:454
 msgid "Never"
 msgstr "Aldrig"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:428
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:465
 msgid "Response time"
 msgstr "Svartid"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:430
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:467
 #, php-format
 msgid "%2.3f seconds"
 msgstr "%2.3f sekunder"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:433
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:470
 msgid "Final URL"
 msgstr "Endelige URL"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:438
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:475
 msgid "Redirect count"
 msgstr "Antal redirigeringer"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:443
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:480
 msgid "Instance count"
 msgstr "Antal instanser"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:452
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:489
 #, php-format
 msgid "This link has failed %d time."
 msgid_plural "This link has failed %d times."
 msgstr[0] "Der har været fejl på dette link %d gang."
 msgstr[1] "Der har været fejl på dette link %d gange."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:460
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:497
 #, php-format
 msgid "This link has been broken for %s."
 msgstr "Dette link har været dødt i %s."
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:471
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:508
 msgid "Log"
 msgstr "Log"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:507
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:658
-msgid "[An orphaned link! This is a bug.]"
-msgstr "[En forælderløs link! Dette er en bug.]"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:522
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:558
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:529
 msgid "Show more info about this link"
 msgstr "Vis flere oplysninger om dette link"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:524
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:614
-msgid "Remove this link from all posts"
-msgstr "Fjern dette link fra alle indlæg"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:530
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:620
-msgid "Remove this link from the list of broken links and mark it as valid"
-msgstr "Fjern dette link fra listen over døde links og markér det som aktivt"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:535
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:612
-msgid "Edit link URL"
-msgstr "Redigér link-URL"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:535
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:612
-msgid "Edit URL"
-msgstr "Redigér URL"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:541
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:629
-msgid "Cancel URL editing"
-msgstr "Anullér redigering af URL"
-
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:576
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:547
 msgid "Checked"
 msgstr "Tjekket"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:592
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:563
 msgid "Broken for"
 msgstr "Død for"
 
-#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:636
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:583
+msgid "Edit link URL"
+msgstr "Redigér link-URL"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:585
+msgid "Remove this link from all posts"
+msgstr "Fjern dette link fra alle indlæg"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:591
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "Fjern dette link fra listen over døde links og markér det som aktivt"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:600
+msgid "Cancel URL editing"
+msgstr "Anullér redigering af URL"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:607
 msgid "Update URL"
 msgstr "Opdatér URL"
+
+#: d:\wordpress\plugins\broken-link-checker/includes/admin/table-printer.php:629
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[En forælderløs link! Dette er en bug.]"
 
 #: d:\wordpress\plugins\broken-link-checker/modules/checkers/http.php:242
 msgid "Server Not Found"
@@ -1404,14 +1444,14 @@ msgstr "Se kommentar"
 msgid "Comment"
 msgstr "Kommentar"
 
-#: d:\wordpress\plugins\broken-link-checker/modules/containers/comment.php:360
+#: d:\wordpress\plugins\broken-link-checker/modules/containers/comment.php:372
 #, php-format
 msgid "%d comment has been deleted."
 msgid_plural "%d comments have been deleted."
 msgstr[0] "%d kommentar er blevet slettet"
 msgstr[1] "%d kommentarer er blevet slettede"
 
-#: d:\wordpress\plugins\broken-link-checker/modules/containers/comment.php:379
+#: d:\wordpress\plugins\broken-link-checker/modules/containers/comment.php:391
 #, php-format
 msgid "%d comment moved to the Trash."
 msgid_plural "%d comments moved to the Trash."
