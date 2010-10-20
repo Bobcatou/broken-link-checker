@@ -83,7 +83,7 @@ class blcHTMLLink extends blcParser {
 		
 		//Skip invalid links (again)
 		if ( !$url || (strlen($url)<6) ) {
-			continue;
+			return null;
 		}
 		
 		$text = strip_tags( $link['#link_text'] ); 
