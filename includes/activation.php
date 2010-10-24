@@ -17,6 +17,10 @@ $blclog->info( sprintf('Plugin activated at %s.', date_i18n('Y-m-d H:i:s')) );
 
 //Reset the "installation_complete" flag
 $blc_config_manager->options['installation_complete'] = false;
+//Note the time of the first installation (not very accurate, but still useful)
+if ( empty($blc_config_manager->options['first_installation_timestamp']) ){
+	$blc_config_manager->options['first_installation_timestamp'] = time();
+}
 $blc_config_manager->save_options();
 $blclog->info('Installation/update begins.');
 
