@@ -11,7 +11,7 @@ if ( !function_exists( 'microtime_float' ) ) {
 	}
 }
 
-require dirname(blc_get_plugin_file()) . '/includes/screen-options/screen-options.php';
+require BLC_DIRECTORY . '/includes/screen-options/screen-options.php';
 
 if (!class_exists('wsBrokenLinkChecker')) {
 
@@ -394,7 +394,7 @@ class wsBrokenLinkChecker {
     }
 
     function options_page(){
-    	global $blclog, $blc_directory;
+    	global $blclog;
     	
     	$moduleManager = &blcModuleManager::getInstance();
     	

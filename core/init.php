@@ -46,14 +46,15 @@ define('BLC_FOR_EDITING', 'edit');
 define('BLC_FOR_PARSING', 'parse');
 define('BLC_FOR_DISPLAY', 'display');
 
+//Path to the plugin's directory
+define('BLC_DIRECTORY', dirname(blc_get_plugin_file()));
+
 /***********************************************
 				Configuration
 ************************************************/
 
 //Load and initialize the plugin's configuration
-global $blc_directory;
-$blc_directory = dirname( blc_get_plugin_file() );
-require $blc_directory . '/includes/config-manager.php';
+require BLC_DIRECTORY . '/includes/config-manager.php';
 
 global $blc_config_manager;
 $blc_config_manager = new blcConfigurationManager(
@@ -120,7 +121,7 @@ $blc_config_manager = new blcConfigurationManager(
 				Logging
 ************************************************/
 
-include $blc_directory . '/includes/logger.php';
+include BLC_DIRECTORY . '/includes/logger.php';
 
 global $blclog;
 $blclog = new blcDummyLogger;
@@ -128,8 +129,8 @@ $blclog = new blcDummyLogger;
 /*
 if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
 	//Load FirePHP for debug logging
-	if ( !class_exists('FB') && file_exists($blc_directory . '/FirePHPCore/fb.php4') ) {
-		require_once $blc_directory . '/FirePHPCore/fb.php4';
+	if ( !class_exists('FB') && file_exists(BLC_DIRECTORY . '/FirePHPCore/fb.php4') ) {
+		require_once BLC_DIRECTORY . '/FirePHPCore/fb.php4';
 	}
 	//FB::setEnabled(false);
 }
@@ -253,15 +254,14 @@ add_filter('cron_schedules', 'blc_cron_schedules');
 
 //Execute the installation/upgrade script when the plugin is activated.
 function blc_activation_hook(){
-	global $blc_directory;
-	require $blc_directory . '/includes/activation.php';
+	require BLC_DIRECTORY . '/includes/activation.php';
 }
 register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
 
 //Load the plugin if installed successfully
 if ( $blc_config_manager->options['installation_complete'] ){
 	function blc_init(){
-		global $blc_directory, $blc_module_manager, $blc_config_manager, $ws_link_checker;
+		global $blc_module_manager, $blc_config_manager, $ws_link_checker;
 		
 		static $init_done = false;
 		if ( $init_done ){
@@ -270,13 +270,13 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		$init_done = true;
 		
 		//Load the base classes and utilities
-		require $blc_directory . '/includes/links.php';
-		require $blc_directory . '/includes/link-query.php';
-		require $blc_directory . '/includes/instances.php';
-		require $blc_directory . '/includes/utility-class.php';
+		require BLC_DIRECTORY . '/includes/links.php';
+		require BLC_DIRECTORY . '/includes/link-query.php';
+		require BLC_DIRECTORY . '/includes/instances.php';
+		require BLC_DIRECTORY . '/includes/utility-class.php';
 		
 		//Load the module subsystem
-		require $blc_directory . '/includes/modules.php';
+		require BLC_DIRECTORY . '/includes/modules.php';
 		
 		//Load the modules that want to be executed in all contexts
 		$blc_module_manager->load_modules();
@@ -284,7 +284,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		if ( is_admin() || defined('DOING_CRON') ){
 			
 			//It's an admin-side or Cron request. Load the core.
-			require $blc_directory . '/core/core.php';
+			require BLC_DIRECTORY . '/core/core.php';
 			$ws_link_checker = new wsBrokenLinkChecker( blc_get_plugin_file() , $blc_config_manager );
 			
 		} else {

@@ -20,10 +20,9 @@ if ( !function_exists('sys_get_temp_dir')) {
 
 //Include the internationalized domain name converter (requires PHP 5)
 if ( defined('BLC_PRO_VERSION') && version_compare(phpversion(), '5.0.0', '>=') && !class_exists('idna_convert') ){
-	$blc_directory = dirname(blc_get_plugin_file()); 
-	include $blc_directory . '/idn/idna_convert.class.php';
+	include BLC_DIRECTORY . '/idn/idna_convert.class.php';
 	if ( !function_exists('encode_utf8') ){
-		include $blc_directory . '/idn/transcode_wrapper.php';
+		include BLC_DIRECTORY . '/idn/transcode_wrapper.php';
 	}
 }
 

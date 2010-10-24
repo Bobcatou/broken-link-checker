@@ -1,6 +1,6 @@
 <?php
 
-global $blc_directory, $blclog, $blc_config_manager, $wpdb;
+global $blclog, $blc_config_manager, $wpdb;
 $queryCnt = $wpdb->num_queries;
 
 //Completing the installation/upgrade is required for the plugin to work, so make sure 
@@ -21,13 +21,13 @@ $blc_config_manager->save_options();
 $blclog->info('Installation/update begins.');
 
 //Load the base classes and utilities
-require $blc_directory . '/includes/links.php';
-require $blc_directory . '/includes/link-query.php';
-require $blc_directory . '/includes/instances.php';
-require $blc_directory . '/includes/utility-class.php';
+require BLC_DIRECTORY . '/includes/links.php';
+require BLC_DIRECTORY . '/includes/link-query.php';
+require BLC_DIRECTORY . '/includes/instances.php';
+require BLC_DIRECTORY . '/includes/utility-class.php';
 
 //Load the module subsystem
-require $blc_directory . '/includes/modules.php';
+require BLC_DIRECTORY . '/includes/modules.php';
 $moduleManager = & blcModuleManager::getInstance();	
        
 //If upgrading, activate/deactivate custom field and comment containers based on old ver. settings
@@ -43,7 +43,7 @@ if ( empty($blc_config_manager->options['custom_fields']) ){
 
 //Prepare the database.
 $blclog->info('Upgrading the database...');
-require_once $blc_directory . '/includes/admin/db-upgrade.php';
+require_once BLC_DIRECTORY . '/includes/admin/db-upgrade.php';
 blcDatabaseUpgrader::upgrade_database();
 
 //Remove invalid DB entries
