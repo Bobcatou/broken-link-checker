@@ -83,6 +83,13 @@ To upgrade your installation
 
 == Changelog ==
 
+= 0.9.7.2 =
+* Added Polish translation.
+* Updated Danish translation.
+* Updated Italian translation.
+* Fixed an uncommon "Cannot break/continue 1 level" error. 
+* Added a new user feedback survey (the link only shows up after you've used this version for at least two weeks).
+
 = 0.9.7.1 =
 * Updated German translation and fixed the corresponding credits link.
 
