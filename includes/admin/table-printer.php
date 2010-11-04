@@ -583,7 +583,7 @@ class blcTablePrinter {
       	$actions['edit'] = "<span class='edit'><a href='javascript:void(0)' class='blc-edit-button' title='" . esc_attr( __('Edit link URL' , 'broken-link-checker') ) . "'>". __('Edit URL' , 'broken-link-checker') ."</a>";
       	
       	$actions['delete'] = "<span class='delete'><a class='submitdelete blc-unlink-button' title='" . esc_attr( __('Remove this link from all posts', 'broken-link-checker') ). "' ".
-			"id='unlink-button-$rownum' href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
+			"href='javascript:void(0);'>" . __('Unlink', 'broken-link-checker') . "</a>";
 
 		if ( $link->broken ){
 			$actions['discard'] = sprintf(
