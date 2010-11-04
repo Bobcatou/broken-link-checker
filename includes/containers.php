@@ -36,7 +36,8 @@ class blcContainerManager extends blcModule {
    */
 	function &get_container($container){
 		$container['fields'] = $this->get_parseable_fields();
-		return new $this->container_class_name($container);
+        $container_obj = new $this->container_class_name($container);
+        return $container_obj;
 	}
 	
   /**

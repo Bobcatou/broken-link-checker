@@ -249,26 +249,27 @@ class blcModuleManager {
 	 * @return blcModule A reference to a module object, or NULL on error. 
 	 */
 	function &get_module($module_id, $autoload = true, $category=''){
+        $no_result = null;
 		if ( !is_string($module_id) ){
 			//$backtrace = debug_backtrace();
 			//FB::error($backtrace, "get_module called with a non-string argument");
-			return null;
+			return $no_result;
 		}
 		
 		if ( empty($this->loaded[$module_id]) ){
 			if ( $autoload && $this->is_active($module_id) ){
 				if ( !$this->load_module($module_id) ){
-					return null;
+					return $no_result;
 				}
 			} else {
-				return null;
+				return $no_result;
 			}
 		}
 		
 		if ( !empty($category) ){
 			$data = $this->get_module_data($module_id);
 			if ( $data['ModuleCategory'] != $category ){
-				return null;
+				return $no_result;
 			}
 		}
 		
