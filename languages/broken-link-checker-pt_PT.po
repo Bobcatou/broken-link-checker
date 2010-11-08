@@ -1,7 +1,7 @@
-# Translation of the WordPress plugin Broken Link Checker 0.9.7.2 by Janis Elsts.
+# Translation of the WordPress plugin Broken Link Checker Pro 1.2 by Janis Elsts.
 # Copyright (C) 2010 Janis Elsts
 # This file is distributed under the same license as the Broken Link Checker package.
-# Tradução em português pt_PT do plugin Broken Link Checker - v.0.9.7.2 - 4/11/2010
+# Tradução em português pt_PT do plugin Broken Link Checker Pro 1.2 - 8/11/2010
 # Autor: PedroDM - <pm[at]mowster[dot]net>
 # Website: http://jobs.mowster.net/ - <jobs@mowster.net>
 #
@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Broken Link Checker PT\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-04 21:15-0000\n"
+"POT-Creation-Date: 2010-11-07 19:35-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: MwJobs | http://jobs.mowster.net <jobs@mowster.net>\n"
@@ -45,7 +45,6 @@ msgid "Link Checker"
 msgstr "Links offline"
 
 #: core/core.php:349
-#: includes/link-query.php:26
 msgid "Broken Links"
 msgstr "Links offline"
 
@@ -179,7 +178,6 @@ msgid "Check links using"
 msgstr "Verificar links utilizados"
 
 #: core/core.php:851
-#: includes/links.php:849
 msgid "Timeout"
 msgstr "Intervalo"
 
@@ -219,7 +217,6 @@ msgid "Custom temporary directory"
 msgstr "Pasta temporária personalizada"
 
 #: core/core.php:933
-#: includes/links.php:875
 msgid "OK"
 msgstr "Aceitar"
 
@@ -472,7 +469,7 @@ msgstr[1] "em %d links"
 
 #: core/core.php:2327
 msgid "and still searching..."
-msgstr "procurando..."
+msgstr "e procurando..."
 
 #: core/core.php:2333
 msgid "Searching your blog for links..."
@@ -483,7 +480,6 @@ msgid "No links detected."
 msgstr "Não se encontraram links."
 
 #: core/core.php:2361
-#: includes/links.php:831
 msgid "Unknown"
 msgstr "Desconhecido"
 
@@ -612,11 +608,6 @@ msgid "If this value is zero even after several page reloads you have probably e
 msgstr "Se este valor é zero depois de recarregar várias provavelmente encontrou um bug."
 
 #: core/core.php:2960
-#, php-format
-msgid "[%s] Broken links detected"
-msgstr "[%s] Links offline detectados"
-
-#: core/core.php:2966
 #, php-format
 msgid "Broken Link Checker has detected %d new broken link on your site."
 msgid_plural "Broken Link Checker has detected %d new broken links on your site."
@@ -780,8 +771,8 @@ msgid_plural "%d '%s' have been deleted"
 msgstr[0] "%d '%s' foi apagado"
 msgstr[1] "%d '%s' foram apagados"
 
-#: includes/containers.php:882
-#: includes/containers.php:900
+#: includes/containers.php:883
+#: includes/containers.php:901
 #, php-format
 msgid "Container type '%s' not recognized"
 msgstr "Recipiente tipo '%s' não foi reconhecido"
@@ -895,6 +886,7 @@ msgid "No links found (yet)"
 msgstr "Links (0)"
 
 #: includes/link-query.php:53
+#: includes/admin/search-form.php:32
 msgid "Search"
 msgstr "Procurar"
 
@@ -1344,8 +1336,8 @@ msgstr "Não foi possível eliminar o link blogroll \"%s\" (%d)"
 #, php-format
 msgid "%d blogroll link deleted."
 msgid_plural "%d blogroll links deleted."
-msgstr[0] "%d link blogroll apagado"
-msgstr[1] "%d links blogroll apagados"
+msgstr[0] "%d link blogroll apagado."
+msgstr[1] "%d links blogroll apagados."
 
 #: modules/containers/comment.php:53
 #, php-format
@@ -1383,10 +1375,10 @@ msgstr[1] "%d comentários foram apagados."
 
 #: modules/containers/comment.php:391
 #, php-format
-msgid "%d comment moved to the trash."
-msgid_plural "%d comments moved to the trash."
-msgstr[0] "%d comentário movido para o lixo."
-msgstr[1] "%d comentários movidos para o lixo."
+msgid "%d comment moved to the Trash"
+msgid_plural "%d comments moved to the Trash."
+msgstr[0] "%d comentário apagado."
+msgstr[1] "%d comentários apagados."
 
 #: modules/containers/custom_field.php:84
 #, php-format
@@ -1413,6 +1405,100 @@ msgstr "Ver \"%s\""
 msgid "I don't know how to edit a '%s' [%d]."
 msgstr "Não é possível editar '%s' [%d]."
 
+#: modules/extras/dailymotion-embed.php:24
+msgid "DailyMotion Video"
+msgstr "Vídeo DailyMotion"
+
+#: modules/extras/dailymotion-embed.php:25
+msgid "Embedded DailyMotion video"
+msgstr "Vídeo DailyMotion embutido"
+
+#: modules/extras/embed-parser-base.php:140
+msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
+msgstr "Vídeos embutidos não podem ser editados utilizando o Links offline. Por favor, editar ou substituir manualmente o vídeo em questão."
+
+#: modules/extras/mediafire.php:92
+#: modules/extras/megaupload.php:110
+#: modules/extras/rapidshare.php:143
+msgid "Not Found"
+msgstr "Não Encontrado"
+
+#: modules/extras/megaupload.php:117
+msgid "File Temporarily Unavailable"
+msgstr "Ficheiro Temporariamente Indisponível"
+
+#: modules/extras/megaupload.php:123
+msgid "API Error"
+msgstr "Erro API"
+
+#: modules/extras/rapidshare.php:162
+msgid "RS Server Down"
+msgstr "Servidor RS Desligado"
+
+#: modules/extras/rapidshare.php:169
+msgid "File Blocked"
+msgstr "Ficheiro Bloqueado"
+
+#: modules/extras/rapidshare.php:176
+msgid "File Locked"
+msgstr "Ficheiro Bloqueado"
+
+#: modules/extras/rapidshare.php:187
+#, php-format
+msgid "RapidShare : %s"
+msgstr "Rapidshare : %s"
+
+#: modules/extras/rapidshare.php:193
+#, php-format
+msgid "RapidShare API error: %s"
+msgstr "Rapidshare erro API: %s"
+
+#: modules/extras/vimeo-embed.php:25
+msgid "Vimeo Video"
+msgstr "Vídeo Vimeo"
+
+#: modules/extras/vimeo-embed.php:26
+msgid "Embedded Vimeo video"
+msgstr "Vídeo Vimeo embutido"
+
+#: modules/extras/youtube-embed.php:23
+msgid "YouTube Video"
+msgstr "Vídeo YouTube"
+
+#: modules/extras/youtube-embed.php:24
+msgid "Embedded YouTube video"
+msgstr "Vídeo YouTube embutido"
+
+#: modules/extras/youtube.php:64
+#: modules/extras/youtube.php:67
+msgid "Video Not Found"
+msgstr "Vídeo Não Encontrado"
+
+#: modules/extras/youtube.php:75
+msgid "Video Removed"
+msgstr "Vídeo Apagado"
+
+#: modules/extras/youtube.php:83
+msgid "Invalid Video ID"
+msgstr "Vídeo ID Inválido"
+
+#: modules/extras/youtube.php:95
+msgid "Video OK"
+msgstr "Vídeo Ok"
+
+#: modules/extras/youtube.php:109
+#, php-format
+msgid "Video status : %s%s"
+msgstr "Vídeo status : %s%s"
+
+#: modules/extras/youtube.php:128
+msgid "Video Restricted"
+msgstr "Vídeo Restricto"
+
+#: modules/extras/youtube.php:145
+msgid "Unknown YouTube API response received."
+msgstr "Resposta API YouTube desconhecida."
+
 #: modules/parsers/image.php:156
 msgid "Image"
 msgstr "Imagem"
@@ -1421,5 +1507,9 @@ msgstr "Imagem"
 msgid "Custom field"
 msgstr "Campo personalizado"
 
-msgid "Checks your blog for broken links and missing images and notifies you on the dashboard if any are found."
-msgstr "Verifica o blog procurando os links e imagens em falta, informa no Painel do WordPress os resultados da verificação."
+#~ msgid ""
+#~ "Checks your blog for broken links and missing images and notifies you on "
+#~ "the dashboard if any are found."
+#~ msgstr ""
+#~ "Verifica o blog procurando os links e imagens em falta, informa no Painel "
+#~ "do WordPress os resultados da verificação."
