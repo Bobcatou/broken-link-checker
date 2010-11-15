@@ -392,10 +392,16 @@ class blcUtility {
 			if ( empty($charset) ){
 				$charset = get_bloginfo('charset');
 			}
-			if ( (strtoupper($charset) != 'UTF-8') && (strtoupper($charset) != 'UTF8') ){
-				$url = encode_utf8($url, $charset, true);
-			}			
-			$url = $idn->encode($url);
+            
+            //Encode only the host
+            if ( preg_match('@(\w+:/*)?([^/:]+)(.*$)?@s', $url, $matches) ){
+                $host = $matches[2];
+                if ( (strtoupper($charset) != 'UTF-8') && (strtoupper($charset) != 'UTF8') ){
+    				$host = encode_utf8($host, $charset, true);
+    			}
+                $host = $idn->encode($host);
+                $url = $matches[1] . $host . $matches[3];
+            } 
 		}
 		
 		return $url;
