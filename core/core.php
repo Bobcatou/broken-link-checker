@@ -3014,7 +3014,7 @@ class wsBrokenLinkChecker {
 		}
 		
 		//Add a link to the "Broken Links" tab.
-		$body .= __("You can see all broken links here:", 'brokenk-link-checker') . "<br>";
+		$body .= __("You can see all broken links here:", 'broken-link-checker') . "<br>";
 		$link_page = admin_url('tools.php?page=view-broken-links'); 
 		$body .= sprintf('<a href="%1$s">%1$s</a>', $link_page);
 		
