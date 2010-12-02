@@ -1,0 +1,1572 @@
+# Translation of the WordPress plugin Broken Link Checker 0.9.6 by Janis Elsts.
+# Copyright (C) 2010 Janis Elsts
+# This file is distributed under the same license as the Broken Link Checker package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Broken Link Checker 0.9.6\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
+"POT-Creation-Date: 2010-10-08 16:08+0000\n"
+"PO-Revision-Date: 2010-12-02 12:29+0100\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Poedit-Language: Romanian\n"
+"X-Poedit-Country: ROMANIA\n"
+
+#: core/core.php:152
+#: includes/admin/links-page-js.php:37
+msgid "Loading..."
+msgstr "Se �ncarc�..."
+
+#: core/core.php:176
+#: includes/admin/options-page-js.php:18
+msgid "[ Network error ]"
+msgstr "[Eroare de Re�ea]"
+
+#: core/core.php:201
+msgid "Automatically expand the widget if broken links have been detected"
+msgstr "Extinde automat widget-ul dac� s-au detectat leg�turi �ntrerupte"
+
+#: core/core.php:342
+msgid "Link Checker Settings"
+msgstr "Set�ri Verificator de Leg�turi"
+
+#: core/core.php:343
+msgid "Link Checker"
+msgstr "Verificator de Leg�turi"
+
+#: core/core.php:348
+#: includes/link-query.php:26
+msgid "Broken Links"
+msgstr "Leg�turi �ntrerupte"
+
+#: core/core.php:364
+msgid "View Broken Links"
+msgstr "Vizualizare Leg�turi �ntrerupte"
+
+#: core/core.php:392
+msgid "Settings"
+msgstr "Set�ri"
+
+#: core/core.php:404
+#: core/core.php:1186
+#, php-format
+msgid "Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)"
+msgstr "Eroare: Tabelele bazelor de date ale modulului extensie nu sunt actualizate! (Versiune curent�: %d, a�teptat�: %d)"
+
+#: core/core.php:543
+msgid "Settings saved."
+msgstr "Set�ri salvate."
+
+#: core/core.php:550
+msgid "Complete site recheck started."
+msgstr "Reverificare complet� a siturilor pornit�."
+
+#: core/core.php:564
+#: core/core.php:2744
+msgid "Details"
+msgstr "Detalii"
+
+#: core/core.php:578
+msgid "General"
+msgstr "Generalit��i"
+
+#: core/core.php:579
+msgid "Look For Links In"
+msgstr "Caut� Leg�turi �n"
+
+#: core/core.php:580
+msgid "Which Links To Check"
+msgstr "Ce Leg�turi s� se Verifice"
+
+#: core/core.php:581
+msgid "Protocols & APIs"
+msgstr "Protocoale & Interfe�e de Programare Aplica�ie (IPA - API)"
+
+#: core/core.php:582
+msgid "Advanced"
+msgstr "Avansate"
+
+#: core/core.php:586
+msgid "Broken Link Checker Options"
+msgstr "Op�iuni Broken Link Checker"
+
+#: core/core.php:612
+#: includes/admin/table-printer.php:168
+msgid "Status"
+msgstr "Stare"
+
+#: core/core.php:614
+#: includes/admin/options-page-js.php:56
+msgid "Show debug info"
+msgstr "Arat� informa�iile de depanare"
+
+#: core/core.php:642
+msgid "Check each link"
+msgstr "Verific� fiecare leg�tur�"
+
+#: core/core.php:647
+#, php-format
+msgid "Every %s hours"
+msgstr "La fiecare %s Ore"
+
+#: core/core.php:656
+msgid "Existing links will be checked this often. New links will usually be checked ASAP."
+msgstr "Leg�turile existente vor fi verificate cu aceast� frecven��. Leg�turile noi vor fi verificate, de obicei, de �ndat� ce este posibil."
+
+#: core/core.php:663
+msgid "E-mail notifications"
+msgstr "Notific�ri po�t� electronic� (e-mail)"
+
+#: core/core.php:669
+msgid "Send me e-mail notifications about newly detected broken links"
+msgstr "Trimite-mi notific�ri despre leg�turile �ntrerupte nou detectate"
+
+#: core/core.php:676
+msgid "Link tweaks"
+msgstr "Optimizare leg�turi"
+
+#: core/core.php:682
+msgid "Apply custom formatting to broken links"
+msgstr "Aplicare formatare personalizat� leg�turilor �ntrerupte"
+
+#: core/core.php:686
+#: core/core.php:714
+msgid "Edit CSS"
+msgstr "Editare Diagrame stilistice in cascad� (DSC - CSS)"
+
+#: core/core.php:710
+msgid "Apply custom formatting to removed links"
+msgstr "Aplicare formatare personalizat� leg�turilor eliminate"
+
+#: core/core.php:738
+msgid "Stop search engines from following broken links"
+msgstr "Opre�te motoarele de c�utare s� urmeze leg�turile �ntrerupte"
+
+#: core/core.php:755
+msgid "Look for links in"
+msgstr "Caut� leg�turi �n"
+
+#: core/core.php:766
+msgid "Post statuses"
+msgstr "Afi�are st�ri"
+
+#: core/core.php:799
+msgid "Link types"
+msgstr "Tipuri de leg�turi"
+
+#: core/core.php:805
+msgid "Error : All link parsers missing!"
+msgstr "Eroare: Toate analizoarele de cod ale leg�turilor lips�!"
+
+#: core/core.php:812
+msgid "Exclusion list"
+msgstr "List� de excluziuni"
+
+#: core/core.php:813
+msgid "Don't check links where the URL contains any of these words (one per line) :"
+msgstr "Nu verifica leg�turile acolo unde adresa universal� (URL) con�ine vreunul dintre aceste cuvinte (unul pe r�nd):"
+
+#: core/core.php:831
+msgid "Check links using"
+msgstr "Verific� leg�turile cu ajutorul"
+
+#: core/core.php:850
+#: includes/links.php:849
+msgid "Timeout"
+msgstr "Expirare timp"
+
+#: core/core.php:856
+#: core/core.php:902
+#: core/core.php:2871
+#, php-format
+msgid "%s seconds"
+msgstr "%s secunde"
+
+#: core/core.php:865
+msgid "Links that take longer than this to load will be marked as broken."
+msgstr "Leg�turile a c�ror �nc�rcare dureaz� mai mult dec�t at�t vor fi marcate ca �ntrerupte."
+
+#: core/core.php:872
+msgid "Link monitor"
+msgstr "Monitor de leg�turi"
+
+#: core/core.php:880
+msgid "Run continuously while the Dashboard is open"
+msgstr "Ruleaz� �n continuu, at�t timp c�t Tabloul de Bord este deschis"
+
+#: core/core.php:888
+msgid "Run hourly in the background"
+msgstr "Ruleaz� la fiecare or�, �n fundal"
+
+#: core/core.php:896
+msgid "Max. execution time"
+msgstr "Max. timp de execu�ie"
+
+#: core/core.php:913
+msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
+msgstr "Modulul extensie func�ioneaz� prin lansarea periodic� a unei sarcini, �n fundal, care analizeaz� afi��rile dumneavoastr�, pentru a g�si leg�turi, verific� adresele universale (URL) descoperite, �i �ndepline�te alte sarcini consumatoare de timp. Aici pute�i seta durata pentru care poate rula monitorul de leg�turi, de fiecare dat�, �nainte de a se opri."
+
+#: core/core.php:923
+msgid "Custom temporary directory"
+msgstr "Director temporar personalizat"
+
+#: core/core.php:932
+msgid "OK"
+msgstr "OK"
+
+#: core/core.php:935
+msgid "Error : This directory isn't writable by PHP."
+msgstr "Eroare: Acest director nu este inscriptibil �n PHP."
+
+#: core/core.php:940
+msgid "Error : This directory doesn't exist."
+msgstr "Eroare: Acest director nu exist�."
+
+#: core/core.php:948
+msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
+msgstr "Setaţi acest câmp dacă doriţi să utilizaţi plugin-un director particularizat pentru lockfiles sale. În caz contrar, lăsaţi-l gol."
+
+#: core/core.php:955
+msgid "Server load limit"
+msgstr "Limita de �nc�rcare a serverului"
+
+#: core/core.php:970
+#, php-format
+msgid "Current load : %s"
+msgstr "�nc�rcare curent�: %s"
+
+#: core/core.php:976
+#, php-format
+msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
+msgstr "Verificarea leg�turilor va fi suspendat� dac� media <a href=\"%s\">de �nc�rcare a serverului</a> se ridic� peste aceast� cifr�. L�sa�i acest c�mp necompletat pentru a dezactiva limitarea �nc�rc�rii."
+
+#: core/core.php:984
+msgid "Not available"
+msgstr "Indisponibil"
+
+#: core/core.php:986
+msgid "Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible."
+msgstr "Limitarea �n�rc�rii func�ioneaz� doar pe sisteme similare Linux, unde este prezent� �i accesibil� <code>media de proc/�nc�rcare</code>."
+
+#: core/core.php:994
+msgid "Forced recheck"
+msgstr "Reverificare for�at�"
+
+#: core/core.php:997
+msgid "Re-check all pages"
+msgstr "Reverificare a tuturor paginilor"
+
+#: core/core.php:1001
+msgid "The \"Nuclear Option\". Click this button to make the plugin empty its link database and recheck the entire site from scratch."
+msgstr "\"Op�iunea Nuclear�\". Face�i clic pe acest buton pentru a determina modulul extensie s� �i goleasc�  baza de date cu leg�turi �i s� reverifice �ntregul sit de la cap�t."
+
+#: core/core.php:1012
+msgid "Save Changes"
+msgstr "Salveaz� Modific�rile"
+
+#: core/core.php:1057
+msgid "Configure"
+msgstr "Configurare"
+
+#: core/core.php:1117
+msgid "Upgrade to Pro to enable this feature"
+msgstr "Trece�i la versiunea Pro pentru a permite aceast� op�iune"
+
+#: core/core.php:1152
+msgid "Check URLs entered in these custom fields (one per line) :"
+msgstr "Verifica�i URL-urile introduse �n aceste c�mpuri personalizabile (una pe r�nd) :"
+
+#: core/core.php:1286
+#: core/core.php:1370
+#: core/core.php:1402
+#, php-format
+msgid "Database error : %s"
+msgstr "Eroare de baz� de date: %s"
+
+#: core/core.php:1352
+msgid "You must enter a filter name!"
+msgstr "Trebuie s� introduce�i un nume de filtru!"
+
+#: core/core.php:1356
+msgid "Invalid search query."
+msgstr "Cerere de c�utare invalid�."
+
+#: core/core.php:1365
+#, php-format
+msgid "Filter \"%s\" created"
+msgstr "Filtru \"%s\" creat"
+
+#: core/core.php:1392
+msgid "Filter ID not specified."
+msgstr "ID filtru nespecificat."
+
+#: core/core.php:1399
+msgid "Filter deleted"
+msgstr "Filtru �ters"
+
+#: core/core.php:1447
+#, php-format
+msgid "Replaced %d redirect with a direct link"
+msgid_plural "Replaced %d redirects with direct links"
+msgstr[0] "�nlocuire redirec�ionare %d cu o leg�tur� direct�"
+msgstr[1] "�nlocuire redirec�ion�ri %d cu leg�turi directe"
+
+#: core/core.php:1458
+#, php-format
+msgid "Failed to fix %d redirect"
+msgid_plural "Failed to fix %d redirects"
+msgstr[0] "E�ec la repararea redirec�ion�rii %d"
+msgstr[1] "E�ec la repararea redirec�ion�rilor %d"
+
+#: core/core.php:1468
+msgid "None of the selected links are redirects!"
+msgstr "Nici una dintre leg�turile selectate nu este o redirec�ionare!"
+
+#: core/core.php:1547
+#, php-format
+msgid "%d link updated."
+msgid_plural "%d links updated."
+msgstr[0] "Leg�tura %d actualizat�."
+msgstr[1] "Leg�turile %d actualizate."
+
+#: core/core.php:1558
+#, php-format
+msgid "Failed to update %d link."
+msgid_plural "Failed to update %d links."
+msgstr[0] "E�ec la actualizarea leg�turii %d."
+msgstr[1] "E�ec la actualizarea leg�turilor %d."
+
+#: core/core.php:1612
+#, php-format
+msgid "%d link removed"
+msgid_plural "%d links removed"
+msgstr[0] "%d leg�tur� eliminat�"
+msgstr[1] "%d leg�turi eliminate"
+
+#: core/core.php:1623
+#, php-format
+msgid "Failed to remove %d link"
+msgid_plural "Failed to remove %d links"
+msgstr[0] "E�ec la eliminarea a %d leg�tur�"
+msgstr[1] "E�ec la eliminarea a %d leg�turi"
+
+#: core/core.php:1732
+#, php-format
+msgid "%d item was skipped because it can't be moved to the Trash. You need to delete it manually."
+msgid_plural "%d items were skipped because they can't be moved to the Trash. You need to delete them manually."
+msgstr[0] "Articolul %d a fost omis pentru c� nu poate fi mutat �n Pubel�. Este nevoie s� �l �terge�i manual."
+msgstr[1] "Articolele %d au fost omise pentru c� nu pot fi mutate �n Pubel�. Este nevoie s� le �terge�i manual."
+
+#: core/core.php:1753
+msgid "Didn't find anything to delete!"
+msgstr "Nu am g�sit nimic de �ters!"
+
+#: core/core.php:1781
+#, php-format
+msgid "%d link scheduled for rechecking"
+msgid_plural "%d links scheduled for rechecking"
+msgstr[0] "Leg�tura %d programat� pentru reverificare"
+msgstr[1] "Leg�turile %d programate pentru reverificare"
+
+#: core/core.php:1826
+#: core/core.php:2431
+msgid "This link was manually marked as working by the user."
+msgstr "Aceast� leg�tur� a fost marcat� manual, de c�tre utilizator, ca func�ional�."
+
+#: core/core.php:1833
+#, php-format
+msgid "Couldn't modify link %d"
+msgstr "Nu am putut modifica leg�tura %d"
+
+#: core/core.php:1844
+#, php-format
+msgid "%d link marked as not broken"
+msgid_plural "%d links marked as not broken"
+msgstr[0] "%d leg�tur� marcat� ca ne�ntrerupt�"
+msgstr[1] "%d leg�turi marcate ca ne�ntrerupte"
+
+#: core/core.php:1884
+msgid "Table columns"
+msgstr "Coloane de tabel"
+
+#: core/core.php:1903
+msgid "Show on screen"
+msgstr "Arat� pe ecran"
+
+#: core/core.php:1910
+msgid "links"
+msgstr "leg�turi"
+
+#: core/core.php:1911
+#: includes/admin/table-printer.php:136
+msgid "Apply"
+msgstr "Aplic�"
+
+#: core/core.php:1915
+msgid "Misc"
+msgstr "Diverse"
+
+#: core/core.php:1930
+#, php-format
+msgid "Highlight links broken for at least %s days"
+msgstr "Eviden�iaz� leg�turile �ntrerupte pentru cel pu�in %s zile"
+
+#: core/core.php:1939
+msgid "Color-code status codes"
+msgstr "Codare a st�rii prin culoare"
+
+#: core/core.php:1956
+#: core/core.php:2416
+#: core/core.php:2452
+#: core/core.php:2515
+msgid "You're not allowed to do that!"
+msgstr "Nu vi se permite aceast� ac�iune!"
+
+#: core/core.php:2297
+msgid "View broken links"
+msgstr "Vizualizare leg�turi �ntrerupte"
+
+#: core/core.php:2298
+#, php-format
+msgid "Found %d broken link"
+msgid_plural "Found %d broken links"
+msgstr[0] "S-a g�sit %d leg�tur� �ntrerupt�"
+msgstr[1] "S-au g�sit %d leg�turi �ntrerupte"
+
+#: core/core.php:2304
+msgid "No broken links found."
+msgstr "Nu s-au g�sit leg�turi �ntrerupte."
+
+#: core/core.php:2311
+#, php-format
+msgid "%d URL in the work queue"
+msgid_plural "%d URLs in the work queue"
+msgstr[0] "%d URL �n �irul de lucru"
+msgstr[1] "%d URL-uri �n �irul de lucru"
+
+#: core/core.php:2314
+msgid "No URLs in the work queue."
+msgstr "Nici un URL �n �irul de lucru."
+
+#: core/core.php:2320
+#, php-format
+msgid "Detected %d unique URL"
+msgid_plural "Detected %d unique URLs"
+msgstr[0] "S-a detectat %d un URL unic"
+msgstr[1] "S-au detectat %d un URL-uri unice"
+
+#: core/core.php:2321
+#, php-format
+msgid "in %d link"
+msgid_plural "in %d links"
+msgstr[0] "�n %d leg�tur�"
+msgstr[1] "�n %d leg�turi"
+
+#: core/core.php:2326
+msgid "and still searching..."
+msgstr ", iar c�utarea continu�..."
+
+#: core/core.php:2332
+msgid "Searching your blog for links..."
+msgstr "Se caut� leg�turi pe blogul dvs..."
+
+#: core/core.php:2334
+msgid "No links detected."
+msgstr "Nu s-au detectat leg�turi."
+
+#: core/core.php:2360
+msgctxt "current load"
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: core/core.php:2424
+#: core/core.php:2462
+#: core/core.php:2525
+#, php-format
+msgid "Oops, I can't find the link %d"
+msgstr "Hopa, nu pot s� g�sesc leg�tura %d"
+
+#: core/core.php:2437
+msgid "Oops, couldn't modify the link!"
+msgstr "Hopa, n-am putut modifica leg�tura!"
+
+#: core/core.php:2440
+#: core/core.php:2551
+msgid "Error : link_id not specified"
+msgstr "Eroare: ID_leg�tur� nespecificat�"
+
+#: core/core.php:2472
+msgid "Oops, the new URL is invalid!"
+msgstr "Hopa, noul URL este invalid!"
+
+#: core/core.php:2483
+#: core/core.php:2534
+msgid "An unexpected error occured!"
+msgstr "A avut loc o eroare nea�teptat�!"
+
+#: core/core.php:2501
+msgid "Error : link_id or new_url not specified"
+msgstr "Eroare: ID_leg�tur� ori URL_nou nespecificat(�)"
+
+#: core/core.php:2560
+msgid "You don't have sufficient privileges to access this information!"
+msgstr "Nu ave�i privilegii suficiente pentru a accesa aceast� informa�ie!"
+
+#: core/core.php:2573
+msgid "Error : link ID not specified"
+msgstr "Eroare: ID leg�tur� nespecificat�"
+
+#: core/core.php:2587
+#, php-format
+msgid "Failed to load link details (%s)"
+msgstr "E�ec la �nc�rcarea detaliilor leg�turii (%s)"
+
+#. #-#-#-#-#  plugin.pot (Broken Link Checker 0.9.6)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: core/core.php:2716
+msgid "Broken Link Checker"
+msgstr "Broken Link Checker"
+
+#: core/core.php:2730
+#, php-format
+msgid "The current temporary directory is not accessible; please <a href=\"%s\">set a different one</a>."
+msgstr "Directorul temporar curent nu este accesibil; v� rug�m <a href=\"%s\">s� declara�i un altul</a>."
+
+#: core/core.php:2735
+#, php-format
+msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
+msgstr "V� rug�m s� face�i directorul <code>%1$s</code> inscriptibil de c�tre module extensie ori <a href=\"%2$s\">declara�i un director temporar personalizat</a>."
+
+#: core/core.php:2742
+msgid "Broken Link Checker can't create a lockfile."
+msgstr "Broken Link Checker nu poate crea un fi�ier de blocare."
+
+#: core/core.php:2747
+msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
+msgstr "Modulul extensie folose�te un mecanism de blocare pe baz� de fi�iere pentru a se asigura c�, �n orice moment, ruleaz� doar o singur� instan�� a algoritmului de verificare a leg�turilor, mare consumator de resurse. Din p�cate, BLC nu poate g�si un director inscriptibil unde ar putea stoca fi�ierul de blocare - nu a reu�it s� detecteze localizarea directorului temporar al serverului dvs., iar directorul propriu al modulului extensie nu este inscriptibil de c�tre PHP. Pentru a repara aceast� problem�, declara�i directorul modulului extensie ca inscriptibil ori declara�i un director temporar personalizat in set�rile modulului extensie."
+
+#: core/core.php:2766
+msgid "PHP version"
+msgstr "Versiune PHP"
+
+#: core/core.php:2772
+msgid "MySQL version"
+msgstr "Versiune MySQL"
+
+#: core/core.php:2785
+msgid "You have an old version of CURL. Redirect detection may not work properly."
+msgstr "Ave�i o versiune veche a CURL. Se poate ca detec�ia redirec�ion�rilor s� nu func�ioneze cum trebuie."
+
+#: core/core.php:2797
+#: core/core.php:2813
+#: core/core.php:2818
+msgid "Not installed"
+msgstr "Ne-instalat(�)"
+
+#: core/core.php:2800
+msgid "CURL version"
+msgstr "Versiune CURL"
+
+#: core/core.php:2806
+msgid "Installed"
+msgstr "Instalat(�)"
+
+#: core/core.php:2819
+msgid "You must have either CURL or Snoopy installed for the plugin to work!"
+msgstr "Pentru ca acest modul extensie s� func�ioneze, trebuie s� ave�i instalat fie CURL, fie Snoopy!"
+
+#: core/core.php:2830
+msgid "On"
+msgstr "Pornit"
+
+#: core/core.php:2831
+msgid "Redirects may be detected as broken links when safe_mode is on."
+msgstr "Redirec�ion�rile pot fi detectate ca leg�turi �ntrerupte, atunci c�nd este pornit modul_sigur."
+
+#: core/core.php:2836
+#: core/core.php:2850
+msgid "Off"
+msgstr "Oprit"
+
+#: core/core.php:2844
+#, php-format
+msgid "On ( %s )"
+msgstr "Pornit ( %s )"
+
+#: core/core.php:2845
+msgid "Redirects may be detected as broken links when open_basedir is on."
+msgstr "Redirec�ion�rile pot fi detectate ca leg�turi �ntrerupte, atunci c�nd este pornit dirbaz�_deschis."
+
+#: core/core.php:2864
+msgid "Can't create a lockfile. Please specify a custom temporary directory."
+msgstr "nu poate crea un fi�ier de blocare. V� rug�m s� specifica�i un director temporar personalizat."
+
+#: core/core.php:2888
+msgid "If this value is zero even after several page reloads you have probably encountered a bug."
+msgstr "Dac� aceast� valoare este zero, chiar �i dup� mai multe re�nc�rc�ri de pagin�, porbabil c� a�i �nt�lnit o eroare de cod."
+
+#: core/core.php:2959
+#, php-format
+msgid "[%s] Broken links detected"
+msgstr "S-au detectat [%s] leg�turi �ntrerupte"
+
+#: core/core.php:2965
+#, php-format
+msgid "Broken Link Checker has detected %d new broken link on your site."
+msgid_plural "Broken Link Checker has detected %d new broken links on your site."
+msgstr[0] "Broken Link Checker a detectat %d leg�tur� �ntrerupt� pe situl dvs."
+msgstr[1] "Broken Link Checker a detectat %d leg�turi �ntrerupte pe situl dvs."
+
+#: core/core.php:2980
+#, php-format
+msgid "Here's a list of the first %d broken links:"
+msgid_plural "Here's a list of the first %d broken links:"
+msgstr[0] "Iat� o list� a primelor %d leg�turi �ntrerupte:"
+msgstr[1] "Iat� o list� a primelor %d leg�turi �ntrerupte:"
+
+#: core/core.php:2988
+msgid "Here's a list of the new broken links: "
+msgstr "Iat� o list� a noilor leg�turi �ntrerupte: "
+
+#: core/core.php:3000
+#, php-format
+msgid "Link text : %s"
+msgstr "Text Leg�tur� %s"
+
+#: core/core.php:3001
+#, php-format
+msgid "Link URL : <a href=\"%s\">%s</a>"
+msgstr "leg�tur� URL: <a href=\"%s\">%s</a>"
+
+#: core/core.php:3002
+#, php-format
+msgid "Source : %s"
+msgstr "Surs�: %s"
+
+#: core/core.php:3016
+msgid "You can see all broken links here:"
+msgstr "Pute�i vizualiza toate leg�turile �ntrerupte aici:"
+
+#: core/init.php:236
+msgid "Once Weekly"
+msgstr "S�pt�m�nal"
+
+#: core/init.php:242
+msgid "Twice a Month"
+msgstr "De dou� ori pe lun�"
+
+#: core/init.php:309
+msgid "Broken Link Checker installation failed"
+msgstr "Instalarea Broken Link Checker a e�uat"
+
+#: includes/admin/db-upgrade.php:95
+#, php-format
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "�tergerea tabelelor BD vechi a e�uat. Eroare de baz� de date: %s"
+
+#: includes/admin/links-page-js.php:58
+#: includes/admin/links-page-js.php:301
+msgid "Wait..."
+msgstr "A�tepta�i..."
+
+#: includes/admin/links-page-js.php:99
+#: includes/admin/table-printer.php:592
+msgid "Not broken"
+msgstr "Ne�ntrerupt�"
+
+#: includes/admin/links-page-js.php:213
+#, php-format
+msgid "%d instances of the link were successfully modified."
+msgstr "%d instan�e ale leg�turii au fost modificate."
+
+#: includes/admin/links-page-js.php:219
+#, php-format
+msgid "However, %d instances couldn't be edited and still point to the old URL."
+msgstr "Cu toate acestea, %d instan�e nu au putut fi fi editate �i indic� �n continuare vechiul URL."
+
+#: includes/admin/links-page-js.php:225
+msgid "The link could not be modified."
+msgstr "Aceast� leg�tur� nu a putut fi modificat�."
+
+#: includes/admin/links-page-js.php:228
+#: includes/admin/links-page-js.php:353
+msgid "The following error(s) occured :"
+msgstr "A(u) avut loc urm�toarea(ele) eroare(i):"
+
+#: includes/admin/links-page-js.php:339
+#, php-format
+msgid "%d instances of the link were successfully unlinked."
+msgstr "%d instan�e ale leg�turii au fost dezasociate."
+
+#: includes/admin/links-page-js.php:345
+#, php-format
+msgid "However, %d instances couldn't be removed."
+msgstr "Cu toate acestea, %d instan�e nu au putut fi eliminate."
+
+#: includes/admin/links-page-js.php:350
+msgid "The plugin failed to remove the link."
+msgstr "Modulul extensie nu a reu�it s� elimine leg�tura."
+
+#: includes/admin/links-page-js.php:361
+#: includes/admin/table-printer.php:237
+#: includes/admin/table-printer.php:586
+msgid "Unlink"
+msgstr "Dezasocia�i"
+
+#: includes/admin/links-page-js.php:405
+msgid "Enter a name for the new custom filter"
+msgstr "Introduce�i un nume pentru noul filtru personalizat"
+
+#: includes/admin/links-page-js.php:416
+msgid ""
+"You are about to delete the current filter.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"Sunte�i pe cale s� �terge�i filtrul curent.\n"
+"'Anulare' pentru a v� opri, 'OK' pentru a �terge"
+
+#: includes/admin/links-page-js.php:439
+msgid ""
+"Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n"
+"'Cancel' to stop, 'OK' to delete"
+msgstr ""
+"Sunte�i sigur(�) c� vre�i s� �terge�i toate afi��rile, semnele de carte ori alte articole care con�in vreuna dintre leg�turile selectate? Aceast� ac�iune nu poate fi desf�cut�.\n"
+"'Anulare' pentru a v� opri, 'OK' pentru a �terge"
+
+#: includes/admin/links-page-js.php:449
+msgid ""
+"Are you sure you want to remove the selected links? This action can't be undone.\n"
+"'Cancel' to stop, 'OK' to remove"
+msgstr ""
+"Sunte�i sigur(�) c� vre�i s� elimina�i leg�turile selectate? Aceast� ac�iune nu poate fi desf�cut�.\n"
+"'Anulare' pentru a v� opri, 'OK' pentru a elimina"
+
+#: includes/admin/links-page-js.php:558
+msgid "Enter a search string first."
+msgstr "Introduce�i, mai �nt�i, un �ir de c�utare."
+
+#: includes/admin/links-page-js.php:565
+msgid "Select one or more links to edit."
+msgstr "Selecta�i una sau mai multe leg�turi de editat."
+
+#: includes/admin/options-page-js.php:54
+msgid "Hide debug info"
+msgstr "Ascunde informa�iile de depanare"
+
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Salveaz� C�utarea de fa�� drept Filtru"
+
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "�terge Acest Filtru"
+
+#: includes/admin/search-form.php:32
+#: includes/link-query.php:53
+msgid "Search"
+msgstr "C�utare"
+
+#: includes/admin/search-form.php:42
+msgid "Link text"
+msgstr "Text leg�tur�"
+
+#: includes/admin/search-form.php:45
+#: includes/admin/table-printer.php:173
+msgid "URL"
+msgstr "URL"
+
+#: includes/admin/search-form.php:48
+#: includes/admin/table-printer.php:460
+msgid "HTTP code"
+msgstr "cod HTTP"
+
+#: includes/admin/search-form.php:51
+msgid "Link status"
+msgstr "Stare leg�tur�"
+
+#: includes/admin/search-form.php:68
+#: includes/admin/search-form.php:85
+msgid "Link type"
+msgstr "Tip leg�tur�"
+
+#: includes/admin/search-form.php:70
+msgid "Any"
+msgstr "Oricare"
+
+#: includes/admin/search-form.php:74
+msgid "Links used in"
+msgstr "Leg�turi folosite la"
+
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Leg�turi de C�utare"
+
+#: includes/admin/search-form.php:113
+#: includes/admin/table-printer.php:318
+#: includes/admin/table-printer.php:600
+#: includes/admin/table-printer.php:606
+msgid "Cancel"
+msgstr "Anulare"
+
+#: includes/admin/table-printer.php:150
+msgid "Compact View"
+msgstr "Vizualizare Compact�"
+
+#: includes/admin/table-printer.php:151
+msgid "Detailed View"
+msgstr "Vizualizare Detaliat�"
+
+#: includes/admin/table-printer.php:178
+msgid "Source"
+msgstr "Surs�"
+
+#: includes/admin/table-printer.php:184
+msgid "Link Text"
+msgstr "Text Leg�tur�"
+
+#: includes/admin/table-printer.php:232
+msgid "Bulk Actions"
+msgstr "Ac�iuni Diverse"
+
+#: includes/admin/table-printer.php:233
+#: includes/admin/table-printer.php:583
+msgid "Edit URL"
+msgstr "Editare URL"
+
+#: includes/admin/table-printer.php:234
+msgid "Recheck"
+msgstr "Reverificare"
+
+#: includes/admin/table-printer.php:235
+msgid "Fix redirects"
+msgstr "Reparare redirec�ion�ri"
+
+#: includes/admin/table-printer.php:236
+msgid "Mark as not broken"
+msgstr "Marcare ca ne-�ntrerupt�"
+
+#: includes/admin/table-printer.php:240
+msgid "Move sources to Trash"
+msgstr "Mutare surse in Pubel�"
+
+#: includes/admin/table-printer.php:242
+msgid "Delete sources"
+msgstr "�tergere surse"
+
+#: includes/admin/table-printer.php:262
+msgid "&laquo;"
+msgstr "&laquo;"
+
+#: includes/admin/table-printer.php:263
+msgid "&raquo;"
+msgstr "&raquo;"
+
+#: includes/admin/table-printer.php:271
+#, php-format
+msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
+msgstr "Afi�are %s&#8211;%s a <span class=\"current-link-count\">%s</span>"
+
+#: includes/admin/table-printer.php:294
+msgid "Bulk Edit URLs"
+msgstr "Editare concomitent� URL-uri"
+
+#: includes/admin/table-printer.php:296
+msgid "Find"
+msgstr "G�sire"
+
+#: includes/admin/table-printer.php:300
+msgid "Replace with"
+msgstr "�nlocuire cu"
+
+#: includes/admin/table-printer.php:308
+msgid "Case sensitive"
+msgstr "Sensibil la majuscule"
+
+#: includes/admin/table-printer.php:312
+msgid "Regular expression"
+msgstr "Expresie uzual�"
+
+#: includes/admin/table-printer.php:320
+msgid "Update"
+msgstr "Actualizare"
+
+#: includes/admin/table-printer.php:445
+msgid "Post published on"
+msgstr "Afi�are publicat� pe"
+
+#: includes/admin/table-printer.php:450
+msgid "Link last checked"
+msgstr "Ultima verificare a leg�turii"
+
+#: includes/admin/table-printer.php:454
+msgid "Never"
+msgstr "Niciodat�"
+
+#: includes/admin/table-printer.php:465
+msgid "Response time"
+msgstr "Timp de r�spuns"
+
+#: includes/admin/table-printer.php:467
+#, php-format
+msgid "%2.3f seconds"
+msgstr "%2.3f secunde"
+
+#: includes/admin/table-printer.php:470
+msgid "Final URL"
+msgstr "URL final"
+
+#: includes/admin/table-printer.php:475
+msgid "Redirect count"
+msgstr "Num�r�toare redirec�ion�ri"
+
+#: includes/admin/table-printer.php:480
+msgid "Instance count"
+msgstr "Num�r�toare instan�e"
+
+#: includes/admin/table-printer.php:489
+#, php-format
+msgid "This link has failed %d time."
+msgid_plural "This link has failed %d times."
+msgstr[0] "Aceast� leg�tur� a e�uat %d dat�."
+msgstr[1] "Aceast� leg�tur� a e�uat de %d d��i."
+
+#: includes/admin/table-printer.php:497
+#, php-format
+msgid "This link has been broken for %s."
+msgstr "Aceast� leg�tur� este �ntrerupt� de %s."
+
+#: includes/admin/table-printer.php:508
+msgid "Log"
+msgstr "Jurnal"
+
+#: includes/admin/table-printer.php:529
+msgid "Show more info about this link"
+msgstr "Arat� mai multe informa�ii despre aceast� leg�tur�"
+
+#: includes/admin/table-printer.php:547
+msgctxt "checked how long ago"
+msgid "Checked"
+msgstr "Verificare"
+
+#: includes/admin/table-printer.php:563
+msgid "Broken for"
+msgstr "�ntrerupt� de"
+
+#: includes/admin/table-printer.php:583
+msgid "Edit link URL"
+msgstr "Editare leg�tur� URL"
+
+#: includes/admin/table-printer.php:585
+msgid "Remove this link from all posts"
+msgstr "Elimin� aceast� leg�tur� din toate afi��rile"
+
+#: includes/admin/table-printer.php:591
+msgid "Remove this link from the list of broken links and mark it as valid"
+msgstr "Elimin� aceast� leg�tur� din lista de leg�turi �nterupte �i marca�i ca valid�"
+
+#: includes/admin/table-printer.php:600
+msgid "Cancel URL editing"
+msgstr "Anulare editare URL"
+
+#: includes/admin/table-printer.php:607
+msgid "Update URL"
+msgstr "Actualizare URL"
+
+#: includes/admin/table-printer.php:629
+msgid "[An orphaned link! This is a bug.]"
+msgstr "[Leg�tur� orfan� (f�r� obiect)! Aceasta este o eroare de cod.]"
+
+#: includes/any-post.php:398
+#: modules/containers/blogroll.php:46
+#: modules/containers/comment.php:153
+#: modules/containers/custom_field.php:197
+msgid "Edit"
+msgstr "Editare"
+
+#: includes/any-post.php:406
+#: modules/containers/custom_field.php:203
+msgid "Move this item to the Trash"
+msgstr "Mut� acest articol �n Pubel�"
+
+#: includes/any-post.php:408
+#: modules/containers/custom_field.php:205
+msgid "Trash"
+msgstr "Pubel�"
+
+#: includes/any-post.php:413
+#: modules/containers/custom_field.php:210
+msgid "Delete this item permanently"
+msgstr "�terge definitiv acest articol"
+
+#: includes/any-post.php:415
+#: modules/containers/blogroll.php:47
+#: modules/containers/custom_field.php:212
+msgid "Delete"
+msgstr "�tergere"
+
+#: includes/any-post.php:428
+#, php-format
+msgid "Preview &#8220;%s&#8221;"
+msgstr "Previzualizare &#8220;%s&#8221;"
+
+#: includes/any-post.php:429
+msgid "Preview"
+msgstr "Previzualizare"
+
+#: includes/any-post.php:436
+#, php-format
+msgid "View &#8220;%s&#8221;"
+msgstr "Vizualizare &#8220;%s&#8221;"
+
+#: includes/any-post.php:437
+#: modules/containers/comment.php:166
+#: modules/containers/custom_field.php:217
+msgid "View"
+msgstr "Vizualizare"
+
+#: includes/any-post.php:456
+#: modules/containers/custom_field.php:197
+msgid "Edit this item"
+msgstr "Editare articol"
+
+#: includes/any-post.php:520
+#: modules/containers/blogroll.php:83
+#: modules/containers/comment.php:43
+msgid "Nothing to update"
+msgstr "Nimic de actualizat"
+
+#: includes/any-post.php:530
+#, php-format
+msgid "Updating post %d failed"
+msgstr "Actualizare a afi��rii %d e�uat�"
+
+#: includes/any-post.php:565
+#: modules/containers/custom_field.php:284
+#, php-format
+msgid "Failed to delete post \"%s\" (%d)"
+msgstr "E�uare �tergere afi�are \"%s\" (%d)"
+
+#: includes/any-post.php:584
+#: modules/containers/custom_field.php:303
+#, php-format
+msgid "Can't move post \"%s\" (%d) to the trash because the trash feature is disabled"
+msgstr "Nu pot muta afi�area \"%s\" (%d) �n Pubel�, deoarece op�iunea Pubel� este dezactivat�"
+
+#: includes/any-post.php:604
+#: modules/containers/custom_field.php:322
+#, php-format
+msgid "Failed to move post \"%s\" (%d) to the trash"
+msgstr "E�uare mutare afi�are \"%s\" (%d) �n Pubel�"
+
+#: includes/any-post.php:712
+#, php-format
+msgid "%d post deleted."
+msgid_plural "%d posts deleted."
+msgstr[0] "%d afi�are �tears�."
+msgstr[1] "%d afi��ri �terse."
+
+#: includes/any-post.php:714
+#, php-format
+msgid "%d page deleted."
+msgid_plural "%d pages deleted."
+msgstr[0] "%d pagin� �tears�."
+msgstr[1] "%d pagini �terse."
+
+#: includes/any-post.php:716
+#, php-format
+msgid "%d \"%s\" deleted."
+msgid_plural "%d \"%s\" deleted."
+msgstr[0] "%d \"%s\" �tears�(e)."
+msgstr[1] "%d \"%s\" �tears�(e)."
+
+#: includes/any-post.php:735
+#, php-format
+msgid "%d post moved to the Trash."
+msgid_plural "%d posts moved to the Trash."
+msgstr[0] "%d afi�are mutat� �n Pubel�."
+msgstr[1] "%d %afi��ri mutate �n Pubel�."
+
+#: includes/any-post.php:737
+#, php-format
+msgid "%d page moved to the Trash."
+msgid_plural "%d pages moved to the Trash."
+msgstr[0] "%d pagin� mutat� �n Pubel�."
+msgstr[1] "%d pagini mutate �n Pubel�."
+
+#: includes/any-post.php:739
+#, php-format
+msgid "%d \"%s\" moved to the Trash."
+msgid_plural "%d \"%s\" moved to the Trash."
+msgstr[0] "%d \"%s\" mutat�(e) �n Pubel�."
+msgstr[1] "%d \"%s\" mutat�(e) �n Pubel�."
+
+#: includes/containers.php:122
+#, php-format
+msgid "%d '%s' has been deleted"
+msgid_plural "%d '%s' have been deleted"
+msgstr[0] "%d '%s' a fost �tears�"
+msgstr[1] "%d '%s' au fost �terse"
+
+#: includes/containers.php:882
+#: includes/containers.php:900
+#, php-format
+msgid "Container type '%s' not recognized"
+msgstr "Tip recipient '%s' nerecunoscut"
+
+#: includes/extra-strings.php:2
+msgctxt "module name"
+msgid "Basic HTTP"
+msgstr "HTTP elementar"
+
+#: includes/extra-strings.php:3
+msgctxt "module name"
+msgid "Blogroll items"
+msgstr "Articole stat blog"
+
+#: includes/extra-strings.php:4
+msgctxt "module name"
+msgid "Comments"
+msgstr "Comentarii"
+
+#: includes/extra-strings.php:5
+msgctxt "module name"
+msgid "Custom fields"
+msgstr "C�mpuri personalizabile"
+
+#: includes/extra-strings.php:6
+msgctxt "module name"
+msgid "Embedded DailyMotion videos"
+msgstr "Clipuri video DailyMotion �ncorporate"
+
+#: includes/extra-strings.php:7
+msgctxt "module name"
+msgid "Embedded Vimeo videos"
+msgstr "Clipuri video Vimeo �ncorporate"
+
+#: includes/extra-strings.php:8
+msgctxt "module name"
+msgid "Embedded YouTube videos"
+msgstr "Clipuri video YouTube �ncorporate"
+
+#: includes/extra-strings.php:9
+msgctxt "module name"
+msgid "HTML images"
+msgstr "Imagini HTML"
+
+#: includes/extra-strings.php:10
+msgctxt "module name"
+msgid "HTML links"
+msgstr "Leg�turi HTML"
+
+#: includes/extra-strings.php:11
+msgctxt "module name"
+msgid "MediaFire API"
+msgstr "IPA (interfa�� de programare a aplica�iei - API) MediaFire"
+
+#: includes/extra-strings.php:12
+msgctxt "module name"
+msgid "MegaUpload API"
+msgstr "Mega�nc�rcare IPA (API)"
+
+#: includes/extra-strings.php:13
+msgctxt "module name"
+msgid "Plaintext URLs"
+msgstr "URL-uri de text simplu"
+
+#: includes/extra-strings.php:14
+msgctxt "module name"
+msgid "RapidShare API"
+msgstr "IPA (interfa�� de programare a aplica�iei - API) RapidShare"
+
+#: includes/extra-strings.php:15
+msgctxt "module name"
+msgid "YouTube API"
+msgstr "IPA (interfa�� de programare a aplica�iei - API) YouTube"
+
+#: includes/extra-strings.php:16
+msgctxt "module name"
+msgid "Posts"
+msgstr "Afi��ri"
+
+#: includes/extra-strings.php:17
+msgctxt "module name"
+msgid "Pages"
+msgstr "Pagini"
+
+#: includes/instances.php:102
+#: includes/instances.php:158
+#, php-format
+msgid "Container %s[%d] not found"
+msgstr "Recipient %s[%d] neg�sit"
+
+#: includes/instances.php:111
+#: includes/instances.php:167
+#, php-format
+msgid "Parser '%s' not found."
+msgstr "Analizor de cod '%s' neg�sit."
+
+#: includes/link-query.php:25
+msgid "Broken"
+msgstr "�ntrerupt�"
+
+#: includes/link-query.php:27
+msgid "No broken links found"
+msgstr "Nu s-au g�sit leg�turi �ntrerupte"
+
+#: includes/link-query.php:34
+msgid "Redirects"
+msgstr "Redirec�ion�ri"
+
+#: includes/link-query.php:35
+msgid "Redirected Links"
+msgstr "Leg�turi redirec�ionate"
+
+#: includes/link-query.php:36
+msgid "No redirects found"
+msgstr "Nu s-au g�sit redirec�ion�ri"
+
+#: includes/link-query.php:44
+msgid "All"
+msgstr "Toate"
+
+#: includes/link-query.php:45
+msgid "Detected Links"
+msgstr "Leg�turi detectate"
+
+#: includes/link-query.php:46
+msgid "No links found (yet)"
+msgstr "Nu s-au g�sit leg�turi (�nc�)"
+
+#: includes/link-query.php:54
+msgid "Search Results"
+msgstr "Rezultate C�utare"
+
+#: includes/link-query.php:55
+#: includes/link-query.php:106
+msgid "No links found for your query"
+msgstr "Nu s-au g�sit leg�turi pentru solicitarea dvs."
+
+#: includes/links.php:215
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "Scriptul modulului extensie a fost �nchis �n timp ce se �ncerca verificarea leg�turii."
+
+#: includes/links.php:261
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "Modulul extensie nu �tie s� verifice acest tip de leg�tur�."
+
+#: includes/links.php:349
+msgid "Link is valid."
+msgstr "Leg�tura este valid�."
+
+#: includes/links.php:351
+msgid "Link is broken."
+msgstr "Leg�tura este �ntrerupt�."
+
+#: includes/links.php:564
+#: includes/links.php:666
+#: includes/links.php:693
+msgid "Link is not valid"
+msgstr "Leg�tura nu este valid�."
+
+#: includes/links.php:581
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "Aceast� leg�tur� nu poate fi editat�, pentru c� nu este folosit� nic�ieri pe acest sit."
+
+#: includes/links.php:607
+msgid "Failed to create a DB entry for the new URL."
+msgstr "Nu s-a reu�it crearea unei intr�ri �n BD pentru noul URL."
+
+#: includes/links.php:673
+msgid "This link is not a redirect"
+msgstr "Leg�tura nu este o redirec�ionare."
+
+#: includes/links.php:720
+#: includes/links.php:757
+msgid "Couldn't delete the link's database record"
+msgstr "Nu s-a putut �terge �nregistrarea acestei leg�turi din baza de date"
+
+#: includes/links.php:831
+msgctxt "link status"
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: includes/links.php:845
+#: modules/checkers/http.php:263
+msgid "Unknown Error"
+msgstr "Eroare necunoscut�"
+
+#: includes/links.php:869
+msgid "Not checked"
+msgstr "Neverificat�"
+
+#: includes/links.php:872
+msgid "False positive"
+msgstr "Pozitiv fals"
+
+#: includes/links.php:875
+msgctxt "link status"
+msgid "OK"
+msgstr "OK"
+
+#: includes/module-manager.php:122
+#: includes/module-manager.php:139
+msgctxt "module name"
+msgid "Name"
+msgstr "Nume"
+
+#: includes/parsers.php:109
+#, php-format
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "Editarea nu este implementat� �n analizorul de cod '%s'"
+
+#: includes/parsers.php:124
+#, php-format
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "Dezasocierea nu este implementat� �n analizorul de cod '%s'"
+
+#: includes/utility-class.php:287
+#, php-format
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d secund�"
+msgstr[1] "%d secunde"
+
+#: includes/utility-class.php:288
+#, php-format
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "acum %d secund�"
+msgstr[1] "acum %d secunde"
+
+#: includes/utility-class.php:291
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minut"
+msgstr[1] "%d minute"
+
+#: includes/utility-class.php:292
+#, php-format
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "acum %d minut"
+msgstr[1] "acum %d minute"
+
+#: includes/utility-class.php:295
+#, php-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d or�"
+msgstr[1] "%d ore"
+
+#: includes/utility-class.php:296
+#, php-format
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "acum %d or�"
+msgstr[1] "acum %d ore"
+
+#: includes/utility-class.php:299
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d zi"
+msgstr[1] "%d zile"
+
+#: includes/utility-class.php:300
+#, php-format
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "acum %d zi"
+msgstr[1] "acum %d zile"
+
+#: includes/utility-class.php:303
+#, php-format
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d lun�"
+msgstr[1] "%d luni"
+
+#: includes/utility-class.php:304
+#, php-format
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "acum %d lun�"
+msgstr[1] "acum %d luni"
+
+#: modules/checkers/http.php:242
+msgid "Server Not Found"
+msgstr "Server de neg�sit"
+
+#: modules/checkers/http.php:257
+msgid "Connection Failed"
+msgstr "Conectare e�uat�"
+
+#: modules/checkers/http.php:292
+#: modules/checkers/http.php:362
+#, php-format
+msgid "HTTP code : %d"
+msgstr "cod HTTP: %d"
+
+#: modules/checkers/http.php:294
+#: modules/checkers/http.php:364
+msgid "(No response)"
+msgstr "(Nici un r�spuns)"
+
+#: modules/checkers/http.php:300
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Cel mai probabil, timpul conexiunii a expirat ori domeniul nu exist�."
+
+#: modules/checkers/http.php:371
+msgid "Request timed out."
+msgstr "Timpul solicit�rii a expirat."
+
+#: modules/checkers/http.php:389
+msgid "Using Snoopy"
+msgstr "Folosirea Snoopy"
+
+#: modules/containers/blogroll.php:21
+msgid "Bookmark"
+msgstr "Semne de carte"
+
+#: modules/containers/blogroll.php:27
+#: modules/containers/blogroll.php:46
+msgid "Edit this bookmark"
+msgstr "Editare semn de carte"
+
+#: modules/containers/blogroll.php:47
+#, php-format
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Sunte�i pe cale s� �terge�i aceast� leg�tur� '%s'\n"
+"  'Anulare' pentru a v� opri, 'OK' pentru a �terge."
+
+#: modules/containers/blogroll.php:97
+#, php-format
+msgid "Updating bookmark %d failed"
+msgstr "Actulaizarea semnului de carte %d a e�uat"
+
+#: modules/containers/blogroll.php:128
+#, php-format
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "Nu s-a reu�it �tergerea leg�turii statului de blog \"%s\" (%d)"
+
+#: modules/containers/blogroll.php:299
+#, php-format
+msgid "%d blogroll link deleted."
+msgid_plural "%d blogroll links deleted."
+msgstr[0] "%d leg�tur� de stat de blog �tears�."
+msgstr[1] "%d leg�turi de stat de blog �terse."
+
+#: modules/containers/comment.php:53
+#, php-format
+msgid "Updating comment %d failed"
+msgstr "Actualizarea comentariului %d a e�uat"
+
+#: modules/containers/comment.php:74
+#, php-format
+msgid "Failed to delete comment %d"
+msgstr "�tergerea comentariului %d a e�uat"
+
+#: modules/containers/comment.php:95
+#, php-format
+msgid "Can't move comment %d to the trash"
+msgstr "Nu s-a putut muta comentariul %d �n Pubel�"
+
+#: modules/containers/comment.php:153
+#: modules/containers/comment.php:195
+msgid "Edit comment"
+msgstr "Editare comentariu"
+
+#: modules/containers/comment.php:160
+msgid "Delete Permanently"
+msgstr "�tergere Permanent�"
+
+#: modules/containers/comment.php:162
+msgid "Move this comment to the trash"
+msgstr "Muta�i acest comentariu �n Pubel�"
+
+#: modules/containers/comment.php:162
+msgctxt "verb"
+msgid "Trash"
+msgstr "Pubel�"
+
+#: modules/containers/comment.php:166
+msgid "View comment"
+msgstr "Vizualizare comentariu"
+
+#: modules/containers/comment.php:183
+msgid "Comment"
+msgstr "Comentariu"
+
+#: modules/containers/comment.php:372
+#, php-format
+msgid "%d comment has been deleted."
+msgid_plural "%d comments have been deleted."
+msgstr[0] "%d comentariu a fost �ters."
+msgstr[1] "%d comentarii au fost �terse."
+
+#: modules/containers/comment.php:391
+#, php-format
+msgid "%d comment moved to the Trash."
+msgid_plural "%d comments moved to the Trash."
+msgstr[0] "%d comentariu mutat �n Pubel�."
+msgstr[1] "%d comentarii mutate �n Pubel�."
+
+#: modules/containers/custom_field.php:84
+#, php-format
+msgid "Failed to update the meta field '%s' on %s [%d]"
+msgstr "S-a e�uat actualizarea meta c�mpului '%s' la %s [%d]"
+
+#: modules/containers/custom_field.php:110
+#, php-format
+msgid "Failed to delete the meta field '%s' on %s [%d]"
+msgstr "S-a e�uat �tergerea meta c�mpului '%s' la %s [%d]"
+
+#: modules/containers/custom_field.php:187
+msgid "Edit this post"
+msgstr "Editare afi�are"
+
+#: modules/containers/custom_field.php:217
+#, php-format
+msgid "View \"%s\""
+msgstr "Vizualizare \"%s\""
+
+#: modules/containers/dummy.php:34
+#: modules/containers/dummy.php:45
+#, php-format
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "Nu �tiu cum s� editez un '%s' [%d]."
+
+#: modules/parsers/image.php:156
+msgid "Image"
+msgstr "Imagine"
+
+#: modules/parsers/metadata.php:117
+msgid "Custom field"
+msgstr "C�mp personalizabil"
+
+#. Plugin URI of the plugin/theme
+msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+msgstr "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
+
+#. Description of the plugin/theme
+msgid "Checks your blog for broken links and missing images and notifies you on the dashboard if any are found."
+msgstr "V� verific� blogul pentru leg�turi �ntrerupte �i imagini lips� �i ��i notific� dac� se g�se�te vreuna, pe tabloul de bord."
+
+#. Author of the plugin/theme
+msgid "Janis Elsts"
+msgstr "Janis Elsts"
+
+#. Author URI of the plugin/theme
+msgid "http://w-shadow.com/blog/"
+msgstr "http://w-shadow.com/blog/"
+

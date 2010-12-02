@@ -54,6 +54,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Japanese - [ningendesu](http://ningendesu.com/)
 * Polish - [http://positionmaker.pl](http://positionmaker.pl/)
 * Portuguese - [PedroDM](http://development.mowster.net/)
+* Romanian - [Emmanuelle Traduction](http://www.translatonline.com/)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
