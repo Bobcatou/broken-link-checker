@@ -476,8 +476,8 @@ msgid "Searching your blog for links..."
 msgstr "Procurando links..."
 
 #: core/core.php:2335
-msgid "No links detected."
-msgstr "Não se encontraram links."
+msgid "[%s] Broken links detected"
+msgstr "[%s] Links offline encontrados"
 
 #: core/core.php:2361
 msgid "Unknown"
@@ -1375,7 +1375,7 @@ msgstr[1] "%d comentários foram apagados."
 
 #: modules/containers/comment.php:391
 #, php-format
-msgid "%d comment moved to the Trash"
+msgid "%d comment moved to the Trash."
 msgid_plural "%d comments moved to the Trash."
 msgstr[0] "%d comentário apagado."
 msgstr[1] "%d comentários apagados."
