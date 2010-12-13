@@ -73,7 +73,11 @@ blcUtility::optimize_database();
 
 $blclog->info('Completing installation...');
 $blc_config_manager->options['installation_complete'] = true;
-$blc_config_manager->save_options();
+if ( $blc_config_manager->save_options() ){
+    $blclog->info('Configuration saved.');
+} else {
+    $blclog->error('Error saving plugin configuration!');
+};
 
 $blclog->info(sprintf(
 	'Installation/update completed at %s with %d queries executed.', 

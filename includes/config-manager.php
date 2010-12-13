@@ -70,7 +70,7 @@ class blcConfigurationManager {
    * Save plugin options to the databse. 
    *
    * @param string $option_name (Optional) Save the options under this name 
-   * @return bool True on success, false on failure
+   * @return bool True if settings were saved, false if settings haven't been changed or if there was an error.
    */
 	function save_options( $option_name = '' ){
 		if ( !empty($option_name) ){
@@ -78,9 +78,8 @@ class blcConfigurationManager {
 		}
 		
 		if ( empty($this->option_name) ) return false;
-		
-		update_option( $this->option_name, $this->options );
-		return true;		
+        
+		return update_option( $this->option_name, $this->options );		
 	}
 }
 
