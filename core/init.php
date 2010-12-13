@@ -304,6 +304,9 @@ if ( $blc_config_manager->options['installation_complete'] ){
 } else {
 	//Display installation errors (if any) on the Dashboard.
 	function blc_print_installation_errors(){
+        if ( $blc_config_manager->options['installation_complete'] ) {
+            return;
+        }
 		$logger = new blcCachedOptionLogger('blc_installation_log');
 		$messages = array_merge(
 			array('<strong>' . __('Broken Link Checker installation failed', 'broken-link-checker') . '</strong>', '', '<em>Installation log follows :</em>'),
