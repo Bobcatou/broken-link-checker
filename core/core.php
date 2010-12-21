@@ -584,7 +584,79 @@ class wsBrokenLinkChecker {
 		);
 		?>
 		
-        <div class="wrap"><?php screen_icon(); ?><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
+		<!--[if lte IE 7]>
+		<style type="text/css">
+		/* Simulate inline-block in IE7 */
+		ul.ui-tabs-nav li {
+			display: inline; 
+			zoom: 1;
+		}
+		</style>
+		<![endif]-->
+		
+        <div class="wrap" id="blc-settings-wrap">
+		<?php screen_icon(); ?><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
+		
+		
+        <div id="blc-sidebar">
+			<div class="metabox-holder">
+			
+				<div id="advertising" class="postbox">
+					<h3 class="hndle">Like this plugin?</h3>
+					<div class="inside">
+						<p>You might also like:</p>
+						<p>(put ads here)</p>
+					</div>					
+				</div>
+			
+				<div id="donate" class="postbox">
+					<h3 class="hndle">Donate $10, $20 or $50!</h3>
+					<div class="inside">
+						<p>
+							If you like this plugin, donate to support future development and maintenance!							
+							
+							<!--
+							This plugin has cost me countless hours of work, if you use it, 
+							please donate a token of your appreciation!
+							-->
+						</p>
+						
+						<!--
+						<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+						<input type="hidden" name="cmd" value="_donations">
+						<input type="hidden" name="business" value="G3GGNXHBSHKYC">
+						<input type="hidden" name="lc" value="US">
+						<input type="hidden" name="item_name" value="Broken Link Checker">
+						<input type="hidden" name="amount" value="10.00">
+						<input type="hidden" name="currency_code" value="USD">
+						<input type="hidden" name="no_note" value="1">
+						<input type="hidden" name="no_shipping" value="1">
+						<input type="hidden" name="currency_code" value="USD">
+						<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_SM.gif:NonHosted">
+						
+						<input type="hidden" name="return" value="<?php echo esc_attr(add_query_arg('donated', 1)); ?>" />
+						<input type="hidden" name="cbt" value="<?php echo esc_attr('Return to WordPress Dashboard'); ?>" />
+						<input type="hidden" name="return" value="<?php echo esc_attr(add_query_arg('donation_canceled', 1)); ?>" />
+						
+						<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Donate $10!">
+						</form>
+						-->
+
+													
+						<form style="text-align: center;" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+							<input type="hidden" name="cmd" value="_s-xclick">
+							<input type="hidden" name="hosted_button_id" value="JHW2BMBSSUNXN">
+							
+							<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+						</form>
+					</div>					
+				</div>
+				
+			</div>
+		</div>
+		
+        
+        <div id="blc-admin-content">
 		
         <form name="link_checker_options" id="link_checker_options" method="post" action="<?php 
 			echo admin_url('options-general.php?page=link-checker-settings&noheader=1'); 
@@ -598,7 +670,13 @@ class wsBrokenLinkChecker {
 		<ul class="hide-if-no-js">
 			<?php
 				foreach($section_names as $section_id => $section_name){
-					printf('<li><a href="#section-%s">%s</a></li>', esc_attr($section_id), $section_name);					
+					printf(
+						'<li id="tab-button-%s"><a href="#section-%s" title="%s">%s</a></li>',
+						esc_attr($section_id), 
+						esc_attr($section_id),
+						esc_attr($section_name), 
+						$section_name
+					);					
 				}
 			?>
 		</ul>
@@ -1012,7 +1090,13 @@ class wsBrokenLinkChecker {
         
         <p class="submit"><input type="submit" name="submit" class='button-primary' value="<?php _e('Save Changes') ?>" /></p>
         </form>
+        
+        </div> <!-- First postbox-container -->
+        
+        
         </div>
+        
+        
         
         <?php
         //The various JS for this page is stored in a separate file for the purposes readability.
@@ -1168,6 +1252,7 @@ class wsBrokenLinkChecker {
     function options_page_css(){
     	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.6' );
     	wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()), array(), '0.9.6' );
+    	wp_enqueue_style('dashboard');
 	}
 	
 

@@ -1,3 +1,41 @@
+#blc-sidebar {
+	clear: right; 
+	float: right; 
+	position: relative; 
+	width: 255px;
+}
+
+#blc-admin-content {
+	clear: left; 
+	float: left; 
+	margin-right: -275px; 
+	width: 100%;
+}
+
+#blc-admin-content > * {
+	margin-right: 267px; 
+}
+
+#donate {
+	border-color: green !important;
+	border-width: 2px;
+}
+
+#donate h3 {
+	color: green;
+}
+
+
+
+
+
+
+#link_checker_options .form-table th {
+	width: 25%;
+	min-width: 110px;
+	max-width: 200px;
+}
+
 #blc-debug-info-toggle {
 	font-size: smaller;
 }
@@ -67,6 +105,10 @@
 ul.ui-tabs-nav {
 	margin-bottom: -1px;
 	padding-left: 1.5em;
+	
+	overflow: hidden;
+	white-space: nowrap;
+	padding-right: 3.5em;
 }
 
 ul.ui-tabs-nav li {
@@ -88,6 +130,14 @@ ul.ui-tabs-nav li {
 	
 	font-weight: bold;
 	text-shadow: 0 1px 0 #FFFFFF;
+	
+	max-width: 20%;
+	overflow: hidden;
+	text-align: center;
+}
+
+#tab-button-which {
+	max-width: 25%;
 }
 
 ul.ui-tabs-nav li.ui-tabs-selected {
@@ -98,14 +148,14 @@ ul.ui-tabs-nav li.ui-tabs-selected {
 
 ul.ui-tabs-nav li a {
 	display: inline-block;
-	padding: 0.5em 1em 0.6em 1em;
 	text-decoration: none;
 	color: #C1C1C1;
+	padding: 0.5em 1em 0.6em 1em;
 }
 
 ul.ui-tabs-nav li.ui-tabs-selected a {
 	color: black;
-} 
+}
 
 /* Tab panels */
 
@@ -142,4 +192,10 @@ ul.ui-tabs-nav li.ui-tabs-selected a {
 
 .pro-notice a {
 	font-style: italic;
+}
+
+/* Right sidebar */
+
+#blc-settings-wrap .hndle {
+	cursor: default;
 }
