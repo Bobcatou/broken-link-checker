@@ -1,17 +1,39 @@
 <?php
 /*
-ModuleID: youtube-embed
+Plugin Name: Embedded YouTube videos
+Description: Parse embedded videos from YouTube
+Version: 1.0
+Author: Janis Elsts
+
 ModuleCategory: parser
+ModuleClassName: blcYouTubeEmbed
 ModuleContext: on-demand
 ModuleLazyInit: true
-ModuleClassName: blcYouTubeEmbed
-ModulePriority: 0
-ModuleCheckerUrlPattern: 
-ModuleHidden: false
-ModuleAlwaysActive: false
 ModuleRequiresPro: true
-Version: 1.0
-Description: Parse embedded videos from YouTube
-Plugin Name: Embedded YouTube videos
 */
+
+if ( !class_exists('blcEmbedParserBase') ){
+	require 'embed-parser-base.php';
+}
+
+class blcYouTubeEmbed extends blcEmbedParserBase {
+	
+	function init(){
+		parent::init();
+		$this->short_title = __('YouTube Video', 'broken-link-checker');
+		$this->long_title = __('Embedded YouTube video', 'broken-link-checker');
+		$this->url_search_string = 'youtube.com/v/';
+	}
+	
+	function link_url_from_src($src){
+		//Extract video ID from the SRC. The ID is always 11 characters.
+		$video_id = substr(	end(explode('/', $src)), 0, 11 );
+		
+		//Reconstruct the video permalink based on the ID
+		$url = 'http://www.youtube.com/watch?v='.$video_id;
+		
+		return $url;
+	}
+}
+
 ?>

@@ -1180,12 +1180,6 @@ class wsBrokenLinkChecker {
     	$label_class = '';
     	$active = $active || $module_data['ModuleAlwaysActive'];
     	
-		if ( $module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION') ){
-    		$active = false;
-    		$disabled = true;
-    		$label_class .= ' module-requires-pro';
-    	}
-    	
 		if ( $module_data['ModuleAlwaysActive'] ){
 			$disabled = true;
 			$name_prefix = 'module-always-active';
@@ -1204,15 +1198,14 @@ class wsBrokenLinkChecker {
 		
 		printf(
 			'<label class="%s">
-				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s %s
+				<input type="checkbox" name="%s[%s]" id="module-checkbox-%s"%s /> %s
 			</label>',
 			esc_attr($label_class),
 			$name_prefix,
 	   		esc_attr($module_id),
 			esc_attr($module_id),
 			$checked,
-			$module_data['Name'],
-			($module_data['ModuleRequiresPro'] && !defined('BLC_PRO_VERSION')) ? $pro_notice : ''
+			$module_data['Name']
 		);
 		
 		if ( $module_data['ModuleAlwaysActive'] ){
@@ -3176,12 +3169,7 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function check_news(){
-		$url = 'http://w-shadow.com/plugin-news/';
-		if ( defined('BLC_PRO_VERSION') && BLC_PRO_VERSION ){
-			$url .= 'broken-link-checker-pro-news.txt';
-		} else {
-			$url .= 'broken-link-checker-news.txt';
-		}
+		$url = 'http://w-shadow.com/plugin-news/broken-link-checker-news.txt';
 		
 		//Retrieve the appropriate "news" file
 		$res = wp_remote_get($url);

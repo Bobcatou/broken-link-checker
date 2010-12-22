@@ -242,11 +242,6 @@ class blcTablePrinter {
 			$bulk_actions["bulk-delete-sources"] = __('Delete sources', 'broken-link-checker');
 		}
 		
-		//Bulk editing is only available in the Pro version
-		if ( !defined('BLC_PRO_VERSION') || !BLC_PRO_VERSION ){
-			unset($bulk_actions['bulk-edit']);
-		}		
-		
 		$bulk_actions_html = '';
 		foreach($bulk_actions as $value => $name){
 			$bulk_actions_html .= sprintf('<option value="%s">%s</option>', $value, $name);
