@@ -613,7 +613,7 @@ class wsBrokenLinkChecker {
 					<h3 class="hndle">Donate $10, $20 or $50!</h3>
 					<div class="inside">
 						<p>
-							If you like this plugin, donate to support future development and maintenance!							
+							If you like this plugin, please donate to support development and maintenance!							
 							
 							<!--
 							This plugin has cost me countless hours of work, if you use it, 
