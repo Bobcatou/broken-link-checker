@@ -80,7 +80,7 @@ $blc_config_manager = new blcConfigurationManager(
         
         'exclusion_list' => array(), 	//Links that contain a substring listed in this array won't be checked.
 		
-		'send_email_notifications' => true,//Whether to send email notifications about broken links
+		'send_email_notifications' => true, //Whether to send email notifications about broken links
 		'notification_schedule' => 'daily', //How often (at most) notifications will be sent. Possible values : 'daily', 'weekly'
 		'last_notification_sent' => 0,		//When the last email notification was send (Unix timestamp)
 		

@@ -601,14 +601,6 @@ class wsBrokenLinkChecker {
         <div id="blc-sidebar">
 			<div class="metabox-holder">
 			
-				<div id="advertising" class="postbox">
-					<h3 class="hndle">Like this plugin?</h3>
-					<div class="inside">
-						<p>You might also like:</p>
-						<p>(put ads here)</p>
-					</div>					
-				</div>
-			
 				<div id="donate" class="postbox">
 					<h3 class="hndle">Donate $10, $20 or $50!</h3>
 					<div class="inside">
@@ -649,6 +641,14 @@ class wsBrokenLinkChecker {
 							
 							<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 						</form>
+					</div>					
+				</div>
+				
+				<div id="advertising" class="postbox">
+					<h3 class="hndle">Like this plugin?</h3>
+					<div class="inside">
+						<p>You might also like:</p>
+						<p>(put ads here)</p>
 					</div>					
 				</div>
 				
@@ -1189,12 +1189,6 @@ class wsBrokenLinkChecker {
 		if ( $disabled ){
 			$checked .= ' disabled="disabled"';
 		}
-		
-		$pro_notice = sprintf(
-			'<span class="pro-notice"><a href="%s" title="%s">Pro</a></span>',
-			esc_attr('http://wpplugins.com/plugin/173/broken-link-checker-pro'),
-			esc_attr(__('Upgrade to Pro to enable this feature', 'broken-link-checker'))
-		);
 		
 		printf(
 			'<label class="%s">
