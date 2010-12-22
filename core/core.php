@@ -550,6 +550,12 @@ class wsBrokenLinkChecker {
         	
         }
         
+        //Show a thank-you message when a donation is made.
+        if ( !empty($_GET['donated']) ){
+        	echo '<div id="message" class="updated fade"><p><strong>',__('Thank you for your donation!', 'broken-link-checker'), '</strong></p></div>';
+        	
+        }
+        
         //Show one when recheck is started, too. 
         if ( !empty($_GET['recheck-initiated']) ){
         	echo '<div id="message" class="updated fade"><p><strong>',
@@ -602,44 +608,33 @@ class wsBrokenLinkChecker {
 			<div class="metabox-holder">
 			
 				<div id="donate" class="postbox">
-					<h3 class="hndle">Donate $10, $20 or $50!</h3>
+					<h3 class="hndle"><?php _e('Donate $10, $20 or $50!', 'broken-link-checker'); ?></h3>
 					<div class="inside">
-						<p>
-							If you like this plugin, please donate to support development and maintenance!							
-							
-							<!--
-							This plugin has cost me countless hours of work, if you use it, 
-							please donate a token of your appreciation!
-							-->
-						</p>
+						<p><?php
+						_e('If you like this plugin, please donate to support development and maintenance!', 'broken-link-checker');							
+						?></p>
 						
-						<!--
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-						<input type="hidden" name="cmd" value="_donations">
-						<input type="hidden" name="business" value="G3GGNXHBSHKYC">
-						<input type="hidden" name="lc" value="US">
-						<input type="hidden" name="item_name" value="Broken Link Checker">
-						<input type="hidden" name="amount" value="10.00">
-						<input type="hidden" name="currency_code" value="USD">
-						<input type="hidden" name="no_note" value="1">
-						<input type="hidden" name="no_shipping" value="1">
-						<input type="hidden" name="currency_code" value="USD">
-						<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_SM.gif:NonHosted">
-						
-						<input type="hidden" name="return" value="<?php echo esc_attr(add_query_arg('donated', 1)); ?>" />
-						<input type="hidden" name="cbt" value="<?php echo esc_attr('Return to WordPress Dashboard'); ?>" />
-						<input type="hidden" name="return" value="<?php echo esc_attr(add_query_arg('donation_canceled', 1)); ?>" />
-						
-						<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Donate $10!">
-						</form>
-						-->
-
-													
 						<form style="text-align: center;" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-							<input type="hidden" name="cmd" value="_s-xclick">
-							<input type="hidden" name="hosted_button_id" value="JHW2BMBSSUNXN">
+							<input type="hidden" name="cmd" value="_donations">
+							<input type="hidden" name="business" value="G3GGNXHBSHKYC">
+							<input type="hidden" name="lc" value="US">
+							<input type="hidden" name="item_name" value="Broken Link Checker">
+							<input type="hidden" name="no_note" value="1">
+							<input type="hidden" name="no_shipping" value="1">
+							<input type="hidden" name="currency_code" value="USD">
+							<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
 							
-							<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+							<input type="hidden" name="return" value="<?php 
+								echo esc_attr(admin_url('options-general.php?page=link-checker-settings&donated=1')); 
+							?>" />
+							<input type="hidden" name="cbt" value="<?php 
+								echo esc_attr(__('Return to WordPress Dashboard', 'broken-link-checker')); 
+							?>" />
+							<input type="hidden" name="cancel_return" value="<?php 
+								echo esc_attr(admin_url('options-general.php?page=link-checker-settings&donation_canceled=1')); 
+							?>" />
+							
+							<input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
 						</form>
 					</div>					
 				</div>
