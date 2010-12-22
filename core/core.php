@@ -643,7 +643,7 @@ class wsBrokenLinkChecker {
 					<h3 class="hndle">Like this plugin?</h3>
 					<div class="inside">
 						<p>You might also like:</p>
-						<p>(put ads here)</p>
+						<p>(put fancy ads here)</p>
 					</div>					
 				</div>
 				
