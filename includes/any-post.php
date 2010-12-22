@@ -60,7 +60,6 @@ class blcPostTypeOverlord {
 					'ModuleCategory' => 'container',
 					'ModuleContext' => 'all',
 					'ModuleClassName' => 'blcAnyPostContainerManager',
-					'ModuleRequiresPro' => in_array($post_type, $built_in) ? 'false' : 'true',
 				)
 			);
 		}	
