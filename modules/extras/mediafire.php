@@ -11,7 +11,6 @@ ModuleContext: on-demand
 ModuleLazyInit: true
 ModuleClassName: blcMediaFireChecker
 ModulePriority: 100
-ModuleRequiresPro: true
 
 ModuleCheckerUrlPattern: @^http://(?:www\.)?mediafire\.com/(?:download\.php)?\?([0-9a-zA-Z]{11})(?:$|[^0-9a-zA-Z])@
 */

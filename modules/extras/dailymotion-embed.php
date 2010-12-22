@@ -9,7 +9,6 @@ ModuleCategory: parser
 ModuleClassName: blcDailyMotionEmbed
 ModuleContext: on-demand
 ModuleLazyInit: true
-ModuleRequiresPro: true
 */
 
 if ( !class_exists('blcEmbedParserBase') ){

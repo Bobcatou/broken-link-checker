@@ -11,7 +11,6 @@ ModuleContext: on-demand
 ModuleLazyInit: true
 ModuleClassName: blcMegaUploadChecker
 ModulePriority: 100
-ModuleRequiresPro: true
 
 ModuleCheckerUrlPattern: @^http://[\w\.]*?megaupload\.com/.*?(?:\?|&)d=([0-9A-Za-z]+)@
 */

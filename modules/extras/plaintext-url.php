@@ -9,7 +9,6 @@ ModuleCategory: parser
 ModuleClassName: blcPlaintextURL
 ModuleContext: on-demand
 ModuleLazyInit: true
-ModuleRequiresPro: true
 
 ModulePriority: 800
 */

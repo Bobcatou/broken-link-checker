@@ -12,7 +12,6 @@ ModuleContext: on-demand
 ModuleLazyInit: true
 ModuleClassName: blcYouTubeChecker
 ModulePriority: 100
-ModuleRequiresPro: true
 
 ModuleCheckerUrlPattern: @^http://([\w\d]+\.)*youtube\.[^/]+/watch\?.*v=[^/#]@i
 */

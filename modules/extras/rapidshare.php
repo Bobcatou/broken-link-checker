@@ -11,7 +11,6 @@ ModuleContext: on-demand
 ModuleLazyInit: true
 ModuleClassName: blcRapidShareChecker
 ModulePriority: 100
-ModuleRequiresPro: true
 
 ModuleCheckerUrlPattern: @^https?://(?:[\w\d]+\.)*rapidshare\.\w+/files/(\d+)/([^&?#/]+?)(?:$|[&?#/])@i
 */
