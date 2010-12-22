@@ -12,6 +12,7 @@ if ( !function_exists( 'microtime_float' ) ) {
 }
 
 require BLC_DIRECTORY . '/includes/screen-options/screen-options.php';
+require BLC_DIRECTORY . '/includes/screen-meta-links.php';
 require BLC_DIRECTORY . '/includes/survey.php';
 
 if (!class_exists('wsBrokenLinkChecker')) {
@@ -224,31 +225,6 @@ class wsBrokenLinkChecker {
 	}
 	
   /**
-   * Output the JavaScript that adds the "Feedback" widget to screen meta.
-   *
-   * @return void
-   */
-	function print_uservoice_widget(){
-		?>
-		<script type="text/javascript">
-		(function($){
-			$('#screen-meta-links').append(
-				'<div id="blc-feedback-widget-wrap" class="hide-if-no-js screen-meta-toggle">' +
-					'<a href="#" id="blc-feedback-widget" class="show-settings">Feedback</a>' +
-				'</div>'
-			);
-			
-			$('#blc-feedback-widget').click(function(){
-				//Launch UserVoice
-				UserVoice.Popin.show(uservoiceOptions); 
-				return false;
-			});
-		})(jQuery);
-		</script>
-		<?php
-	}
-	
-  /**
    * Load the UserVoice script for use with the "Feedback" widget
    *
    * @return void
@@ -256,6 +232,12 @@ class wsBrokenLinkChecker {
 	function uservoice_widget(){
 		?>
 		<script type="text/javascript">
+			jQuery('#blc-feedback-widget').click(function(){
+				//Launch UserVoice
+				UserVoice.Popin.show(uservoiceOptions); 
+				return false;
+			});
+		
 		  var uservoiceOptions = {
 		    key: 'whiteshadow',
 		    host: 'feedback.w-shadow.com', 
@@ -374,9 +356,32 @@ class wsBrokenLinkChecker {
 		add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'enqueue_settings_scripts') );
         add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'enqueue_link_page_scripts') );
         
-        //Add the UserVoice widget to the plugin's pages
+        //Add a "Feedback" button that links to the plugin's UserVoice forum
+        add_screen_meta_link(
+        	'blc-feedback-widget',
+        	__('Feedback', 'broken-link-checker'),
+        	'#',
+        	array($options_page_hook, $links_page_hook),
+        	array('style' => 'font-weight: bold;')
+		);
+		
+		//Add the supporting UserVoice-invocation code
         add_action( 'admin_footer-' . $options_page_hook, array(&$this, 'uservoice_widget') );
         add_action( 'admin_footer-' . $links_page_hook, array(&$this, 'uservoice_widget') );
+        
+        //Make the Settings page link to the link list, and vice versa
+        add_screen_meta_link(
+        	'blc-settings-link',
+			__('Go to Settings', 'broken-link-checker'),
+			admin_url('options-general.php?page=link-checker-settings'),
+			$links_page_hook
+		);
+		add_screen_meta_link(
+        	'blc-links-page-link',
+			__('Go to Broken Links', 'broken-link-checker'),
+			admin_url('tools.php?page=view-broken-links'),
+			$options_page_hook
+		);
     }
     
   /**
@@ -555,11 +560,6 @@ class wsBrokenLinkChecker {
         //Cull invalid and missing modules
         $moduleManager->validate_active_modules();
         
-		//Output the "Feedback" button that links to the plugin's UserVoice forum
-		$this->print_uservoice_widget();
-		//Output the "Upgrade to Pro" button
-		$this->display_pro_link();
-		
 		$debug = $this->get_debug_info();
 		
 		$details_text = __('Details', 'broken-link-checker');
@@ -1251,7 +1251,6 @@ class wsBrokenLinkChecker {
      */
     function options_page_css(){
     	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.6' );
-    	wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()), array(), '0.9.6' );
     	wp_enqueue_style('dashboard');
 	}
 	
@@ -1373,9 +1372,7 @@ class wsBrokenLinkChecker {
 		}
 		
 		//Add "Feedback", "Upgrade to Pro" and an optional "[Plugin news]" button to screen meta
-		$this->print_uservoice_widget();
 		$this->display_plugin_news_link();
-		$this->display_pro_link();
         ?>
         
 <script type='text/javascript'>
@@ -1947,7 +1944,6 @@ class wsBrokenLinkChecker {
 	 */
 	function links_page_css(){
 		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '0.9.6' );
-		wp_enqueue_style('blc-screen-meta-links', plugins_url('css/screen-meta-links.css', blc_get_plugin_file()), array(), '0.9.5' );
 	}
 	
 	/**
@@ -3230,28 +3226,6 @@ class wsBrokenLinkChecker {
 		<?php
 	}
 	
-	/**
-	 * Display the "Upgrade to Pro" button unless already running the Pro version
-	 * 
-	 * @return void
-	 */
-	function display_pro_link(){
-		if ( defined('BLC_PRO_VERSION') && BLC_PRO_VERSION ){
-			return;
-		}
-		?>
-		<script type="text/javascript">
-		(function($){
-			var wrapper = $('<div id="blc-upgrade-to-pro-wrap" class="hide-if-no-js screen-meta-toggle blc-meta-button"></div>').appendTo('#screen-meta-links');
-			$('<a id="blc-upgrade-to-pro-link" class="show-settings"></a>')
-				.attr('href', 'http://wpplugins.com/plugin/173/broken-link-checker-pro')
-				.html('Upgrade to Pro')
-				.appendTo(wrapper);
-		})(jQuery);
-		</script>
-		<?php
-	}
-
 }//class ends here
 
 } // if class_exists...
