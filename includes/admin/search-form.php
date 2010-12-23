@@ -4,7 +4,7 @@
 <div class="search-box">
 	
 	<?php
-			//If we're currently displaying search results offer the user the option to s
+			//If we're currently displaying search results offer the user the option to
 			//save the search query as a custom filter. 	
 			if ( $filter_id == 'search' ){
 	?>
@@ -54,7 +54,7 @@
 		if ( !empty($search_params['s_filter']) ){
 			$search_subfilter = $search_params['s_filter']; 
 		} else {
-			$search_subfilter = $filter_id;
+			$search_subfilter = 'all';
 		}
 		
 		$linkQuery = & blcLinkQuery::getInstance();
