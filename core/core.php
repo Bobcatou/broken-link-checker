@@ -361,8 +361,7 @@ class wsBrokenLinkChecker {
         	'blc-feedback-widget',
         	__('Feedback', 'broken-link-checker'),
         	'#',
-        	array($options_page_hook, $links_page_hook),
-        	array('style' => 'font-weight: bold;')
+        	array($options_page_hook, $links_page_hook)
 		);
 		
 		//Add the supporting UserVoice-invocation code
@@ -374,13 +373,15 @@ class wsBrokenLinkChecker {
         	'blc-settings-link',
 			__('Go to Settings', 'broken-link-checker'),
 			admin_url('options-general.php?page=link-checker-settings'),
-			$links_page_hook
+			$links_page_hook,
+			array('style' => 'font-weight: bold;')
 		);
 		add_screen_meta_link(
         	'blc-links-page-link',
 			__('Go to Broken Links', 'broken-link-checker'),
 			admin_url('tools.php?page=view-broken-links'),
-			$options_page_hook
+			$options_page_hook,
+			array('style' => 'font-weight: bold;')
 		);
     }
     
