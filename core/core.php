@@ -2187,7 +2187,7 @@ class wsBrokenLinkChecker {
 		/*****************************************
 						Check links
 		******************************************/
-		while ( $links = $this->get_links_to_check(50) ){
+		while ( $links = $this->get_links_to_check(30) ){
 		
 			//Some unchecked links found
 			//FB::log("Checking ".count($links)." link(s)");
