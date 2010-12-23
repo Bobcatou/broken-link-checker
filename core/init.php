@@ -309,7 +309,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
         }
 		$logger = new blcCachedOptionLogger('blc_installation_log');
 		$messages = array_merge(
-			array('<strong>' . __('Broken Link Checker installation failed', 'broken-link-checker') . '</strong>', '', '<em>Installation log follows :</em>'),
+			array('<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>', '', '<em>Installation log follows :</em>'),
 			$logger->get_messages()
 		);
 		echo "<div class='error'><p>", implode("<br>\n", $messages), "</p></div>";
