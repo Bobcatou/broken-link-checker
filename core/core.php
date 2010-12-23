@@ -1353,7 +1353,7 @@ class wsBrokenLinkChecker {
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
 		
-		//Add "Feedback", "Upgrade to Pro" and an optional "[Plugin news]" button to screen meta
+		//Add an optional "[Plugin news]" button to screen meta
 		$this->display_plugin_news_link();
         ?>
         
