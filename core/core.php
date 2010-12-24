@@ -13,7 +13,6 @@ if ( !function_exists( 'microtime_float' ) ) {
 
 require BLC_DIRECTORY . '/includes/screen-options/screen-options.php';
 require BLC_DIRECTORY . '/includes/screen-meta-links.php';
-require BLC_DIRECTORY . '/includes/survey.php';
 
 if (!class_exists('wsBrokenLinkChecker')) {
 
