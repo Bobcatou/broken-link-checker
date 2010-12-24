@@ -30,13 +30,6 @@
 	</div>					
 </div>
 
-<?php
-$post_counts = wp_count_posts();
-$show_ad = isset($post_counts->publish) && ($post_counts->publish >= 10);
-
-if ( $show_ad ):
-?>
-
 <div id="advertising" class="postbox">
 	<h3 class="hndle"><?php _e('Recommended', 'broken-link-checker'); ?></h3>
 	<div class="inside" style="text-align: center;">
@@ -46,9 +39,3 @@ if ( $show_ad ):
 		<img src="http://impression.clickinc.com/impressions/servlet/Impression?merchant=70291&&type=impression&&affId=102167&&img=c_160x600_maxcdn_simple.gif" style="display:none" border=0>
 	</div>					
 </div>
-
-<?php
-
-endif;
-
-?>
