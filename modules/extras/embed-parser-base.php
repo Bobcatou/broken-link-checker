@@ -95,7 +95,7 @@ class blcEmbedParserBase extends blcParser {
 		
 		$image_html = sprintf(
 			'<img src="%s" class="blc-small-image" title="%2$s" alt="%2$s"> ',
-			esc_attr( plugins_url($image_url, blc_get_plugin_file()) ),
+			esc_attr( plugins_url($image_url, BLC_PLUGIN_FILE) ),
 			$this->long_title
 		);
 		

@@ -46,9 +46,6 @@ define('BLC_FOR_EDITING', 'edit');
 define('BLC_FOR_PARSING', 'parse');
 define('BLC_FOR_DISPLAY', 'display');
 
-//Path to the plugin's directory
-define('BLC_DIRECTORY', dirname(blc_get_plugin_file()));
-
 /***********************************************
 				Configuration
 ************************************************/
@@ -256,7 +253,7 @@ add_filter('cron_schedules', 'blc_cron_schedules');
 function blc_activation_hook(){
 	require BLC_DIRECTORY . '/includes/activation.php';
 }
-register_activation_hook(plugin_basename(blc_get_plugin_file()), 'blc_activation_hook');
+register_activation_hook(plugin_basename(BLC_PLUGIN_FILE), 'blc_activation_hook');
 
 //Load the plugin if installed successfully
 if ( $blc_config_manager->options['installation_complete'] ){
@@ -285,7 +282,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
 			
 			//It's an admin-side or Cron request. Load the core.
 			require BLC_DIRECTORY . '/core/core.php';
-			$ws_link_checker = new wsBrokenLinkChecker( blc_get_plugin_file() , $blc_config_manager );
+			$ws_link_checker = new wsBrokenLinkChecker( BLC_PLUGIN_FILE, $blc_config_manager );
 			
 		} else {
 			

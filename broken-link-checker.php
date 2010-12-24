@@ -9,16 +9,14 @@ Author URI: http://w-shadow.com/blog/
 Text Domain: broken-link-checker
 */
 
-if ( !function_exists('blc_get_plugin_file') ){
-	/**
-	 * Retrieve the fully qualified filename of BLC's main PHP file.
-	 * 
-	 * @return string
-	 */
-	function blc_get_plugin_file(){
-		//You'd be surprised on how useful this can be. 
-		return __FILE__; 
-	}
+//Path to this file
+if ( !defined('BLC_PLUGIN_FILE') ){
+	define('BLC_PLUGIN_FILE', __FILE__);
+}
+
+//Path to the plugin's directory
+if ( !defined('BLC_DIRECTORY') ){
+	define('BLC_DIRECTORY', dirname(__FILE__));
 }
 
 //Load the actual plugin

@@ -157,7 +157,7 @@ class blcHTMLImage extends blcParser {
 		
 		$image = sprintf(
 			'<img src="%s" class="blc-small-image" alt="%2$s" title="%2$s"> ',
-			esc_attr(plugins_url('/images/image.png', blc_get_plugin_file())),
+			esc_attr(plugins_url('/images/image.png', BLC_PLUGIN_FILE)),
 			esc_attr($text)
 		);
 		

@@ -214,13 +214,13 @@ class wsBrokenLinkChecker {
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog');
         wp_enqueue_script('jquery-ui-tabs');
-        wp_enqueue_script('jquery-cookie', plugins_url('js/jquery.cookie.js', blc_get_plugin_file())); //Used for storing last widget states, etc
+        wp_enqueue_script('jquery-cookie', plugins_url('js/jquery.cookie.js', BLC_PLUGIN_FILE)); //Used for storing last widget states, etc
 	}
 	
 	function enqueue_link_page_scripts(){
 		wp_enqueue_script('jquery-ui-core');   //Used for background color animation
         wp_enqueue_script('jquery-ui-dialog'); //Used for the search form
-        wp_enqueue_script('sprintf', plugins_url('js/sprintf.js', blc_get_plugin_file())); //Used in error messages
+        wp_enqueue_script('sprintf', plugins_url('js/sprintf.js', BLC_PLUGIN_FILE)); //Used in error messages
 	}
 	
   /**
@@ -606,7 +606,7 @@ class wsBrokenLinkChecker {
 		
         <div id="blc-sidebar">
 			<div class="metabox-holder">
-				<?php include dirname(blc_get_plugin_file()) . '/includes/admin/sidebar.php'; ?>
+				<?php include BLC_DIRECTORY . '/includes/admin/sidebar.php'; ?>
 			</div>
 		</div>
 		
@@ -1192,7 +1192,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', blc_get_plugin_file()), array(), '0.9.6' );
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '0.9.6' );
     	wp_enqueue_style('dashboard');
 	}
 	
@@ -2688,8 +2688,8 @@ class wsBrokenLinkChecker {
 		}
 		
 		//Try the plugin's own directory.
-		if ( @is_writable( dirname( blc_get_plugin_file() ) ) ){
-			return dirname( blc_get_plugin_file() ) . '/wp_blc_lock';
+		if ( @is_writable( BLC_DIRECTORY ) ){
+			return BLC_DIRECTORY . '/wp_blc_lock';
 		} else {
 			
 			//Try the system-wide temp directory
@@ -2745,7 +2745,7 @@ class wsBrokenLinkChecker {
 	}
 	
 	function lockfile_warning(){
-		$my_dir =  '/plugins/' . basename(dirname(blc_get_plugin_file())) . '/';
+		$my_dir =  '/plugins/' . basename(BLC_DIRECTORY) . '/';
 		$settings_page = admin_url( 'options-general.php?page=link-checker-settings#lockfile_directory' );
 		
 		//Make the notice customized to the current settings
