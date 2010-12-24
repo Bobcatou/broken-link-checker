@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.0
-Tested up to: 3.1-beta2
+Tested up to: 3.1
 Stable tag: 0.9.7.2
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
@@ -83,6 +83,23 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.2.2 = 
+* All Pro features now included in the free version!
+* Updated Japanese translation.
+* Updated Polish translation.
+* Updated Portuguese translation.
+* Added Romanian translation.
+* Fixed a tab layout bug in IE 7.
+* Fixed UTF-8 characters outside the domain name being encoded incorrectly (may only work with Curl).
+* Fixed a missing translation in email notifications.
+* Fixed a rare "only variables can be returned by reference" notice.
+* Added a donation button and a MaxCDN ad to the Settings page.
+* Added a "Go to Settings" button to the Broken Links page, and a "Go to Broken Links" button to the Settings page.
+* Settings page now looks better on small screens.
+* Email notifications are now enabled by default.
+* "Link status" in the search form no longer defaults to the currently displayed filter/view.
+* Made the "installation failed" message a bit more helpful.
 
 = 0.9.7.2 =
 * Added Polish translation.
