@@ -25,7 +25,7 @@
 				echo esc_attr(admin_url('options-general.php?page=link-checker-settings&donation_canceled=1')); 
 			?>" />
 			
-			<input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+			<input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online." style="max-width:170px;height:47px;">
 		</form>
 	</div>					
 </div>
