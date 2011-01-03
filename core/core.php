@@ -2898,7 +2898,7 @@ class wsBrokenLinkChecker {
 		//Resynch flag.
 		$debug['Resynch. flag'] = array(
 	 		'state' => 'ok',
-	 		'value' => sprintf('%d', $this->conf->options['need_resynch']),
+	 		'value' => sprintf('%d', $this->conf->options['need_resynch'] ? '1 (resynch. required)' : '0 (resynch. not required)'),
 		);
 		
 		//Synch records
