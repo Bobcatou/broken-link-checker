@@ -13,6 +13,7 @@ if ( !function_exists( 'microtime_float' ) ) {
 
 require BLC_DIRECTORY . '/includes/screen-options/screen-options.php';
 require BLC_DIRECTORY . '/includes/screen-meta-links.php';
+require BLC_DIRECTORY . '/includes/wp-mutex.php';
 
 if (!class_exists('wsBrokenLinkChecker')) {
 
@@ -25,7 +26,6 @@ class wsBrokenLinkChecker {
     var $db_version = 5; 		//The required version of the plugin's DB schema.
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
-    var $lockfile_handle = null; 
     
   /**
    * wsBrokenLinkChecker::wsBrokenLinkChecker()
@@ -66,16 +66,6 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
-        
-        //Check if it's possible to create a lockfile and nag the user about it if not.
-        if ( $this->lockfile_name() ){
-            //Lockfiles work, so it's safe to enable the footer hook that will call the worker
-            //function via AJAX.
-            add_action('admin_footer', array(&$this,'admin_footer'));
-        } else {
-            //No lockfiles, nag nag nag!
-            add_action( 'admin_notices', array( &$this, 'lockfile_warning' ) );
-        }
         
         //Add/remove Cron events
         $this->setup_cron_events();
@@ -484,9 +474,6 @@ class wsBrokenLinkChecker {
             $diff1 = array_diff( $new_custom_fields, $this->conf->options['custom_fields'] );
             $diff2 = array_diff( $this->conf->options['custom_fields'], $new_custom_fields );
             $this->conf->options['custom_fields'] = $new_custom_fields;
-            
-            //Temporary file directory
-            $this->conf->options['custom_tmp_dir'] = trim( stripslashes(strval($_POST['custom_tmp_dir'])) );
             
             //HTTP timeout
             $new_timeout = intval($_POST['timeout']);
@@ -953,39 +940,6 @@ class wsBrokenLinkChecker {
         </tr>
         
         <tr valign="top">
-        <th scope="row">
-			<a name='lockfile_directory'></a><?php _e('Custom temporary directory', 'broken-link-checker'); ?></th>
-        <td>
-
-        <input type="text" name="custom_tmp_dir" id="custom_tmp_dir"
-            value="<?php echo htmlspecialchars( $this->conf->options['custom_tmp_dir'] ); ?>" size='53' maxlength='500'/>
-            <?php 
-            if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
-				if ( @is_dir( $this->conf->options['custom_tmp_dir'] ) ){
-					if ( @is_writable( $this->conf->options['custom_tmp_dir'] ) ){
-						echo "<strong>", __('OK', 'broken-link-checker'), "</strong>";
-					} else {
-						echo '<span class="error">';
-						_e("Error : This directory isn't writable by PHP.", 'broken-link-checker');
-						echo '</span>';
-					}
-				} else {
-					echo '<span class="error">';
-					_e("Error : This directory doesn't exist.", 'broken-link-checker');
-					echo '</span>';
-				}
-			}
-			
-			?>
-        <br/>
-        <span class="description">
-        <?php _e('Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank.','broken-link-checker'); ?>
-        </span>
-
-        </td>
-        </tr>
-        
-                <tr valign="top">
         <th scope="row"><?php _e('Server load limit', 'broken-link-checker'); ?></th>
         <td>
 		<?php
@@ -2614,99 +2568,23 @@ class wsBrokenLinkChecker {
 	}
 	
   /**
-   * Create and lock a temporary file.
+   * Acquire an exclusive lock.
+   * If we already hold a lock, it will be released and a new one will be acquired.
    *
    * @return bool
    */
 	function acquire_lock(){
-		//Maybe we already have the lock?
-		if ( $this->lockfile_handle ){
-			return true;
-		}
-		
-		$fn = $this->lockfile_name();
-		if ( $fn ){
-			//Open the lockfile
-			$this->lockfile_handle = fopen($fn, 'w+');
-			if ( $this->lockfile_handle ){
-				//Do an exclusive lock
-				if (flock($this->lockfile_handle, LOCK_EX | LOCK_NB)) {
-					//File locked successfully 
-					return true; 
-				} else {
-					//Something went wrong
-					fclose($this->lockfile_handle);
-					$this->lockfile_handle = null;
-				    return false;
-				}
-			} else {
-				//Can't open the file, fail.
-				return false;
-			}
-		} else {
-			//Uh oh, can't generate a lockfile name. This is bad.
-			//FB::error("Can't find a writable directory to use for my lock file!"); 
-			return false;
-		};
+		return WPMutex::acquire('blc_lock');
 	}
 	
   /**
-   * Unlock and delete the temporary file
+   * Relese our exclusive lock. 
+   * Does nothing if the lock has already been released.
    *
    * @return bool
    */
 	function release_lock(){
-		if ( $this->lockfile_handle ){
-			//Close the file (implicitly releasing the lock)
-			fclose( $this->lockfile_handle );
-			//Delete the file
-			$fn = $this->lockfile_name();
-			if ( file_exists( $fn ) ) {
-				unlink( $fn );
-			}
-			$this->lockfile_handle = null;			
-			return true;
-		} else {
-			//We didn't have the lock anyway...
-			return false;
-		}
-	}
-	
-  /**
-   * Generate system-specific lockfile filename
-   *
-   * @return string A filename or FALSE on error 
-   */
-	function lockfile_name(){
-		//Try the user-specified temp. directory first, if any
-		if ( !empty( $this->conf->options['custom_tmp_dir'] ) ) {
-			if ( @is_writable($this->conf->options['custom_tmp_dir']) && @is_dir($this->conf->options['custom_tmp_dir']) ) {
-				return trailingslashit($this->conf->options['custom_tmp_dir']) . 'wp_blc_lock';
-			} else {
-				return false;
-			}
-		}
-		
-		//Try the plugin's own directory.
-		if ( @is_writable( BLC_DIRECTORY ) ){
-			return BLC_DIRECTORY . '/wp_blc_lock';
-		} else {
-			
-			//Try the system-wide temp directory
-			$path = sys_get_temp_dir();
-			if ( $path && @is_writable($path)){
-				return trailingslashit($path) . 'wp_blc_lock';
-			}
-			
-			//Try the upload directory.  
-			$path = ini_get('upload_tmp_dir');
-			if ( $path && @is_writable($path)){
-				return trailingslashit($path) . 'wp_blc_lock';
-			}
-			
-			//Fail
-			return false;
-		}
+		return WPMutex::release('blc_lock');
 	}
 	
   /**
@@ -2742,37 +2620,6 @@ class wsBrokenLinkChecker {
 				array( &$this, 'dashboard_widget_control' )
 			 );
 		}
-	}
-	
-	function lockfile_warning(){
-		$my_dir =  '/plugins/' . basename(BLC_DIRECTORY) . '/';
-		$settings_page = admin_url( 'options-general.php?page=link-checker-settings#lockfile_directory' );
-		
-		//Make the notice customized to the current settings
-		if ( !empty($this->conf->options['custom_tmp_dir']) ){
-			$action_notice = sprintf(
-				__('The current temporary directory is not accessible; please <a href="%s">set a different one</a>.', 'broken-link-checker'),
-				$settings_page
-			);
-		} else {
-			$action_notice = sprintf(
-				__('Please make the directory <code>%1$s</code> writable by plugins or <a href="%2$s">set a custom temporary directory</a>.', 'broken-link-checker'),
-				$my_dir, $settings_page
-			);
-		}
-					
-		echo sprintf('
-			<div id="blc-lockfile-warning" class="error"><p>
-				<strong>' . __("Broken Link Checker can't create a lockfile.", 'broken-link-checker') . 
-				'</strong> %s <a href="javascript:void(0)" onclick="jQuery(\'#blc-lockfile-details\').toggle()">' . 
-				__('Details', 'broken-link-checker') . '</a> </p>
-				
-				<div id="blc-lockfile-details" style="display:none;"><p>' . 
-				__("The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings.", 'broken-link-checker') .
-				'</p> 
-				</div>
-			</div>',
-			$action_notice);
 	}
 	
   /**
@@ -2872,20 +2719,6 @@ class wsBrokenLinkChecker {
 			$debug['open_basedir'] = array(
 				'state' => 'ok',
 				'value' => __('Off', 'broken-link-checker'),
-			);
-		}
-		
-		//Lockfile location
-		$lockfile = $this->lockfile_name();
-		if ( $lockfile ){
-			$debug['Lockfile'] = array(
-				'state' => 'ok',
-				'value' => $lockfile,
-			);
-		} else {
-			$debug['Lockfile'] = array(
-				'state' => 'error',
-				'message' => __("Can't create a lockfile. Please specify a custom temporary directory.", 'broken-link-checker'),
 			);
 		}
 		

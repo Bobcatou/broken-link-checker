@@ -100,10 +100,6 @@ $blc_config_manager = new blcConfigurationManager(
 		'need_resynch' => false,  		//[Internal flag] True if there are unparsed items.
 		'current_db_version' => 0,		//The currently set-up version of the plugin's tables
 		
-		'custom_tmp_dir' => '',			//The lockfile will be stored in this directory. 
-										//If this option is not set, the plugin's own directory or the 
-										//system-wide /tmp directory will be used instead.
-										
 		'timeout' => 30,				//(in seconds) Links that take longer than this to respond will be treated as broken.
 		
 		'highlight_permanent_failures' => false,//Highlight links that have appear to be permanently broken (in Tools -> Broken Links).
