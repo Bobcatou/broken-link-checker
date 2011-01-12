@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.0
 Tested up to: 3.1
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -83,6 +83,13 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.2.3 =
+* Updated Portuguese translation.
+* Updated German translation.
+* Switched to a simpler, MySQL-based locking mechanism. Note: This may cause trouble for people who've hacked their WP install to use persistent database connections.
+* Added a poll asking for feedback on a new BLC-related web application idea.
+* Minor wording change in the debug info table.
 
 = 1.2.2 = 
 * All Pro features now included in the free version!
