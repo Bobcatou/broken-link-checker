@@ -30,6 +30,23 @@
 	</div>					
 </div>
 
+<?php
+if ( time() < strtotime('2011-02-20') ): 
+//Note: i18n intentionally omitted for this part because the link (below) leads to an English-only page.
+?>
+<div id="advertising" class="postbox">
+	<h3 class="hndle">Poll</h3>
+	<div class="inside" style="text-align: center;">
+		<a href="https://spreadsheets.google.com/viewform?formkey=dFA2VEFsdURoWjc2YlQ5WGxPSXc2Z3c6MQ">
+			Would you use a link checker that works with 
+			<span style="white-space: nowrap;">non-WordPress</span> sites?
+		</a>
+	</div>					
+</div>
+<?php
+endif;
+/*//Advertising temporarily disabled.
+?>
 <div id="advertising" class="postbox">
 	<h3 class="hndle"><?php _e('Recommended', 'broken-link-checker'); ?></h3>
 	<div class="inside" style="text-align: center;">
@@ -39,3 +56,6 @@
 		<img src="http://impression.clickinc.com/impressions/servlet/Impression?merchant=70291&&type=impression&&affId=102167&&img=c_160x600_maxcdn_simple.gif" style="display:none" border=0>
 	</div>					
 </div>
+<?php
+//*/
+?>
