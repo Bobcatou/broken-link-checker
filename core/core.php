@@ -76,6 +76,9 @@ class wsBrokenLinkChecker {
 		add_action('blc_cron_database_maintenance', array(&$this, 'database_maintenance'));
 		add_action('blc_cron_check_news', array(&$this, 'check_news'));
 		
+        //Set the footer hook that will call the worker function via AJAX.
+        add_action('admin_footer', array(&$this,'admin_footer'));
+		
 		//Add a "Screen Options" panel to the "Broken Links" page
 		add_screen_options_panel(
 			'blc-screen-options',
@@ -372,6 +375,17 @@ class wsBrokenLinkChecker {
 			$options_page_hook,
 			array('style' => 'font-weight: bold;')
 		);
+		
+		//Add a link to the latest blog post/whatever about this plugin, if any.
+		if ( isset($this->conf->options['plugin_news']) && !empty($this->conf->options['plugin_news']) ){
+			$news = $this->conf->options['plugin_news'];
+	        add_screen_meta_link(
+	        	'blc-plugin-news-link',
+	        	$news[0],
+	        	$news[1],
+	        	array($options_page_hook, $links_page_hook)
+			);
+		}
     }
     
   /**
@@ -1266,9 +1280,6 @@ class wsBrokenLinkChecker {
 		if ( empty($current_filter['links']) && !empty($wpdb->last_error) ){
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
 		}
-		
-		//Add an optional "[Plugin news]" button to screen meta
-		$this->display_plugin_news_link();
         ?>
         
 <script type='text/javascript'>
@@ -2971,29 +2982,6 @@ class wsBrokenLinkChecker {
 			}
 			$this->conf->save_options();
 		}		
-	}
-	
-	/**
-	 * Display a link to the latest blog post/whatever about this plugin, if any.
-	 * 
-	 * @return void
-	 */
-	function display_plugin_news_link(){
-		if ( !isset($this->conf->options['plugin_news']) || empty($this->conf->options['plugin_news']) ){
-			return;
-		}  
-		$news = $this->conf->options['plugin_news'];
-		?>
-		<script type="text/javascript">
-		(function($){
-			var wrapper = $('<div id="blc-news-link-wrap" class="hide-if-no-js screen-meta-toggle"></div>').appendTo('#screen-meta-links');
-			$('<a id="blc-plugin-news-link" class="show-settings"></a>')
-				.attr('href', '<?php echo esc_js($news[1]); ?>')
-				.html('<?php echo esc_js($news[0]) ?>')
-				.appendTo(wrapper);
-		})(jQuery);
-		</script>
-		<?php
 	}
 	
 }//class ends here
