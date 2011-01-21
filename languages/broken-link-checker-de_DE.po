@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Broken Link Checker | V1.2.2\n"
+"Project-Id-Version: Broken Link Checker | V1.2.4\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
 "POT-Creation-Date: 2010-12-25 11:10:52+00:00\n"
-"PO-Revision-Date: 2011-01-02 17:29+0100\n"
+"PO-Revision-Date: 2011-01-20 21:31+0100\n"
 "Last-Translator: Ivan Graf <contact@bildergallery.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1133,7 +1133,7 @@ msgstr "Hier ist eine Liste von neuen fehlerhaften Links:"
 # @ broken-link-checker
 #: core/core.php:3024
 msgid "Link text : %s"
-msgstr "Link Text: %s"
+msgstr "Linktext: %s"
 
 # @ broken-link-checker
 #: core/core.php:3025
@@ -1264,7 +1264,7 @@ msgstr "Suche"
 # @ broken-link-checker
 #: includes/admin/search-form.php:42
 msgid "Link text"
-msgstr "Link Text"
+msgstr "Linktext"
 
 # @ broken-link-checker
 #: includes/admin/search-form.php:45
@@ -1352,7 +1352,7 @@ msgstr "Quelle"
 # @ broken-link-checker
 #: includes/admin/table-printer.php:184
 msgid "Link Text"
-msgstr "Link Text"
+msgstr "Linktext"
 
 # @ broken-link-checker
 #: includes/admin/table-printer.php:232
