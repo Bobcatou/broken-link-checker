@@ -145,7 +145,7 @@ class blcParser extends blcModule {
    */
 	function relative2absolute($url, $base_url = ''){
 		if ( empty($base_url) ){
-			$base_url = get_option('siteurl');
+			$base_url = home_url();
 		}
 		
 		$p = @parse_url($url);

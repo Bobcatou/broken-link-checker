@@ -154,7 +154,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
         curl_setopt($ch, CURLOPT_USERAGENT, $ua);
         
         //Add a semi-plausible referer header to avoid tripping up some bot traps 
-        curl_setopt($ch, CURLOPT_REFERER, get_option('home'));
+        curl_setopt($ch, CURLOPT_REFERER, home_url());
         
         //Redirects don't work when safe mode or open_basedir is enabled.
         if ( !blcUtility::is_safe_mode() && !blcUtility::is_open_basedir() ) {
@@ -343,7 +343,7 @@ class blcSnoopyHttp extends blcHttpCheckerBase {
         $snoopy = new Snoopy;
         $snoopy->read_timeout = $timeout; //read timeout in seconds
         $snoopy->agent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"; //masquerade as IE 7
-        $snoopy->referer = get_option('home'); //valid referer helps circumvent some hotlink protection schemes
+        $snoopy->referer = home_url(); //valid referer helps circumvent some hotlink protection schemes
         $snoopy->maxlength = 1024*5; //load up to 5 kilobytes
         $snoopy->fetch( $this->urlencodefix($url) );
         

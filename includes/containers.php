@@ -341,7 +341,7 @@ class blcContainer {
    * @return string
    */
 	function base_url(){
-		return get_option('siteurl');
+		return home_url();
 	}
 	
   /**
