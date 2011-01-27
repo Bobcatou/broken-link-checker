@@ -206,7 +206,11 @@ class blcParser extends blcModule {
 	        $url .= "@";
 	    }
 	    if(isset($parts['host'])) {
-	        $url .= $parts['host']."/";
+	        $url .= $parts['host'];
+	        if(isset($parts['port'])) {
+		        $url .= ':' . $parts['port'];
+		    }
+		    $url .= '/';
 	    }
 	    $url .= $path;
 	
