@@ -2623,7 +2623,7 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function hook_wp_dashboard_setup(){
-		if ( function_exists( 'wp_add_dashboard_widget' ) ) {
+		if ( function_exists( 'wp_add_dashboard_widget' ) && current_user_can('edit_others_posts') ) {
 			wp_add_dashboard_widget(
 				'blc_dashboard_widget', 
 				__('Broken Link Checker', 'broken-link-checker'), 
