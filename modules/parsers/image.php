@@ -45,6 +45,9 @@ class blcHTMLImage extends blcParser {
 				$url = html_entity_decode($url);
 				$url = trim($url);
 				
+				//Allow shortcodes in image URLs.
+				$url = do_shortcode($url);
+				
 				//Attempt to parse the URL
 				$parts = @parse_url($url);
 			    if(!$parts) {
