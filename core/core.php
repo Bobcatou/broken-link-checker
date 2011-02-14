@@ -415,6 +415,7 @@ class wsBrokenLinkChecker {
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
+			echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
 		}
     	
         if (isset($_POST['recheck']) && !empty($_POST['recheck']) ){
@@ -1182,6 +1183,7 @@ class wsBrokenLinkChecker {
 				$this->conf->options['current_db_version'],
 				$this->db_version
 			);
+			echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
 		}
 		
 		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
