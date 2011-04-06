@@ -9,7 +9,7 @@
 if ( !class_exists('wsScreenMetaLinks10') ):
 
 //Load JSON functions for PHP < 5.2
-if (!class_exists('Services_JSON')){
+if (!function_exists('json_encode') && !class_exists('Services_JSON')){
 	require ABSPATH . WPINC . '/class-json.php';
 }
  
