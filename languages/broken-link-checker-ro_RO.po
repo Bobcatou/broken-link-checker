@@ -5,1051 +5,776 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Broken Link Checker 1.2.4\n"
+"Project-Id-Version: Broken Link Checker 0.9.6\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2010-12-25 11:10:52+00:00\n"
-"PO-Revision-Date: 2011-01-21 23:42+0200\n"
-"Last-Translator: Ovidiu <ovidiu@selco.biz>\n"
-"Language-Team: http://www.jibo.ro <contact@jibo.ro>\n"
+"POT-Creation-Date: 2010-10-08 16:08+0000\n"
+"PO-Revision-Date: 2011-04-11 18:37+0200\n"
+"Last-Translator: Janis Elsts <whiteshadow@w-shadow.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
 "X-Poedit-Language: Romanian\n"
 "X-Poedit-Country: ROMANIA\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Poedit-SourceCharset: utf-8\n"
 
-#: modules/containers/dummy.php:34
-#: modules/containers/dummy.php:45
-msgid "I don't know how to edit a '%s' [%d]."
-msgstr "Nu stiu cum sa editez un '%s' [%d]."
-
-#: modules/containers/custom_field.php:84
-msgid "Failed to update the meta field '%s' on %s [%d]"
-msgstr "S-a esuat actualizarea meta campului '%s' la %s [%d]"
-
-#: modules/containers/custom_field.php:110
-msgid "Failed to delete the meta field '%s' on %s [%d]"
-msgstr "S-a esuat stergerea meta campului '%s' la %s [%d]"
-
-#: modules/containers/custom_field.php:187
-msgid "Edit this post"
-msgstr "Editare afisare"
-
-#: modules/containers/custom_field.php:197
-#: includes/any-post.php:455
-msgid "Edit this item"
-msgstr "Editare articol"
-
-#: modules/containers/custom_field.php:197
-#: modules/containers/blogroll.php:46
-#: modules/containers/comment.php:153
-#: includes/any-post.php:397
-msgid "Edit"
-msgstr "Editare"
-
-#: modules/containers/custom_field.php:203
-#: includes/any-post.php:405
-msgid "Move this item to the Trash"
-msgstr "Muta acest articol in Pubela"
-
-#: modules/containers/custom_field.php:205
-#: includes/any-post.php:407
-msgid "Trash"
-msgstr "Pubela"
-
-#: modules/containers/custom_field.php:210
-#: includes/any-post.php:412
-msgid "Delete this item permanently"
-msgstr "Sterge definitiv acest articol"
-
-#: modules/containers/custom_field.php:212
-#: modules/containers/blogroll.php:47
-#: includes/any-post.php:414
-msgid "Delete"
-msgstr "Stergere"
-
-#: modules/containers/custom_field.php:217
-msgid "View \"%s\""
-msgstr "Vizualizare \"%s\""
-
-#: modules/containers/custom_field.php:217
-#: modules/containers/comment.php:166
-#: includes/any-post.php:436
-msgid "View"
-msgstr "Vizualizare"
-
-#: modules/containers/custom_field.php:284
-#: includes/any-post.php:564
-msgid "Failed to delete post \"%s\" (%d)"
-msgstr "Esuare stergere afisare \"%s\" (%d)"
-
-#: modules/containers/custom_field.php:303
-#: includes/any-post.php:583
-msgid "Can't move post \"%s\" (%d) to the trash because the trash feature is disabled"
-msgstr "Nu pot muta afisarea \"%s\" (%d) in Pubela, deoarece optiunea Pubela este dezactivata"
-
-#: modules/containers/custom_field.php:322
-#: includes/any-post.php:603
-msgid "Failed to move post \"%s\" (%d) to the trash"
-msgstr "Esuare mutare afisare \"%s\" (%d) in Pubela"
-
-#: modules/containers/blogroll.php:21
-msgid "Bookmark"
-msgstr "Semne de carte"
-
-#: modules/containers/blogroll.php:27
-#: modules/containers/blogroll.php:46
-msgid "Edit this bookmark"
-msgstr "Editare semn de carte"
-
-#: modules/containers/blogroll.php:47
-msgid ""
-"You are about to delete this link '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Sunteti pe cale sa stergeti aceasta legatura '%s'\n"
-"  'Anulare' pentru a va opri, 'OK' pentru a sterge."
-
-#: modules/containers/blogroll.php:83
-#: modules/containers/comment.php:43
-#: includes/any-post.php:519
-msgid "Nothing to update"
-msgstr "Nimic de actualizat"
-
-#: modules/containers/blogroll.php:97
-msgid "Updating bookmark %d failed"
-msgstr "Actualizarea semnului de carte %d a esuat"
-
-#: modules/containers/blogroll.php:128
-msgid "Failed to delete blogroll link \"%s\" (%d)"
-msgstr "Nu s-a reusit stergerea legaturii \"%s\" (%d)"
-
-#: modules/containers/blogroll.php:298
-msgid "%d blogroll link deleted."
-msgid_plural "%d blogroll links deleted."
-msgstr[0] "%d legatura stearsa."
-msgstr[1] "%d legaturi sterse."
-
-#: modules/containers/comment.php:53
-msgid "Updating comment %d failed"
-msgstr "Actualizarea comentariului %d a esuat"
-
-#: modules/containers/comment.php:74
-msgid "Failed to delete comment %d"
-msgstr "Stergerea comentariului %d a esuat"
-
-#: modules/containers/comment.php:95
-msgid "Can't move comment %d to the trash"
-msgstr "Nu s-a putut muta comentariul %d in Pubela"
-
-#: modules/containers/comment.php:153
-#: modules/containers/comment.php:195
-msgid "Edit comment"
-msgstr "Editare comentariu"
-
-#: modules/containers/comment.php:160
-msgid "Delete Permanently"
-msgstr "Stergere Permanenta"
-
-#: modules/containers/comment.php:162
-msgid "Move this comment to the trash"
-msgstr "Muta si acest comentariu in Pubela"
-
-#: modules/containers/comment.php:162
-msgctxt "verb"
-msgid "Trash"
-msgstr "Pubela"
-
-#: modules/containers/comment.php:166
-msgid "View comment"
-msgstr "Vizualizare comentariu"
-
-#: modules/containers/comment.php:183
-msgid "Comment"
-msgstr "Comentariu"
-
-#: modules/containers/comment.php:371
-msgid "%d comment has been deleted."
-msgid_plural "%d comments have been deleted."
-msgstr[0] "%d comentariu a fost sters."
-msgstr[1] "%d comentarii au fost sterse."
-
-#: modules/containers/comment.php:390
-msgid "%d comment moved to the Trash."
-msgid_plural "%d comments moved to the Trash."
-msgstr[0] "%d comentariu mutat in Pubela."
-msgstr[1] "%d comentarii mutate in Pubela."
-
-#: modules/checkers/http.php:242
-msgid "Server Not Found"
-msgstr "Server de negasit"
-
-#: modules/checkers/http.php:257
-msgid "Connection Failed"
-msgstr "Conectare esuata"
-
-#: modules/checkers/http.php:263
-#: modules/extras/mediafire.php:96
-#: includes/links.php:845
-msgid "Unknown Error"
-msgstr "Eroare necunoscuta"
-
-#: modules/checkers/http.php:292
-#: modules/checkers/http.php:362
-msgid "HTTP code : %d"
-msgstr "cod HTTP: %d"
-
-#: modules/checkers/http.php:294
-#: modules/checkers/http.php:364
-msgid "(No response)"
-msgstr "(Nici un raspuns)"
-
-#: modules/checkers/http.php:300
-msgid "Most likely the connection timed out or the domain doesn't exist."
-msgstr "Cel mai probabil, timpul conexiunii a expirat ori domeniul nu exista."
-
-#: modules/checkers/http.php:371
-msgid "Request timed out."
-msgstr "Timpul solicitarii a expirat."
-
-#: modules/checkers/http.php:389
-msgid "Using Snoopy"
-msgstr "Folosirea Snoopy"
-
-#: modules/parsers/image.php:156
-msgid "Image"
-msgstr "Imagine"
-
-#: modules/parsers/metadata.php:117
-msgid "Custom field"
-msgstr "Camp personalizabil"
-
-#: modules/extras/dailymotion-embed.php:23
-msgid "DailyMotion Video"
-msgstr "Clipuri video DailyMotion"
-
-#: modules/extras/dailymotion-embed.php:24
-msgid "Embedded DailyMotion video"
-msgstr "Clipuri video DailyMotion incorporate"
-
-#: modules/extras/rapidshare.php:142
-#: modules/extras/mediafire.php:91
-#: modules/extras/megaupload.php:109
-msgid "Not Found"
-msgstr "Negasit"
-
-#: modules/extras/rapidshare.php:148
-#: modules/extras/rapidshare.php:154
-#: modules/extras/rapidshare.php:181
-#: modules/extras/megaupload.php:101
-#: includes/links.php:875
-msgctxt "link status"
-msgid "OK"
-msgstr "OK"
-
-#: modules/extras/rapidshare.php:161
-msgid "RS Server Down"
-msgstr "Server RS cazut"
-
-#: modules/extras/rapidshare.php:168
-msgid "File Blocked"
-msgstr "Fisier nepermis"
-
-#: modules/extras/rapidshare.php:175
-msgid "File Locked"
-msgstr "Fisier blocat"
-
-#: modules/extras/rapidshare.php:186
-msgid "RapidShare : %s"
-msgstr "%s RapidShare"
-
-#: modules/extras/rapidshare.php:192
-msgid "RapidShare API error: %s"
-msgstr "Eroare API RapidShare: %s"
-
-#: modules/extras/embed-parser-base.php:140
-msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
-msgstr "Embedded video nu pot fi editate cu ajutorul Broken Link Checker. Va rugam sa editati sau sa inlocuiti fisierul video in cauza manual."
-
-#: modules/extras/vimeo-embed.php:24
-msgid "Vimeo Video"
-msgstr "Clipuri video Vimeo"
-
-#: modules/extras/vimeo-embed.php:25
-msgid "Embedded Vimeo video"
-msgstr "Clipuri video Vimeo incorporate"
-
-#: modules/extras/youtube.php:63
-#: modules/extras/youtube.php:66
-msgid "Video Not Found"
-msgstr "Nu a fost gasit clipul video"
-
-#: modules/extras/youtube.php:74
-msgid "Video Removed"
-msgstr "Clip video eliminat"
-
-#: modules/extras/youtube.php:82
-msgid "Invalid Video ID"
-msgstr "ID Video invalid"
-
-#: modules/extras/youtube.php:94
-msgid "Video OK"
-msgstr "Video OK"
-
-#: modules/extras/youtube.php:95
-#: modules/extras/youtube.php:122
-#: core/core.php:966
-msgid "OK"
-msgstr "OK"
-
-#: modules/extras/youtube.php:108
-msgid "Video status : %s%s"
-msgstr "Stare clip video: %s%s"
-
-#: modules/extras/youtube.php:127
-msgid "Video Restricted"
-msgstr "Video restrictionat"
-
-#: modules/extras/youtube.php:144
-msgid "Unknown YouTube API response received."
-msgstr "Raspuns API necunoscut primit de la YouTube."
-
-#: modules/extras/youtube-embed.php:22
-msgid "YouTube Video"
-msgstr "Video YouTube"
-
-#: modules/extras/youtube-embed.php:23
-msgid "Embedded YouTube video"
-msgstr "Clipuri video YouTube incorporate"
-
-#: modules/extras/megaupload.php:116
-msgid "File Temporarily Unavailable"
-msgstr "Fisier indisponibil temporar"
-
-#: modules/extras/megaupload.php:122
-msgid "API Error"
-msgstr "Eroare API"
-
-#: core/init.php:234
-msgid "Once Weekly"
-msgstr "Saptamanal"
-
-#: core/init.php:240
-msgid "Twice a Month"
-msgstr "De doua ori pe luna"
-
-#: core/init.php:309
-msgid "Broken Link Checker installation failed. Try deactivating and then reactivating the plugin."
-msgstr "Instalarea Broken Link Checker a esuat. Incearca sa dezactivezi si sa reactivezi plugin-ul."
-
-#: core/core.php:153
+#: core/core.php:152
 #: includes/admin/links-page-js.php:37
 msgid "Loading..."
-msgstr "Se incarca..."
+msgstr "Se încarcă..."
 
-#: core/core.php:177
+#: core/core.php:176
 #: includes/admin/options-page-js.php:18
 msgid "[ Network error ]"
-msgstr "[Eroare de Retea]"
+msgstr "[ Eroare de rețea ]"
 
-#: core/core.php:202
+#: core/core.php:201
 msgid "Automatically expand the widget if broken links have been detected"
-msgstr "Extinde automat widget-ul daca s-au detectat legaturi intrerupte"
+msgstr "Extinde automat widget-ul dacă s-au detectat legături întrerupte"
 
-#: core/core.php:324
+#: core/core.php:342
 msgid "Link Checker Settings"
-msgstr "Setari Verificator de Legaturi"
+msgstr "Setări Verificator de Legături"
 
-#: core/core.php:325
+#: core/core.php:343
 msgid "Link Checker"
-msgstr "Verificator de Legaturi"
+msgstr "Verificator de Legături"
 
-#: core/core.php:330
+#: core/core.php:348
 #: includes/link-query.php:26
 msgid "Broken Links"
-msgstr "Legaturi intrerupte"
+msgstr "Legături Întrerupte"
 
-#: core/core.php:346
+#: core/core.php:364
 msgid "View Broken Links"
-msgstr "Vizualizare Legaturi intrerupte"
+msgstr "Vizualizare Legături Întrerupte"
 
-#: core/core.php:361
-msgid "Feedback"
-msgstr "Feedback"
-
-#: core/core.php:373
-msgid "Go to Settings"
-msgstr "Mergi la setari"
-
-#: core/core.php:380
-msgid "Go to Broken Links"
-msgstr "Mergi la legaturile intrerupte"
-
-#: core/core.php:398
+#: core/core.php:392
 msgid "Settings"
-msgstr "Setari"
+msgstr "Setări"
 
-#: core/core.php:410
-#: core/core.php:1213
+#: core/core.php:404
+#: core/core.php:1186
+#, php-format
 msgid "Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)"
-msgstr "Eroare: Tabelele bazelor de date ale modulului extensie nu sunt actualizate! (Versiune curenta: %d, asteptat : %d)"
+msgstr "Eroare: Tabelele bazelor de date ale modulului extensie nu sunt actualizate! (Versiune curentă: %d, așteptată: %d)"
 
-#: core/core.php:549
+#: core/core.php:543
 msgid "Settings saved."
-msgstr "Setari salvate."
+msgstr "Setări salvate."
 
-#: core/core.php:555
-msgid "Thank you for your donation!"
-msgstr "Iti multumim pentru donatie!"
-
-#: core/core.php:562
+#: core/core.php:550
 msgid "Complete site recheck started."
-msgstr "Reverificare completa a siturilor pornita."
+msgstr "Reverificare completă a siturilor pornită."
 
-#: core/core.php:571
-#: core/core.php:2768
+#: core/core.php:564
+#: core/core.php:2744
 msgid "Details"
 msgstr "Detalii"
 
-#: core/core.php:585
+#: core/core.php:578
 msgid "General"
-msgstr "Generalitati"
+msgstr "General"
 
-#: core/core.php:586
+#: core/core.php:579
 msgid "Look For Links In"
-msgstr "Cauta Legaturi in"
+msgstr "Caută Legături în"
 
-#: core/core.php:587
+#: core/core.php:580
 msgid "Which Links To Check"
-msgstr "Ce Legaturi sa se Verifice"
+msgstr "Ce Legături să se Verifice"
 
-#: core/core.php:588
+#: core/core.php:581
 msgid "Protocols & APIs"
-msgstr "Protocoale & Interfete de Programare Aplicatie (IPA - API)"
+msgstr "Protocoale & Interfețe API"
 
-#: core/core.php:589
+#: core/core.php:582
 msgid "Advanced"
 msgstr "Avansate"
 
-#: core/core.php:604
+#: core/core.php:586
 msgid "Broken Link Checker Options"
-msgstr "Optiuni Broken Link Checker"
+msgstr "Opțiuni Broken Link Checker"
 
-#: core/core.php:646
+#: core/core.php:612
 #: includes/admin/table-printer.php:168
 msgid "Status"
 msgstr "Stare"
 
-#: core/core.php:648
+#: core/core.php:614
 #: includes/admin/options-page-js.php:56
 msgid "Show debug info"
-msgstr "Arata informatiile de depanare"
+msgstr "Arată informațiile de depanare"
 
-#: core/core.php:676
+#: core/core.php:642
 msgid "Check each link"
-msgstr "Verifica fiecare legatura"
+msgstr "Verifică fiecare legătură"
 
-#: core/core.php:681
+#: core/core.php:647
+#, php-format
 msgid "Every %s hours"
 msgstr "La fiecare %s Ore"
 
-#: core/core.php:690
+#: core/core.php:656
 msgid "Existing links will be checked this often. New links will usually be checked ASAP."
-msgstr "Legaturile existente vor fi verificate cu aceasta frecventa. Legaturile noi vor fi verificate, de obicei, de indata ce este posibil."
+msgstr "Legăturile existente vor fi verificate cu această frecvență. Legăturile noi vor fi verificate, de obicei, de îndată ce este posibil."
 
-#: core/core.php:697
+#: core/core.php:663
 msgid "E-mail notifications"
-msgstr "Notificari posta electronica (e-mail)"
+msgstr "Notificări e-mail"
 
-#: core/core.php:703
+#: core/core.php:669
 msgid "Send me e-mail notifications about newly detected broken links"
-msgstr "Trimite-mi notificari despre legaturile intrerupte nou detectate"
+msgstr "Trimite-mi notificări despre legăturile întrerupte nou detectate"
+
+#: core/core.php:676
+msgid "Link tweaks"
+msgstr "Optimizare legături"
+
+#: core/core.php:682
+msgid "Apply custom formatting to broken links"
+msgstr "Aplicare formatare personalizată legăturilor întrerupte"
+
+#: core/core.php:686
+#: core/core.php:714
+msgid "Edit CSS"
+msgstr "Editare CSS"
 
 #: core/core.php:710
-msgid "Link tweaks"
-msgstr "Optimizare legaturi"
-
-#: core/core.php:716
-msgid "Apply custom formatting to broken links"
-msgstr "Aplicare formatare personalizata  legaturilor intrerupte"
-
-#: core/core.php:720
-#: core/core.php:748
-msgid "Edit CSS"
-msgstr "Editare Diagrame stilistice in cascada (DSC - CSS)"
-
-#: core/core.php:744
 msgid "Apply custom formatting to removed links"
-msgstr "Aplicare formatare personalizata legaturilor eliminate"
+msgstr "Aplicare formatare personalizată legăturilor eliminate"
 
-#: core/core.php:772
+#: core/core.php:738
 msgid "Stop search engines from following broken links"
-msgstr "Opreste motoarele de cautare sa urmeze legaturile intrerupte"
+msgstr "Oprește motoarele de căutare să urmeze legăturile întrerupte"
 
-#: core/core.php:789
+#: core/core.php:755
 msgid "Look for links in"
-msgstr "Cauta legaturi in"
+msgstr "Caută legături în"
 
-#: core/core.php:800
+#: core/core.php:766
 msgid "Post statuses"
-msgstr "Afisare stari"
+msgstr "Afișare stări"
 
-#: core/core.php:833
+#: core/core.php:799
 msgid "Link types"
-msgstr "Tipuri de legaturi"
+msgstr "Tipuri de legături"
 
-#: core/core.php:839
+#: core/core.php:805
 msgid "Error : All link parsers missing!"
-msgstr "Eroare: Toate analizoarele de cod ale legaturilor lipsa!"
+msgstr "Eroare: Toate analizoarele de cod ale legăturilor lipsă!"
 
-#: core/core.php:846
+#: core/core.php:812
 msgid "Exclusion list"
-msgstr "Lista de excluziuni"
+msgstr "Listă de excluziuni"
 
-#: core/core.php:847
+#: core/core.php:813
 msgid "Don't check links where the URL contains any of these words (one per line) :"
-msgstr "Nu verifica legaturile acolo unde adresa universala (URL) contine vreunul dintre aceste cuvinte (unul pe rand):"
+msgstr "Nu verifica legăturile acolo unde adresa URL conține vreunul dintre aceste cuvinte (unul pe rând):"
 
-#: core/core.php:865
+#: core/core.php:831
 msgid "Check links using"
-msgstr "Verific  legaturile cu ajutorul"
+msgstr "Verifică legăturile cu ajutorul"
 
-#: core/core.php:884
+#: core/core.php:850
 #: includes/links.php:849
 msgid "Timeout"
 msgstr "Expirare timp"
 
-#: core/core.php:890
-#: core/core.php:936
-#: core/core.php:2895
+#: core/core.php:856
+#: core/core.php:902
+#: core/core.php:2871
+#, php-format
 msgid "%s seconds"
 msgstr "%s secunde"
 
-#: core/core.php:899
+#: core/core.php:865
 msgid "Links that take longer than this to load will be marked as broken."
-msgstr "Legaturile a caror incercare dureaza mai mult decat atat vor fi marcate ca intrerupte."
+msgstr "Legăturile a căror încărcare durează mai mult decât atât vor fi marcate ca întrerupte."
 
-#: core/core.php:906
+#: core/core.php:872
 msgid "Link monitor"
-msgstr "Monitor de legaturi"
+msgstr "Monitor de legături"
 
-#: core/core.php:914
+#: core/core.php:880
 msgid "Run continuously while the Dashboard is open"
-msgstr "Ruleaza in continuu, atat timp cat Tabloul de Bord este deschis"
+msgstr "Rulează în continuu, atât timp cât Tabloul de Bord este deschis"
 
-#: core/core.php:922
+#: core/core.php:888
 msgid "Run hourly in the background"
-msgstr "Ruleaza la fiecare ora, in fundal"
+msgstr "Rulează la fiecare oră, în fundal"
 
-#: core/core.php:930
+#: core/core.php:896
 msgid "Max. execution time"
-msgstr "Max. timp de executie"
+msgstr "Max. timp de execuție"
 
-#: core/core.php:947
+#: core/core.php:913
 msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
-msgstr "Modulul extensie functioneaza prin lansarea periodica a unei sarcini, in fundal, care analizeaza afisarile dumneavoastra, pentru a gasi legaturi, verifica adresele universale (URL) descoperite, si  ndeplineste alte sarcini consumatoare de timp. Aici puteti seta durata pentru care poate rula monitorul de legaturi, de fiecare data, inainte de a se opri."
+msgstr "Modulul extensie funcționează prin lansarea periodică a unei sarcini, în fundal, care analizează articolele dumneavoastră, pentru a găsi legături, verifică adresele URL descoperite, și îndeplinește alte sarcini consumatoare de timp. Aici puteți seta durata pentru care poate rula monitorul de legături, de fiecare dată, înainte de a se opri."
 
-#: core/core.php:957
+#: core/core.php:923
 msgid "Custom temporary directory"
 msgstr "Director temporar personalizat"
 
-#: core/core.php:969
+#: core/core.php:932
+msgid "OK"
+msgstr "OK"
+
+#: core/core.php:935
 msgid "Error : This directory isn't writable by PHP."
-msgstr "Eroare: Acest director nu este inscriptibil in PHP."
+msgstr "Eroare: Acest director nu este inscriptibil în PHP."
 
-#: core/core.php:974
+#: core/core.php:940
 msgid "Error : This directory doesn't exist."
-msgstr "Eroare: Acest director nu exista."
+msgstr "Eroare: Acest director nu există."
 
-#: core/core.php:982
+#: core/core.php:948
 msgid "Set this field if you want the plugin to use a custom directory for its lockfiles. Otherwise, leave it blank."
 msgstr "Setaţi acest câmp dacă doriţi să utilizaţi plugin-un director particularizat pentru lockfiles sale. În caz contrar, lăsaţi-l gol."
 
-#: core/core.php:989
+#: core/core.php:955
 msgid "Server load limit"
-msgstr "Limita de incarcare a serverului"
+msgstr "Limita de încărcare a serverului"
 
-#: core/core.php:1004
+#: core/core.php:970
+#, php-format
 msgid "Current load : %s"
-msgstr "Incarcare curenta: %s"
+msgstr "Încărcare curentă: %s"
 
-#: core/core.php:1009
+#: core/core.php:976
+#, php-format
 msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
-msgstr "Verificarea legaturilor va fi suspendata daca media <a href=\"%s\">de incarcare a serverului</a> se ridica peste aceasta cifra. Lasa  acest camp necompletat pentru a dezactiva limitarea incarcarii."
+msgstr "Verificarea legăturilor va fi suspendată dacă media de <a href=\"%s\">încărcare a serverului</a> se ridică peste această cifră. Lăsați acest câmp necompletat pentru a dezactiva limitarea încărcării."
 
-#: core/core.php:1018
+#: core/core.php:984
 msgid "Not available"
 msgstr "Indisponibil"
 
-#: core/core.php:1020
+#: core/core.php:986
 msgid "Load limiting only works on Linux-like systems where <code>/proc/loadavg</code> is present and accessible."
-msgstr "Limitarea incarcarii functioneaza doar pe sisteme similare Linux, unde este prezenta si accesibila <code>media de proc/incarcare</code>."
+msgstr "Limitarea încărcării funcționează doar pe sisteme similare Linux, unde este prezent <code>/proc/loadavg</code>."
 
-#: core/core.php:1028
+#: core/core.php:994
 msgid "Forced recheck"
-msgstr "Reverificare fortata"
+msgstr "Reverificare forțată"
 
-#: core/core.php:1031
+#: core/core.php:997
 msgid "Re-check all pages"
 msgstr "Reverificare a tuturor paginilor"
 
-#: core/core.php:1035
+#: core/core.php:1001
 msgid "The \"Nuclear Option\". Click this button to make the plugin empty its link database and recheck the entire site from scratch."
-msgstr "\"Optiunea Nucleara\". Faceti clic pe acest buton pentru a determina modulul extensie sa isi goleasca baza de date cu legaturi si sa reverifice intregul sit de la capat."
+msgstr "\"Opțiunea Nucleară\". Faceți clic pe acest buton pentru a determina modulul extensie să și golească  baza de date cu legături și să reverifice întregul sit de la capăt."
 
-#: core/core.php:1046
+#: core/core.php:1012
 msgid "Save Changes"
-msgstr "Salveaza Modificarile"
+msgstr "Salvează Modificările"
 
-#: core/core.php:1097
+#: core/core.php:1057
 msgid "Configure"
 msgstr "Configurare"
 
-#: core/core.php:1179
+#: core/core.php:1117
+msgid "Upgrade to Pro to enable this feature"
+msgstr "Treceți la versiunea Pro pentru a permite această opțiune"
+
+#: core/core.php:1152
 msgid "Check URLs entered in these custom fields (one per line) :"
-msgstr "Verificati URL-urile introduse in aceste campuri personalizabile (una pe rand) :"
+msgstr "Verificați URL-urile introduse în aceste câmpuri personalizabile (una pe rând) :"
 
-#: core/core.php:1313
-#: core/core.php:1395
-#: core/core.php:1427
+#: core/core.php:1286
+#: core/core.php:1370
+#: core/core.php:1402
+#, php-format
 msgid "Database error : %s"
-msgstr "Eroare de baza de date: %s"
+msgstr "Eroare de bază de date: %s"
 
-#: core/core.php:1377
+#: core/core.php:1352
 msgid "You must enter a filter name!"
-msgstr "Trebuie sa introduceti un nume de filtru!"
+msgstr "Trebuie să introduceți un nume de filtru!"
 
-#: core/core.php:1381
+#: core/core.php:1356
 msgid "Invalid search query."
-msgstr "Cerere de cautare invalida."
+msgstr "Cerere de căutare invalidă."
 
-#: core/core.php:1390
+#: core/core.php:1365
+#, php-format
 msgid "Filter \"%s\" created"
 msgstr "Filtru \"%s\" creat"
 
-#: core/core.php:1417
+#: core/core.php:1392
 msgid "Filter ID not specified."
 msgstr "ID filtru nespecificat."
 
-#: core/core.php:1424
+#: core/core.php:1399
 msgid "Filter deleted"
-msgstr "Filtru sters"
+msgstr "Filtru șters"
 
-#: core/core.php:1471
+#: core/core.php:1447
+#, php-format
 msgid "Replaced %d redirect with a direct link"
 msgid_plural "Replaced %d redirects with direct links"
-msgstr[0] "Inlocuire redirectionare %d cu o legatura directa"
-msgstr[1] " nlocuire redirec ion ri %d cu leg turi directe"
+msgstr[0] "Înlocuire redirecționare %d cu o legătură directă"
+msgstr[1] "Înlocuire redirecționări %d cu legături directe"
 
-#: core/core.php:1482
+#: core/core.php:1458
+#, php-format
 msgid "Failed to fix %d redirect"
 msgid_plural "Failed to fix %d redirects"
-msgstr[0] "Esec la repararea redirectionarii %d"
-msgstr[1] "Esec la repararea redirectionarilor %d"
+msgstr[0] "Eșec la repararea redirecționării %d"
+msgstr[1] "Eșec la repararea redirecționărilor %d"
 
-#: core/core.php:1493
+#: core/core.php:1468
 msgid "None of the selected links are redirects!"
-msgstr "Nici una dintre legaturile selectate nu este o redirectionare!"
+msgstr "Nici una dintre legăturile selectate nu este o redirecționare!"
 
-#: core/core.php:1571
+#: core/core.php:1547
+#, php-format
 msgid "%d link updated."
 msgid_plural "%d links updated."
-msgstr[0] "Legatura %d actualizata."
-msgstr[1] "Legaturile %d actualizate."
+msgstr[0] "Legătura %d actualizată."
+msgstr[1] "Legăturile %d actualizate."
 
-#: core/core.php:1582
+#: core/core.php:1558
+#, php-format
 msgid "Failed to update %d link."
 msgid_plural "Failed to update %d links."
-msgstr[0] "Esec la actualizarea legaturii %d."
-msgstr[1] "Esec la actualizarea legaturilor %d."
+msgstr[0] "Eșec la actualizarea legăturii %d."
+msgstr[1] "Eșec la actualizarea legăturilor %d."
 
-#: core/core.php:1636
+#: core/core.php:1612
+#, php-format
 msgid "%d link removed"
 msgid_plural "%d links removed"
-msgstr[0] "%d legatura  eliminata"
-msgstr[1] "%d legaturi eliminate"
+msgstr[0] "%d legătură eliminată"
+msgstr[1] "%d legături eliminate"
 
-#: core/core.php:1647
+#: core/core.php:1623
+#, php-format
 msgid "Failed to remove %d link"
 msgid_plural "Failed to remove %d links"
-msgstr[0] "Esec la eliminarea a %d legatura"
-msgstr[1] "Esec la eliminarea a %d legaturi"
+msgstr[0] "Eșec la eliminarea a %d legătură"
+msgstr[1] "Eșec la eliminarea a %d legături"
 
-#: core/core.php:1756
+#: core/core.php:1732
+#, php-format
 msgid "%d item was skipped because it can't be moved to the Trash. You need to delete it manually."
 msgid_plural "%d items were skipped because they can't be moved to the Trash. You need to delete them manually."
-msgstr[0] "Articolul %d a fost omis pentru ca nu poate fi mutat in Pubela. Este nevoie sa il stergeti manual."
-msgstr[1] "Articolele %d au fost omise pentru ca nu pot fi mutate in Pubela. Este nevoie sa le stergeti manual."
+msgstr[0] "Articolul %d a fost omis pentru că nu poate fi mutat în Pubelă. Este nevoie să îl ștergeți manual."
+msgstr[1] "Articolele %d au fost omise pentru că nu pot fi mutate în Pubelă. Este nevoie să le ștergeți manual."
 
-#: core/core.php:1778
+#: core/core.php:1753
 msgid "Didn't find anything to delete!"
-msgstr "Nu am gasit nimic de sters!"
+msgstr "Nu am găsit nimic de șters!"
 
-#: core/core.php:1805
+#: core/core.php:1781
+#, php-format
 msgid "%d link scheduled for rechecking"
 msgid_plural "%d links scheduled for rechecking"
-msgstr[0] "Legatura %d programata pentru reverificare"
-msgstr[1] "Legaturile %d programate pentru reverificare"
+msgstr[0] "Legătura %d programată pentru reverificare"
+msgstr[1] "Legăturile %d programate pentru reverificare"
 
-#: core/core.php:1851
-#: core/core.php:2455
+#: core/core.php:1826
+#: core/core.php:2431
 msgid "This link was manually marked as working by the user."
-msgstr "Aceasta legatura a fost marcata manual, de catre utilizator, ca functionala."
+msgstr "Această legătură a fost marcată manual, de către utilizator, ca funcțională."
 
-#: core/core.php:1858
+#: core/core.php:1833
+#, php-format
 msgid "Couldn't modify link %d"
-msgstr "Nu am putut modifica legatura %d"
+msgstr "Nu am putut modifica legătura %d"
 
-#: core/core.php:1868
+#: core/core.php:1844
+#, php-format
 msgid "%d link marked as not broken"
 msgid_plural "%d links marked as not broken"
-msgstr[0] "%d legatura marcata ca neintrerupta"
-msgstr[1] "%d legaturi marcate ca neintrerupte"
+msgstr[0] "%d legătură marcată ca neîntreruptă"
+msgstr[1] "%d legături marcate ca neîntrerupte"
 
-#: core/core.php:1908
+#: core/core.php:1884
 msgid "Table columns"
 msgstr "Coloane de tabel"
 
-#: core/core.php:1927
+#: core/core.php:1903
 msgid "Show on screen"
-msgstr "Arata  pe ecran"
+msgstr "Arată pe ecran"
 
-#: core/core.php:1934
+#: core/core.php:1910
 msgid "links"
-msgstr "legaturi"
+msgstr "legături"
 
-#: core/core.php:1935
+#: core/core.php:1911
 #: includes/admin/table-printer.php:136
 msgid "Apply"
-msgstr "Aplica"
+msgstr "Aplică"
 
-#: core/core.php:1939
+#: core/core.php:1915
 msgid "Misc"
 msgstr "Diverse"
 
-#: core/core.php:1954
+#: core/core.php:1930
+#, php-format
 msgid "Highlight links broken for at least %s days"
-msgstr "Evidentiaza legaturile intrerupte pentru cel putin %s zile"
+msgstr "Evidențiază legăturile întrerupte pentru cel puțin %s zile"
 
-#: core/core.php:1963
+#: core/core.php:1939
 msgid "Color-code status codes"
-msgstr "Codare a starii prin culoare"
+msgstr "Codare a stării prin culoare"
 
-#: core/core.php:1980
-#: core/core.php:2440
-#: core/core.php:2476
-#: core/core.php:2539
+#: core/core.php:1956
+#: core/core.php:2416
+#: core/core.php:2452
+#: core/core.php:2515
 msgid "You're not allowed to do that!"
-msgstr "Nu vi se permite aceasta actiune!"
+msgstr "Nu vi se permite această acțiune!"
 
-#: core/core.php:2321
+#: core/core.php:2297
 msgid "View broken links"
-msgstr "Vizualizare legaturi intrerupte"
+msgstr "Vizualizare legături întrerupte"
 
-#: core/core.php:2322
+#: core/core.php:2298
+#, php-format
 msgid "Found %d broken link"
 msgid_plural "Found %d broken links"
-msgstr[0] "S-a gasit %d legatura intrerupta"
-msgstr[1] "S-au gasit %d legaturi intrerupte"
+msgstr[0] "S-a găsit %d legătură întreruptă"
+msgstr[1] "S-au găsit %d legături întrerupte"
 
-#: core/core.php:2328
+#: core/core.php:2304
 msgid "No broken links found."
-msgstr "Nu s-au gasit legaturi intrerupte."
+msgstr "Nu s-au găsit legături întrerupte."
 
-#: core/core.php:2335
+#: core/core.php:2311
+#, php-format
 msgid "%d URL in the work queue"
 msgid_plural "%d URLs in the work queue"
-msgstr[0] "%d URL in sirul de lucru"
-msgstr[1] "%d URL-uri in sirul de lucru"
+msgstr[0] "%d URL în șirul de lucru"
+msgstr[1] "%d URL-uri în șirul de lucru"
 
-#: core/core.php:2338
+#: core/core.php:2314
 msgid "No URLs in the work queue."
-msgstr "Nici un URL in sirul de lucru."
+msgstr "Nici un URL în șirul de lucru."
 
-#: core/core.php:2344
+#: core/core.php:2320
+#, php-format
 msgid "Detected %d unique URL"
 msgid_plural "Detected %d unique URLs"
 msgstr[0] "S-a detectat %d un URL unic"
 msgstr[1] "S-au detectat %d un URL-uri unice"
 
-#: core/core.php:2345
+#: core/core.php:2321
+#, php-format
 msgid "in %d link"
 msgid_plural "in %d links"
-msgstr[0] "in %d legatura"
-msgstr[1] "in %d legaturi"
+msgstr[0] "în %d legătură"
+msgstr[1] "în %d legături"
 
-#: core/core.php:2350
+#: core/core.php:2326
 msgid "and still searching..."
-msgstr ", iar cautarea continua..."
+msgstr ", iar căutarea continuă..."
 
-#: core/core.php:2356
+#: core/core.php:2332
 msgid "Searching your blog for links..."
-msgstr "Se cauta legaturi pe blogul dvs..."
+msgstr "Se caută legături pe blogul dvs..."
 
-#: core/core.php:2358
+#: core/core.php:2334
 msgid "No links detected."
-msgstr "Nu s-au detectat legaturi."
+msgstr "Nu s-au detectat legături."
 
-#: core/core.php:2384
+#: core/core.php:2360
 msgctxt "current load"
 msgid "Unknown"
 msgstr "Necunoscut"
 
-#: core/core.php:2448
-#: core/core.php:2486
-#: core/core.php:2549
+#: core/core.php:2424
+#: core/core.php:2462
+#: core/core.php:2525
+#, php-format
 msgid "Oops, I can't find the link %d"
-msgstr "Hopa, nu pot sa gasesc legatura %d"
+msgstr "Hopa, nu pot să găsesc legătura %d"
 
-#: core/core.php:2461
+#: core/core.php:2437
 msgid "Oops, couldn't modify the link!"
-msgstr "Hopa, n-am putut modifica legatura!"
+msgstr "Hopa, n-am putut modifica legătura!"
 
-#: core/core.php:2464
-#: core/core.php:2575
+#: core/core.php:2440
+#: core/core.php:2551
 msgid "Error : link_id not specified"
-msgstr "Eroare: ID_legatur  nespecificata"
+msgstr "Eroare: ID_legătură nespecificată"
 
-#: core/core.php:2496
+#: core/core.php:2472
 msgid "Oops, the new URL is invalid!"
 msgstr "Hopa, noul URL este invalid!"
 
-#: core/core.php:2507
-#: core/core.php:2558
+#: core/core.php:2483
+#: core/core.php:2534
 msgid "An unexpected error occured!"
-msgstr "A avut loc o eroare neasteptata!"
+msgstr "A avut loc o eroare neașteptată!"
 
-#: core/core.php:2525
+#: core/core.php:2501
 msgid "Error : link_id or new_url not specified"
-msgstr "Eroare: ID_legatura ori URL_nou nespecificat( )"
+msgstr "Eroare: ID_legătură ori URL_nou nespecificat(ă)"
 
-#: core/core.php:2584
+#: core/core.php:2560
 msgid "You don't have sufficient privileges to access this information!"
-msgstr "Nu aveti privilegii suficiente pentru a accesa aceasta informatie!"
+msgstr "Nu aveți privilegii suficiente pentru a accesa această informație!"
 
-#: core/core.php:2597
+#: core/core.php:2573
 msgid "Error : link ID not specified"
-msgstr "Eroare: ID legatura nespecificata"
+msgstr "Eroare: ID legătură nespecificată"
 
-#: core/core.php:2611
+#: core/core.php:2587
+#, php-format
 msgid "Failed to load link details (%s)"
-msgstr "Esec la incarcarea detaliilor legaturii (%s)"
+msgstr "Eșec la încărcarea detaliilor legăturii (%s)"
 
-#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.2.2)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Broken Link Checker 0.9.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: core/core.php:2740
+#: core/core.php:2716
 msgid "Broken Link Checker"
 msgstr "Broken Link Checker"
 
-#: core/core.php:2754
+#: core/core.php:2730
+#, php-format
 msgid "The current temporary directory is not accessible; please <a href=\"%s\">set a different one</a>."
-msgstr "Directorul temporar curent nu este accesibil; va rugam <a href=\"%s\">sa declarati un altul</a>."
+msgstr "Directorul temporar curent nu este accesibil; vă rugăm <a href=\"%s\">să declarați un altul</a>."
 
-#: core/core.php:2759
+#: core/core.php:2735
+#, php-format
 msgid "Please make the directory <code>%1$s</code> writable by plugins or <a href=\"%2$s\">set a custom temporary directory</a>."
-msgstr "Va rugam sa faceti directorul <code>%1$s</code> inscriptibil de catre module extensie ori <a href=\"%2$s\">declarati un director temporar personalizat</a>."
+msgstr "Vă rugăm să faceți directorul <code>%1$s</code> inscriptibil de către module extensie ori <a href=\"%2$s\">declarați un director temporar personalizat</a>."
+
+#: core/core.php:2742
+msgid "Broken Link Checker can't create a lockfile."
+msgstr "Broken Link Checker nu poate crea un fișier de blocare."
+
+#: core/core.php:2747
+msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
+msgstr "Modulul extensie folosește un mecanism de blocare pe bază de fișiere pentru a se asigura că, în orice moment, rulează doar o singură instanță a algoritmului de verificare a legăturilor, mare consumator de resurse. Din păcate, BLC nu poate găsi un director inscriptibil unde ar putea stoca fișierul de blocare - nu a reușit să detecteze localizarea directorului temporar al serverului dvs., iar directorul propriu al modulului extensie nu este inscriptibil de către PHP. Pentru a repara această problemă, declarați directorul modulului extensie ca inscriptibil ori declarați un director temporar personalizat in setările modulului extensie."
 
 #: core/core.php:2766
-msgid "Broken Link Checker can't create a lockfile."
-msgstr "Broken Link Checker nu poate crea un fisier de blocare."
-
-#: core/core.php:2771
-msgid "The plugin uses a file-based locking mechanism to ensure that only one instance of the resource-heavy link checking algorithm is running at any given time. Unfortunately, BLC can't find a writable directory where it could store the lockfile - it failed to detect the location of your server's temporary directory, and the plugin's own directory isn't writable by PHP. To fix this problem, please make the plugin's directory writable or enter a specify a custom temporary directory in the plugin's settings."
-msgstr "Modulul extensie foloseste un mecanism de blocare pe baza de fisiere pentru a se asigura ca, in orice moment, ruleaza doar o singura instanta a algoritmului de verificare a legaturilor, mare consumator de resurse. Din pacate, BLC nu poate gasi un director inscriptibil unde ar putea stoca fisierul de blocare - nu a reusit sa detecteze localizarea directorului temporar al serverului dvs., iar directorul propriu al modulului extensie nu este inscriptibil de catre PHP. Pentru a repara aceasta problema, declarati directorul modulului extensie ca inscriptibil ori declarati un director temporar personalizat in setarile modulului extensie."
-
-#: core/core.php:2790
 msgid "PHP version"
 msgstr "Versiune PHP"
 
-#: core/core.php:2796
+#: core/core.php:2772
 msgid "MySQL version"
 msgstr "Versiune MySQL"
 
-#: core/core.php:2809
+#: core/core.php:2785
 msgid "You have an old version of CURL. Redirect detection may not work properly."
-msgstr "Avti o versiune veche a CURL. Se poate ca detectia redirectionarilor sa nu functioneze cum trebuie."
+msgstr "Aveți o versiune veche a CURL. Se poate ca detecția redirecționărilor să nu funcționeze cum trebuie."
 
-#: core/core.php:2821
-#: core/core.php:2837
-#: core/core.php:2842
+#: core/core.php:2797
+#: core/core.php:2813
+#: core/core.php:2818
 msgid "Not installed"
-msgstr "Ne-instalat(a)"
+msgstr "Ne-instalat(ă)"
 
-#: core/core.php:2824
+#: core/core.php:2800
 msgid "CURL version"
 msgstr "Versiune CURL"
 
-#: core/core.php:2830
+#: core/core.php:2806
 msgid "Installed"
-msgstr "Instalat(a)"
+msgstr "Instalat(ă)"
 
-#: core/core.php:2843
+#: core/core.php:2819
 msgid "You must have either CURL or Snoopy installed for the plugin to work!"
-msgstr "Pentru ca acest modul extensie sa functioneze, trebuie sa aveti instalat fie CURL, fie Snoopy!"
+msgstr "Pentru ca acest modul extensie să funcționeze, trebuie să aveți instalat fie CURL, fie Snoopy!"
 
-#: core/core.php:2854
+#: core/core.php:2830
 msgid "On"
 msgstr "Pornit"
 
-#: core/core.php:2855
+#: core/core.php:2831
 msgid "Redirects may be detected as broken links when safe_mode is on."
-msgstr "Redirectionarile pot fi detectate ca legaturi intrerupte, atunci cand este pornit modul_sigur."
+msgstr "Redirecționările pot fi detectate ca legături întrerupte, atunci când safe_mode este setat."
 
-#: core/core.php:2860
-#: core/core.php:2874
+#: core/core.php:2836
+#: core/core.php:2850
 msgid "Off"
 msgstr "Oprit"
 
-#: core/core.php:2868
+#: core/core.php:2844
+#, php-format
 msgid "On ( %s )"
 msgstr "Pornit ( %s )"
 
-#: core/core.php:2869
+#: core/core.php:2845
 msgid "Redirects may be detected as broken links when open_basedir is on."
-msgstr "Redirectionarile pot fi detectate ca legaturi intrerupte, atunci cand este pornit open_basedir."
+msgstr "Redirecționările pot fi detectate ca legături întrerupte, atunci când open_basedir este setat."
+
+#: core/core.php:2864
+msgid "Can't create a lockfile. Please specify a custom temporary directory."
+msgstr "nu poate crea un fișier de blocare. Vă rugăm să specificați un director temporar personalizat."
 
 #: core/core.php:2888
-msgid "Can't create a lockfile. Please specify a custom temporary directory."
-msgstr "nu poate crea un fisier de blocare. Va rugam sa specificati un director temporar personalizat."
-
-#: core/core.php:2912
 msgid "If this value is zero even after several page reloads you have probably encountered a bug."
-msgstr "Daca aceasta valoare este zero, chiar si dupa mai multe reincarcari de pagina, porbabil ca ati intalnit o eroare de cod."
+msgstr "Dacă această valoare este zero, chiar și după mai multe reîncărcări de pagină, porbabil că ați întâlnit o eroare de cod."
 
-#: core/core.php:2983
+#: core/core.php:2959
+#, php-format
 msgid "[%s] Broken links detected"
-msgstr "S-au detectat [%s] legaturi intrerupte"
+msgstr "S-au detectat [%s] legături întrerupte"
 
-#: core/core.php:2988
+#: core/core.php:2965
+#, php-format
 msgid "Broken Link Checker has detected %d new broken link on your site."
 msgid_plural "Broken Link Checker has detected %d new broken links on your site."
-msgstr[0] "Broken Link Checker a detectat %d legatura intrerupta pe situl dvs."
-msgstr[1] "Broken Link Checker a detectat %d legaturi intrerupte pe situl dvs."
+msgstr[0] "Broken Link Checker a detectat %d legătură întreruptă pe situl dvs."
+msgstr[1] "Broken Link Checker a detectat %d legături întrerupte pe situl dvs."
 
-#: core/core.php:3003
+#: core/core.php:2980
+#, php-format
 msgid "Here's a list of the first %d broken links:"
 msgid_plural "Here's a list of the first %d broken links:"
-msgstr[0] "Iata o lista a primelor %d legaturi intrerupte:"
-msgstr[1] "Iat  o list  a primelor %d leg turi  ntrerupte:"
+msgstr[0] "Iată o listă a primelor %d legături întrerupte:"
+msgstr[1] "Iată o listă a primelor %d legături întrerupte:"
 
-#: core/core.php:3012
+#: core/core.php:2988
 msgid "Here's a list of the new broken links: "
-msgstr "Iata o lista a noilor legaturi intrerupte: "
+msgstr "Iată o listă a noilor legături întrerupte: "
 
-#: core/core.php:3024
+#: core/core.php:3000
+#, php-format
 msgid "Link text : %s"
-msgstr "Text Legatura: %s"
+msgstr "Text Legătură %s"
 
-#: core/core.php:3025
+#: core/core.php:3001
+#, php-format
 msgid "Link URL : <a href=\"%s\">%s</a>"
-msgstr "legatura URL: <a href=\"%s\">%s</a>"
+msgstr "legătură URL: <a href=\"%s\">%s</a>"
 
-#: core/core.php:3026
+#: core/core.php:3002
+#, php-format
 msgid "Source : %s"
-msgstr "Sursa: %s"
+msgstr "Sursă: %s"
 
-#: core/core.php:3040
+#: core/core.php:3016
 msgid "You can see all broken links here:"
-msgstr "Puteti vizualiza toate legaturile intrerupte aici:"
+msgstr "Puteți vizualiza toate legăturile întrerupte aici:"
+
+#: core/init.php:236
+msgid "Once Weekly"
+msgstr "Săptămânal"
+
+#: core/init.php:242
+msgid "Twice a Month"
+msgstr "De două ori pe lună"
+
+#: core/init.php:309
+msgid "Broken Link Checker installation failed"
+msgstr "Instalarea Broken Link Checker a eșuat"
+
+#: includes/admin/db-upgrade.php:95
+#, php-format
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "Ștergerea tabelelor BD vechi a eșuat. Eroare de bază de date: %s"
 
 #: includes/admin/links-page-js.php:58
 #: includes/admin/links-page-js.php:301
 msgid "Wait..."
-msgstr "Asteptati..."
+msgstr "Așteptați..."
 
 #: includes/admin/links-page-js.php:99
-#: includes/admin/table-printer.php:587
+#: includes/admin/table-printer.php:592
 msgid "Not broken"
-msgstr "Neintrerupta"
+msgstr "Neîntreruptă"
 
 #: includes/admin/links-page-js.php:213
+#, php-format
 msgid "%d instances of the link were successfully modified."
-msgstr "%d instante ale legaturii au fost modificate."
+msgstr "%d instanțe ale legăturii au fost modificate."
 
 #: includes/admin/links-page-js.php:219
+#, php-format
 msgid "However, %d instances couldn't be edited and still point to the old URL."
-msgstr "Cu toate acestea, %d instante nu au putut fi fi editate si indica in continuare vechiul URL."
+msgstr "Cu toate acestea, %d instanțe nu au putut fi fi editate și indică în continuare vechiul URL."
 
 #: includes/admin/links-page-js.php:225
 msgid "The link could not be modified."
-msgstr "Aceasta legatura nu a putut fi modificata."
+msgstr "Această legătură nu a putut fi modificată."
 
 #: includes/admin/links-page-js.php:228
 #: includes/admin/links-page-js.php:353
 msgid "The following error(s) occured :"
-msgstr "A(u) avut loc urmatoarea(ele) eroare(i):"
+msgstr "A(u) avut loc următoarea(ele) eroare(i):"
 
 #: includes/admin/links-page-js.php:339
+#, php-format
 msgid "%d instances of the link were successfully unlinked."
-msgstr "%d instante ale legaturii au fost dezasociate."
+msgstr "%d instanțe ale legăturii au fost dezasociate."
 
 #: includes/admin/links-page-js.php:345
+#, php-format
 msgid "However, %d instances couldn't be removed."
-msgstr "Cu toate acestea, %d instante nu au putut fi eliminate."
+msgstr "Cu toate acestea, %d instanțe nu au putut fi eliminate."
 
 #: includes/admin/links-page-js.php:350
 msgid "The plugin failed to remove the link."
-msgstr "Modulul extensie nu a reusit sa elimine legatura."
+msgstr "Modulul extensie nu a reușit să elimine legătura."
 
 #: includes/admin/links-page-js.php:361
 #: includes/admin/table-printer.php:237
-#: includes/admin/table-printer.php:581
+#: includes/admin/table-printer.php:586
 msgid "Unlink"
-msgstr "Dezasociati"
+msgstr "Dezasociați"
 
 #: includes/admin/links-page-js.php:405
 msgid "Enter a name for the new custom filter"
-msgstr "Introducti un nume pentru noul filtru personalizat"
+msgstr "Introduceți un nume pentru noul filtru personalizat"
 
 #: includes/admin/links-page-js.php:416
 msgid ""
 "You are about to delete the current filter.\n"
 "'Cancel' to stop, 'OK' to delete"
 msgstr ""
-"Sunteti pe cale sa stergeti filtrul curent.\n"
-"'Anulare' pentru a va opri, 'OK' pentru a sterge"
+"Sunteți pe cale să ștergeți filtrul curent.\n"
+"'Anulare' pentru a vă opri, 'OK' pentru a șterge"
 
 #: includes/admin/links-page-js.php:439
 msgid ""
 "Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n"
 "'Cancel' to stop, 'OK' to delete"
 msgstr ""
-"Sunteti sigur( ) ca vreti sa stergeti toate afisarile, semnele de carte ori alte articole care contin vreuna dintre legaturile selectate? Aceasta actiune nu poate fi desfacut .\n"
-"'Anulare' pentru a va opri, 'OK' pentru a  sterge"
+"Sunteți sigur(ă) că vreți să ștergeți toate afișările, semnele de carte ori alte articole care conțin vreuna dintre legăturile selectate? Această acțiune nu poate fi desfăcută.\n"
+"'Anulare' pentru a vă opri, 'OK' pentru a șterge"
 
 #: includes/admin/links-page-js.php:449
 msgid ""
 "Are you sure you want to remove the selected links? This action can't be undone.\n"
 "'Cancel' to stop, 'OK' to remove"
 msgstr ""
-"Sunteti sigur( ) ca vreti sa eliminati legaturile selectate? Aceasta actiune nu poate fi desfacuta.\n"
-"'Anulare' pentru a va opri, 'OK' pentru a elimina"
+"Sunteți sigur(ă) că vreți să eliminați legăturile selectate? Această acțiune nu poate fi desfăcută.\n"
+"'Anulare' pentru a vă opri, 'OK' pentru a elimina"
 
 #: includes/admin/links-page-js.php:558
 msgid "Enter a search string first."
-msgstr "Introduceti, mai intai, un sir de cautare."
+msgstr "Introduceți, mai întâi, un șir de căutare."
 
 #: includes/admin/links-page-js.php:565
 msgid "Select one or more links to edit."
-msgstr "Selectati una sau mai multe legaturi de editat."
+msgstr "Selectați una sau mai multe legături de editat."
+
+#: includes/admin/options-page-js.php:54
+msgid "Hide debug info"
+msgstr "Ascunde informațiile de depanare"
 
 #: includes/admin/search-form.php:16
 msgid "Save This Search As a Filter"
-msgstr "Salveaza Cautarea de fata drept Filtru"
+msgstr "Salvează Căutarea de față drept Filtru"
 
 #: includes/admin/search-form.php:26
 msgid "Delete This Filter"
-msgstr "Sterge Acest Filtru"
+msgstr "Șterge Acest Filtru"
 
 #: includes/admin/search-form.php:32
 #: includes/link-query.php:53
 msgid "Search"
-msgstr "Cautare"
+msgstr "Căutare"
 
 #: includes/admin/search-form.php:42
 msgid "Link text"
-msgstr "Text legatura"
+msgstr "Text legătură"
 
 #: includes/admin/search-form.php:45
 #: includes/admin/table-printer.php:173
@@ -1057,18 +782,18 @@ msgid "URL"
 msgstr "URL"
 
 #: includes/admin/search-form.php:48
-#: includes/admin/table-printer.php:455
+#: includes/admin/table-printer.php:460
 msgid "HTTP code"
 msgstr "cod HTTP"
 
 #: includes/admin/search-form.php:51
 msgid "Link status"
-msgstr "Stare legatura"
+msgstr "Stare legătură"
 
 #: includes/admin/search-form.php:68
 #: includes/admin/search-form.php:85
 msgid "Link type"
-msgstr "Tip legaturi"
+msgstr "Tip legătură"
 
 #: includes/admin/search-form.php:70
 msgid "Any"
@@ -1076,61 +801,41 @@ msgstr "Oricare"
 
 #: includes/admin/search-form.php:74
 msgid "Links used in"
-msgstr "Legaturi folosite la"
+msgstr "Legături folosite la"
 
 #: includes/admin/search-form.php:112
 msgid "Search Links"
-msgstr "Legaturi de Cautare"
+msgstr "Legături de Căutare"
 
 #: includes/admin/search-form.php:113
-#: includes/admin/table-printer.php:313
-#: includes/admin/table-printer.php:595
-#: includes/admin/table-printer.php:601
+#: includes/admin/table-printer.php:318
+#: includes/admin/table-printer.php:600
+#: includes/admin/table-printer.php:606
 msgid "Cancel"
 msgstr "Anulare"
 
-#: includes/admin/sidebar.php:2
-msgid "Donate $10, $20 or $50!"
-msgstr "Doneaza $10, $20 or $50!"
-
-#: includes/admin/sidebar.php:5
-msgid "If you like this plugin, please donate to support development and maintenance!"
-msgstr "Daca iti este util acest plugin, te rog sa donezi pentru a sustine dezvoltarea si suportul acestuia."
-
-#: includes/admin/sidebar.php:22
-msgid "Return to WordPress Dashboard"
-msgstr "Intoarce-te la panoul de control WordPress"
-
-#: includes/admin/sidebar.php:34
-msgid "Recommended"
-msgstr "Rrecomandat"
-
-#: includes/admin/options-page-js.php:54
-msgid "Hide debug info"
-msgstr "Ascunde informatiile de depanare"
-
 #: includes/admin/table-printer.php:150
 msgid "Compact View"
-msgstr "Vizualizare Compacta"
+msgstr "Vizualizare Compactă"
 
 #: includes/admin/table-printer.php:151
 msgid "Detailed View"
-msgstr "Vizualizare Detaliata"
+msgstr "Vizualizare Detaliată"
 
 #: includes/admin/table-printer.php:178
 msgid "Source"
-msgstr "Sursa"
+msgstr "Sursă"
 
 #: includes/admin/table-printer.php:184
 msgid "Link Text"
-msgstr "Text Legatura "
+msgstr "Text Legătură"
 
 #: includes/admin/table-printer.php:232
 msgid "Bulk Actions"
-msgstr "Actiuni Diverse"
+msgstr "Acțiuni Diverse"
 
 #: includes/admin/table-printer.php:233
-#: includes/admin/table-printer.php:578
+#: includes/admin/table-printer.php:583
 msgid "Edit URL"
 msgstr "Editare URL"
 
@@ -1140,306 +845,279 @@ msgstr "Reverificare"
 
 #: includes/admin/table-printer.php:235
 msgid "Fix redirects"
-msgstr "Reparare redirectionari"
+msgstr "Reparare redirecționări"
 
 #: includes/admin/table-printer.php:236
 msgid "Mark as not broken"
-msgstr "Marcare ca ne-intrerupta"
+msgstr "Marcare ca ne-întreruptă"
 
 #: includes/admin/table-printer.php:240
 msgid "Move sources to Trash"
-msgstr "Mutare surse in Pubela"
+msgstr "Mutare surse in Pubelă"
 
 #: includes/admin/table-printer.php:242
 msgid "Delete sources"
-msgstr "Stergere surse"
+msgstr "Ștergere surse"
 
-#: includes/admin/table-printer.php:257
+#: includes/admin/table-printer.php:262
 msgid "&laquo;"
 msgstr "&laquo;"
 
-#: includes/admin/table-printer.php:258
+#: includes/admin/table-printer.php:263
 msgid "&raquo;"
 msgstr "&raquo;"
 
-#: includes/admin/table-printer.php:266
+#: includes/admin/table-printer.php:271
+#, php-format
 msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
-msgstr "Afisare %s&#8211;%s a <span class=\"current-link-count\">%s</span>"
+msgstr "Afișare %s&#8211;%s a <span class=\"current-link-count\">%s</span>"
 
-#: includes/admin/table-printer.php:289
+#: includes/admin/table-printer.php:294
 msgid "Bulk Edit URLs"
-msgstr "Editare concomitenta URL-uri"
+msgstr "Editare concomitentă URL-uri"
 
-#: includes/admin/table-printer.php:291
+#: includes/admin/table-printer.php:296
 msgid "Find"
-msgstr "Gasire"
+msgstr "Găsire"
 
-#: includes/admin/table-printer.php:295
+#: includes/admin/table-printer.php:300
 msgid "Replace with"
-msgstr "Inlocuire cu"
+msgstr "Înlocuire cu"
 
-#: includes/admin/table-printer.php:303
+#: includes/admin/table-printer.php:308
 msgid "Case sensitive"
 msgstr "Sensibil la majuscule"
 
-#: includes/admin/table-printer.php:307
+#: includes/admin/table-printer.php:312
 msgid "Regular expression"
-msgstr "Expresie uzuala"
+msgstr "Expresie uzuală"
 
-#: includes/admin/table-printer.php:315
+#: includes/admin/table-printer.php:320
 msgid "Update"
 msgstr "Actualizare"
 
-#: includes/admin/table-printer.php:440
-msgid "Post published on"
-msgstr "Afisare publicata pe"
-
 #: includes/admin/table-printer.php:445
+msgid "Post published on"
+msgstr "Afișare publicată pe"
+
+#: includes/admin/table-printer.php:450
 msgid "Link last checked"
-msgstr "Ultima verificare a legaturii"
+msgstr "Ultima verificare a legăturii"
 
-#: includes/admin/table-printer.php:449
+#: includes/admin/table-printer.php:454
 msgid "Never"
-msgstr "Niciodata"
+msgstr "Niciodată"
 
-#: includes/admin/table-printer.php:460
+#: includes/admin/table-printer.php:465
 msgid "Response time"
-msgstr "Timp de raspuns"
+msgstr "Timp de răspuns"
 
-#: includes/admin/table-printer.php:462
+#: includes/admin/table-printer.php:467
+#, php-format
 msgid "%2.3f seconds"
 msgstr "%2.3f secunde"
 
-#: includes/admin/table-printer.php:465
+#: includes/admin/table-printer.php:470
 msgid "Final URL"
 msgstr "URL final"
 
-#: includes/admin/table-printer.php:470
-msgid "Redirect count"
-msgstr "Numaratoare redirectionari"
-
 #: includes/admin/table-printer.php:475
-msgid "Instance count"
-msgstr "Numaratoare instante"
+msgid "Redirect count"
+msgstr "Numărătoare redirecționări"
 
-#: includes/admin/table-printer.php:484
+#: includes/admin/table-printer.php:480
+msgid "Instance count"
+msgstr "Numărătoare instanțe"
+
+#: includes/admin/table-printer.php:489
+#, php-format
 msgid "This link has failed %d time."
 msgid_plural "This link has failed %d times."
-msgstr[0] "Aceasta legatura a esuat %d data."
-msgstr[1] "Aceasta legatura a esuat de %d ori."
+msgstr[0] "Această legătură a eșuat %d dată."
+msgstr[1] "Această legătură a eșuat de %d dăți."
 
-#: includes/admin/table-printer.php:492
+#: includes/admin/table-printer.php:497
+#, php-format
 msgid "This link has been broken for %s."
-msgstr "Aceasta legatura este intrerupta de %s."
+msgstr "Această legătură este întreruptă de %s."
 
-#: includes/admin/table-printer.php:503
+#: includes/admin/table-printer.php:508
 msgid "Log"
 msgstr "Jurnal"
 
-#: includes/admin/table-printer.php:524
+#: includes/admin/table-printer.php:529
 msgid "Show more info about this link"
-msgstr "Arata mai multe informatii despre aceasta legatura"
+msgstr "Arată mai multe informații despre această legătură"
 
-#: includes/admin/table-printer.php:542
+#: includes/admin/table-printer.php:547
 msgctxt "checked how long ago"
 msgid "Checked"
 msgstr "Verificare"
 
-#: includes/admin/table-printer.php:558
+#: includes/admin/table-printer.php:563
 msgid "Broken for"
-msgstr "Intrerupta de"
+msgstr "Întreruptă de"
 
-#: includes/admin/table-printer.php:578
+#: includes/admin/table-printer.php:583
 msgid "Edit link URL"
-msgstr "Editare legatura URL"
+msgstr "Editare legătură URL"
 
-#: includes/admin/table-printer.php:580
+#: includes/admin/table-printer.php:585
 msgid "Remove this link from all posts"
-msgstr "Elimina aceasta legatura din toate afisarile"
+msgstr "Elimină această legătură din toate afișările"
 
-#: includes/admin/table-printer.php:586
+#: includes/admin/table-printer.php:591
 msgid "Remove this link from the list of broken links and mark it as valid"
-msgstr "Elimina aceasta legatura din lista de legaturi interupte si marcheaza ca si valida"
+msgstr "Elimină această legătură din lista de legături înterupte și marcați ca validă"
 
-#: includes/admin/table-printer.php:595
+#: includes/admin/table-printer.php:600
 msgid "Cancel URL editing"
 msgstr "Anulare editare URL"
 
-#: includes/admin/table-printer.php:602
+#: includes/admin/table-printer.php:607
 msgid "Update URL"
 msgstr "Actualizare URL"
 
-#: includes/admin/table-printer.php:624
+#: includes/admin/table-printer.php:629
 msgid "[An orphaned link! This is a bug.]"
-msgstr "[Legaturi orfane (fara obiect)! Aceasta este o eroare de cod.]"
+msgstr "[Legătură orfană (fără obiect)! Aceasta este o eroare de cod.]"
 
-#: includes/admin/db-upgrade.php:95
-msgid "Failed to delete old DB tables. Database error : %s"
-msgstr "Stergerea tabelelor BD vechi a esuat. Eroare de baza de date: %s"
+#: includes/any-post.php:398
+#: modules/containers/blogroll.php:46
+#: modules/containers/comment.php:153
+#: modules/containers/custom_field.php:197
+msgid "Edit"
+msgstr "Editare"
 
-#: includes/parsers.php:109
-msgid "Editing is not implemented in the '%s' parser"
-msgstr "Editarea nu este implementata in analizorul de cod '%s'"
+#: includes/any-post.php:406
+#: modules/containers/custom_field.php:203
+msgid "Move this item to the Trash"
+msgstr "Mută acest articol în Pubelă"
 
-#: includes/parsers.php:124
-msgid "Unlinking is not implemented in the '%s' parser"
-msgstr "Dezasocierea nu este implementata in analizorul de cod '%s'"
+#: includes/any-post.php:408
+#: modules/containers/custom_field.php:205
+msgid "Trash"
+msgstr "Pubelă"
 
-#: includes/link-query.php:25
-msgid "Broken"
-msgstr "Intrerupta"
+#: includes/any-post.php:413
+#: modules/containers/custom_field.php:210
+msgid "Delete this item permanently"
+msgstr "Șterge definitiv acest articol"
 
-#: includes/link-query.php:27
-msgid "No broken links found"
-msgstr "Nu s-au gasit legaturi intrerupte"
+#: includes/any-post.php:415
+#: modules/containers/blogroll.php:47
+#: modules/containers/custom_field.php:212
+msgid "Delete"
+msgstr "Ștergere"
 
-#: includes/link-query.php:34
-msgid "Redirects"
-msgstr "Redirectionari"
-
-#: includes/link-query.php:35
-msgid "Redirected Links"
-msgstr "Legaturi redirectionate"
-
-#: includes/link-query.php:36
-msgid "No redirects found"
-msgstr "Nu s-au gasit redirectionari"
-
-#: includes/link-query.php:44
-msgid "All"
-msgstr "Toate"
-
-#: includes/link-query.php:45
-msgid "Detected Links"
-msgstr "Legaturi detectate"
-
-#: includes/link-query.php:46
-msgid "No links found (yet)"
-msgstr "Nu s-au gasit legaturi (inca)"
-
-#: includes/link-query.php:54
-msgid "Search Results"
-msgstr "Rezultate Cautare"
-
-#: includes/link-query.php:55
-#: includes/link-query.php:106
-msgid "No links found for your query"
-msgstr "Nu s-au gasit legaturi pentru solicitarea dvs."
-
-#: includes/any-post.php:427
+#: includes/any-post.php:428
+#, php-format
 msgid "Preview &#8220;%s&#8221;"
 msgstr "Previzualizare &#8220;%s&#8221;"
 
-#: includes/any-post.php:428
+#: includes/any-post.php:429
 msgid "Preview"
 msgstr "Previzualizare"
 
-#: includes/any-post.php:435
+#: includes/any-post.php:436
+#, php-format
 msgid "View &#8220;%s&#8221;"
 msgstr "Vizualizare &#8220;%s&#8221;"
 
-#: includes/any-post.php:529
-msgid "Updating post %d failed"
-msgstr "Actualizare a afisarii %d esuata"
+#: includes/any-post.php:437
+#: modules/containers/comment.php:166
+#: modules/containers/custom_field.php:217
+msgid "View"
+msgstr "Vizualizare"
 
-#: includes/any-post.php:711
+#: includes/any-post.php:456
+#: modules/containers/custom_field.php:197
+msgid "Edit this item"
+msgstr "Editare articol"
+
+#: includes/any-post.php:520
+#: modules/containers/blogroll.php:83
+#: modules/containers/comment.php:43
+msgid "Nothing to update"
+msgstr "Nimic de actualizat"
+
+#: includes/any-post.php:530
+#, php-format
+msgid "Updating post %d failed"
+msgstr "Actualizare a afișării %d eșuată"
+
+#: includes/any-post.php:565
+#: modules/containers/custom_field.php:284
+#, php-format
+msgid "Failed to delete post \"%s\" (%d)"
+msgstr "Eșuare ștergere afișare \"%s\" (%d)"
+
+#: includes/any-post.php:584
+#: modules/containers/custom_field.php:303
+#, php-format
+msgid "Can't move post \"%s\" (%d) to the trash because the trash feature is disabled"
+msgstr "Nu pot muta afișarea \"%s\" (%d) în Pubelă, deoarece opțiunea Pubelă este dezactivată"
+
+#: includes/any-post.php:604
+#: modules/containers/custom_field.php:322
+#, php-format
+msgid "Failed to move post \"%s\" (%d) to the trash"
+msgstr "Eșuare mutare afișare \"%s\" (%d) în Pubelă"
+
+#: includes/any-post.php:712
+#, php-format
 msgid "%d post deleted."
 msgid_plural "%d posts deleted."
-msgstr[0] "%d afisare stearsa."
-msgstr[1] "%d afisari sterse."
+msgstr[0] "%d afișare ștearsă."
+msgstr[1] "%d afișări șterse."
 
-#: includes/any-post.php:713
+#: includes/any-post.php:714
+#, php-format
 msgid "%d page deleted."
 msgid_plural "%d pages deleted."
-msgstr[0] "%d pagina stearsa."
-msgstr[1] "%d pagini sterse."
+msgstr[0] "%d pagină ștearsă."
+msgstr[1] "%d pagini șterse."
 
-#: includes/any-post.php:715
+#: includes/any-post.php:716
+#, php-format
 msgid "%d \"%s\" deleted."
 msgid_plural "%d \"%s\" deleted."
-msgstr[0] "%d \"%s\" stearsa (e)."
-msgstr[1] "%d \"%s\" stearsa(e)."
+msgstr[0] "%d \"%s\" ștearsă(e)."
+msgstr[1] "%d \"%s\" ștearsă(e)."
 
-#: includes/any-post.php:734
+#: includes/any-post.php:735
+#, php-format
 msgid "%d post moved to the Trash."
 msgid_plural "%d posts moved to the Trash."
-msgstr[0] "%d afisare mutata in Pubela."
-msgstr[1] "%d afisari mutate in Pubela."
+msgstr[0] "%d afișare mutată în Pubelă."
+msgstr[1] "%d afișări mutate în Pubelă."
 
-#: includes/any-post.php:736
+#: includes/any-post.php:737
+#, php-format
 msgid "%d page moved to the Trash."
 msgid_plural "%d pages moved to the Trash."
-msgstr[0] "%d pagina mutat  in Pubela."
-msgstr[1] "%d pagini mutate in Pubela."
+msgstr[0] "%d pagină mutată în Pubelă."
+msgstr[1] "%d pagini mutate în Pubelă."
 
-#: includes/any-post.php:738
+#: includes/any-post.php:739
+#, php-format
 msgid "%d \"%s\" moved to the Trash."
 msgid_plural "%d \"%s\" moved to the Trash."
-msgstr[0] "%d \"%s\" mutat in Pubela."
-msgstr[1] "%d \"%s\" mutate in Pubela."
+msgstr[0] "%d \"%s\" mutată(e) în Pubelă."
+msgstr[1] "%d \"%s\" mutată(e) în Pubelă."
 
 #: includes/containers.php:122
+#, php-format
 msgid "%d '%s' has been deleted"
 msgid_plural "%d '%s' have been deleted"
-msgstr[0] "%d '%s' a fost stearsa"
-msgstr[1] "%d '%s' au fost sterse"
+msgstr[0] "%d '%s' a fost ștearsă"
+msgstr[1] "%d '%s' au fost șterse"
 
-#: includes/containers.php:883
-#: includes/containers.php:901
+#: includes/containers.php:882
+#: includes/containers.php:900
+#, php-format
 msgid "Container type '%s' not recognized"
 msgstr "Tip recipient '%s' nerecunoscut"
-
-#: includes/links.php:215
-msgid "The plugin script was terminated while trying to check the link."
-msgstr "Scriptul modulului extensie a fost inchis in timp ce se incerca verificarea legaturii."
-
-#: includes/links.php:261
-msgid "The plugin doesn't know how to check this type of link."
-msgstr "Modulul extensie nu stie sa verifice acest tip de legatura."
-
-#: includes/links.php:349
-msgid "Link is valid."
-msgstr "Legatura este valida."
-
-#: includes/links.php:351
-msgid "Link is broken."
-msgstr "Legatura este intrerupta."
-
-#: includes/links.php:564
-#: includes/links.php:666
-#: includes/links.php:693
-msgid "Link is not valid"
-msgstr "Legatura nu este valida."
-
-#: includes/links.php:581
-msgid "This link can not be edited because it is not used anywhere on this site."
-msgstr "Aceast  legatura nu poate fi editata, pentru ca nu este folosita nicaieri pe acest sit."
-
-#: includes/links.php:607
-msgid "Failed to create a DB entry for the new URL."
-msgstr "Nu s-a reusit crearea unei intrari in BD pentru noul URL."
-
-#: includes/links.php:673
-msgid "This link is not a redirect"
-msgstr "Legatura nu este o redirectionare."
-
-#: includes/links.php:720
-#: includes/links.php:757
-msgid "Couldn't delete the link's database record"
-msgstr "Nu s-a putut sterge inregistrarea acestei legaturi din baza de date"
-
-#: includes/links.php:831
-msgctxt "link status"
-msgid "Unknown"
-msgstr "Necunoscut"
-
-#: includes/links.php:869
-msgid "Not checked"
-msgstr "Neverificata"
-
-#: includes/links.php:872
-msgid "False positive"
-msgstr "Pozitiv fals"
 
 #: includes/extra-strings.php:2
 msgctxt "module name"
@@ -1459,22 +1137,22 @@ msgstr "Comentarii"
 #: includes/extra-strings.php:5
 msgctxt "module name"
 msgid "Custom fields"
-msgstr "Campuri personalizabile"
+msgstr "Câmpuri personalizabile"
 
 #: includes/extra-strings.php:6
 msgctxt "module name"
 msgid "Embedded DailyMotion videos"
-msgstr "Clipuri video DailyMotion Incorporate"
+msgstr "Clipuri video DailyMotion încorporate"
 
 #: includes/extra-strings.php:7
 msgctxt "module name"
 msgid "Embedded Vimeo videos"
-msgstr "Clipuri video Vimeo Incorporate"
+msgstr "Clipuri video Vimeo încorporate"
 
 #: includes/extra-strings.php:8
 msgctxt "module name"
 msgid "Embedded YouTube videos"
-msgstr "Clipuri video YouTube Incorporate"
+msgstr "Clipuri video YouTube încorporate"
 
 #: includes/extra-strings.php:9
 msgctxt "module name"
@@ -1484,112 +1162,397 @@ msgstr "Imagini HTML"
 #: includes/extra-strings.php:10
 msgctxt "module name"
 msgid "HTML links"
-msgstr "Legaturi HTML"
+msgstr "Legături HTML"
 
 #: includes/extra-strings.php:11
 msgctxt "module name"
 msgid "MediaFire API"
-msgstr "IPA (interfata de programare a aplicatiei - API) MediaFire"
+msgstr ""
 
 #: includes/extra-strings.php:12
 msgctxt "module name"
 msgid "MegaUpload API"
-msgstr "MegaIncarcare IPA (API)"
+msgstr ""
 
 #: includes/extra-strings.php:13
 msgctxt "module name"
 msgid "Plaintext URLs"
-msgstr "URL-uri de text simplu"
+msgstr "URL-uri mod text"
 
 #: includes/extra-strings.php:14
 msgctxt "module name"
 msgid "RapidShare API"
-msgstr "IPA (interfata de programare a aplicatiei - API) RapidShare"
+msgstr ""
 
 #: includes/extra-strings.php:15
 msgctxt "module name"
 msgid "YouTube API"
-msgstr "IPA (interfata de programare a aplicatiei - API) YouTube"
+msgstr ""
 
 #: includes/extra-strings.php:16
 msgctxt "module name"
 msgid "Posts"
-msgstr "Afisari"
+msgstr "Articole"
 
 #: includes/extra-strings.php:17
 msgctxt "module name"
 msgid "Pages"
 msgstr "Pagini"
 
-#: includes/utility-class.php:286
-msgid "%d second"
-msgid_plural "%d seconds"
-msgstr[0] "%d secunda"
-msgstr[1] "%d secunde"
+#: includes/instances.php:102
+#: includes/instances.php:158
+#, php-format
+msgid "Container %s[%d] not found"
+msgstr "Recipient %s[%d] negăsit"
+
+#: includes/instances.php:111
+#: includes/instances.php:167
+#, php-format
+msgid "Parser '%s' not found."
+msgstr "Analizor de cod '%s' negăsit."
+
+#: includes/link-query.php:25
+msgid "Broken"
+msgstr "Întreruptă"
+
+#: includes/link-query.php:27
+msgid "No broken links found"
+msgstr "Nu s-au găsit legături întrerupte"
+
+#: includes/link-query.php:34
+msgid "Redirects"
+msgstr "Redirecționări"
+
+#: includes/link-query.php:35
+msgid "Redirected Links"
+msgstr "Legături redirecționate"
+
+#: includes/link-query.php:36
+msgid "No redirects found"
+msgstr "Nu s-au găsit redirecționări"
+
+#: includes/link-query.php:44
+msgid "All"
+msgstr "Toate"
+
+#: includes/link-query.php:45
+msgid "Detected Links"
+msgstr "Legături detectate"
+
+#: includes/link-query.php:46
+msgid "No links found (yet)"
+msgstr "Nu s-au găsit legături (încă)"
+
+#: includes/link-query.php:54
+msgid "Search Results"
+msgstr "Rezultate Căutare"
+
+#: includes/link-query.php:55
+#: includes/link-query.php:106
+msgid "No links found for your query"
+msgstr "Nu s-au găsit legături pentru solicitarea dvs."
+
+#: includes/links.php:215
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "Scriptul modulului extensie a fost închis în timp ce se încerca verificarea legăturii."
+
+#: includes/links.php:261
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "Modulul extensie nu știe să verifice acest tip de legătură."
+
+#: includes/links.php:349
+msgid "Link is valid."
+msgstr "Legătura este validă."
+
+#: includes/links.php:351
+msgid "Link is broken."
+msgstr "Legătura este întreruptă."
+
+#: includes/links.php:564
+#: includes/links.php:666
+#: includes/links.php:693
+msgid "Link is not valid"
+msgstr "Legătura nu este validă."
+
+#: includes/links.php:581
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "Această legătură nu poate fi editată, pentru că nu este folosită nicăieri pe acest sit."
+
+#: includes/links.php:607
+msgid "Failed to create a DB entry for the new URL."
+msgstr "Nu s-a reușit crearea unei intrări în BD pentru noul URL."
+
+#: includes/links.php:673
+msgid "This link is not a redirect"
+msgstr "Legătura nu este o redirecționare."
+
+#: includes/links.php:720
+#: includes/links.php:757
+msgid "Couldn't delete the link's database record"
+msgstr "Nu s-a putut șterge înregistrarea acestei legături din baza de date"
+
+#: includes/links.php:831
+msgctxt "link status"
+msgid "Unknown"
+msgstr "Necunoscut"
+
+#: includes/links.php:845
+#: modules/checkers/http.php:263
+msgid "Unknown Error"
+msgstr "Eroare necunoscută"
+
+#: includes/links.php:869
+msgid "Not checked"
+msgstr "Neverificată"
+
+#: includes/links.php:872
+msgid "False positive"
+msgstr "Pozitiv fals"
+
+#: includes/links.php:875
+msgctxt "link status"
+msgid "OK"
+msgstr "OK"
+
+#: includes/module-manager.php:122
+#: includes/module-manager.php:139
+msgctxt "module name"
+msgid "Name"
+msgstr "Nume"
+
+#: includes/parsers.php:109
+#, php-format
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "Editarea nu este implementată în analizorul de cod '%s'"
+
+#: includes/parsers.php:124
+#, php-format
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "Dezasocierea nu este implementată în analizorul de cod '%s'"
 
 #: includes/utility-class.php:287
+#, php-format
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d secundă"
+msgstr[1] "%d secunde"
+
+#: includes/utility-class.php:288
+#, php-format
 msgid "%d second ago"
 msgid_plural "%d seconds ago"
-msgstr[0] "acum %d secunda"
+msgstr[0] "acum %d secundă"
 msgstr[1] "acum %d secunde"
 
-#: includes/utility-class.php:290
+#: includes/utility-class.php:291
+#, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d minut"
 msgstr[1] "%d minute"
 
-#: includes/utility-class.php:291
+#: includes/utility-class.php:292
+#, php-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "acum %d minut"
 msgstr[1] "acum %d minute"
 
-#: includes/utility-class.php:294
+#: includes/utility-class.php:295
+#, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "%d ora"
+msgstr[0] "%d oră"
 msgstr[1] "%d ore"
 
-#: includes/utility-class.php:295
+#: includes/utility-class.php:296
+#, php-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "acum %d ora"
+msgstr[0] "acum %d oră"
 msgstr[1] "acum %d ore"
 
-#: includes/utility-class.php:298
+#: includes/utility-class.php:299
+#, php-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d zi"
 msgstr[1] "%d zile"
 
-#: includes/utility-class.php:299
+#: includes/utility-class.php:300
+#, php-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "acum %d zi"
 msgstr[1] "acum %d zile"
 
-#: includes/utility-class.php:302
+#: includes/utility-class.php:303
+#, php-format
 msgid "%d month"
 msgid_plural "%d months"
-msgstr[0] "%d luna"
+msgstr[0] "%d lună"
 msgstr[1] "%d luni"
 
-#: includes/utility-class.php:303
+#: includes/utility-class.php:304
+#, php-format
 msgid "%d month ago"
 msgid_plural "%d months ago"
-msgstr[0] "acum %d luna"
+msgstr[0] "acum %d lună"
 msgstr[1] "acum %d luni"
 
-#: includes/instances.php:102
-#: includes/instances.php:158
-msgid "Container %s[%d] not found"
-msgstr "Recipient %s[%d] negasit"
+#: modules/checkers/http.php:242
+msgid "Server Not Found"
+msgstr "Server de negăsit"
 
-#: includes/instances.php:111
-#: includes/instances.php:167
-msgid "Parser '%s' not found."
-msgstr "Analizor de cod '%s' negasit."
+#: modules/checkers/http.php:257
+msgid "Connection Failed"
+msgstr "Conectare eșuată"
+
+#: modules/checkers/http.php:292
+#: modules/checkers/http.php:362
+#, php-format
+msgid "HTTP code : %d"
+msgstr "cod HTTP: %d"
+
+#: modules/checkers/http.php:294
+#: modules/checkers/http.php:364
+msgid "(No response)"
+msgstr "(Nici un răspuns)"
+
+#: modules/checkers/http.php:300
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Cel mai probabil, timpul conexiunii a expirat ori domeniul nu există."
+
+#: modules/checkers/http.php:371
+msgid "Request timed out."
+msgstr "Timpul solicitării a expirat."
+
+#: modules/checkers/http.php:389
+msgid "Using Snoopy"
+msgstr "Folosirea Snoopy"
+
+#: modules/containers/blogroll.php:21
+msgid "Bookmark"
+msgstr "Semne de carte"
+
+#: modules/containers/blogroll.php:27
+#: modules/containers/blogroll.php:46
+msgid "Edit this bookmark"
+msgstr "Editare semn de carte"
+
+#: modules/containers/blogroll.php:47
+#, php-format
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Sunteți pe cale să ștergeți această legătură '%s'\n"
+"  'Anulare' pentru a vă opri, 'OK' pentru a șterge."
+
+#: modules/containers/blogroll.php:97
+#, php-format
+msgid "Updating bookmark %d failed"
+msgstr "Actualizarea semnului de carte %d a eșuat"
+
+#: modules/containers/blogroll.php:128
+#, php-format
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "Nu s-a reușit ștergerea legăturii statului de blog \"%s\" (%d)"
+
+#: modules/containers/blogroll.php:299
+#, php-format
+msgid "%d blogroll link deleted."
+msgid_plural "%d blogroll links deleted."
+msgstr[0] "%d legătură de stat de blog ștearsă."
+msgstr[1] "%d legături de stat de blog șterse."
+
+#: modules/containers/comment.php:53
+#, php-format
+msgid "Updating comment %d failed"
+msgstr "Actualizarea comentariului %d a eșuat"
+
+#: modules/containers/comment.php:74
+#, php-format
+msgid "Failed to delete comment %d"
+msgstr "Ștergerea comentariului %d a eșuat"
+
+#: modules/containers/comment.php:95
+#, php-format
+msgid "Can't move comment %d to the trash"
+msgstr "Nu s-a putut muta comentariul %d în Pubelă"
+
+#: modules/containers/comment.php:153
+#: modules/containers/comment.php:195
+msgid "Edit comment"
+msgstr "Editare comentariu"
+
+#: modules/containers/comment.php:160
+msgid "Delete Permanently"
+msgstr "Ștergere Permanentă"
+
+#: modules/containers/comment.php:162
+msgid "Move this comment to the trash"
+msgstr "Mutați acest comentariu în Pubelă"
+
+#: modules/containers/comment.php:162
+msgctxt "verb"
+msgid "Trash"
+msgstr "Pubelă"
+
+#: modules/containers/comment.php:166
+msgid "View comment"
+msgstr "Vizualizare comentariu"
+
+#: modules/containers/comment.php:183
+msgid "Comment"
+msgstr "Comentariu"
+
+#: modules/containers/comment.php:372
+#, php-format
+msgid "%d comment has been deleted."
+msgid_plural "%d comments have been deleted."
+msgstr[0] "%d comentariu a fost șters."
+msgstr[1] "%d comentarii au fost șterse."
+
+#: modules/containers/comment.php:391
+#, php-format
+msgid "%d comment moved to the Trash."
+msgid_plural "%d comments moved to the Trash."
+msgstr[0] "%d comentariu mutat în Pubelă."
+msgstr[1] "%d comentarii mutate în Pubelă."
+
+#: modules/containers/custom_field.php:84
+#, php-format
+msgid "Failed to update the meta field '%s' on %s [%d]"
+msgstr "S-a eșuat actualizarea meta câmpului '%s' la %s [%d]"
+
+#: modules/containers/custom_field.php:110
+#, php-format
+msgid "Failed to delete the meta field '%s' on %s [%d]"
+msgstr "S-a eșuat ștergerea meta câmpului '%s' la %s [%d]"
+
+#: modules/containers/custom_field.php:187
+msgid "Edit this post"
+msgstr "Editare afișare"
+
+#: modules/containers/custom_field.php:217
+#, php-format
+msgid "View \"%s\""
+msgstr "Vizualizare \"%s\""
+
+#: modules/containers/dummy.php:34
+#: modules/containers/dummy.php:45
+#, php-format
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "Nu știu cum să editez un '%s' [%d]."
+
+#: modules/parsers/image.php:156
+msgid "Image"
+msgstr "Imagine"
+
+#: modules/parsers/metadata.php:117
+msgid "Custom field"
+msgstr "Câmp personalizabil"
 
 #. Plugin URI of the plugin/theme
 msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
@@ -1597,7 +1560,7 @@ msgstr "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
 
 #. Description of the plugin/theme
 msgid "Checks your blog for broken links and missing images and notifies you on the dashboard if any are found."
-msgstr "Va verifica blogul pentru legaturi  intrerupte si imagini lipsa si notifica daca se gaseste vreuna, pe tabloul de bord."
+msgstr "Vă verifică blogul pentru legături întrerupte și imagini lipsă și notifică dacă se găsește vreuna, pe tabloul de bord."
 
 #. Author of the plugin/theme
 msgid "Janis Elsts"
@@ -1607,9 +1570,3 @@ msgstr "Janis Elsts"
 msgid "http://w-shadow.com/blog/"
 msgstr "http://w-shadow.com/blog/"
 
-#~ msgid "Upgrade to Pro to enable this feature"
-#~ msgstr "Trece�i la versiunea Pro pentru a permite aceast� op�iune"
-#~ msgctxt "module name"
-
-#~ msgid "Name"
-#~ msgstr "Nume"
