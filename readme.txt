@@ -51,6 +51,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * French - [Whiler](http://blogs.wittwer.fr/whiler/)
 * German - [Ivan Graf](http://blog.bildergallery.com/)
 * Hindi - [Outshine Solutions](http://outshinesolutions.com/)
+* Irish - [Ray Gren](http://letsbefamous.com/)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Japanese - [ningendesu](http://ningendesu.com/)
 * Korean - [MinHyeong Lim](http://ssamture.net/)
