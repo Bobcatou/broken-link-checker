@@ -81,6 +81,32 @@ class blcConfigurationManager {
         
 		return update_option( $this->option_name, $this->options );		
 	}
+	
+	/**
+	 * Retrieve a scpecific setting.
+	 * 
+	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
+	 */
+	function get($key, $default = null){
+		if ( array_key_exists($key, $this->options) ){
+			return $this->options[$key];
+		} else {
+			return $default;
+		}
+	}
+	
+	/**
+	 * Update or add a setting.
+	 * 
+	 * @param string $key
+	 * @param mixed $value
+	 * @return void
+	 */
+	function set($key, $value){
+		$this->options[$key] = $value;
+	}
 }
 
 }

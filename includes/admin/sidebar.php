@@ -31,23 +31,53 @@
 </div>
 
 <?php
-if ( time() < strtotime('2011-02-20') ): 
-//Note: i18n intentionally omitted for this part because the link (below) leads to an English-only page.
+//Basic split-testing. Pick a line at random and remember our choice for later.
+$copy_versions = array(
+	'cy1' => 'A link checker for your <em>other</em> sites.',
+	'cy2' => 'A link checker for your <span style="white-space:nowrap;">non-WP</span> sites.',
+	'cy3' => 'A link checker for your <span style="white-space:nowrap;">non-WordPress</span> sites.',
+	'c3' => 'A link checker for <span style="white-space:nowrap;">non-WordPress</span> sites.',
+);
+
+$configuration = blc_get_configuration();
+$key = $configuration->get('_findbroken_ad');
+if ( ($key == null) || !array_key_exists($key, $copy_versions) ){
+	//Pick a random version of the ad.
+	$keys = array_keys($copy_versions);
+	$key = $keys[rand(0, count($keys)-1)];
+	$configuration->set('_findbroken_ad', $key);
+	$configuration->save_options();
+}
+
+$text = $copy_versions[$key];
+$url = 'http://findbroken.com/?source=the-plugin&line='.urlencode($key);
+$image_url = plugins_url('images/findbroken.png', BLC_PLUGIN_FILE);
 ?>
+<style>
+#advertising .inside {
+	text-align: left;
+}
+#advertising .inside img {
+	display: block;
+	margin: 1em auto 0.5em 0;
+	border: 0;
+}
+</style>
 <div id="advertising" class="postbox">
-	<h3 class="hndle">Poll</h3>
-	<div class="inside" style="text-align: center;">
-		<a href="https://spreadsheets.google.com/viewform?formkey=dFA2VEFsdURoWjc2YlQ5WGxPSXc2Z3c6MQ">
-			Would you use a link checker that works with 
-			<span style="white-space: nowrap;">non-WordPress</span> sites?
+	<h3 class="hndle">Recommended</h3>
+	<div class="inside">
+		<a href="<?php echo esc_attr($url); ?>" title="FindBroken.com">
+			<img src="<?php echo esc_attr($image_url); ?>"">
 		</a>
+		<?php echo $text; ?>
 	</div>					
 </div>
+
 <?php
-endif;
-/*//Advertising temporarily disabled.
+//This ad currently disabled.
+/*
 ?>
-<div id="advertising" class="postbox">
+<div id="advertising2" class="postbox">
 	<h3 class="hndle"><?php _e('Recommended', 'broken-link-checker'); ?></h3>
 	<div class="inside" style="text-align: center;">
 		<a href="http://www.maxcdn.com/wordpress-cdn.php?type=banner&&affId=102167&&img=c_160x600_maxcdn_simple.gif">
