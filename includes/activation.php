@@ -25,13 +25,13 @@ $blc_config_manager->save_options();
 $blclog->info('Installation/update begins.');
 
 //Load the base classes and utilities
-require BLC_DIRECTORY . '/includes/links.php';
-require BLC_DIRECTORY . '/includes/link-query.php';
-require BLC_DIRECTORY . '/includes/instances.php';
-require BLC_DIRECTORY . '/includes/utility-class.php';
+require_once BLC_DIRECTORY . '/includes/links.php';
+require_once BLC_DIRECTORY . '/includes/link-query.php';
+require_once BLC_DIRECTORY . '/includes/instances.php';
+require_once BLC_DIRECTORY . '/includes/utility-class.php';
 
 //Load the module subsystem
-require BLC_DIRECTORY . '/includes/modules.php';
+require_once BLC_DIRECTORY . '/includes/modules.php';
 $moduleManager = & blcModuleManager::getInstance();	
        
 //If upgrading, activate/deactivate custom field and comment containers based on old ver. settings

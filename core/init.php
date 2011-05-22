@@ -263,13 +263,13 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		$init_done = true;
 		
 		//Load the base classes and utilities
-		require BLC_DIRECTORY . '/includes/links.php';
-		require BLC_DIRECTORY . '/includes/link-query.php';
-		require BLC_DIRECTORY . '/includes/instances.php';
-		require BLC_DIRECTORY . '/includes/utility-class.php';
+		require_once BLC_DIRECTORY . '/includes/links.php';
+		require_once BLC_DIRECTORY . '/includes/link-query.php';
+		require_once BLC_DIRECTORY . '/includes/instances.php';
+		require_once BLC_DIRECTORY . '/includes/utility-class.php';
 		
 		//Load the module subsystem
-		require BLC_DIRECTORY . '/includes/modules.php';
+		require_once BLC_DIRECTORY . '/includes/modules.php';
 		
 		//Load the modules that want to be executed in all contexts
 		$blc_module_manager->load_modules();
@@ -277,7 +277,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		if ( is_admin() || defined('DOING_CRON') ){
 			
 			//It's an admin-side or Cron request. Load the core.
-			require BLC_DIRECTORY . '/core/core.php';
+			require_once BLC_DIRECTORY . '/core/core.php';
 			$ws_link_checker = new wsBrokenLinkChecker( BLC_PLUGIN_FILE, $blc_config_manager );
 			
 		} else {
