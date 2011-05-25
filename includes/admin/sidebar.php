@@ -34,9 +34,10 @@
 //Basic split-testing. Pick a line at random and remember our choice for later.
 $copy_versions = array(
 	'cy1' => 'A link checker for your <em>other</em> sites.',
-	'cy2' => 'A link checker for your <span style="white-space:nowrap;">non-WP</span> sites.',
-	'cy3' => 'A link checker for your <span style="white-space:nowrap;">non-WordPress</span> sites.',
 	'c3' => 'A link checker for <span style="white-space:nowrap;">non-WordPress</span> sites.',
+	'b3' => 'Broken link checker for non-WordPress sites.',
+	'c4' => 'A link checker that works with any site, not just WordPress.',
+	'c5' => 'Link checker as a web app.',
 );
 
 $configuration = blc_get_configuration();
@@ -50,7 +51,7 @@ if ( ($key == null) || !array_key_exists($key, $copy_versions) ){
 }
 
 $text = $copy_versions[$key];
-$url = 'http://findbroken.com/?source=the-plugin&line='.urlencode($key);
+$url = 'http://findbroken.com/blc?source=the-plugin&line='.urlencode($key);
 $image_url = plugins_url('images/findbroken.png', BLC_PLUGIN_FILE);
 ?>
 <style>
