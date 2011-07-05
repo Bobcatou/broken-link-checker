@@ -9,8 +9,15 @@
 if ( !class_exists('wsScreenMetaLinks10') ):
 
 //Load JSON functions for PHP < 5.2
-if (!function_exists('json_encode') && !class_exists('Services_JSON')){
-	require ABSPATH . WPINC . '/class-json.php';
+if ( !(function_exists('json_encode') && function_exists('json_decode')) && !(class_exists('Services_JSON') || class_exists('Moxiecode_JSON')) ){
+	$class_json_path = ABSPATH.WPINC.'/class-json.php';
+	$class_moxiecode_json_path = ABSPATH.WPINC.'/js/tinymce/plugins/spellchecker/classes/utils/JSON.php';
+	if ( file_exists($class_json_path) ){
+		require $class_json_path;
+		
+	} elseif ( file_exists($class_moxiecode_json_path) ) {
+		require $class_moxiecode_json_path;
+	}
 }
  
 class wsScreenMetaLinks10 {
@@ -197,11 +204,18 @@ class wsScreenMetaLinks10 {
 	 */
 	function json_encode($data){
 		if ( function_exists('json_encode') ){
-			return json_encode($data);
-		} else {
-			$json = new Services_JSON();
+    		return json_encode($data);
+    	}
+    	if ( class_exists('Services_JSON') ){
+    		$json = new Services_JSON();
         	return( $json->encodeUnsafe($data) );
-		}
+    	} elseif ( class_exists('Moxiecode_JSON') ){
+    		$json = new Moxiecode_JSON();
+    		return $json->encode($data);
+    	} else {
+    		trigger_error('No JSON parser available', E_USER_ERROR);
+		    return null;
+   		}
 	}
 	
 }
