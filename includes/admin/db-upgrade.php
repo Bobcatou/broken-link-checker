@@ -122,7 +122,7 @@ class blcDatabaseUpgrader {
 			SET
 			 synch.container_type = posts.post_type
 			WHERE
-			 synch.container_type == 'post' AND posts.post_type IS NOT NULL";
+			 synch.container_type = 'post' AND posts.post_type IS NOT NULL";
 		$wpdb->query($q);
 		 
 		$q = "
@@ -132,7 +132,7 @@ class blcDatabaseUpgrader {
 			SET
 			 instances.container_type = posts.post_type
 			WHERE
-			 instances.container_type == 'post' AND posts.post_type IS NOT NULL";
+			 instances.container_type = 'post' AND posts.post_type IS NOT NULL";
 		$wpdb->query($q); 
 	}
 	
