@@ -164,7 +164,7 @@ class blcMegaUploadChecker extends blcChecker {
 			$counter++;
 		}
 		
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		$args = array(
 			'timeout' => $conf->options['timeout'],
 			'body' => $request_ids,

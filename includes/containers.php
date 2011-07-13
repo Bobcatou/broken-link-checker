@@ -34,7 +34,7 @@ class blcContainerManager extends blcModule {
    * @param array $container An associative array of container data.
    * @return blcContainer
    */
-	function &get_container($container){
+	function get_container($container){
 		$container['fields'] = $this->get_parseable_fields();
         $container_obj = new $this->container_class_name($container);
         return $container_obj;
@@ -73,7 +73,7 @@ class blcContainerManager extends blcModule {
 		$results = array();
 		foreach($containers as $container){
 			$key = $container['container_type'] . '|' . $container['container_id'];
-			$results[ $key ] = & $this->get_container($container);
+			$results[ $key ] = $this->get_container($container);
 		}
 		return $results;
 	}
@@ -177,16 +177,6 @@ class blcContainer {
 	}
 	
   /**
-   * blcContainer::blcContainer()
-   * Old style class constructor
-   *
-   * @return void
-   */
-	function blcContainer( $data = null, $wrapped_object = null ){
-		$this->__construct($data, $wrapped_object);
-	}
-	
-  /**
    * Get the value of the specified field of the object wrapped by this container.
    * 
    * @access protected
@@ -229,7 +219,7 @@ class blcContainer {
    * @param bool $ensure_consistency Set this to true to ignore the cached $wrapped_object value and retrieve an up-to-date copy of the wrapped object from the DB (or WP's internal cache).
    * @return object The wrapped object.
    */
-	function &get_wrapped_object($ensure_consistency = false){
+	function get_wrapped_object($ensure_consistency = false){
 		trigger_error('Function blcContainer::get_wrapped_object() must be over-ridden in a sub-class', E_USER_ERROR);
 	}	
 	
@@ -511,12 +501,12 @@ class blcContainer {
    * Remove all links with the specified URL, leaving their anchor text intact.
    *
    * @param string $field_name
-   * @param blcParser $parser_type
+   * @param blcParser $parser
    * @param string $url
    * @param string $raw_url
    * @return bool|WP_Error True on success, or an error object if something went wrong.
    */
-	function unlink($field_name, &$parser, $url, $raw_url =''){
+	function unlink($field_name, $parser, $url, $raw_url =''){
 		//Ensure we're operating on a consistent copy of the wrapped object.
 		$this->get_wrapped_object(true);
 		
@@ -600,13 +590,13 @@ class blcContainerHelper {
    * @param string $fallback If there is no manager associated with $container_type, return the manager of this container type instead.  
    * @return blcContainerManager|null
    */
-	function &get_manager( $container_type, $fallback = '' ){
-		$module_manager = & blcModuleManager::getInstance();
+	static function get_manager( $container_type, $fallback = '' ){
+		$module_manager = blcModuleManager::getInstance();
 		$container_manager = null;
 		
-		if ( $container_manager = & $module_manager->get_module($container_type, true, 'container') ){
+		if ( $container_manager = $module_manager->get_module($container_type, true, 'container') ){
 			return $container_manager;
-		} elseif ( !empty($fallback) && ( $container_manager = & $module_manager->get_module($fallback, true, 'container') ) ) {
+		} elseif ( !empty($fallback) && ( $container_manager = $module_manager->get_module($fallback, true, 'container') ) ) {
 			return $container_manager;
 		} else {
 			return null;
@@ -623,7 +613,7 @@ class blcContainerHelper {
    * @param array $container Either [container_type, container_id], or an assoc. array of container data. 
    * @return blcContainer|null
    */
-	function &get_container( $container ){
+	function get_container( $container ){
 		global $wpdb;
 		
 		if ( !is_array($container) || ( count($container) < 2 ) ){
@@ -648,7 +638,7 @@ class blcContainerHelper {
 			}
 		}
 		
-		if ( !($manager = & blcContainerHelper::get_manager($container['container_type'])) ){
+		if ( !($manager = blcContainerHelper::get_manager($container['container_type'])) ){
 			return null;
 		}
 		
@@ -670,7 +660,7 @@ class blcContainerHelper {
    * @param bool $load_wrapped_objects Preload wrapped objects regardless of purpose.
    * @return array of blcContainer indexed by "container_type|container_id"
    */
-	function get_containers( $containers, $purpose = '', $fallback = '', $load_wrapped_objects = false ){
+	static function get_containers( $containers, $purpose = '', $fallback = '', $load_wrapped_objects = false ){
 		global $wpdb;
 		
 		//If the input is invalid or empty, return an empty array.
@@ -729,7 +719,7 @@ class blcContainerHelper {
 			
 		$results = array();
 		foreach($by_type as $container_type => $entries){
-			$manager = & blcContainerHelper::get_manager($container_type, $fallback);
+			$manager = blcContainerHelper::get_manager($container_type, $fallback);
 			if ( !is_null($manager) ){
 				$partial_results = $manager->get_containers($entries, $purpose, $load_wrapped_objects);
 				$results = array_merge($results, $partial_results);
@@ -773,10 +763,10 @@ class blcContainerHelper {
 	function resynch($forced = false){
 		global $wpdb;
     	
-		$module_manager = & blcModuleManager::getInstance();
+		$module_manager = blcModuleManager::getInstance();
 		$active_managers = $module_manager->get_active_by_category('container');    	
     	foreach($active_managers as $module_id => $module_data){
-    		$manager = & $module_manager->get_module($module_id);
+    		$manager = $module_manager->get_module($module_id);
     		if ( $manager ){
     			$manager->resynch($forced);
     		}
@@ -800,7 +790,7 @@ class blcContainerHelper {
 		
 		//Find containers that match any of the specified formats and add them to
 		//the list of container types that need to be marked as unsynched.
-		$module_manager = &blcModuleManager::getInstance();
+		$module_manager = blcModuleManager::getInstance();
 		$containers = $module_manager->get_active_by_category('container');
 		
 		foreach($containers as $module_id => $module_data){
@@ -857,7 +847,7 @@ class blcContainerHelper {
 		global $wpdb;
 		global $blclog;
 		
-		$module_manager = & blcModuleManager::getInstance();
+		$module_manager = blcModuleManager::getInstance();
 		$active_containers = $module_manager->get_escaped_ids('container');
 		
 		$q = "DELETE synch.*
@@ -878,7 +868,7 @@ class blcContainerHelper {
    * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
    */
 	function ui_bulk_delete_message($container_type, $n){
-		$manager = & blcContainerHelper::get_manager($container_type);
+		$manager = blcContainerHelper::get_manager($container_type);
 		if ( is_null($manager) ){
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
 		} else {
@@ -896,7 +886,7 @@ class blcContainerHelper {
 	 * @return string
 	 */
 	function ui_bulk_trash_message($container_type, $n){
-		$manager = & blcContainerHelper::get_manager($container_type);
+		$manager = blcContainerHelper::get_manager($container_type);
 		if ( is_null($manager) ){
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
 		} else {

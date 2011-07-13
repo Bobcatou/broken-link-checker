@@ -132,7 +132,7 @@ class blcParser extends blcModule {
    * @param blcLinkInstance $instance
    * @return string HTML 
    */
-	function ui_get_link_text(&$instance, $context = 'display'){
+	function ui_get_link_text($instance, $context = 'display'){
 		return $instance->link_text;
 	}
 	
@@ -290,8 +290,8 @@ class blcParserHelper {
    * @param string $parser_type
    * @return blcParser|null
    */
-	function &get_parser( $parser_type ){
-		$manager = & blcModuleManager::getInstance();
+	static function get_parser( $parser_type ){
+		$manager = blcModuleManager::getInstance();
 		return $manager->get_module($parser_type, true, 'parser');
 	}
 	
@@ -307,12 +307,12 @@ class blcParserHelper {
 		$found = array();
 		
 		//Retrieve a list of active parsers
-		$manager = & blcModuleManager::getInstance();
+		$manager = blcModuleManager::getInstance();
 		$active_parsers = $manager->get_modules_by_category('parser');
 		
 		//Try each one
 		foreach($active_parsers as $module_id => $module_data){
-			$parser = & $manager->get_module($module_id); //Will autoload if necessary
+			$parser = $manager->get_module($module_id); //Will autoload if necessary
 			if ( !$parser ){
 				continue;
 			}

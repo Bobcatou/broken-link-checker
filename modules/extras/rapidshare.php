@@ -101,7 +101,7 @@ class blcRapidShareChecker extends blcChecker {
 			$file_name
 		);
 		
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		$args = array( 'timeout' => $conf->options['timeout'], );
 		
 		$start = microtime_float();

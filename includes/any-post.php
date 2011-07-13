@@ -33,14 +33,14 @@ class blcPostTypeOverlord {
    * @return void
    */
 	function init(){
- 		$this->plugin_conf = &blc_get_configuration();
+ 		$this->plugin_conf = blc_get_configuration();
  		
  		if ( isset($this->plugin_conf->options['enabled_post_statuses']) ){
  			$this->enabled_post_statuses = $this->plugin_conf->options['enabled_post_statuses'];
  		}
 		
 		//Register a virtual container module for each enabled post type
-		$module_manager = &blcModuleManager::getInstance();
+		$module_manager = blcModuleManager::getInstance();
 		
 		$post_types = get_post_types(array(), 'objects');
 		$exceptions = array('revision', 'nav_menu_item', 'attachment');
@@ -85,7 +85,7 @@ class blcPostTypeOverlord {
 	 * 
 	 * @return blcPostTypeOverlord
 	 */
-	function &getInstance(){
+	static function getInstance(){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcPostTypeOverlord;
@@ -119,12 +119,12 @@ class blcPostTypeOverlord {
    */
 	function post_deleted($post_id){
 		//Get the container type matching the type of the deleted post
-		$post = &get_post($post_id);
+		$post = get_post($post_id);
 		if ( !$post ){
 			return;
 		}
 		//Get the associated container object
-		$post_container = & blcContainerHelper::get_container( array($post->post_type, intval($post_id)) );
+		$post_container = blcContainerHelper::get_container( array($post->post_type, intval($post_id)) );
 		
 		if ( $post_container ){
 			//Delete it
@@ -142,7 +142,7 @@ class blcPostTypeOverlord {
    */
 	function post_saved($post_id){
 		//Get the container type matching the type of the deleted post
-		$post = &get_post($post_id);
+		$post = get_post($post_id);
 		if ( !$post ){
 			return;
 		}
@@ -155,7 +155,7 @@ class blcPostTypeOverlord {
         
     	//Get the container & mark it as unparsed
 		$args = array($post->post_type, intval($post_id));
-		$post_container = & blcContainerHelper::get_container( $args );
+		$post_container = blcContainerHelper::get_container( $args );
 
         $post_container->mark_as_unsynched();
 	}
@@ -296,7 +296,7 @@ class blcPostTypeOverlord {
 		}
 		
         //Iterate over all HTML links and modify the broken ones
-		if ( $parser = & blcParserHelper::get_parser('link') ){
+		if ( $parser = blcParserHelper::get_parser('link') ){
 			$content = $parser->multi_edit($content, array(&$this, 'highlight_broken_link'), $broken_link_urls);
 		}
 		
@@ -381,7 +381,7 @@ class blcAnyPostContainer extends blcContainer {
 		$actions = array();
 		
 		//Fetch the post (it should be cached already)
-		$post = &$this->get_wrapped_object();
+		$post = $this->get_wrapped_object();
 		if ( !$post ){
 			return $actions;
 		}
@@ -475,7 +475,7 @@ class blcAnyPostContainer extends blcContainer {
 		executed by Cron.
 		*/ 
 		
-		if ( !$post = &$this->get_wrapped_object() ){
+		if ( !$post = $this->get_wrapped_object() ){
 			return '';
 		}
 		
@@ -498,9 +498,9 @@ class blcAnyPostContainer extends blcContainer {
    * @param bool $ensure_consistency Set this to true to ignore the cached $wrapped_object value and retrieve an up-to-date copy of the wrapped object from the DB (or WP's internal cache).
    * @return object Post data.
    */
-	function &get_wrapped_object($ensure_consistency = false){
+	function get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
-			$this->wrapped_object = &get_post($this->container_id);
+			$this->wrapped_object = get_post($this->container_id);
 		}		
 		return $this->wrapped_object;
 	}
@@ -587,7 +587,7 @@ class blcAnyPostContainer extends blcContainer {
 			);
 		}
 		
-		$post = &get_post($this->container_id);
+		$post = get_post($this->container_id);
 		if ( $post->post_status == 'trash' ){
 			//Prevent conflicts between post and custom field containers trying to trash the same post.
 			//BUG: Post and custom field containers shouldn't wrap the same object
@@ -614,7 +614,7 @@ class blcAnyPostContainer extends blcContainer {
 	 * @return bool
 	 */
 	function current_user_can_delete(){
-		$post = &$this->get_wrapped_object();
+		$post = $this->get_wrapped_object();
 		$post_type_object = get_post_type_object($post->post_type);
 		return current_user_can( $post_type_object->cap->delete_post, $this->container_id );
 	}
@@ -641,7 +641,7 @@ class blcAnyPostContainerManager extends blcContainerManager {
 		
 		//Notify the overlord that the post/container type that this instance is 
 		//responsible for is enabled.
-		$overlord = &blcPostTypeOverlord::getInstance();
+		$overlord = blcPostTypeOverlord::getInstance();
 		$overlord->post_type_enabled($this->container_type); 
 	}
 	
@@ -686,7 +686,7 @@ class blcAnyPostContainerManager extends blcContainerManager {
    * @return void
    */
 	function resynch($forced = false){
-		$overlord = &blcPostTypeOverlord::getInstance();
+		$overlord = blcPostTypeOverlord::getInstance();
 		$overlord->resynch($this->container_type, $forced);
 	}
 	

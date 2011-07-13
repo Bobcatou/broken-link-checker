@@ -110,7 +110,7 @@ class blcMetadataParser extends blcParser {
    * @param blcLinkInstance $instance
    * @return string HTML 
    */
-	function ui_get_link_text(&$instance, $context = 'display'){
+	function ui_get_link_text($instance, $context = 'display'){
 		$image_html = sprintf(
 			'<img src="%s" class="blc-small-image" title="%2$s" alt="%2$s"> ',
 			esc_attr( plugins_url('/images/script_code.png', BLC_PLUGIN_FILE) ),

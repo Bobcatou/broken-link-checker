@@ -62,7 +62,7 @@ class blcBookmark extends blcContainer{
    * @param bool $ensure_consistency Set this to true to ignore the cached $wrapped_object value and retrieve an up-to-date copy of the wrapped object from the DB (or WP's internal cache).
    * @return object Bookmark data.
    */
-	function &get_wrapped_object($ensure_consistency = false){
+	function get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
 			$this->wrapped_object = &get_bookmark($this->container_id);
 		}		
@@ -250,7 +250,7 @@ class blcBookmarkManager extends blcContainerManager{
    * @return void
    */
 	function hook_add_link( $link_id ){
-		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
+		$container = blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -272,7 +272,7 @@ class blcBookmarkManager extends blcContainerManager{
    */
 	function hook_delete_link( $link_id ){
 		//Get the container object.
-		$container = & blcContainerHelper::get_container( array($this->container_type, $link_id) );
+		$container = blcContainerHelper::get_container( array($this->container_type, $link_id) );
 		//Get the link(s) associated with it.
 		$links = $container->get_links(); 
 		

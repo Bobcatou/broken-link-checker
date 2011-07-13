@@ -87,7 +87,7 @@ class blcEmbedParserBase extends blcParser {
    * @param blcLinkInstance $instance
    * @return string HTML 
    */
-	function ui_get_link_text(&$instance, $context = 'display'){
+	function ui_get_link_text($instance, $context = 'display'){
 		$image_url = sprintf(
 			'/images/%s.png',
 			$this->parser_type

@@ -95,7 +95,7 @@ class blcLinkInstance {
 	function edit($new_url, $old_url = ''){
 		
 		//Get the container that contains this link
-		$container = & $this->get_container();
+		$container = $this->get_container();
 		if ( is_null($container) ){
 			return new WP_Error(
 				'container_not_found',
@@ -104,7 +104,7 @@ class blcLinkInstance {
 		}
 		
 		//Get the parser.
-		$parser = & $this->get_parser();
+		$parser = $this->get_parser();
 		if ( is_null($parser) ){
 			return new WP_Error(
 				'parser_not_found', 
@@ -151,7 +151,7 @@ class blcLinkInstance {
 	function unlink( $url = null ) {
 		
 		//Get the container that contains this link
-		$container = & $this->get_container();
+		$container = $this->get_container();
 		if ( is_null($container) ){
 			return new WP_Error(
 				'container_not_found',
@@ -160,7 +160,7 @@ class blcLinkInstance {
 		}
 		
 		//Get the parser.
-		$parser = & $this->get_parser();
+		$parser = $this->get_parser();
 		if ( is_null($parser) ){
 			return new WP_Error(
 				'parser_not_found', 
@@ -306,7 +306,7 @@ class blcLinkInstance {
    * @return string The associated URL, or an empty string if the instance is currently not assigned to any link.
    */
 	function get_url(){
-		$link = & $this->get_link();
+		$link = $this->get_link();
 		
 		if ( !is_null($link) ){
 			return $link->url;
@@ -320,9 +320,9 @@ class blcLinkInstance {
    *
    * @return blcContainer|null
    */
-	function &get_container(){
+	function get_container(){
 		if( is_null($this->_container) ){
-			$this->_container = & blcContainerHelper::get_container( array($this->container_type, $this->container_id) );
+			$this->_container = blcContainerHelper::get_container( array($this->container_type, $this->container_id) );
 		}
 		
 		return $this->_container;
@@ -354,9 +354,9 @@ class blcLinkInstance {
    *
    * @return blcParser|null
    */
-	function &get_parser(){
+	function get_parser(){
 		if ( is_null($this->_parser) ){
-			$this->_parser = & blcParserHelper::get_parser($this->parser_type);
+			$this->_parser = blcParserHelper::get_parser($this->parser_type);
 		}
 		
 		return $this->_parser;
@@ -383,7 +383,7 @@ class blcLinkInstance {
    *
    * @return blcLink|null
    */
-	function &get_link(){
+	function get_link(){
 		if ( !is_null($this->_link) ){
 			return $this->_link;
 		}
@@ -419,7 +419,7 @@ class blcLinkInstance {
    * @return string HTML 
    */
 	function ui_get_link_text($context = 'display'){
-		$parser = & $this->get_parser();
+		$parser = $this->get_parser();
 		
 		if ( !is_null($parser) ){
 			$text = $parser->ui_get_link_text($this, $context);
@@ -441,7 +441,7 @@ class blcLinkInstance {
    */
 	function ui_get_action_links(){
 		//The container is responsible for generating the links.
-		$container = & $this->get_container();
+		$container = $this->get_container();
 		if ( !is_null($container) ){
 			return $container->ui_get_action_links($this->container_field);
 		} else {
@@ -459,7 +459,7 @@ class blcLinkInstance {
    */
 	function ui_get_source($context = 'display'){
 		//The container is also responsible for generating the "Source" column HTML.
-		$container = & $this->get_container();
+		$container = $this->get_container();
 		if ( !is_null($container) ){
 			return $container->ui_get_source($this->container_field, $context);
 		} else {
@@ -492,7 +492,7 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
 	
 	//Skip instances that reference containers or parsers that aren't currently loaded
 	if ( !$include_invalid ){
-		$manager = & blcModuleManager::getInstance();
+		$manager = blcModuleManager::getInstance();
 		$active_containers = $manager->get_escaped_ids('container');
 		$active_parsers = $manager->get_escaped_ids('parser');
 		
@@ -556,7 +556,7 @@ function blc_get_usable_instance_count(){
 	$q = "SELECT COUNT(instance_id) FROM {$wpdb->prefix}blc_instances WHERE 1";
 	
 	//Skip instances that reference containers or parsers that aren't currently loaded
-	$manager = & blcModuleManager::getInstance();
+	$manager = blcModuleManager::getInstance();
 	$active_containers = $manager->get_escaped_ids('container');
 	$active_parsers = $manager->get_escaped_ids('parser');
 	
@@ -586,7 +586,7 @@ function blc_cleanup_instances(){
 	$blclog->log(sprintf('... %d instances deleted', $wpdb->rows_affected));
 	
 	//Delete instances that reference containers and parsers that are no longer active
-	$manager = & blcModuleManager::getInstance();
+	$manager = blcModuleManager::getInstance();
 	$active_containers = $manager->get_escaped_ids('container');
 	$active_parsers = $manager->get_escaped_ids('parser');
 	

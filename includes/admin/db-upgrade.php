@@ -10,7 +10,7 @@ class blcDatabaseUpgrader {
     function upgrade_database(){
 		global $wpdb, $blclog;
 		
-		$conf = &blc_get_configuration();
+		$conf = blc_get_configuration();
 		$current = $conf->options['current_db_version'];
 		
 		if ( ($current != 0) && ( $current < 4 ) ){
@@ -549,12 +549,12 @@ class blcTableDelta {
 	function generate_index_string($definition){
 		
 		//Rebuild the index def. in a normalized form
-		$index_definition = ''; 
+		$index_definition = '';
 		if ( !empty($definition['index_modifier']) ){
 			$index_definition .= strtoupper($definition['index_modifier']) . ' ';
 		}
 		$index_definition .= 'KEY';
-		if ( $definition['index_modifier'] != 'primary' ){
+		if ( empty($definition['index_modifier']) || ($definition['index_modifier'] != 'primary') ){
 			$index_definition .= ' `' . $definition['name'].'`';
 		}
 		

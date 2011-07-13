@@ -72,11 +72,7 @@ class blcLinkQuery {
 		);
 	}
 	
-	function blcLinkQuery(){
-		$this->__construct();
-	}
-	
-	function &getInstance(){
+	static function getInstance(){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcLinkQuery;
@@ -264,7 +260,7 @@ class blcLinkQuery {
 		if ( empty($params['include_invalid']) ){
 			$join_instances = true;
 			
-			$module_manager = & blcModuleManager::getInstance();
+			$module_manager = blcModuleManager::getInstance();
 			$loaded_containers = array_keys($module_manager->get_active_by_category('container'));
 			$loaded_parsers = array_keys($module_manager->get_active_by_category('parser'));
 			
@@ -757,7 +753,7 @@ class blcLinkQuery {
  * @return int|array Either an array of blcLink objects, or the number of results for the query.
  */
 function blc_get_links($params = null){
-	$instance = & blcLinkQuery::getInstance();
+	$instance = blcLinkQuery::getInstance();
 	return $instance->get_links($params);
 }
 

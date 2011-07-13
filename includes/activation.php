@@ -32,7 +32,7 @@ require_once BLC_DIRECTORY . '/includes/utility-class.php';
 
 //Load the module subsystem
 require_once BLC_DIRECTORY . '/includes/modules.php';
-$moduleManager = & blcModuleManager::getInstance();	
+$moduleManager = blcModuleManager::getInstance();	
        
 //If upgrading, activate/deactivate custom field and comment containers based on old ver. settings
 if ( isset($blc_config_manager->options['check_comment_links']) ){

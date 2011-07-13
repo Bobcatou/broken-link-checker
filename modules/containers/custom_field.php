@@ -108,7 +108,7 @@ class blcPostMeta extends blcContainer {
 				'metadata_delete_failed',
 				sprintf(
 					__("Failed to delete the meta field '%s' on %s [%d]", 'broken-link-checker'), 
-					$field, 
+					$field_name,
 					$this->meta_type, 
 					$this->container_id
 				)
@@ -514,7 +514,7 @@ class blcPostMetaManager extends blcContainerManager {
 		
 		//Metadata changes only matter to us if the modified key 
 		//is one that the user wants checked. 
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		if ( !is_array($conf->options['custom_fields']) ){
 			return;
 		}
@@ -522,7 +522,7 @@ class blcPostMetaManager extends blcContainerManager {
 			return;
 		}
 		
-		$container = & blcContainerHelper::get_container( array($this->container_type, intval($object_id)) );
+		$container = blcContainerHelper::get_container( array($this->container_type, intval($object_id)) );
 		$container->mark_as_unsynched();
 	}
 	
@@ -534,7 +534,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_deleted($post_id){
 		//Get the associated container object
-		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
+		$container = blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		//Delete it
 		$container->delete();
 		//Clean up any dangling links
@@ -550,7 +550,7 @@ class blcPostMetaManager extends blcContainerManager {
    */
 	function post_untrashed($post_id){
 		//Get the associated container object
-		$container = & blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
+		$container = blcContainerHelper::get_container( array($this->container_type, intval($post_id)) );
 		$container->mark_as_unsynched();
 	}
 	

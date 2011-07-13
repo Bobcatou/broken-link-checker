@@ -11,7 +11,7 @@ require 'containers.php';
 require 'checkers.php';
 require 'parsers.php';
 
-$blc_module_manager = & blcModuleManager::getInstance(array( 
+$blc_module_manager = blcModuleManager::getInstance(array(
 		//List of modules active by default 
 		'http',             //Link checker for the HTTP(s) protocol
 		'link',             //HTML link parser

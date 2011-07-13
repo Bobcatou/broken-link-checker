@@ -73,8 +73,8 @@ class blcCheckerHelper {
 	 * @param string $checker_id
 	 * @return blcChecker
 	 */
-	function &get_checker($checker_id){
-		$manager = & blcModuleManager::getInstance();
+	static function get_checker($checker_id){
+		$manager = blcModuleManager::getInstance();
 		return $manager->get_module($checker_id, true, 'checker');
 	}
 	
@@ -84,10 +84,10 @@ class blcCheckerHelper {
    * @param string $url
    * @return blcChecker|null
    */
-	function &get_checker_for($url){
+	static function get_checker_for($url){
 		$parsed = @parse_url($url);
 		
-		$manager = & blcModuleManager::getInstance();
+		$manager = blcModuleManager::getInstance();
 		$active_checkers = $manager->get_active_by_category('checker'); 
 		
 		foreach($active_checkers as $module_id => $module_data){
@@ -99,7 +99,7 @@ class blcCheckerHelper {
 				}
 			}
 			
-			$checker = & $manager->get_module($module_id);
+			$checker = $manager->get_module($module_id);
 			
 			if ( !$checker ){
 				continue;
@@ -112,8 +112,9 @@ class blcCheckerHelper {
 				return $checker;
 			}
 		}
-		
-		return null;
+
+		$checker = null;
+		return $checker;
 	}
 }
 		

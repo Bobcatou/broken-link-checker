@@ -251,7 +251,7 @@ class blcLink {
 		);
         
         
-        $checker = & blcCheckerHelper::get_checker_for($this->get_ascii_url());
+        $checker = blcCheckerHelper::get_checker_for($this->get_ascii_url());
         
 		if ( is_null($checker) ){
 			//Oops, there are no checker implementations that can handle this link.

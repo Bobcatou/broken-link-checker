@@ -147,7 +147,7 @@ class blcMediaFireChecker extends blcChecker {
 			);
 		}
 		
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		$args = array(
 			'timeout' => $conf->options['timeout'],
 			'redirection' => 0,

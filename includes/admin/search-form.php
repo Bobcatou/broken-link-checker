@@ -57,7 +57,7 @@
 			$search_subfilter = 'all';
 		}
 		
-		$linkQuery = & blcLinkQuery::getInstance();
+		$linkQuery = blcLinkQuery::getInstance();
 		foreach ($linkQuery->native_filters as $filter => $data){
 			$selected = ($search_subfilter == $filter)?' selected="selected"':'';
 			printf('<option value="%s"%s>%s</option>', $filter, $selected, $data['name']);
@@ -69,7 +69,7 @@
 	<select name="s_link_type" id="s_link_type">
 		<option value=""><?php _e('Any', 'broken-link-checker'); ?></option>
 		<?php
-		$moduleManager = &blcModuleManager::getInstance();
+		$moduleManager = blcModuleManager::getInstance();
 		
 		printf('<optgroup label="%s">', esc_attr(__('Links used in', 'broken-link-checker')));
 		$containers = $moduleManager->get_modules_by_category('container', false, true);

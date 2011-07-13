@@ -37,7 +37,7 @@ class blcUtility {
    *
    * @return bool
    */
-	function is_safe_mode(){
+	static function is_safe_mode(){
 		$safe_mode = ini_get('safe_mode');
 		//Null, 0, '', '0' and so on count as false 
 		if ( !$safe_mode ) return false;
@@ -64,7 +64,7 @@ class blcUtility {
    *
    * @return bool
    */
-	function is_open_basedir(){
+	static function is_open_basedir(){
 		$open_basedir = ini_get('open_basedir');
 		return $open_basedir && ( strtolower($open_basedir) != 'none' );
 	}
@@ -78,7 +78,7 @@ class blcUtility {
    * @param string $pad Pad the truncated string with this string. Defaults to an HTML ellipsis.
    * @return
    */
-	function truncate($text, $max_characters = 0, $break = ' ', $pad = '&hellip;'){
+	static function truncate($text, $max_characters = 0, $break = ' ', $pad = '&hellip;'){
 		if ( strlen($text) <= $max_characters ){
 			return $text;
 		}
@@ -117,7 +117,7 @@ class blcUtility {
 	 *
 	 * @return array An array of extracted tags, or an empty array if no matching tags were found. 
 	 */
-	function extract_tags( $html, $tag, $selfclosing = null, $return_the_entire_tag = false, $charset = 'ISO-8859-1' ){
+	static function extract_tags( $html, $tag, $selfclosing = null, $return_the_entire_tag = false, $charset = 'ISO-8859-1' ){
 	 
 		if ( is_array($tag) ){
 			$tag = implode('|', $tag);
@@ -226,11 +226,11 @@ class blcUtility {
 	 * @param string $html
 	 * @return array 
 	 */
-	function extract_embeds($html){
+	static function extract_embeds($html){
 		$results = array();
 		
 		//remove all <code></code> blocks first
-		$content = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $content);
+		$html = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $html);
 		
 		//Find likely-looking <object> elements
 		$objects = blcUtility::extract_tags($html, 'object', false, true);
@@ -259,7 +259,7 @@ class blcUtility {
      * @param string $default_value Optional. If the cookie is not set, this value will be returned instead. Defaults to an empty string.
      * @return mixed Either the value of the requested cookie, or $default_value.
      */
-    function get_cookie($cookie_name, $default_value = ''){
+    static function get_cookie($cookie_name, $default_value = ''){
     	if ( isset($_COOKIE[$cookie_name]) ){
     		return $_COOKIE[$cookie_name];
     	} else {
@@ -274,7 +274,7 @@ class blcUtility {
    * @param string $type Optional. The output template to use. 
    * @return string
    */
-	function fuzzy_delta($delta, $template = 'default'){
+	static function fuzzy_delta($delta, $template = 'default'){
 		$ONE_MINUTE = 60;
 		$ONE_HOUR = 60 * $ONE_MINUTE;
 		$ONE_DAY = 24 * $ONE_HOUR;
@@ -340,7 +340,7 @@ class blcUtility {
    *
    * @return void
    */
-	function optimize_database(){
+	static function optimize_database(){
 		global $wpdb;
 		
 		$wpdb->query("OPTIMIZE TABLE {$wpdb->prefix}blc_links, {$wpdb->prefix}blc_instances, {$wpdb->prefix}blc_synch");
@@ -354,7 +354,7 @@ class blcUtility {
    * @param integer $cache How long the load averages may be cached, in seconds. Set to 0 to get maximally up-to-date data.
    * @return array|null Array, or NULL if retrieving load data is impossible (e.g. when running on a Windows box). 
    */
-	function get_server_load($cache = 5){
+	static function get_server_load($cache = 5){
 		static $cached_load = null;
 		static $cached_when = 0;
 		
@@ -386,7 +386,7 @@ class blcUtility {
 	 * @param string $charset The character encoding of the $url parameter. Defaults to the encoding set in Settings -> Reading.
 	 * @return string
 	 */
-	function idn_to_ascii($url, $charset = ''){
+	static function idn_to_ascii($url, $charset = ''){
 		$idn = blcUtility::get_idna_converter();
 		if ( $idn != null ){
 			if ( empty($charset) ){
@@ -413,7 +413,7 @@ class blcUtility {
 	 * @param string $url
 	 * @return string
 	 */
-	function idn_to_utf8($url){
+	static function idn_to_utf8($url){
 		$idn = blcUtility::get_idna_converter();		
 		if ( $idn != null ){
 			$url = $idn->decode($url);
@@ -427,7 +427,7 @@ class blcUtility {
 	 * 
 	 * @return object Either an instance of idna_converter, or NULL if the converter class is not available
 	 */
-	function get_idna_converter(){
+	static function get_idna_converter(){
 		static $idn = null;
 		if ( ($idn == null) && class_exists('idna_convert') ){
 			$idn = new idna_convert();

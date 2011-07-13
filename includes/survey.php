@@ -6,7 +6,7 @@
  */
 
 //Appearify the survey notice to people who have used BLC for at least 2 weeks (doesn't need to be very accurate) 
-$blc_config = &blc_get_configuration();
+$blc_config = blc_get_configuration();
 $blc_show_survey = empty($blc_config->options['hide_surveyio_notice'])     
 	           && !empty($blc_config->options['first_installation_timestamp'])  
                && ( time() - $blc_config->options['first_installation_timestamp'] > 2*7*24*60*60 ); 
@@ -26,7 +26,7 @@ function blc_display_survey_notice(){
 	
 	if ( !empty($_GET['dismiss-blc-survey']) ){
 		//The user has chosen to hide the survey notice
-		$blc_config = &blc_get_configuration();
+		$blc_config = blc_get_configuration();
 		$blc_config->options['hide_surveyio_notice'] = true;
 		$blc_config->save_options();
 		return;

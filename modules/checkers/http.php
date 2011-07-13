@@ -141,7 +141,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		$log = '';
 		
 		//Get the BLC configuration. It's used below to set the right timeout values and such.
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		
 		//Init curl.
 	 	$ch = curl_init();
@@ -296,7 +296,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		$log .= " ===\n\n";
         $log .= $this->last_headers;
         
-        if ( $result['broken'] && $result['timeout'] ) {
+        if ( !empty($result['broken']) && !empty($result['timeout']) ) {
 			$log .= "\n(" . __("Most likely the connection timed out or the domain doesn't exist.", 'broken-link-checker') . ')';
 		}
         
@@ -306,8 +306,8 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		//link is working.  
         $result['result_hash'] = implode('|', array(
 			$result['http_code'],
-			$result['broken']?'broken':'0', 
-			$result['timeout']?'timeout':'0',
+			!empty($result['broken'])?'broken':'0',
+			!empty($result['timeout'])?'timeout':'0',
 			md5($result['final_url']),
 		));
         
@@ -334,7 +334,7 @@ class blcSnoopyHttp extends blcHttpCheckerBase {
 		$log = '';
 		
 		//Get the timeout setting from the BLC configuration. 
-		$conf = & blc_get_configuration();
+		$conf = blc_get_configuration();
 		$timeout = $conf->options['timeout'];
 		
 		$start_time = microtime_float();

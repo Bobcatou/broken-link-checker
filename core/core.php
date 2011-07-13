@@ -279,7 +279,7 @@ class wsBrokenLinkChecker {
 		wp_clear_scheduled_hook('blc_cron_check_news');
 		//Note the deactivation time for each module. This will help them 
 		//synch up propely if/when the plugin is reactivated.
-		$moduleManager = & blcModuleManager::getInstance();
+		$moduleManager = blcModuleManager::getInstance();
 		$the_time = current_time('timestamp');
 		foreach($moduleManager->get_active_modules() as $module_id => $module){
 			$this->conf->options['module_deactivated_when'][$module_id] = $the_time;
@@ -325,7 +325,7 @@ class wsBrokenLinkChecker {
 			//To make it easier to notice when broken links appear, display the current number of 
 			//broken links in a little bubble notification in the "Broken Links" menu.  
 			//(Similar to how the number of plugin updates and unmoderated comments is displayed).
-			$blc_link_query = & blcLinkQuery::getInstance();
+			$blc_link_query = blcLinkQuery::getInstance();
 			$broken_links = $blc_link_query->get_filter_links('broken', array('count_only' => true));
 			if ( $broken_links > 0 ){
 				//TODO: Appropriating existing CSS classes for my own purposes is hacky. Fix eventually. 
@@ -406,7 +406,7 @@ class wsBrokenLinkChecker {
     function options_page(){
     	global $blclog;
     	
-    	$moduleManager = &blcModuleManager::getInstance();
+    	$moduleManager = blcModuleManager::getInstance();
     	
     	//Sanity check : make sure the DB is all set up 
     	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -534,7 +534,7 @@ class wsBrokenLinkChecker {
 			 inefficient.  
 			 */
 			if ( ( count($diff1) > 0 ) || ( count($diff2) > 0 ) ){
-				$manager = & blcContainerHelper::get_manager('custom_field');
+				$manager = blcContainerHelper::get_manager('custom_field');
 				if ( !is_null($manager) ){
 					$manager->resynch();
 					blc_got_unsynched_items();
@@ -1038,7 +1038,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function print_module_list($modules, $current_settings){
-    	$moduleManager = &blcModuleManager::getInstance();
+    	$moduleManager = blcModuleManager::getInstance();
     	
     	foreach($modules as $module_id => $module_data){
 			$module_id = $module_data['ModuleID'];
@@ -1174,7 +1174,7 @@ class wsBrokenLinkChecker {
     function links_page(){
         global $wpdb, $blclog;
         
-        $blc_link_query = & blcLinkQuery::getInstance();
+        $blc_link_query = blcLinkQuery::getInstance();
         
         //Sanity check : Make sure the plugin's tables are all set up.
         if ( $this->db_version != $this->conf->options['current_db_version'] ) {
@@ -1187,7 +1187,7 @@ class wsBrokenLinkChecker {
 		}
 		
 		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
-        $moduleManager = &blcModuleManager::getInstance();
+        $moduleManager = blcModuleManager::getInstance();
         $moduleManager->validate_active_modules();
         
         if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
@@ -1335,6 +1335,8 @@ class wsBrokenLinkChecker {
    * @return array Message and the CSS class to apply to the message.  
    */
     function do_create_custom_filter(){
+	    global $wpdb;
+
 		//Create a custom filter!
     	check_admin_referer( 'create-custom-filter' );
     	$msg_class = 'updated';
@@ -1349,7 +1351,7 @@ class wsBrokenLinkChecker {
 			$msg_class = 'error';
 		} else {
 			//Save the new filter
-			$blc_link_query = & blcLinkQuery::getInstance();
+			$blc_link_query = blcLinkQuery::getInstance();
 			$filter_id = $blc_link_query->create_custom_filter($_POST['name'], $_POST['params']);
 			
 			if ( $filter_id ){
@@ -1385,7 +1387,7 @@ class wsBrokenLinkChecker {
 			$msg_class = 'error';
 		} else {
 			//Try to delete the filter
-			$blc_link_query = & blcLinkQuery::getInstance();
+			$blc_link_query = blcLinkQuery::getInstance();
 			if ( $blc_link_query->delete_custom_filter($_POST['filter_id']) ){
 				//Success
 				$message = __('Filter deleted', 'broken-link-checker');
@@ -2021,7 +2023,7 @@ class wsBrokenLinkChecker {
 		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
 		//encountered when activating the plugin.
 		//(Disable when debugging or you won't get the FirePHP output)
-		if ( !defined('BLC_DEBUG') || !constant('BLC_DEBUG')){
+		if ( !headers_sent() && (!defined('BLC_DEBUG') || !constant('BLC_DEBUG')) ){
 			@ob_end_clean(); //Discard the existing buffer, if any
 	 		header("Connection: close");
 			ob_start();
@@ -2033,7 +2035,7 @@ class wsBrokenLinkChecker {
  		}
  		
  		//Load modules for this context
- 		$moduleManager = & blcModuleManager::getInstance();
+ 		$moduleManager = blcModuleManager::getInstance();
  		$moduleManager->load_modules('work');
  		
  		
@@ -2189,7 +2191,7 @@ class wsBrokenLinkChecker {
 		
 		//Only check links that have at least one valid instance (i.e. an instance exists and 
 		//it corresponds to one of the currently loaded container/parser types).
-		$manager = & blcModuleManager::getInstance();
+		$manager = blcModuleManager::getInstance();
 		$loaded_containers = $manager->get_escaped_ids('container');
 		$loaded_parsers = $manager->get_escaped_ids('parser');
 		
@@ -2369,7 +2371,7 @@ class wsBrokenLinkChecker {
    */
 	function get_status(){
 		global $wpdb;
-		$blc_link_query = & blcLinkQuery::getInstance();
+		$blc_link_query = blcLinkQuery::getInstance();
 		
 		$check_threshold=date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold=date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
@@ -2457,7 +2459,7 @@ class wsBrokenLinkChecker {
 			$new_url = $_GET['new_url'];
 			$new_url = stripslashes($new_url);
 			
-			$parsed = @parse_url($parsed);
+			$parsed = @parse_url($new_url);
 			if ( !$parsed ){
 				die( json_encode( array(
 					'error' => __("Oops, the new URL is invalid!", 'broken-link-checker') 

@@ -140,7 +140,7 @@ if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
  *
  * @return blcConfigurationManager
  */
-function &blc_get_configuration(){
+function blc_get_configuration(){
 	return $GLOBALS['blc_config_manager'];
 }
 
@@ -151,7 +151,7 @@ function &blc_get_configuration(){
  * @return void
  */
 function blc_got_unsynched_items(){
-	$conf = & blc_get_configuration();
+	$conf = blc_get_configuration();
 	
 	if ( !$conf->options['need_resynch'] ){
 		$conf->options['need_resynch'] = true;

@@ -24,7 +24,7 @@ class blcModuleManager {
 	function init($default_active_modules = null){
 		$this->module_dir = realpath(dirname(__FILE__) . '/../modules');
 		
-		$this->plugin_conf = & blc_get_configuration();
+		$this->plugin_conf = blc_get_configuration();
 		$this->default_active_modules = $default_active_modules;
 		
 		$this->loaded = array();
@@ -39,7 +39,7 @@ class blcModuleManager {
 	 * @param array|null $default_active_modules
 	 * @return object
 	 */
-	function &getInstance($default_active_modules = null){
+	static function getInstance($default_active_modules = null){
 		static $instance = null;
 		if ( is_null($instance) ){
 			$instance = new blcModuleManager();
@@ -248,7 +248,7 @@ class blcModuleManager {
 	 * @param string $category Optional. Return the module only if it's in a specific category. Categories are ignored by default.
 	 * @return blcModule A reference to a module object, or NULL on error. 
 	 */
-	function &get_module($module_id, $autoload = true, $category=''){
+	function get_module($module_id, $autoload = true, $category=''){
         $no_result = null;
 		if ( !is_string($module_id) ){
 			//$backtrace = debug_backtrace();
@@ -273,7 +273,7 @@ class blcModuleManager {
 			}
 		}
 		
-		$module = &$this->init_module($module_id);
+		$module = $this->init_module($module_id);
 		return $module;
 	}
 	
@@ -377,7 +377,7 @@ class blcModuleManager {
 			$this->_category_cache_active = null; 
 			
 			//Notify the module that it's been activated
-			$module = & $this->get_module($module_id);
+			$module = $this->get_module($module_id);
 			if ( $module ){
 				$module->activated();
 			}
@@ -405,7 +405,7 @@ class blcModuleManager {
 		}
 		
 		//Notify the module that it's being deactivated
-		$module = & $this->get_module($module_id);
+		$module = $this->get_module($module_id);
 		if ( $module ){
 			$module->deactivated();
 		}
@@ -487,7 +487,7 @@ class blcModuleManager {
 		$active = $this->get_active_modules();
 		foreach($active as $module_id => $module_data){
 			$blclog->log( sprintf('... Notifying module "%s"', $module_id) );
-			$module = & $this->get_module($module_id);
+			$module = $this->get_module($module_id);
 			if ( $module ){
 				$module->activated();
 			} else {
@@ -602,7 +602,7 @@ class blcModuleManager {
 	 * @param array $module_data Optional. The header data of the module that needs to be instantiated. If not specified, it will be retrieved automatically.  
 	 * @return object The newly instantiated module object (extends blcModule), or NULL on error.
 	 */
-	function &init_module($module_id, $module_data = null){
+	function init_module($module_id, $module_data = null){
 		//Each module is only instantiated once.
 		if ( isset($this->instances[$module_id]) ){
 			return $this->instances[$module_id];
