@@ -30,30 +30,6 @@
 	</div>					
 </div>
 
-<?php
-//Basic split-testing. Pick a line at random and remember our choice for later.
-$copy_versions = array(
-	'cy1' => 'A link checker for your <em>other</em> sites.',
-	'c3' => 'A link checker for <span style="white-space:nowrap;">non-WordPress</span> sites.',
-	'b3' => 'Broken link checker for non-WordPress sites.',
-	'c4' => 'A link checker that works with any site, not just WordPress.',
-	'c5' => 'Link checker as a web app.',
-);
-
-$configuration = blc_get_configuration();
-$key = $configuration->get('_findbroken_ad');
-if ( ($key == null) || !array_key_exists($key, $copy_versions) ){
-	//Pick a random version of the ad.
-	$keys = array_keys($copy_versions);
-	$key = $keys[rand(0, count($keys)-1)];
-	$configuration->set('_findbroken_ad', $key);
-	$configuration->save_options();
-}
-
-$text = $copy_versions[$key];
-$url = 'http://findbroken.com/blc?source=the-plugin&line='.urlencode($key);
-$image_url = plugins_url('images/findbroken.png', BLC_PLUGIN_FILE);
-?>
 <style>
 #advertising .inside {
 	text-align: left;
@@ -64,13 +40,28 @@ $image_url = plugins_url('images/findbroken.png', BLC_PLUGIN_FILE);
 	border: 0;
 }
 </style>
+
+<?php
+$otherPlugins = array(
+	'Google Keyword Tracker' => '#',
+	'Raw HTML' => 'http://wpplugins.com/plugin/850/raw-html-pro',
+	'Admin Menu Editor' => 'http://wpplugins.com/plugin/146/admin-menu-editor-pro',
+);
+?>
 <div id="advertising" class="postbox">
-	<h3 class="hndle">Recommended</h3>
+	<h3 class="hndle">More plugins by Janis Elsts</h3>
 	<div class="inside">
-		<a href="<?php echo esc_attr($url); ?>" title="FindBroken.com">
-			<img src="<?php echo esc_attr($image_url); ?>"">
-		</a>
-		<?php echo $text; ?>
+		<ul>
+			<?php
+			foreach($otherPlugins as $plugin => $url){
+				printf(
+					'<li><a href="%s">%s</a></li>',
+					esc_attr($url),
+					$plugin
+				);
+			}
+			?>
+		</ul>
 	</div>					
 </div>
 
