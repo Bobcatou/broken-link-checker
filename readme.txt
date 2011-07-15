@@ -96,6 +96,7 @@ To upgrade your installation
 * Fixed a fatal error caused by class-json.php not being available in later versions of WP. This only affects servers running PHP < 5.2.
 * Updated Chinese (TW) translation.
 * Updated Portuguese translation.
+* Updated Italian translation (minor fix).
 * Replaced the link to FindBroken with a short list of (some of) my other plugins.
 
 = 1.2.5 =
