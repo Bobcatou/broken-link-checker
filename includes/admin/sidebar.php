@@ -43,7 +43,7 @@
 
 <?php
 $otherPlugins = array(
-	'Google Keyword Tracker' => '#',
+	'Google Keyword Tracker' => 'http://wpplugins.com/plugin/876/google-keyword-tracker',
 	'Raw HTML' => 'http://wpplugins.com/plugin/850/raw-html-pro',
 	'Admin Menu Editor' => 'http://wpplugins.com/plugin/146/admin-menu-editor-pro',
 );
