@@ -64,20 +64,3 @@ $otherPlugins = array(
 		</ul>
 	</div>					
 </div>
-
-<?php
-//This ad currently disabled.
-/*
-?>
-<div id="advertising2" class="postbox">
-	<h3 class="hndle"><?php _e('Recommended', 'broken-link-checker'); ?></h3>
-	<div class="inside" style="text-align: center;">
-		<a href="http://www.maxcdn.com/wordpress-cdn.php?type=banner&&affId=102167&&img=c_160x600_maxcdn_simple.gif">
-			<img src="<?php echo esc_attr(plugins_url('images/maxcdn.gif', BLC_PLUGIN_FILE)); ?>" border=0>
-		</a>
-		<img src="http://impression.clickinc.com/impressions/servlet/Impression?merchant=70291&&type=impression&&affId=102167&&img=c_160x600_maxcdn_simple.gif" style="display:none" border=0>
-	</div>					
-</div>
-<?php
-//*/
-?>
