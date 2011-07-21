@@ -93,7 +93,7 @@ To upgrade your installation
 * Fixed a whole lot of PHP 5 related notices and strict-mode warnings.
 * Fixed some inconsistent method declarations.
 * Fixed a long-standing bug in the ver. 0.9.5 upgrade routine.
-* Fixed a fatal error caused by class-json.php not being available in later versions of WP. This only affects servers running PHP < 5.2.
+* Fixed the look and behavior of the "Feedback" and "Go to Broken Links/Go to Settings" links to be consistent with other WP screen meta links.
 * Updated Chinese (TW) translation.
 * Updated Portuguese translation.
 * Updated Italian translation (minor fix).
