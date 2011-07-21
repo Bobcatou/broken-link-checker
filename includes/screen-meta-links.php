@@ -2,11 +2,11 @@
 
 /**
  * @author Janis Elsts
- * @copyright 2010
+ * @copyright 2011
  */
 
 
-if ( !class_exists('wsScreenMetaLinks10') ):
+if ( !class_exists('wsScreenMetaLinks11') ):
 
 //Load JSON functions for PHP < 5.2
 if ( !(function_exists('json_encode') && function_exists('json_decode')) && !(class_exists('Services_JSON') || class_exists('Moxiecode_JSON')) ){
@@ -20,7 +20,7 @@ if ( !(function_exists('json_encode') && function_exists('json_decode')) && !(cl
 	}
 }
  
-class wsScreenMetaLinks10 {
+class wsScreenMetaLinks11 {
 	var $registered_links; //List of meta links registered for each page. 
 	
 	/**
@@ -28,7 +28,7 @@ class wsScreenMetaLinks10 {
 	 * 
 	 * @return void
 	 */
-	function wsScreenMetaLinks10(){
+	function wsScreenMetaLinks11(){
 		$this->registered_links = array();
 		
 		add_action('admin_notices', array(&$this, 'append_meta_links'));
@@ -235,7 +235,7 @@ global $ws_screen_meta_links_versions;
 if ( !isset($ws_screen_meta_links_versions) ){
 	$ws_screen_meta_links_versions = array();
 } 
-$ws_screen_meta_links_versions['1.0'] = 'wsScreenMetaLinks10';
+$ws_screen_meta_links_versions['1.1'] = 'wsScreenMetaLinks11';
 
 endif;
 
