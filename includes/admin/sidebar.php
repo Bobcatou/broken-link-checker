@@ -30,37 +30,40 @@
 	</div>					
 </div>
 
+<?php
+if ( !function_exists('fetch_feed') ){
+	include_once(ABSPATH . WPINC . '/feed.php');
+}
+if ( function_exists('fetch_feed') ):
+	$feed_url = 'http://w-shadow.com/files/blc-plugin-links.rss';
+	$num_items = 3;
+	
+	$feed = fetch_feed($feed_url);
+	if ( !is_wp_error($feed) ):	
+?>
 <style>
 #advertising .inside {
 	text-align: left;
 }
-#advertising .inside img {
-	display: block;
-	margin: 1em auto 0.5em 0;
-	border: 0;
-}
 </style>
-
-<?php
-$otherPlugins = array(
-	'Google Keyword Tracker' => 'http://wpplugins.com/plugin/876/google-keyword-tracker',
-	'Raw HTML' => 'http://wpplugins.com/plugin/850/raw-html-pro',
-	'Admin Menu Editor' => 'http://wpplugins.com/plugin/146/admin-menu-editor-pro',
-);
-?>
 <div id="advertising" class="postbox">
 	<h3 class="hndle">More plugins by Janis Elsts</h3>
 	<div class="inside">
 		<ul>
-			<?php
-			foreach($otherPlugins as $plugin => $url){
-				printf(
-					'<li><a href="%s">%s</a></li>',
-					esc_attr($url),
-					$plugin
-				);
-			}
-			?>
+		<?php
+		foreach($feed->get_items(0, $num_items) as $item) {
+			printf(
+				'<li><a href="%1$s" title="%2$s">%3$s</a></li>',
+				esc_url( $item->get_link() ),
+				esc_attr( strip_tags( $item->get_title() ) ),
+				esc_html( $item->get_title() )
+			);
+		}
+		?>
 		</ul>
 	</div>					
 </div>
+<?php
+	endif; 
+endif; 
+?>
