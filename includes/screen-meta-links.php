@@ -100,7 +100,7 @@ class wsScreenMetaLinks10 {
 						$('<div/>')
 							.attr({
 								'id' : links[i].id + '-wrap',
-								'class' : 'hide-if-no-js screen-meta-toggle custom-screen-meta-link-wrap'
+								'class' : 'hide-if-no-js custom-screen-meta-link-wrap'
 							})
 							.append( $('<a/>', links[i]) )
 					);
@@ -153,21 +153,32 @@ class wsScreenMetaLinks10 {
 			float: right;
 			height: 22px;
 			padding: 0;
-			margin: 0 6px 0 0;
-			font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
-			background: #e3e3e3;
-			
-			border-bottom-left-radius: 3px;
-			border-bottom-right-radius: 3px;
+			margin: 0 0 0 6px;
+			font-family: sans-serif;
 			-moz-border-radius-bottomleft: 3px;
 			-moz-border-radius-bottomright: 3px;
 			-webkit-border-bottom-left-radius: 3px;
 			-webkit-border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 3px;
+			
+			background: #e3e3e3;
+			
+			border-right: 1px solid transparent;
+			border-left: 1px solid transparent;
+			border-bottom: 1px solid transparent;
+			background-image: -ms-linear-gradient(bottom, #dfdfdf, #f1f1f1); /* IE10 */
+			background-image: -moz-linear-gradient(bottom, #dfdfdf, #f1f1f1); /* Firefox */
+			background-image: -o-linear-gradient(bottom, #dfdfdf, #f1f1f1); /* Opera */
+			background-image: -webkit-gradient(linear, left bottom, left top, from(#dfdfdf), to(#f1f1f1)); /* old Webkit */
+			background-image: -webkit-linear-gradient(bottom, #dfdfdf, #f1f1f1); /* new Webkit */
+			background-image: linear-gradient(bottom, #dfdfdf, #f1f1f1); /* proposed W3C Markup */
 		}
 		
 		#screen-meta .custom-screen-meta-link-wrap a.custom-screen-meta-link {
 			background-image: none;
 			padding-right: 6px;
+			color: #777;
 		}
 		</style>
 		<?php
