@@ -88,7 +88,7 @@ To upgrade your installation
 
 == Changelog ==
 
-= 1.2.6 =
+= 1.3 =
 * Dropped PHP 4 support.
 * Fixed a whole lot of PHP 5 related notices and strict-mode warnings.
 * Fixed some inconsistent method declarations.
