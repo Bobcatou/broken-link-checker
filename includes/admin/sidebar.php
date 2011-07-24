@@ -47,7 +47,7 @@ if ( function_exists('fetch_feed') ):
 }
 </style>
 <div id="advertising" class="postbox">
-	<h3 class="hndle">More plugins by Janis Elsts</h3>
+	<h3 class="hndle"><?php _e('More plugins by Janis Elsts', 'broken-link-checker'); ?></h3>
 	<div class="inside">
 		<ul>
 		<?php
