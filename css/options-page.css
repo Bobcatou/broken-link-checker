@@ -105,6 +105,8 @@ ul.ui-tabs-nav {
 	overflow: hidden;
 	white-space: nowrap;
 	padding-right: 3.5em;
+	
+	line-height: 5px;
 }
 
 ul.ui-tabs-nav li {
