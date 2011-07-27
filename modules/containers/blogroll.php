@@ -44,7 +44,7 @@ class blcBookmark extends blcContainer{
       	$actions = array();
 		if ( current_user_can('manage_links') ) {
 			$actions['edit'] = '<span class="edit"><a href="' . $this->get_edit_url() . '" title="' . esc_attr(__('Edit this bookmark', 'broken-link-checker')) . '">' . __('Edit') . '</a>';
-			$actions['delete'] = "<span class='delete'><a class='submitdelete' href='" . esc_url($delete_url) . "' onclick=\"if ( confirm('" . js_escape(sprintf( __("You are about to delete this link '%s'\n  'Cancel' to stop, 'OK' to delete."), $bookmark->link_name)) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
+			$actions['delete'] = "<span class='delete'><a class='submitdelete' href='" . esc_url($delete_url) . "' onclick=\"if ( confirm('" . esc_js(sprintf( __("You are about to delete this link '%s'\n  'Cancel' to stop, 'OK' to delete."), $bookmark->link_name)) . "') ) { return true;}return false;\">" . __('Delete') . "</a>";
 		}
 	
 		return $actions;
