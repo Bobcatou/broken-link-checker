@@ -55,7 +55,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Japanese - [ningendesu](http://ningendesu.com/)
 * Korean - [MinHyeong Lim](http://ssamture.net/)
-* Persian - Omid Sheerkavand
+* Persian - [Omid Sheerkavand](http://qanal.ir/)
 * Polish - [http://positionmaker.pl](http://positionmaker.pl/)
 * Portuguese - [PedroDM](http://development.mowster.net/)
 * Romanian - [Ovidiu](http://www.jibo.ro)
