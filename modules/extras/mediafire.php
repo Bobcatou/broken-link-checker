@@ -134,11 +134,12 @@ class blcMediaFireChecker extends blcChecker {
 	 */
 	function head($url){
 		//Only consider transports that allow redirection to be disabled.
-		if ( true === WP_Http_ExtHttp::test($args) ) {
+		$args = array();
+		if ( class_exists('WP_Http_ExtHttp') && (true === WP_Http_ExtHttp::test($args)) ) {
 			$transport = new WP_Http_ExtHttp();
-		} else if ( true === WP_Http_Curl::test($args) ) {
+		} else if ( class_exists('WP_Http_Curl') && (true === WP_Http_Curl::test($args)) ) {
 			$transport = new WP_Http_Curl();
-		} else if ( true === WP_Http_Fsockopen::test($args) ) {
+		} else if ( class_exists('WP_Http_Curl') && (true === WP_Http_Fsockopen::test($args)) ) {
 			$transport = new WP_Http_Fsockopen();
 		} else {
 			return new WP_Error(
