@@ -8,7 +8,7 @@
 if ( !class_exists('blcEmbedParserBase') ):
 
 /**
- * Base class for embed code parsers.
+ * Base class for embedded video/audio parsers.
  * 
  * Sub-classes should override the link_url_from_src() method and set the $url_search_string,
  * $short_title and $long_title properties to meaningful values.
@@ -36,7 +36,7 @@ class blcEmbedParserBase extends blcParser {
 		$instances = array();
 		
 		//Find likely-looking <embed> elements
-		$embeds = blcUtility::extract_embeds($content);
+		$embeds = $this->extract_embeds($content);
 		foreach($embeds as $embed){
 			//Do we know how to handle this embed? (first-pass verification) 
 			if ( strpos($embed['attributes']['src'], $this->url_search_string) === false ){
@@ -53,7 +53,7 @@ class blcEmbedParserBase extends blcParser {
 			$instance = new blcLinkInstance();
 			    
 		    $instance->set_parser($this);
-		    $instance->raw_url = $embed['wrapper']['full_tag']; //The entire contents of the <object> tag that contains this <embed>
+		    $instance->raw_url = $embed['embed_code']; 
 		    $instance->link_text = '[' . $this->short_title .']';
 		    
 		    $link_obj = new blcLink($url); //Creates or loads the link
@@ -63,6 +63,48 @@ class blcEmbedParserBase extends blcParser {
 		}
 		
 		return $instances;
+	}
+	
+	/**
+	 * Extract embedded elements from a HTML string.
+	 * 
+	 * This function returns an array of <embed> elements found in the input
+	 * string. Only <embed>'s that are inside <object>'s are considered. Embeds
+	 * without a 'src' attribute are skipped. 
+	 * 
+	 * Each array item has the same basic structure as the array items
+	 * returned by blcUtility::extract_tags(), plus an additional 'embed_code' key 
+	 * that contains the full HTML code for the entire <object> + <embed> structure.  
+	 *  
+	 * @uses blcUtility::extract_tags() This function is a simple wrapper around extract_tags()
+	 * 
+	 * @param string $html
+	 * @return array 
+	 */
+	function extract_embeds($html){
+		$results = array();
+		
+		//remove all <code></code> blocks first
+		$html = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $html);
+		
+		//Find likely-looking <object> elements
+		$objects = blcUtility::extract_tags($html, 'object', false, true);
+		foreach($objects as $candidate){
+			//Find the <embed> tag
+			$embed = blcUtility::extract_tags($candidate['full_tag'], 'embed', false);
+			if ( empty($embed)) continue;
+			$embed = reset($embed); //Take the first (and only) found <embed> element
+			
+			if ( empty($embed['attributes']['src']) ){
+				continue;
+			}
+			
+			$embed['embed_code'] = $candidate['full_tag'];
+			
+			$results[] = $embed;
+		}
+		
+		return $results;
 	}
 	
   /**

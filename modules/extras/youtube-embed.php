@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Embedded YouTube videos
+Plugin Name: Embedded YouTube videos (old embed code)
 Description: Parse embedded videos from YouTube
 Version: 1.0
 Author: Janis Elsts
@@ -9,6 +9,8 @@ ModuleCategory: parser
 ModuleClassName: blcYouTubeEmbed
 ModuleContext: on-demand
 ModuleLazyInit: true
+
+ModulePriority: 110
 */
 
 if ( !class_exists('blcEmbedParserBase') ){

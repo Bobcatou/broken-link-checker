@@ -211,48 +211,6 @@ class blcUtility {
 	}
 	
 	/**
-	 * Extract <embed> elements from a HTML string.
-	 * 
-	 * This function returns an array of <embed> elements found in the input
-	 * string. Only <embed>'s that are inside <object>'s are considered. Embeds
-	 * without a 'src' attribute are skipped. 
-	 * 
-	 * Each array item has the same basic structure as the array items
-	 * returned by blcUtility::extract_tags(), plus an additional 'wrapper' key 
-	 * that contains similarly structured info about the wrapping <object> tag.  
-	 *  
-	 * @uses blcUtility::extract_tags() This function is a simple wrapper around extract_tags()
-	 * 
-	 * @param string $html
-	 * @return array 
-	 */
-	static function extract_embeds($html){
-		$results = array();
-		
-		//remove all <code></code> blocks first
-		$html = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $html);
-		
-		//Find likely-looking <object> elements
-		$objects = blcUtility::extract_tags($html, 'object', false, true);
-		foreach($objects as $candidate){
-			//Find the <embed> tag
-			$embed = blcUtility::extract_tags($candidate['full_tag'], 'embed', false);
-			if ( empty($embed)) continue;
-			$embed = reset($embed); //Take the first (and only) found <embed> element
-			
-			if ( empty($embed['attributes']['src']) ){
-				continue;
-			}
-			
-			$embed['wrapper'] = $candidate;
-			
-			$results[] = $embed;
-		}
-		
-		return $results;
-	}
-	
-	/**
      * Get the value of a cookie.
      * 
      * @param string $cookie_name The name of the cookie to return.
