@@ -6,6 +6,7 @@ _x("Custom fields", "module name", "broken-link-checker");
 _x("Embedded DailyMotion videos", "module name", "broken-link-checker");
 _x("Embedded Vimeo videos", "module name", "broken-link-checker");
 _x("Embedded YouTube videos", "module name", "broken-link-checker");
+_x("Embedded YouTube videos (old embed code)", "module name", "broken-link-checker");
 _x("HTML images", "module name", "broken-link-checker");
 _x("HTML links", "module name", "broken-link-checker");
 _x("MediaFire API", "module name", "broken-link-checker");
