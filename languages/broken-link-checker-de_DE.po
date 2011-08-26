@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Broken Link Checker | V1.3\n"
+"Project-Id-Version: Broken Link Checker | V1.3.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2011-07-24 08:01:52+00:00\n"
-"PO-Revision-Date: 2011-07-24 17:57+0100\n"
+"POT-Creation-Date: 2011-08-25 16:05:37+00:00\n"
+"PO-Revision-Date: 2011-08-26 09:57+0100\n"
 "Last-Translator: Ivan Graf <contact@bildergallery.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,59 +19,10 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 # @ broken-link-checker
-#: modules/checkers/http.php:242
-msgid "Server Not Found"
-msgstr "Server nicht gefunden"
-
-# @ broken-link-checker
-#: modules/checkers/http.php:257
-msgid "Connection Failed"
-msgstr "Verbindung fehlgeschlagen"
-
-# @ link status
-# @ broken-link-checker
-#: modules/checkers/http.php:263
-#: modules/extras/mediafire.php:96
-#: includes/links.php:845
-msgid "Unknown Error"
-msgstr "Unbekannter Fehler"
-
-# @ broken-link-checker
-#: modules/checkers/http.php:292
-#: modules/checkers/http.php:362
-msgid "HTTP code : %d"
-msgstr "HTTP Code: %d"
-
-# @ broken-link-checker
-#: modules/checkers/http.php:294
-#: modules/checkers/http.php:364
-msgid "(No response)"
-msgstr "(Keine Antwort)"
-
-# @ broken-link-checker
-#: modules/checkers/http.php:300
-msgid "Most likely the connection timed out or the domain doesn't exist."
-msgstr "Vermutlich hat die Verbindung ein Timeout oder die Domain existiert nicht."
-
-# @ broken-link-checker
-#: modules/checkers/http.php:371
-msgid "Request timed out."
-msgstr "Erfordert Zeitlimit."
-
-# @ broken-link-checker
-#: modules/checkers/http.php:389
-msgid "Using Snoopy"
-msgstr "Benutzt Snoopy"
-
-# @ broken-link-checker
-#: modules/parsers/image.php:159
-msgid "Image"
-msgstr "Bild"
-
-# @ broken-link-checker
-#: modules/parsers/metadata.php:117
-msgid "Custom field"
-msgstr "Benutzerdefiniertes Feld"
+#: modules/containers/dummy.php:34
+#: modules/containers/dummy.php:45
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "Das Bearbeiten von '%s' [%d] ist fehlgeschlagen."
 
 # @ broken-link-checker
 #: modules/containers/custom_field.php:84
@@ -96,8 +47,8 @@ msgstr "Bearbeiten Sie dieses Element"
 
 # @ default
 #: modules/containers/custom_field.php:197
-#: modules/containers/comment.php:153
 #: modules/containers/blogroll.php:46
+#: modules/containers/comment.php:153
 #: includes/any-post.php:397
 msgid "Edit"
 msgstr "Bearbeiten"
@@ -158,11 +109,48 @@ msgid "Failed to move post \"%s\" (%d) to the trash"
 msgstr "Verschieben des Beitrages \"%s\" (%d) in den Papierkorb schlug fehl"
 
 # @ broken-link-checker
-#: modules/containers/comment.php:43
+#: modules/containers/blogroll.php:21
+msgid "Bookmark"
+msgstr "Lesezeichen"
+
+# @ broken-link-checker
+#: modules/containers/blogroll.php:27
+#: modules/containers/blogroll.php:46
+msgid "Edit this bookmark"
+msgstr "Lesezeichen bearbeiten"
+
+# @ default
+#: modules/containers/blogroll.php:47
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Möchten Sie diesen Link löschen '%s'\n"
+"  'Abbrechen' um abzubrechen, 'OK' um zu löschen."
+
+# @ broken-link-checker
 #: modules/containers/blogroll.php:83
+#: modules/containers/comment.php:43
 #: includes/any-post.php:519
 msgid "Nothing to update"
 msgstr "Nichts zu aktualisieren"
+
+# @ broken-link-checker
+#: modules/containers/blogroll.php:97
+msgid "Updating bookmark %d failed"
+msgstr "Lesezeichen Aktualisierung %d fehlgeschlagen"
+
+# @ broken-link-checker
+#: modules/containers/blogroll.php:128
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "Löschen des Blogroll Link \"%s\" (%d) schlug fehl"
+
+# @ broken-link-checker
+#: modules/containers/blogroll.php:298
+msgid "%d blogroll link deleted."
+msgid_plural "%d blogroll links deleted."
+msgstr[0] "%d Blogroll Link gelöscht."
+msgstr[1] "%d Blogroll Links gelöscht."
 
 # @ broken-link-checker
 #: modules/containers/comment.php:53
@@ -226,68 +214,71 @@ msgstr[0] "%d Kommentar in den Papierkorb verschoben."
 msgstr[1] "%d Kommentare in den Papierkorb verschoben."
 
 # @ broken-link-checker
-#: modules/containers/blogroll.php:21
-msgid "Bookmark"
-msgstr "Lesezeichen"
+#: modules/checkers/http.php:242
+msgid "Server Not Found"
+msgstr "Server nicht gefunden"
 
 # @ broken-link-checker
-#: modules/containers/blogroll.php:27
-#: modules/containers/blogroll.php:46
-msgid "Edit this bookmark"
-msgstr "Lesezeichen bearbeiten"
+#: modules/checkers/http.php:257
+msgid "Connection Failed"
+msgstr "Verbindung fehlgeschlagen"
 
-# @ default
-#: modules/containers/blogroll.php:47
-msgid ""
-"You are about to delete this link '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Möchten Sie diesen Link löschen '%s'\n"
-"  'Abbrechen' um abzubrechen, 'OK' um zu löschen."
+# @ link status
+# @ broken-link-checker
+#: modules/checkers/http.php:263
+#: modules/extras/mediafire.php:96
+#: includes/links.php:845
+msgid "Unknown Error"
+msgstr "Unbekannter Fehler"
 
 # @ broken-link-checker
-#: modules/containers/blogroll.php:97
-msgid "Updating bookmark %d failed"
-msgstr "Lesezeichen Aktualisierung %d fehlgeschlagen"
+#: modules/checkers/http.php:292
+#: modules/checkers/http.php:362
+msgid "HTTP code : %d"
+msgstr "HTTP Code: %d"
 
 # @ broken-link-checker
-#: modules/containers/blogroll.php:128
-msgid "Failed to delete blogroll link \"%s\" (%d)"
-msgstr "Löschen des Blogroll Link \"%s\" (%d) schlug fehl"
+#: modules/checkers/http.php:294
+#: modules/checkers/http.php:364
+msgid "(No response)"
+msgstr "(Keine Antwort)"
 
 # @ broken-link-checker
-#: modules/containers/blogroll.php:298
-msgid "%d blogroll link deleted."
-msgid_plural "%d blogroll links deleted."
-msgstr[0] "%d Blogroll Link gelöscht."
-msgstr[1] "%d Blogroll Links gelöscht."
+#: modules/checkers/http.php:300
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Vermutlich hat die Verbindung ein Timeout oder die Domain existiert nicht."
 
 # @ broken-link-checker
-#: modules/containers/dummy.php:34
-#: modules/containers/dummy.php:45
-msgid "I don't know how to edit a '%s' [%d]."
-msgstr "Das Bearbeiten von '%s' [%d] ist fehlgeschlagen."
+#: modules/checkers/http.php:371
+msgid "Request timed out."
+msgstr "Erfordert Zeitlimit."
 
 # @ broken-link-checker
-#: modules/extras/mediafire.php:91
-#: modules/extras/megaupload.php:109
-#: modules/extras/rapidshare.php:142
-msgid "Not Found"
-msgstr "Nicht gefunden"
+#: modules/checkers/http.php:389
+msgid "Using Snoopy"
+msgstr "Benutzt Snoopy"
 
 # @ broken-link-checker
-#: modules/extras/youtube-embed.php:22
+#: modules/parsers/image.php:159
+msgid "Image"
+msgstr "Bild"
+
+# @ broken-link-checker
+#: modules/parsers/metadata.php:117
+msgid "Custom field"
+msgstr "Benutzerdefiniertes Feld"
+
+# @ broken-link-checker
+#: modules/extras/youtube-iframe.php:25
+#: modules/extras/youtube-embed.php:24
 msgid "YouTube Video"
 msgstr "YouTube Video"
 
 # @ broken-link-checker
-#: modules/extras/youtube-embed.php:23
+#: modules/extras/youtube-iframe.php:26
+#: modules/extras/youtube-embed.php:25
 msgid "Embedded YouTube video"
 msgstr "Eingebettete YouTube Videos"
-
-#: modules/extras/embed-parser-base.php:140
-msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
-msgstr "Eingebettete Videos können mit Broken Link Checker nicht editiert werden. Bitte ändern oder ersetzen Sie das betreffende Video manuell."
 
 # @ broken-link-checker
 #: modules/extras/dailymotion-embed.php:23
@@ -300,32 +291,21 @@ msgid "Embedded DailyMotion video"
 msgstr "Eingebettete DailyMotion Videos"
 
 # @ broken-link-checker
-#: modules/extras/vimeo-embed.php:24
-msgid "Vimeo Video"
-msgstr "Vimeo Video"
+#: modules/extras/rapidshare.php:142
+#: modules/extras/mediafire.php:91
+#: modules/extras/megaupload.php:109
+msgid "Not Found"
+msgstr "Nicht gefunden"
 
 # @ broken-link-checker
-#: modules/extras/vimeo-embed.php:25
-msgid "Embedded Vimeo video"
-msgstr "Eingebettete Vimeo Videos"
-
-# @ broken-link-checker
-#: modules/extras/megaupload.php:101
 #: modules/extras/rapidshare.php:148
 #: modules/extras/rapidshare.php:154
 #: modules/extras/rapidshare.php:181
+#: modules/extras/megaupload.php:101
 #: includes/links.php:875
 msgctxt "link status"
 msgid "OK"
 msgstr "OK"
-
-#: modules/extras/megaupload.php:116
-msgid "File Temporarily Unavailable"
-msgstr "Datei vorübergehend nicht erreichbar"
-
-#: modules/extras/megaupload.php:122
-msgid "API Error"
-msgstr "API Fehler"
 
 # @ broken-link-checker
 #: modules/extras/rapidshare.php:161
@@ -350,6 +330,20 @@ msgstr "RapidShare: %s"
 #: modules/extras/rapidshare.php:192
 msgid "RapidShare API error: %s"
 msgstr "RapidShare API Fehler: %s"
+
+#: modules/extras/embed-parser-base.php:182
+msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
+msgstr "Eingebettete Videos können mit Broken Link Checker nicht editiert werden. Bitte ändern oder ersetzen Sie das betreffende Video manuell."
+
+# @ broken-link-checker
+#: modules/extras/vimeo-embed.php:24
+msgid "Vimeo Video"
+msgstr "Vimeo Video"
+
+# @ broken-link-checker
+#: modules/extras/vimeo-embed.php:25
+msgid "Embedded Vimeo video"
+msgstr "Eingebettete Vimeo Videos"
 
 # @ broken-link-checker
 #: modules/extras/youtube.php:63
@@ -386,6 +380,14 @@ msgstr "Video mit Einschränkungen"
 #: modules/extras/youtube.php:144
 msgid "Unknown YouTube API response received."
 msgstr "Unbekannte Antwort der YouTube API erhalten."
+
+#: modules/extras/megaupload.php:116
+msgid "File Temporarily Unavailable"
+msgstr "Datei vorübergehend nicht erreichbar"
+
+#: modules/extras/megaupload.php:122
+msgid "API Error"
+msgstr "API Fehler"
 
 # @ default
 #: core/init.php:230
@@ -991,7 +993,7 @@ msgid "Failed to load link details (%s)"
 msgstr "Laden der Link Details (%s) schlug fehl"
 
 # @ broken-link-checker
-#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.3)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.3.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: core/core.php:2633
 msgid "Broken Link Checker"
@@ -1110,246 +1112,6 @@ msgid "You can see all broken links here:"
 msgstr "Hier sehen Sie alle fehlerhaften Links:"
 
 # @ broken-link-checker
-#: includes/containers.php:122
-msgid "%d '%s' has been deleted"
-msgid_plural "%d '%s' have been deleted"
-msgstr[0] "%d '%s' wurde gelöscht"
-msgstr[1] "%d '%s' wurden gelöscht"
-
-# @ broken-link-checker
-#: includes/containers.php:873
-#: includes/containers.php:891
-msgid "Container type '%s' not recognized"
-msgstr "Container Typ '%s' nicht erkannt"
-
-# @ default
-#: includes/utility-class.php:286
-msgid "%d second"
-msgid_plural "%d seconds"
-msgstr[0] "%s Sekunde"
-msgstr[1] "%s Sekunden"
-
-# @ default
-#: includes/utility-class.php:287
-msgid "%d second ago"
-msgid_plural "%d seconds ago"
-msgstr[0] "%s Sekunde vergangen"
-msgstr[1] "%s Sekunden vergangen"
-
-# @ default
-#: includes/utility-class.php:290
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d Minute"
-msgstr[1] "%d Minuten"
-
-# @ default
-#: includes/utility-class.php:291
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d Minute vergangen"
-msgstr[1] "%d Minuten vergangen"
-
-# @ default
-#: includes/utility-class.php:294
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d Stunde"
-msgstr[1] "%d Stunden"
-
-# @ default
-#: includes/utility-class.php:295
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d Stunde vergangen"
-msgstr[1] "%d Stunden vergangen"
-
-# @ default
-#: includes/utility-class.php:298
-msgid "%d day"
-msgid_plural "%d days"
-msgstr[0] "%d Tag"
-msgstr[1] "%d Tage"
-
-# @ default
-#: includes/utility-class.php:299
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d Tag vergangen"
-msgstr[1] "%d Tage vergangen"
-
-# @ default
-#: includes/utility-class.php:302
-msgid "%d month"
-msgid_plural "%d months"
-msgstr[0] "%d Monat"
-msgstr[1] "%d Monate"
-
-# @ default
-#: includes/utility-class.php:303
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d Monat vergangen"
-msgstr[1] "%d Monate vergangen"
-
-# @ broken-link-checker
-#: includes/parsers.php:109
-msgid "Editing is not implemented in the '%s' parser"
-msgstr "Editieren ist nicht im '%s' Parser implementiert"
-
-# @ broken-link-checker
-#: includes/parsers.php:124
-msgid "Unlinking is not implemented in the '%s' parser"
-msgstr "Aufheben der Verknüpfung ist nicht im '%s' Parser implementiert"
-
-# @ broken-link-checker
-#: includes/links.php:215
-msgid "The plugin script was terminated while trying to check the link."
-msgstr "Das Plugin-Skript wurde beim Versuch den Link zu überprüfen beendet."
-
-# @ broken-link-checker
-#: includes/links.php:261
-msgid "The plugin doesn't know how to check this type of link."
-msgstr "Das Plugin weiss nicht genau, wie er diesen Link Typ überprüfen soll."
-
-# @ broken-link-checker
-#: includes/links.php:349
-msgid "Link is valid."
-msgstr "Link ist valide."
-
-# @ broken-link-checker
-#: includes/links.php:351
-msgid "Link is broken."
-msgstr "Link ist fehlerhaft."
-
-# @ broken-link-checker
-#: includes/links.php:564
-#: includes/links.php:666
-#: includes/links.php:693
-msgid "Link is not valid"
-msgstr "Link ist nicht gültig"
-
-# @ broken-link-checker
-#: includes/links.php:581
-msgid "This link can not be edited because it is not used anywhere on this site."
-msgstr "Dieser Link kann nicht bearbeitet werden, weil er nicht überall auf dieser Website verwendet wird."
-
-# @ broken-link-checker
-#: includes/links.php:607
-msgid "Failed to create a DB entry for the new URL."
-msgstr "Das Erstellen eines Datenbankeintrages für die neue URL ist fehlgeschlagen."
-
-# @ broken-link-checker
-#: includes/links.php:673
-msgid "This link is not a redirect"
-msgstr "Dieser Link ist keine Umleitung"
-
-# @ broken-link-checker
-#: includes/links.php:720
-#: includes/links.php:757
-msgid "Couldn't delete the link's database record"
-msgstr "Links können nicht aus der Datenbank gelöscht werden"
-
-# @ broken-link-checker
-#: includes/links.php:831
-msgctxt "link status"
-msgid "Unknown"
-msgstr "Unbekannt"
-
-# @ broken-link-checker
-#: includes/links.php:869
-msgid "Not checked"
-msgstr "Nicht überprüft"
-
-# @ broken-link-checker
-#: includes/links.php:872
-msgid "False positive"
-msgstr "Falsch positiv"
-
-#: includes/admin/sidebar.php:2
-msgid "Donate $10, $20 or $50!"
-msgstr "Spenden Sie $10, $20 oder $50!"
-
-#: includes/admin/sidebar.php:5
-msgid "If you like this plugin, please donate to support development and maintenance!"
-msgstr "Mögen Sie dieses Plugin, dann helfen Sie uns mit einer Spende für die Entwicklung und Wartung."
-
-#: includes/admin/sidebar.php:22
-msgid "Return to WordPress Dashboard"
-msgstr "Zurück zum Wordpress Dashboard"
-
-#: includes/admin/sidebar.php:50
-msgid "More plugins by Janis Elsts"
-msgstr "Weitere Plugins von Janis Elsts"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:16
-msgid "Save This Search As a Filter"
-msgstr "Diese Suche als Filter speichern"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:26
-msgid "Delete This Filter"
-msgstr "Diesen Filter löschen"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:32
-#: includes/link-query.php:53
-msgid "Search"
-msgstr "Suche"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:42
-msgid "Link text"
-msgstr "Linktext"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:45
-#: includes/admin/table-printer.php:173
-msgid "URL"
-msgstr "URL"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:48
-#: includes/admin/table-printer.php:455
-msgid "HTTP code"
-msgstr "HTTP Code"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:51
-msgid "Link status"
-msgstr "Link Status"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:68
-#: includes/admin/search-form.php:85
-msgid "Link type"
-msgstr "Link Typ"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:70
-msgid "Any"
-msgstr "Beliebig"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:74
-msgid "Links used in"
-msgstr "Links verwendet in"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:112
-msgid "Search Links"
-msgstr "Suche Links"
-
-# @ broken-link-checker
-#: includes/admin/search-form.php:113
-#: includes/admin/table-printer.php:313
-#: includes/admin/table-printer.php:595
-#: includes/admin/table-printer.php:601
-msgid "Cancel"
-msgstr "Abbrechen"
-
-# @ broken-link-checker
 #: includes/admin/links-page-js.php:58
 #: includes/admin/links-page-js.php:301
 msgid "Wait..."
@@ -1445,9 +1207,87 @@ msgid "Select one or more links to edit."
 msgstr "Wählen Sie einen oder mehrere Links zum bearbeiten."
 
 # @ broken-link-checker
-#: includes/admin/db-upgrade.php:95
-msgid "Failed to delete old DB tables. Database error : %s"
-msgstr "Konnte alte Datenbantabellen nicht löschen. Datenbank Fehler: %s"
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Diese Suche als Filter speichern"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "Diesen Filter löschen"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:32
+#: includes/link-query.php:53
+msgid "Search"
+msgstr "Suche"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:42
+msgid "Link text"
+msgstr "Linktext"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:45
+#: includes/admin/table-printer.php:173
+msgid "URL"
+msgstr "URL"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:48
+#: includes/admin/table-printer.php:455
+msgid "HTTP code"
+msgstr "HTTP Code"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:51
+msgid "Link status"
+msgstr "Link Status"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:68
+#: includes/admin/search-form.php:85
+msgid "Link type"
+msgstr "Link Typ"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:70
+msgid "Any"
+msgstr "Beliebig"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:74
+msgid "Links used in"
+msgstr "Links verwendet in"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Suche Links"
+
+# @ broken-link-checker
+#: includes/admin/search-form.php:113
+#: includes/admin/table-printer.php:313
+#: includes/admin/table-printer.php:595
+#: includes/admin/table-printer.php:601
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: includes/admin/sidebar.php:2
+msgid "Donate $10, $20 or $50!"
+msgstr "Spenden Sie $10, $20 oder $50!"
+
+#: includes/admin/sidebar.php:5
+msgid "If you like this plugin, please donate to support development and maintenance!"
+msgstr "Mögen Sie dieses Plugin, dann helfen Sie uns mit einer Spende für die Entwicklung und Wartung."
+
+#: includes/admin/sidebar.php:22
+msgid "Return to WordPress Dashboard"
+msgstr "Zurück zum Wordpress Dashboard"
+
+#: includes/admin/sidebar.php:50
+msgid "More plugins by Janis Elsts"
+msgstr "Weitere Plugins von Janis Elsts"
 
 # @ broken-link-checker
 #: includes/admin/options-page-js.php:54
@@ -1656,100 +1496,19 @@ msgid "[An orphaned link! This is a bug.]"
 msgstr "[Ein verwaister Link! Dies ist ein Bug.]"
 
 # @ broken-link-checker
-#: includes/extra-strings.php:2
-msgctxt "module name"
-msgid "Basic HTTP"
-msgstr "Standard HTTP"
+#: includes/admin/db-upgrade.php:95
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "Konnte alte Datenbantabellen nicht löschen. Datenbank Fehler: %s"
 
 # @ broken-link-checker
-#: includes/extra-strings.php:3
-msgctxt "module name"
-msgid "Blogroll items"
-msgstr "Blogroll Elemente"
+#: includes/parsers.php:109
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "Editieren ist nicht im '%s' Parser implementiert"
 
 # @ broken-link-checker
-#: includes/extra-strings.php:4
-msgctxt "module name"
-msgid "Comments"
-msgstr "Kommentare"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:5
-msgctxt "module name"
-msgid "Custom fields"
-msgstr "Benutzerdefinierte Felder"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:6
-msgctxt "module name"
-msgid "Embedded DailyMotion videos"
-msgstr "Eingebettete DailyMotion Videos"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:7
-msgctxt "module name"
-msgid "Embedded Vimeo videos"
-msgstr "Eingebettete Vimeo Videos"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:8
-msgctxt "module name"
-msgid "Embedded YouTube videos"
-msgstr "Eingebettete YouTube Videos"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:9
-msgctxt "module name"
-msgid "HTML images"
-msgstr "HTML Bilder"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:10
-msgctxt "module name"
-msgid "HTML links"
-msgstr "HTML Links"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:11
-msgctxt "module name"
-msgid "MediaFire API"
-msgstr "MediaFire API"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:12
-msgctxt "module name"
-msgid "MegaUpload API"
-msgstr "MegaUpload API"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:13
-msgctxt "module name"
-msgid "Plaintext URLs"
-msgstr "Klartext URLs"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:14
-msgctxt "module name"
-msgid "RapidShare API"
-msgstr "RapidShare API"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:15
-msgctxt "module name"
-msgid "YouTube API"
-msgstr "YouTube API"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:16
-msgctxt "module name"
-msgid "Posts"
-msgstr "Beiträge"
-
-# @ broken-link-checker
-#: includes/extra-strings.php:17
-msgctxt "module name"
-msgid "Pages"
-msgstr "Seiten"
+#: includes/parsers.php:124
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "Aufheben der Verknüpfung ist nicht im '%s' Parser implementiert"
 
 # @ broken-link-checker
 #: includes/link-query.php:25
@@ -1801,18 +1560,6 @@ msgstr "Such Resultat"
 #: includes/link-query.php:102
 msgid "No links found for your query"
 msgstr "Keine Links für Deine Anfrage gefunden"
-
-# @ broken-link-checker
-#: includes/instances.php:102
-#: includes/instances.php:158
-msgid "Container %s[%d] not found"
-msgstr "Container %s[%d] nicht gefunden"
-
-# @ broken-link-checker
-#: includes/instances.php:111
-#: includes/instances.php:167
-msgid "Parser '%s' not found."
-msgstr "Parser '%s' nicht gefunden."
 
 # @ default
 #: includes/any-post.php:427
@@ -1875,6 +1622,267 @@ msgid "%d \"%s\" moved to the Trash."
 msgid_plural "%d \"%s\" moved to the Trash."
 msgstr[0] "%d \"%s\" in den Papierkorb verschoben."
 msgstr[1] "%d \"%s\" in den Papierkorb verschoben."
+
+# @ broken-link-checker
+#: includes/containers.php:122
+msgid "%d '%s' has been deleted"
+msgid_plural "%d '%s' have been deleted"
+msgstr[0] "%d '%s' wurde gelöscht"
+msgstr[1] "%d '%s' wurden gelöscht"
+
+# @ broken-link-checker
+#: includes/containers.php:873
+#: includes/containers.php:891
+msgid "Container type '%s' not recognized"
+msgstr "Container Typ '%s' nicht erkannt"
+
+# @ broken-link-checker
+#: includes/links.php:215
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "Das Plugin-Skript wurde beim Versuch den Link zu überprüfen beendet."
+
+# @ broken-link-checker
+#: includes/links.php:261
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "Das Plugin weiss nicht genau, wie er diesen Link Typ überprüfen soll."
+
+# @ broken-link-checker
+#: includes/links.php:349
+msgid "Link is valid."
+msgstr "Link ist valide."
+
+# @ broken-link-checker
+#: includes/links.php:351
+msgid "Link is broken."
+msgstr "Link ist fehlerhaft."
+
+# @ broken-link-checker
+#: includes/links.php:564
+#: includes/links.php:666
+#: includes/links.php:693
+msgid "Link is not valid"
+msgstr "Link ist nicht gültig"
+
+# @ broken-link-checker
+#: includes/links.php:581
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "Dieser Link kann nicht bearbeitet werden, weil er nicht überall auf dieser Website verwendet wird."
+
+# @ broken-link-checker
+#: includes/links.php:607
+msgid "Failed to create a DB entry for the new URL."
+msgstr "Das Erstellen eines Datenbankeintrages für die neue URL ist fehlgeschlagen."
+
+# @ broken-link-checker
+#: includes/links.php:673
+msgid "This link is not a redirect"
+msgstr "Dieser Link ist keine Umleitung"
+
+# @ broken-link-checker
+#: includes/links.php:720
+#: includes/links.php:757
+msgid "Couldn't delete the link's database record"
+msgstr "Links können nicht aus der Datenbank gelöscht werden"
+
+# @ broken-link-checker
+#: includes/links.php:831
+msgctxt "link status"
+msgid "Unknown"
+msgstr "Unbekannt"
+
+# @ broken-link-checker
+#: includes/links.php:869
+msgid "Not checked"
+msgstr "Nicht überprüft"
+
+# @ broken-link-checker
+#: includes/links.php:872
+msgid "False positive"
+msgstr "Falsch positiv"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:2
+msgctxt "module name"
+msgid "Basic HTTP"
+msgstr "Standard HTTP"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:3
+msgctxt "module name"
+msgid "Blogroll items"
+msgstr "Blogroll Elemente"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:4
+msgctxt "module name"
+msgid "Comments"
+msgstr "Kommentare"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:5
+msgctxt "module name"
+msgid "Custom fields"
+msgstr "Benutzerdefinierte Felder"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:6
+msgctxt "module name"
+msgid "Embedded DailyMotion videos"
+msgstr "Eingebettete DailyMotion Videos"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:7
+msgctxt "module name"
+msgid "Embedded Vimeo videos"
+msgstr "Eingebettete Vimeo Videos"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:8
+msgctxt "module name"
+msgid "Embedded YouTube videos"
+msgstr "Eingebettete YouTube Videos"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:9
+msgctxt "module name"
+msgid "Embedded YouTube videos (old embed code)"
+msgstr "Eingebettete YouTube Videos (Alter Code)"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:10
+msgctxt "module name"
+msgid "HTML images"
+msgstr "HTML Bilder"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:11
+msgctxt "module name"
+msgid "HTML links"
+msgstr "HTML Links"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:12
+msgctxt "module name"
+msgid "MediaFire API"
+msgstr "MediaFire API"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:13
+msgctxt "module name"
+msgid "MegaUpload API"
+msgstr "MegaUpload API"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:14
+msgctxt "module name"
+msgid "Plaintext URLs"
+msgstr "Klartext URLs"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:15
+msgctxt "module name"
+msgid "RapidShare API"
+msgstr "RapidShare API"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:16
+msgctxt "module name"
+msgid "YouTube API"
+msgstr "YouTube API"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:17
+msgctxt "module name"
+msgid "Posts"
+msgstr "Beiträge"
+
+# @ broken-link-checker
+#: includes/extra-strings.php:18
+msgctxt "module name"
+msgid "Pages"
+msgstr "Seiten"
+
+# @ default
+#: includes/utility-class.php:244
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%s Sekunde"
+msgstr[1] "%s Sekunden"
+
+# @ default
+#: includes/utility-class.php:245
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "%s Sekunde vergangen"
+msgstr[1] "%s Sekunden vergangen"
+
+# @ default
+#: includes/utility-class.php:248
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d Minute"
+msgstr[1] "%d Minuten"
+
+# @ default
+#: includes/utility-class.php:249
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d Minute vergangen"
+msgstr[1] "%d Minuten vergangen"
+
+# @ default
+#: includes/utility-class.php:252
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d Stunde"
+msgstr[1] "%d Stunden"
+
+# @ default
+#: includes/utility-class.php:253
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d Stunde vergangen"
+msgstr[1] "%d Stunden vergangen"
+
+# @ default
+#: includes/utility-class.php:256
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d Tag"
+msgstr[1] "%d Tage"
+
+# @ default
+#: includes/utility-class.php:257
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d Tag vergangen"
+msgstr[1] "%d Tage vergangen"
+
+# @ default
+#: includes/utility-class.php:260
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d Monat"
+msgstr[1] "%d Monate"
+
+# @ default
+#: includes/utility-class.php:261
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "%d Monat vergangen"
+msgstr[1] "%d Monate vergangen"
+
+# @ broken-link-checker
+#: includes/instances.php:102
+#: includes/instances.php:158
+msgid "Container %s[%d] not found"
+msgstr "Container %s[%d] nicht gefunden"
+
+# @ broken-link-checker
+#: includes/instances.php:111
+#: includes/instances.php:167
+msgid "Parser '%s' not found."
+msgstr "Parser '%s' nicht gefunden."
 
 #. Plugin URI of the plugin/theme
 msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
