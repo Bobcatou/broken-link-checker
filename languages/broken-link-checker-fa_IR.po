@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-19 17:41+0330\n"
-"PO-Revision-Date: 2011-03-19 18:06+0330\n"
+"PO-Revision-Date: 2011-08-26 14:12+0330\n"
 "Last-Translator: Omid Sheerkavand <o.sheerkavand@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -210,7 +210,7 @@ msgstr "به طور مداوم اجرا کن وقتی پیش‌خوان باز �
 
 #: C:/Users/$oSIs/DEsktop/broken-link-checker/core/core.php:923
 msgid "Run hourly in the background"
-msgstr "به طور ساعتی در پیش‌زمینه اجرا کن"
+msgstr "به طور ساعتی در پس‌زمینه اجرا کن"
 
 #: C:/Users/$oSIs/DEsktop/broken-link-checker/core/core.php:931
 msgid "Max. execution time"
