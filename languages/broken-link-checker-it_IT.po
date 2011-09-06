@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Broken Link Checker in italiano\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2011-07-24 08:01:52+00:00\n"
-"PO-Revision-Date: 2011-09-04 18:31+0100\n"
+"POT-Creation-Date: 2011-08-25 16:05:37+00:00\n"
+"PO-Revision-Date: 2011-09-05 13:48+0100\n"
 "Last-Translator: Gianni Diurno (aka gidibao) <gidibao[at]gmail[dot]com>\n"
 "Language-Team: Gianni Diurno | gidibao.net & charmingpress.com\n"
 "MIME-Version: 1.0\n"
@@ -18,49 +18,10 @@ msgstr ""
 "X-Poedit-Language: Italian\n"
 "X-Poedit-Country: ITALY\n"
 
-#: modules/checkers/http.php:242
-msgid "Server Not Found"
-msgstr "Server non trovato"
-
-#: modules/checkers/http.php:257
-msgid "Connection Failed"
-msgstr "Tentativo di connessione non riuscito"
-
-#: modules/checkers/http.php:263
-#: modules/extras/mediafire.php:96
-#: includes/links.php:845
-msgid "Unknown Error"
-msgstr "Errore sconosciuto"
-
-#: modules/checkers/http.php:292
-#: modules/checkers/http.php:362
-msgid "HTTP code : %d"
-msgstr "Codice HTTP : %d"
-
-#: modules/checkers/http.php:294
-#: modules/checkers/http.php:364
-msgid "(No response)"
-msgstr "(nessuna risposta)"
-
-#: modules/checkers/http.php:300
-msgid "Most likely the connection timed out or the domain doesn't exist."
-msgstr "Connessione scaduta oppure il dominio non esiste."
-
-#: modules/checkers/http.php:371
-msgid "Request timed out."
-msgstr "Richiesta scaduta."
-
-#: modules/checkers/http.php:389
-msgid "Using Snoopy"
-msgstr "Snoopy in uso"
-
-#: modules/parsers/image.php:159
-msgid "Image"
-msgstr "Immagine"
-
-#: modules/parsers/metadata.php:117
-msgid "Custom field"
-msgstr "Campo personalizzato"
+#: modules/containers/dummy.php:34
+#: modules/containers/dummy.php:45
+msgid "I don't know how to edit a '%s' [%d]."
+msgstr "Non so come modificare un '%s' [%d]."
 
 #: modules/containers/custom_field.php:84
 msgid "Failed to update the meta field '%s' on %s [%d]"
@@ -80,8 +41,8 @@ msgid "Edit this item"
 msgstr "modifica questo termine"
 
 #: modules/containers/custom_field.php:197
-#: modules/containers/comment.php:153
 #: modules/containers/blogroll.php:46
+#: modules/containers/comment.php:153
 #: includes/any-post.php:397
 msgid "Edit"
 msgstr "Modifica"
@@ -132,11 +93,42 @@ msgstr "Non é stato possibile spostare l'articolo \"%s\" (%d) nel cestino poich
 msgid "Failed to move post \"%s\" (%d) to the trash"
 msgstr "Impossibile spostare l'articolo \"%s\" (%d) nel cestino"
 
-#: modules/containers/comment.php:43
+#: modules/containers/blogroll.php:21
+msgid "Bookmark"
+msgstr "Segnalibro"
+
+#: modules/containers/blogroll.php:27
+#: modules/containers/blogroll.php:46
+msgid "Edit this bookmark"
+msgstr "Modifica questo segnalibro"
+
+#: modules/containers/blogroll.php:47
+msgid ""
+"You are about to delete this link '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Stai per cancellare questo link '%s'\n"
+"  'Annulla' per fermarti, 'OK' per cancellare."
+
 #: modules/containers/blogroll.php:83
+#: modules/containers/comment.php:43
 #: includes/any-post.php:519
 msgid "Nothing to update"
 msgstr "Nulla da aggiornare"
+
+#: modules/containers/blogroll.php:97
+msgid "Updating bookmark %d failed"
+msgstr "Non é stato possibile aggiornare il bookmark %d"
+
+#: modules/containers/blogroll.php:128
+msgid "Failed to delete blogroll link \"%s\" (%d)"
+msgstr "Non é stato possibile cancellare il link \"%s\" (%d) presente nel blogroll"
+
+#: modules/containers/blogroll.php:298
+msgid "%d blogroll link deleted."
+msgid_plural "%d blogroll links deleted."
+msgstr[0] "Il link %d presente nel blogroll é stato cancellato"
+msgstr[1] "I link %d presenti nel blogroll sono stati cancellati"
 
 #: modules/containers/comment.php:53
 msgid "Updating comment %d failed"
@@ -188,59 +180,59 @@ msgid_plural "%d comments moved to the Trash."
 msgstr[0] "%d commento spostato nel cestino"
 msgstr[1] "%d commenti spostati nel cestino"
 
-#: modules/containers/blogroll.php:21
-msgid "Bookmark"
-msgstr "Segnalibro"
+#: modules/checkers/http.php:242
+msgid "Server Not Found"
+msgstr "Server non trovato"
 
-#: modules/containers/blogroll.php:27
-#: modules/containers/blogroll.php:46
-msgid "Edit this bookmark"
-msgstr "Modifica questo segnalibro"
+#: modules/checkers/http.php:257
+msgid "Connection Failed"
+msgstr "Tentativo di connessione non riuscito"
 
-#: modules/containers/blogroll.php:47
-msgid ""
-"You are about to delete this link '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-"Stai per cancellare questo link '%s'\n"
-"  'Annulla' per fermarti, 'OK' per cancellare."
+#: modules/checkers/http.php:263
+#: modules/extras/mediafire.php:96
+#: includes/links.php:845
+msgid "Unknown Error"
+msgstr "Errore sconosciuto"
 
-#: modules/containers/blogroll.php:97
-msgid "Updating bookmark %d failed"
-msgstr "Non é stato possibile aggiornare il bookmark %d"
+#: modules/checkers/http.php:292
+#: modules/checkers/http.php:362
+msgid "HTTP code : %d"
+msgstr "Codice HTTP : %d"
 
-#: modules/containers/blogroll.php:128
-msgid "Failed to delete blogroll link \"%s\" (%d)"
-msgstr "Non é stato possibile cancellare il link \"%s\" (%d) presente nel blogroll"
+#: modules/checkers/http.php:294
+#: modules/checkers/http.php:364
+msgid "(No response)"
+msgstr "(nessuna risposta)"
 
-#: modules/containers/blogroll.php:298
-msgid "%d blogroll link deleted."
-msgid_plural "%d blogroll links deleted."
-msgstr[0] "Il link %d presente nel blogroll é stato cancellato"
-msgstr[1] "I link %d presenti nel blogroll sono stati cancellati"
+#: modules/checkers/http.php:300
+msgid "Most likely the connection timed out or the domain doesn't exist."
+msgstr "Connessione scaduta oppure il dominio non esiste."
 
-#: modules/containers/dummy.php:34
-#: modules/containers/dummy.php:45
-msgid "I don't know how to edit a '%s' [%d]."
-msgstr "Non so come modificare un '%s' [%d]."
+#: modules/checkers/http.php:371
+msgid "Request timed out."
+msgstr "Richiesta scaduta."
 
-#: modules/extras/mediafire.php:91
-#: modules/extras/megaupload.php:109
-#: modules/extras/rapidshare.php:142
-msgid "Not Found"
-msgstr "Non trovato"
+#: modules/checkers/http.php:389
+msgid "Using Snoopy"
+msgstr "Snoopy in uso"
 
-#: modules/extras/youtube-embed.php:22
+#: modules/parsers/image.php:159
+msgid "Image"
+msgstr "Immagine"
+
+#: modules/parsers/metadata.php:117
+msgid "Custom field"
+msgstr "Campo personalizzato"
+
+#: modules/extras/youtube-iframe.php:25
+#: modules/extras/youtube-embed.php:24
 msgid "YouTube Video"
 msgstr "YouTube Video"
 
-#: modules/extras/youtube-embed.php:23
+#: modules/extras/youtube-iframe.php:26
+#: modules/extras/youtube-embed.php:25
 msgid "Embedded YouTube video"
 msgstr "Video incorporato YouTube"
-
-#: modules/extras/embed-parser-base.php:140
-msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
-msgstr "I video incorporati non possono essere modificati da Broken Link Checker. Sostituisci o modifica i video manualmente."
 
 #: modules/extras/dailymotion-embed.php:23
 msgid "DailyMotion Video"
@@ -250,30 +242,20 @@ msgstr "DailyMotion Video"
 msgid "Embedded DailyMotion video"
 msgstr "Video incorporato DailyMotion"
 
-#: modules/extras/vimeo-embed.php:24
-msgid "Vimeo Video"
-msgstr "Vimeo Video"
+#: modules/extras/rapidshare.php:142
+#: modules/extras/mediafire.php:91
+#: modules/extras/megaupload.php:109
+msgid "Not Found"
+msgstr "Non trovato"
 
-#: modules/extras/vimeo-embed.php:25
-msgid "Embedded Vimeo video"
-msgstr "Video incorporato Vimeo"
-
-#: modules/extras/megaupload.php:101
 #: modules/extras/rapidshare.php:148
 #: modules/extras/rapidshare.php:154
 #: modules/extras/rapidshare.php:181
+#: modules/extras/megaupload.php:101
 #: includes/links.php:875
 msgctxt "link status"
 msgid "OK"
 msgstr "OK"
-
-#: modules/extras/megaupload.php:116
-msgid "File Temporarily Unavailable"
-msgstr "File temporameamente non disponibile"
-
-#: modules/extras/megaupload.php:122
-msgid "API Error"
-msgstr "Errore API"
 
 #: modules/extras/rapidshare.php:161
 msgid "RS Server Down"
@@ -294,6 +276,18 @@ msgstr "RapidShare : %s"
 #: modules/extras/rapidshare.php:192
 msgid "RapidShare API error: %s"
 msgstr "Errore API RapidShare: %s"
+
+#: modules/extras/embed-parser-base.php:182
+msgid "Embedded videos can't be edited using Broken Link Checker. Please edit or replace the video in question manually."
+msgstr "I video incorporati non possono essere modificati da Broken Link Checker. Sostituisci o modifica i video manualmente."
+
+#: modules/extras/vimeo-embed.php:24
+msgid "Vimeo Video"
+msgstr "Vimeo Video"
+
+#: modules/extras/vimeo-embed.php:25
+msgid "Embedded Vimeo video"
+msgstr "Video incorporato Vimeo"
 
 #: modules/extras/youtube.php:63
 #: modules/extras/youtube.php:66
@@ -328,6 +322,14 @@ msgstr "Video riservato"
 #: modules/extras/youtube.php:144
 msgid "Unknown YouTube API response received."
 msgstr "Risposta sconosciuta ricevuta da API YouTube."
+
+#: modules/extras/megaupload.php:116
+msgid "File Temporarily Unavailable"
+msgstr "File temporameamente non disponibile"
+
+#: modules/extras/megaupload.php:122
+msgid "API Error"
+msgstr "Errore API"
 
 #: core/init.php:230
 msgid "Once Weekly"
@@ -822,7 +824,7 @@ msgstr "Errore : La ID del link non é stata specificata"
 msgid "Failed to load link details (%s)"
 msgstr "Non é stato possibile caricare i dettagli sul link (%s)"
 
-#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.3)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.3.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: core/core.php:2633
 msgid "Broken Link Checker"
@@ -919,208 +921,6 @@ msgstr "Sorgente : %s"
 msgid "You can see all broken links here:"
 msgstr "Qui puoi vedere tutti i link rotti:"
 
-#: includes/containers.php:122
-msgid "%d '%s' has been deleted"
-msgid_plural "%d '%s' have been deleted"
-msgstr[0] "%d '%s' é stato cancellato"
-msgstr[1] "%d '%s' sono stati cancellati"
-
-#: includes/containers.php:873
-#: includes/containers.php:891
-msgid "Container type '%s' not recognized"
-msgstr "Container type '%s' non riconosciuto"
-
-#: includes/utility-class.php:286
-msgid "%d second"
-msgid_plural "%d seconds"
-msgstr[0] "%d secondo"
-msgstr[1] "%d secondi"
-
-#: includes/utility-class.php:287
-msgid "%d second ago"
-msgid_plural "%d seconds ago"
-msgstr[0] "%d secondo fa"
-msgstr[1] "%d secondi fa"
-
-#: includes/utility-class.php:290
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] "%d minuto"
-msgstr[1] "%d minuti"
-
-#: includes/utility-class.php:291
-msgid "%d minute ago"
-msgid_plural "%d minutes ago"
-msgstr[0] "%d minuto fa"
-msgstr[1] "%d minuti fa"
-
-#: includes/utility-class.php:294
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d ora"
-msgstr[1] "%d ore"
-
-#: includes/utility-class.php:295
-msgid "%d hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "%d ora fa"
-msgstr[1] "%d ore fa"
-
-#: includes/utility-class.php:298
-msgid "%d day"
-msgid_plural "%d days"
-msgstr[0] "%d giorno"
-msgstr[1] "%d giorni"
-
-#: includes/utility-class.php:299
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] "%d giorno fa"
-msgstr[1] "%d giorni fa"
-
-#: includes/utility-class.php:302
-msgid "%d month"
-msgid_plural "%d months"
-msgstr[0] "%d mese"
-msgstr[1] "%d mesi"
-
-#: includes/utility-class.php:303
-msgid "%d month ago"
-msgid_plural "%d months ago"
-msgstr[0] "%d mese fa"
-msgstr[1] "%d mesi fa"
-
-#: includes/parsers.php:109
-msgid "Editing is not implemented in the '%s' parser"
-msgstr "La modifica non é implementata nel '%s' parser"
-
-#: includes/parsers.php:124
-msgid "Unlinking is not implemented in the '%s' parser"
-msgstr "Il de-link non é implementatato nel '%s' parser"
-
-#: includes/links.php:215
-msgid "The plugin script was terminated while trying to check the link."
-msgstr "Lo script del plugin was é stato fermato durante il tentativo di verifica del link."
-
-#: includes/links.php:261
-msgid "The plugin doesn't know how to check this type of link."
-msgstr "Questo plugin non é in grado di potere verificare questo tipo di link."
-
-#: includes/links.php:349
-msgid "Link is valid."
-msgstr "Il link é valido."
-
-#: includes/links.php:351
-msgid "Link is broken."
-msgstr "Il link é rotto."
-
-#: includes/links.php:564
-#: includes/links.php:666
-#: includes/links.php:693
-msgid "Link is not valid"
-msgstr "Link non valido"
-
-#: includes/links.php:581
-msgid "This link can not be edited because it is not used anywhere on this site."
-msgstr "Questo link non può essere modificato poiché non viene utilizzato in nessuna parte di questo sito."
-
-#: includes/links.php:607
-msgid "Failed to create a DB entry for the new URL."
-msgstr "Non é stato possibile creare una entry nel DB per il nuovo URL."
-
-#: includes/links.php:673
-msgid "This link is not a redirect"
-msgstr "Questo link non é redirect"
-
-#: includes/links.php:720
-#: includes/links.php:757
-msgid "Couldn't delete the link's database record"
-msgstr "Non é possibile cancellare dal database il record per il link"
-
-#: includes/links.php:831
-msgctxt "link status"
-msgid "Unknown"
-msgstr "Sconosciuto"
-
-#: includes/links.php:869
-msgid "Not checked"
-msgstr "Non verificato"
-
-#: includes/links.php:872
-msgid "False positive"
-msgstr "Falso positivo"
-
-#: includes/admin/sidebar.php:2
-msgid "Donate $10, $20 or $50!"
-msgstr "Dona $10, $20 or $50!"
-
-#: includes/admin/sidebar.php:5
-msgid "If you like this plugin, please donate to support development and maintenance!"
-msgstr "Avessi gradito BLC, sostieni con una donazione il suo sviluppo ed il mantenimento!"
-
-#: includes/admin/sidebar.php:22
-msgid "Return to WordPress Dashboard"
-msgstr "Ritorna alla Bacheca WordPress"
-
-#: includes/admin/sidebar.php:50
-msgid "More plugins by Janis Elsts"
-msgstr "Altri plugin da Janis Elsts"
-
-#: includes/admin/search-form.php:16
-msgid "Save This Search As a Filter"
-msgstr "Salva questa ricerca come filtro"
-
-#: includes/admin/search-form.php:26
-msgid "Delete This Filter"
-msgstr "Cancella questo filtro"
-
-#: includes/admin/search-form.php:32
-#: includes/link-query.php:53
-msgid "Search"
-msgstr "Cerca"
-
-#: includes/admin/search-form.php:42
-msgid "Link text"
-msgstr "Testo del link"
-
-#: includes/admin/search-form.php:45
-#: includes/admin/table-printer.php:173
-msgid "URL"
-msgstr "URL"
-
-#: includes/admin/search-form.php:48
-#: includes/admin/table-printer.php:455
-msgid "HTTP code"
-msgstr "Codice HTTP"
-
-#: includes/admin/search-form.php:51
-msgid "Link status"
-msgstr "Stato del link"
-
-#: includes/admin/search-form.php:68
-#: includes/admin/search-form.php:85
-msgid "Link type"
-msgstr "Tipo di link"
-
-#: includes/admin/search-form.php:70
-msgid "Any"
-msgstr "Tutti"
-
-#: includes/admin/search-form.php:74
-msgid "Links used in"
-msgstr "Link utilizzati in"
-
-#: includes/admin/search-form.php:112
-msgid "Search Links"
-msgstr "Ricerca link"
-
-#: includes/admin/search-form.php:113
-#: includes/admin/table-printer.php:313
-#: includes/admin/table-printer.php:595
-#: includes/admin/table-printer.php:601
-msgid "Cancel"
-msgstr "Annulla"
-
 #: includes/admin/links-page-js.php:58
 #: includes/admin/links-page-js.php:301
 msgid "Wait..."
@@ -1202,9 +1002,76 @@ msgstr "Inserisci prima il termine di ricerca."
 msgid "Select one or more links to edit."
 msgstr "Seleziona uno o più link da modificare."
 
-#: includes/admin/db-upgrade.php:95
-msgid "Failed to delete old DB tables. Database error : %s"
-msgstr "Non é stato possibile cancellare le vecchie tabelle del DB. Errore database : %s"
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Salva questa ricerca come filtro"
+
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "Cancella questo filtro"
+
+#: includes/admin/search-form.php:32
+#: includes/link-query.php:53
+msgid "Search"
+msgstr "Cerca"
+
+#: includes/admin/search-form.php:42
+msgid "Link text"
+msgstr "Testo del link"
+
+#: includes/admin/search-form.php:45
+#: includes/admin/table-printer.php:173
+msgid "URL"
+msgstr "URL"
+
+#: includes/admin/search-form.php:48
+#: includes/admin/table-printer.php:455
+msgid "HTTP code"
+msgstr "Codice HTTP"
+
+#: includes/admin/search-form.php:51
+msgid "Link status"
+msgstr "Stato del link"
+
+#: includes/admin/search-form.php:68
+#: includes/admin/search-form.php:85
+msgid "Link type"
+msgstr "Tipo di link"
+
+#: includes/admin/search-form.php:70
+msgid "Any"
+msgstr "Tutti"
+
+#: includes/admin/search-form.php:74
+msgid "Links used in"
+msgstr "Link utilizzati in"
+
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Ricerca link"
+
+#: includes/admin/search-form.php:113
+#: includes/admin/table-printer.php:313
+#: includes/admin/table-printer.php:595
+#: includes/admin/table-printer.php:601
+msgid "Cancel"
+msgstr "Annulla"
+
+#: includes/admin/sidebar.php:2
+msgid "Donate $10, $20 or $50!"
+msgstr "Dona $10, $20 or $50!"
+
+#: includes/admin/sidebar.php:5
+msgid "If you like this plugin, please donate to support development and maintenance!"
+msgstr "Avessi gradito BLC, sostieni con una donazione il suo sviluppo ed il mantenimento!"
+
+#: includes/admin/sidebar.php:22
+msgid "Return to WordPress Dashboard"
+msgstr "Ritorna alla Bacheca WordPress"
+
+#: includes/admin/sidebar.php:50
+msgid "More plugins by Janis Elsts"
+msgstr "Altri plugin da Janis Elsts"
 
 #: includes/admin/options-page-js.php:54
 msgid "Hide debug info"
@@ -1374,85 +1241,17 @@ msgstr "Aggiorna URL"
 msgid "[An orphaned link! This is a bug.]"
 msgstr "[Un link orfano! Questo é un bug.]"
 
-#: includes/extra-strings.php:2
-msgctxt "module name"
-msgid "Basic HTTP"
-msgstr "HTTP di base"
+#: includes/admin/db-upgrade.php:95
+msgid "Failed to delete old DB tables. Database error : %s"
+msgstr "Non é stato possibile cancellare le vecchie tabelle del DB. Errore database : %s"
 
-#: includes/extra-strings.php:3
-msgctxt "module name"
-msgid "Blogroll items"
-msgstr "Elementi blogroll"
+#: includes/parsers.php:109
+msgid "Editing is not implemented in the '%s' parser"
+msgstr "La modifica non é implementata nel '%s' parser"
 
-#: includes/extra-strings.php:4
-msgctxt "module name"
-msgid "Comments"
-msgstr "Commenti"
-
-#: includes/extra-strings.php:5
-msgctxt "module name"
-msgid "Custom fields"
-msgstr "Campi personalizzati"
-
-#: includes/extra-strings.php:6
-msgctxt "module name"
-msgid "Embedded DailyMotion videos"
-msgstr "Video incorporati DailyMotion"
-
-#: includes/extra-strings.php:7
-msgctxt "module name"
-msgid "Embedded Vimeo videos"
-msgstr "Video incorporati Vimeo"
-
-#: includes/extra-strings.php:8
-msgctxt "module name"
-msgid "Embedded YouTube videos"
-msgstr "Video incorporati YouTube"
-
-#: includes/extra-strings.php:9
-msgctxt "module name"
-msgid "HTML images"
-msgstr "HTML immagini"
-
-#: includes/extra-strings.php:10
-msgctxt "module name"
-msgid "HTML links"
-msgstr "HTML link"
-
-#: includes/extra-strings.php:11
-msgctxt "module name"
-msgid "MediaFire API"
-msgstr "API MediaFire"
-
-#: includes/extra-strings.php:12
-msgctxt "module name"
-msgid "MegaUpload API"
-msgstr "API MegaUpload"
-
-#: includes/extra-strings.php:13
-msgctxt "module name"
-msgid "Plaintext URLs"
-msgstr "URL senza formattazione "
-
-#: includes/extra-strings.php:14
-msgctxt "module name"
-msgid "RapidShare API"
-msgstr "API di RapidShare"
-
-#: includes/extra-strings.php:15
-msgctxt "module name"
-msgid "YouTube API"
-msgstr "API di YouTube"
-
-#: includes/extra-strings.php:16
-msgctxt "module name"
-msgid "Posts"
-msgstr "Articoli"
-
-#: includes/extra-strings.php:17
-msgctxt "module name"
-msgid "Pages"
-msgstr "Pagine"
+#: includes/parsers.php:124
+msgid "Unlinking is not implemented in the '%s' parser"
+msgstr "Il de-link non é implementatato nel '%s' parser"
 
 #: includes/link-query.php:25
 msgid "Broken"
@@ -1494,16 +1293,6 @@ msgstr "Risultati della ricerca"
 #: includes/link-query.php:102
 msgid "No links found for your query"
 msgstr "Nessun link trovato in relazione ai termini di ricerca"
-
-#: includes/instances.php:102
-#: includes/instances.php:158
-msgid "Container %s[%d] not found"
-msgstr "Container %s[%d] non trovato"
-
-#: includes/instances.php:111
-#: includes/instances.php:167
-msgid "Parser '%s' not found."
-msgstr "Parser '%s' non trovato."
 
 #: includes/any-post.php:427
 msgid "Preview &#8220;%s&#8221;"
@@ -1556,6 +1345,224 @@ msgid "%d \"%s\" moved to the Trash."
 msgid_plural "%d \"%s\" moved to the Trash."
 msgstr[0] "%d \"%s\" é stato spostato nel cestino."
 msgstr[1] "%d \"%s\" sono stati spostati nel cestino."
+
+#: includes/containers.php:122
+msgid "%d '%s' has been deleted"
+msgid_plural "%d '%s' have been deleted"
+msgstr[0] "%d '%s' é stato cancellato"
+msgstr[1] "%d '%s' sono stati cancellati"
+
+#: includes/containers.php:873
+#: includes/containers.php:891
+msgid "Container type '%s' not recognized"
+msgstr "Container type '%s' non riconosciuto"
+
+#: includes/links.php:215
+msgid "The plugin script was terminated while trying to check the link."
+msgstr "Lo script del plugin was é stato fermato durante il tentativo di verifica del link."
+
+#: includes/links.php:261
+msgid "The plugin doesn't know how to check this type of link."
+msgstr "Questo plugin non é in grado di potere verificare questo tipo di link."
+
+#: includes/links.php:349
+msgid "Link is valid."
+msgstr "Il link é valido."
+
+#: includes/links.php:351
+msgid "Link is broken."
+msgstr "Il link é rotto."
+
+#: includes/links.php:564
+#: includes/links.php:666
+#: includes/links.php:693
+msgid "Link is not valid"
+msgstr "Link non valido"
+
+#: includes/links.php:581
+msgid "This link can not be edited because it is not used anywhere on this site."
+msgstr "Questo link non può essere modificato poiché non viene utilizzato in nessuna parte di questo sito."
+
+#: includes/links.php:607
+msgid "Failed to create a DB entry for the new URL."
+msgstr "Non é stato possibile creare una entry nel DB per il nuovo URL."
+
+#: includes/links.php:673
+msgid "This link is not a redirect"
+msgstr "Questo link non é redirect"
+
+#: includes/links.php:720
+#: includes/links.php:757
+msgid "Couldn't delete the link's database record"
+msgstr "Non é possibile cancellare dal database il record per il link"
+
+#: includes/links.php:831
+msgctxt "link status"
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: includes/links.php:869
+msgid "Not checked"
+msgstr "Non verificato"
+
+#: includes/links.php:872
+msgid "False positive"
+msgstr "Falso positivo"
+
+#: includes/extra-strings.php:2
+msgctxt "module name"
+msgid "Basic HTTP"
+msgstr "HTTP di base"
+
+#: includes/extra-strings.php:3
+msgctxt "module name"
+msgid "Blogroll items"
+msgstr "Elementi blogroll"
+
+#: includes/extra-strings.php:4
+msgctxt "module name"
+msgid "Comments"
+msgstr "Commenti"
+
+#: includes/extra-strings.php:5
+msgctxt "module name"
+msgid "Custom fields"
+msgstr "Campi personalizzati"
+
+#: includes/extra-strings.php:6
+msgctxt "module name"
+msgid "Embedded DailyMotion videos"
+msgstr "Video incorporati DailyMotion"
+
+#: includes/extra-strings.php:7
+msgctxt "module name"
+msgid "Embedded Vimeo videos"
+msgstr "Video incorporati Vimeo"
+
+#: includes/extra-strings.php:8
+msgctxt "module name"
+msgid "Embedded YouTube videos"
+msgstr "Video incorporati YouTube"
+
+#: includes/extra-strings.php:9
+msgctxt "module name"
+msgid "Embedded YouTube videos (old embed code)"
+msgstr "Video incorporati YouTube (vecchio codice embed)"
+
+#: includes/extra-strings.php:10
+msgctxt "module name"
+msgid "HTML images"
+msgstr "HTML immagini"
+
+#: includes/extra-strings.php:11
+msgctxt "module name"
+msgid "HTML links"
+msgstr "HTML link"
+
+#: includes/extra-strings.php:12
+msgctxt "module name"
+msgid "MediaFire API"
+msgstr "API MediaFire"
+
+#: includes/extra-strings.php:13
+msgctxt "module name"
+msgid "MegaUpload API"
+msgstr "API MegaUpload"
+
+#: includes/extra-strings.php:14
+msgctxt "module name"
+msgid "Plaintext URLs"
+msgstr "URL senza formattazione "
+
+#: includes/extra-strings.php:15
+msgctxt "module name"
+msgid "RapidShare API"
+msgstr "API di RapidShare"
+
+#: includes/extra-strings.php:16
+msgctxt "module name"
+msgid "YouTube API"
+msgstr "API di YouTube"
+
+#: includes/extra-strings.php:17
+msgctxt "module name"
+msgid "Posts"
+msgstr "Articoli"
+
+#: includes/extra-strings.php:18
+msgctxt "module name"
+msgid "Pages"
+msgstr "Pagine"
+
+#: includes/utility-class.php:244
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d secondo"
+msgstr[1] "%d secondi"
+
+#: includes/utility-class.php:245
+msgid "%d second ago"
+msgid_plural "%d seconds ago"
+msgstr[0] "%d secondo fa"
+msgstr[1] "%d secondi fa"
+
+#: includes/utility-class.php:248
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuto"
+msgstr[1] "%d minuti"
+
+#: includes/utility-class.php:249
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d minuto fa"
+msgstr[1] "%d minuti fa"
+
+#: includes/utility-class.php:252
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d ora"
+msgstr[1] "%d ore"
+
+#: includes/utility-class.php:253
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d ora fa"
+msgstr[1] "%d ore fa"
+
+#: includes/utility-class.php:256
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d giorno"
+msgstr[1] "%d giorni"
+
+#: includes/utility-class.php:257
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d giorno fa"
+msgstr[1] "%d giorni fa"
+
+#: includes/utility-class.php:260
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d mese"
+msgstr[1] "%d mesi"
+
+#: includes/utility-class.php:261
+msgid "%d month ago"
+msgid_plural "%d months ago"
+msgstr[0] "%d mese fa"
+msgstr[1] "%d mesi fa"
+
+#: includes/instances.php:102
+#: includes/instances.php:158
+msgid "Container %s[%d] not found"
+msgstr "Container %s[%d] non trovato"
+
+#: includes/instances.php:111
+#: includes/instances.php:167
+msgid "Parser '%s' not found."
+msgstr "Parser '%s' non trovato."
 
 #. Plugin URI of the plugin/theme
 msgid "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
