@@ -117,7 +117,7 @@ class blcLink {
 			'redirect_count' => '%d',
 			'log' => '%s',
 			'http_code' => '%d',
-			'request_duration' => '%f',
+			'request_duration' => '%F',
 			'timeout' => 'bool',
 			'result_hash' => '%s',
 			'broken' => 'bool',
