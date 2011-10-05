@@ -217,38 +217,6 @@ class wsBrokenLinkChecker {
 	}
 	
   /**
-   * Load the UserVoice script for use with the "Feedback" widget
-   *
-   * @return void
-   */
-	function uservoice_widget(){
-		?>
-		<script type="text/javascript">
-			jQuery('#blc-feedback-widget').click(function(){
-				//Launch UserVoice
-				UserVoice.Popin.show(uservoiceOptions); 
-				return false;
-			});
-		
-		  var uservoiceOptions = {
-		    key: 'whiteshadow',
-		    host: 'feedback.w-shadow.com', 
-		    forum: '58400',
-		    lang: 'en',
-		    showTab: false
-		  };
-		  function _loadUserVoice() {
-		    var s = document.createElement('script');
-		    s.src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
-		    document.getElementsByTagName('head')[0].appendChild(s);
-		  }
-		  _loadSuper = window.onload;
-		  window.onload = (typeof window.onload != 'function') ? _loadUserVoice : function() { _loadSuper(); _loadUserVoice(); };
-		</script>
-		<?php
-	}
-	
-  /**
    * Initiate a full recheck - reparse everything and check all links anew. 
    *
    * @return void
@@ -352,14 +320,10 @@ class wsBrokenLinkChecker {
         add_screen_meta_link(
         	'blc-feedback-widget',
         	__('Feedback', 'broken-link-checker'),
-        	'#',
+        	'http://whiteshadow.uservoice.com/forums/58400-broken-link-checker',
         	array($options_page_hook, $links_page_hook)
 		);
 		
-		//Add the supporting UserVoice-invocation code
-        add_action( 'admin_footer-' . $options_page_hook, array(&$this, 'uservoice_widget') );
-        add_action( 'admin_footer-' . $links_page_hook, array(&$this, 'uservoice_widget') );
-        
         //Make the Settings page link to the link list, and vice versa
         add_screen_meta_link(
         	'blc-settings-link',
