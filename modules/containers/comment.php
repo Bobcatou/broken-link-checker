@@ -75,7 +75,7 @@ class blcComment extends blcContainer{
 						$this->container_id
 					)
 				);
-			};
+			}
 		}
 	}
 	
@@ -96,7 +96,7 @@ class blcComment extends blcContainer{
 					$this->container_id
 				)
 			);
-		};
+		}
 	}
 	
 	/**
@@ -145,7 +145,7 @@ class blcComment extends blcContainer{
 		$actions = array();
 		
 		$comment = $this->get_wrapped_object();
-		$post = get_post($comment->comment_post_ID);
+		$post = get_post($comment->comment_post_ID); /* @var StdClass $post */
 		
 		//Display Edit & Delete/Trash links only if the user has the right caps.
 		$user_can = current_user_can('edit_post', $comment->comment_post_ID);  
@@ -226,64 +226,49 @@ class blcCommentManager extends blcContainerManager {
 	function init(){
 		parent::init();
 		
-		add_action('edit_comment', array(&$this, 'hook_modified_comment'));
-		add_action('unspammed_comment', array(&$this, 'hook_modified_comment'));
-		add_action('untrashed_comment', array(&$this, 'hook_modified_comment'));
-		
-		add_action('wp_insert_comment', array(&$this, 'hook_wp_insert_comment'), 10, 2);
-		
-		add_action('deleted_comment', array(&$this, 'hook_deleted_comment'));
-		add_action('spammed_comment', array(&$this, 'hook_deleted_comment'));
-		add_action('trashed_comment', array(&$this, 'hook_deleted_comment'));
-		
+		add_action('post_comment', array(&$this, 'hook_post_comment'), 10, 2);
+		add_action('edit_comment', array(&$this, 'hook_edit_comment'));
 		add_action('transition_comment_status', array(&$this, 'hook_comment_status'), 10, 3);
 		
 		add_action('trashed_post_comments', array(&$this, 'hook_trashed_post_comments'), 10, 2);
 		add_action('untrash_post_comments', array(&$this, 'hook_untrash_post_comments'));
 	}
-	
-	function hook_modified_comment($comment_id){
-		$comment = get_comment($comment_id);
-		
-		if ( $comment->comment_approved == '1'){
+
+	function hook_post_comment($comment_id, $comment_status){
+		if ( $comment_status == '1' ) {
 			$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
 	}
-	
-	function hook_wp_insert_comment($comment_id, $comment){
-		if ( $comment->comment_approved == '1'){
+
+	function hook_edit_comment($comment_id){
+		if ( wp_get_comment_status($comment_id) == 'approved' ){
 			$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
 			$container->mark_as_unsynched();
 		}
-	}
-	
-	function hook_deleted_comment($comment_ids){
-		if ( !is_array($comment_ids) ){
-			$comment_ids = array($comment_ids);
-		}
-		
-		foreach($comment_ids as $comment_id){
-			$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
-			$container->delete();
-		}
-		//Clean up any dangling links
-		blc_cleanup_links();
 	}
 	
 	function hook_comment_status($new_status, $old_status, $comment){
-		$container = blcContainerHelper::get_container(array($this->container_type, $comment->comment_ID));
-		if ( $new_status == 'approved' ){
-			$container->mark_as_unsynched();
-		} else {
-			$container->delete();
-			blc_cleanup_links();
+		//We only care about approved comments.
+		if ( ($new_status == 'approved') || ($old_status == 'approved') ){
+			$container = blcContainerHelper::get_container(array($this->container_type, $comment->comment_ID));
+			if ($new_status == 'approved') {
+				$container->mark_as_unsynched();
+			} else {
+				$container->delete();
+				blc_cleanup_links();
+			}
 		}
 	}
 	
 	function hook_trashed_post_comments($post_id, $statuses){
-		$comment_ids = array_keys($statuses);
-		$this->hook_deleted_comment($comment_ids);
+		foreach($statuses as $comment_id => $comment_status){
+			if ( $comment_status == '1' ){
+				$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
+				$container->delete();
+			}
+		}
+		blc_cleanup_links();
 	}
 	
 	function hook_untrash_post_comments($post_id){
@@ -293,7 +278,6 @@ class blcCommentManager extends blcContainerManager {
 		$statuses = get_post_meta($post_id, '_wp_trash_meta_comments_status', true);
 		if ( empty($statuses) || !is_array($statuses) ) return;
 		
-		$comment_ids = array();
 		foreach ( $statuses as $comment_id => $comment_status ){
 			if ( $comment_status == '1' ){ //if approved
 				$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
@@ -309,7 +293,7 @@ class blcCommentManager extends blcContainerManager {
    * @return void
    */
 	function resynch($forced = false){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		global $blclog;
 		
 		if ( $forced ){
@@ -407,7 +391,7 @@ class blcCommentManager extends blcContainerManager {
    * @return array of blcPostContainer indexed by "container_type|container_id"
    */
 	function get_containers($containers, $purpose = '', $load_wrapped_objects = false){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$containers = $this->make_containers($containers);
 		
@@ -415,7 +399,7 @@ class blcCommentManager extends blcContainerManager {
 		$preload = $load_wrapped_objects || in_array($purpose, array(BLC_FOR_DISPLAY, BLC_FOR_PARSING));
 		if ( $preload ){
 			$comment_ids = array();
-			foreach($containers as $container){
+			foreach($containers as $container){ /* @var blcContainer $container */
 				$comment_ids[] = $container->container_id;
 			}
 			
@@ -426,7 +410,7 @@ class blcCommentManager extends blcContainerManager {
 			
 			foreach($comments as $comment){
 				//Cache the comment in the internal WP object cache
-				$comment = get_comment($comment);
+				$comment = get_comment($comment); /* @var StdClass $comment */
 				
 				//Attach it to the container
 				$key = $this->container_type . '|' . $comment->comment_ID;
