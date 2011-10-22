@@ -1136,7 +1136,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function links_page(){
-        global $wpdb, $blclog;
+        global $wpdb, $blclog; /* @var wpdb $wpdb */
         
         $blc_link_query = blcLinkQuery::getInstance();
         
@@ -1628,9 +1628,9 @@ class wsBrokenLinkChecker {
 			//Make a list of all containers associated with these links, with each container
 			//listed only once.
 			$containers = array();
-			foreach($links as $link){
+			foreach($links as $link){ /* @var blcLink $link */
 				$instances = $link->get_instances();
-				foreach($instances as $instance){
+				foreach($instances as $instance){ /* @var blcLinkInstance $instance */
 					$key = $instance->container_type . '|' . $instance->container_id;
 					$containers[$key] = array($instance->container_type, $instance->container_id);
 				}
@@ -1642,7 +1642,7 @@ class wsBrokenLinkChecker {
 			//Delete/trash their associated entities
 			$deleted = array();
 			$skipped = array();
-			foreach($containers as $container){
+			foreach($containers as $container){ /* @var blcContainer $container */
 				if ( !$container->current_user_can_delete() ){
 					continue;
 				}
@@ -1658,7 +1658,7 @@ class wsBrokenLinkChecker {
 					}
 				}
 				
-				if ( is_wp_error($rez) ){
+				if ( is_wp_error($rez) ){ /* @var WP_Error $rez */
 					//Record error messages for later display
 					$messages[] = $rez->get_error_message();
 					$msg_class = 'error';
@@ -2140,7 +2140,7 @@ class wsBrokenLinkChecker {
    * @return int|array
    */
 	function get_links_to_check($max_results = 0, $count_only = false){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
@@ -2511,7 +2511,7 @@ class wsBrokenLinkChecker {
 	}
 	
 	function ajax_link_details(){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		if (!current_user_can('edit_others_posts')){
 			die( __("You don't have sufficient privileges to access this information!", 'broken-link-checker') );
@@ -2828,10 +2828,10 @@ class wsBrokenLinkChecker {
 		
 		//Show up to $max_displayed_links broken link instances right in the email.
 		$displayed = 0;
-		foreach($links as $link){
+		foreach($links as $link){ /* @var blcLink $link */
 			
 			$instances = $link->get_instances();
-			foreach($instances as $instance){
+			foreach($instances as $instance){ /* @var blcLinkInstance $instance */
 				$pieces = array(
 					sprintf( __('Link text : %s', 'broken-link-checker'), $instance->ui_get_link_text('email') ),
 					sprintf( __('Link URL : <a href="%s">%s</a>', 'broken-link-checker'), htmlentities($link->url), blcUtility::truncate($link->url, 70, '') ),
