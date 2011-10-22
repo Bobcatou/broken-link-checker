@@ -292,7 +292,7 @@ class blcContainer {
    * @return bool
    */
 	function mark_as_synched(){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$this->last_synch = time();
 		
@@ -312,7 +312,7 @@ class blcContainer {
    * @return bool
    */
 	function mark_as_unsynched(){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$q = "INSERT INTO {$wpdb->prefix}blc_synch( container_id, container_type, synched, last_synch)
 			  VALUES( %d, %s, %d, '0000-00-00 00:00:00' )
@@ -358,7 +358,7 @@ class blcContainer {
    * @return bool
    */
 	function delete(){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		//Delete instances first.
 		$rez = $this->delete_instances();
@@ -380,12 +380,12 @@ class blcContainer {
 	
   /**
    * Delete all link instance records associated with this container.
-   * NB: Calling this mehtod will not affect the WP entity (e.g. a post) corresponding to this container.
+   * NB: Calling this method will not affect the WP entity (e.g. a post) corresponding to this container.
    *
    * @return bool
    */
 	function delete_instances(){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		//Remove instances associated with this container
 		$q = "DELETE FROM {$wpdb->prefix}blc_instances 
@@ -613,8 +613,8 @@ class blcContainerHelper {
    * @param array $container Either [container_type, container_id], or an assoc. array of container data. 
    * @return blcContainer|null
    */
-	function get_container( $container ){
-		global $wpdb;
+	static function get_container( $container ){
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		if ( !is_array($container) || ( count($container) < 2 ) ){
 			return null;
@@ -661,7 +661,7 @@ class blcContainerHelper {
    * @return array of blcContainer indexed by "container_type|container_id"
    */
 	static function get_containers( $containers, $purpose = '', $fallback = '', $load_wrapped_objects = false ){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		//If the input is invalid or empty, return an empty array.
 		if ( !is_array($containers) || (count($containers) < 1) ) {
@@ -735,8 +735,8 @@ class blcContainerHelper {
    * @param integer $max_results The maximum number of containers to return. Defaults to returning all unsynched containers. 
    * @return array of blcContainer
    */
-	function get_unsynched_containers($max_results = 0){
-		global $wpdb;
+	static function get_unsynched_containers($max_results = 0){
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$q = "SELECT * FROM {$wpdb->prefix}blc_synch WHERE synched = 0";
 		if ( $max_results > 0 ){
@@ -760,7 +760,7 @@ class blcContainerHelper {
    * @param bool $forced If true, assume that no synch. records exist and build all of them from scratch.
    * @return void
    */
-	function resynch($forced = false){
+	static function resynch($forced = false){
 		global $wpdb;
     	
 		$module_manager = blcModuleManager::getInstance();
@@ -785,7 +785,7 @@ class blcContainerHelper {
 	 * @return bool
 	 */
 	function mark_as_unsynched_where($formats, $container_types){
-		global $wpdb;
+		global $wpdb; /* @var wpdb $wpdb */
 		global $blclog;
 		
 		//Find containers that match any of the specified formats and add them to
@@ -843,8 +843,8 @@ class blcContainerHelper {
 	 * 
 	 * @return bool
 	 */
-	function cleanup_containers(){
-		global $wpdb;
+	static function cleanup_containers(){
+		global $wpdb; /* @var wpdb $wpdb */
 		global $blclog;
 		
 		$module_manager = blcModuleManager::getInstance();
@@ -867,7 +867,7 @@ class blcContainerHelper {
    * @param int $n Number of deleted containers.
    * @return string A delete confirmation message, e.g. "5 posts were moved to trash"
    */
-	function ui_bulk_delete_message($container_type, $n){
+	static function ui_bulk_delete_message($container_type, $n){
 		$manager = blcContainerHelper::get_manager($container_type);
 		if ( is_null($manager) ){
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
@@ -885,7 +885,7 @@ class blcContainerHelper {
 	 * @param int $n
 	 * @return string
 	 */
-	function ui_bulk_trash_message($container_type, $n){
+	static function ui_bulk_trash_message($container_type, $n){
 		$manager = blcContainerHelper::get_manager($container_type);
 		if ( is_null($manager) ){
 			return sprintf(__("Container type '%s' not recognized", 'broken-link-checker'), $container_type);
