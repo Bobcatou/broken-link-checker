@@ -1,7 +1,8 @@
 <?php
 
 class blcModuleManager {
-	
+
+	/* @var blcConfigurationManager */
 	var $plugin_conf;
 	var $module_dir = '';
 	
@@ -37,7 +38,7 @@ class blcModuleManager {
 	 * Get an instance of the module manager.
 	 * 
 	 * @param array|null $default_active_modules
-	 * @return object
+	 * @return blcModuleManager
 	 */
 	static function getInstance($default_active_modules = null){
 		static $instance = null;
@@ -355,7 +356,7 @@ class blcModuleManager {
 	 * Does nothing if the module is already active.
 	 * 
 	 * @param string $module_id
-	 * @return bool True if module was activated sucessfully, false otherwise.
+	 * @return bool True if module was activated successfully, false otherwise.
 	 */
 	function activate($module_id){
 		if ( $this->is_active($module_id) ){
@@ -381,6 +382,7 @@ class blcModuleManager {
 			if ( $module ){
 				$module->activated();
 			}
+			return true;
 		} else {
 			return false;
 		}

@@ -11,8 +11,8 @@ class WPMutex {
 	 * @param bool $network_wide 
 	 * @return bool 
 	 */
-	function acquire($name, $timeout = 0, $network_wide = false){
-		global $wpdb;
+	static function acquire($name, $timeout = 0, $network_wide = false){
+		global $wpdb; /* @var wpdb $wpdb */
 		if ( !$network_wide ){
 			$name = WPMutex::_get_private_name($name);
 		}
@@ -27,8 +27,8 @@ class WPMutex {
 	 * @param bool $network_wide 
 	 * @return bool
 	 */
-	function release($name, $network_wide = false){
-		global $wpdb;
+	static function release($name, $network_wide = false){
+		global $wpdb; /* @var wpdb $wpdb */
 		if ( !$network_wide ){
 			$name = WPMutex::_get_private_name($name);
 		}		
@@ -44,7 +44,7 @@ class WPMutex {
 	 * @param string $name
 	 * @return string
 	 */
-	function _get_private_name($name){
+	static function _get_private_name($name){
 		global $current_blog;
 		if ( function_exists('is_multisite') && is_multisite() && isset($current_blog->blog_id) ){
 			$name .= '-blog-' . $current_blog->blog_id;
