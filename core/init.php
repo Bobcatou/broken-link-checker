@@ -166,7 +166,7 @@ function blc_got_unsynched_items(){
  * @return void
  */
 function blc_resynch( $forced = false ){
-	global $wpdb, $blclog;
+	global $wpdb, $blclog; /* @var wpdb $wpdb */
 	
 	if ( $forced ){
 		$blclog->info('... Forced resynchronization initiated');
@@ -297,6 +297,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
 } else {
 	//Display installation errors (if any) on the Dashboard.
 	function blc_print_installation_errors(){
+		global $blc_config_manager;
         if ( $blc_config_manager->options['installation_complete'] ) {
             return;
         }
