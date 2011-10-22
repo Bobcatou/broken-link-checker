@@ -901,7 +901,7 @@ class blcLink {
  * @return bool
  */
 function blc_cleanup_links( $link_id = null ){
-	global $wpdb;
+	global $wpdb; /* @var wpdb $wpdb */
 	global $blclog;
 	
 	$q = "DELETE FROM {$wpdb->prefix}blc_links 
