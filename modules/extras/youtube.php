@@ -3,7 +3,7 @@
 /*
 Plugin Name: YouTube API
 Description: Check links to YouTube videos using the YouTube API.
-Version: 1.0
+Version: 1.1
 Author: Janis Elsts
 
 ModuleID: youtube-checker
@@ -17,12 +17,21 @@ ModuleCheckerUrlPattern: @^http://([\w\d]+\.)*youtube\.[^/]+/watch\?.*v=[^/#]@i
 */
 
 class blcYouTubeChecker extends blcChecker {
+	var $youtube_developer_key = 'AI39si4OM05fWUMbt1g8hBdYPRTGpNbOWVD0-7sKwShqZTOpKigo7Moj1YGk7dMk95-VWB1Iue2aiTNJb655L32-QGM2xq_yVQ';
+	var $api_grace_period = 0.3; //How long to wait between YouTube API requests.
+	var $last_api_request = 0;   //Timestamp of the last request.
 	
 	function can_check($url, $parsed){
 		return true;
 	}
 	
 	function check($url){
+		//Throttle API requests to avoid getting blocked due to quota violation.
+		$delta = microtime_float() - $this->last_api_request; 
+		if ( $delta < $this->api_grace_period ) {
+			usleep(($this->api_grace_period - $delta) * 1000000);
+		}
+		
 		$result = array(
 			'final_url' => $url,
 			'redirect_count' => 0,
@@ -38,13 +47,14 @@ class blcYouTubeChecker extends blcChecker {
 		$video_id = $query['v'];
 		
 		//Fetch video data from the YouTube API
-		$api_url = 'http://gdata.youtube.com/feeds/api/videos/' . $video_id;
+		$api_url = 'http://gdata.youtube.com/feeds/api/videos/' . $video_id . '?key=' . urlencode($this->youtube_developer_key);
 		$conf = blc_get_configuration();
 		$args = array( 'timeout' => $conf->options['timeout'], );
 		
 		$start = microtime_float();
 		$response = wp_remote_get($api_url, $args);
 		$result['request_duration'] = microtime_float() - $start;
+		$this->last_api_request = $start;
 		
 		//Placeholders for video restriction data
 		$state_name = $state_reason = '';
