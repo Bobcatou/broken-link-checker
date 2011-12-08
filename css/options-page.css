@@ -100,17 +100,17 @@
 /* Tab navigation */
 ul.ui-tabs-nav {
 	margin-bottom: -1px;
+	height: 31px;
 	padding-left: 1.5em;
 	
 	overflow: hidden;
 	white-space: nowrap;
 	padding-right: 3.5em;
-	
-	line-height: 5px;
 }
 
 ul.ui-tabs-nav li {
 	display: inline-block;
+	height: 29px;
 	margin: 0 0.5em 0 0;
 	
 	border: 1px solid #DFDFDF;
@@ -146,6 +146,7 @@ ul.ui-tabs-nav li.ui-tabs-selected {
 
 ul.ui-tabs-nav li a {
 	display: inline-block;
+	height: 17px;
 	text-decoration: none;
 	color: #C1C1C1;
 	padding: 0.5em 1em 0.6em 1em;
@@ -180,16 +181,6 @@ ul.ui-tabs-nav li.ui-tabs-selected a {
 	-webkit-border-top-right-radius: 6px;
 	-webkit-border-bottom-right-radius: 6px;
 	-webkit-border-bottom-left-radius: 6px;
-}
-
-/* "Upgrade to Pro" stuff */
-
-.pro-notice {
-	
-}
-
-.pro-notice a {
-	font-style: italic;
 }
 
 /* Right sidebar */
