@@ -58,7 +58,7 @@ class wsScreenMetaLinks11 {
 		//Basically a list of props for a jQuery() call
 		$link = compact('id', 'text', 'href');
 		$link = array_merge($link, $attributes);
-		
+
 		//Add the CSS classes that will make the look like a proper meta link
 		if ( empty($link['class']) ){
 			$link['class'] = '';
@@ -86,7 +86,6 @@ class wsScreenMetaLinks11 {
 		
 		//Find links registered for this page
 		$links = $this->get_links_for_page($hook_suffix);
-		
 		if ( empty($links) ){
 			return;
 		}
@@ -95,6 +94,9 @@ class wsScreenMetaLinks11 {
 		<script type="text/javascript">
 			(function($, links){
 				var container = $('#screen-meta-links');
+				if ( container.length == 0 ) {
+					container = $('<div />').attr('id', 'screen-meta-links').insertAfter('#screen-meta');
+				}
 				for(var i = 0; i < links.length; i++){
 					container.append(
 						$('<div/>')
