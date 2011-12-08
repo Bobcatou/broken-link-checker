@@ -175,7 +175,9 @@ class wsScreenMetaLinks11 {
 			background-image: linear-gradient(bottom, #dfdfdf, #f1f1f1); /* proposed W3C Markup */
 		}
 		
-		#screen-meta .custom-screen-meta-link-wrap a.custom-screen-meta-link {
+		#screen-meta .custom-screen-meta-link-wrap a.custom-screen-meta-link,
+		#screen-meta-links .custom-screen-meta-link-wrap a.custom-screen-meta-link
+		{
 			background-image: none;
 			padding-right: 6px;
 			color: #777;
@@ -260,7 +262,7 @@ function add_screen_meta_link($id, $text, $href, $page, $attributes = null){
 		$instance = new $className;
 	}
 	
-	return $instance->add_screen_meta_link($id, $text, $href, $page, $attributes);
+	$instance->add_screen_meta_link($id, $text, $href, $page, $attributes);
 }
 
 ?>
