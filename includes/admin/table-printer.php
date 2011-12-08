@@ -93,12 +93,38 @@ class blcTablePrinter {
 			if ( !in_array($column_id, $visible_columns) ) {
 				$column_classes[] = 'hidden';
 			}
-			
+
+			$heading = $column['heading'];
+			if ( isset($column['sortable']) && $column['sortable'] ) {
+				$orderby = $column['orderby'];
+				$current_orderby = isset($_GET['orderby']) ? $_GET['orderby'] : '';
+				$current_order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+
+				if ( $orderby == $current_orderby ) {
+					$column_classes[] = 'sorted';
+					$column_classes[] = $current_order;
+					$order = ($current_order == 'asc') ? 'desc' : 'asc'; //Reverse the sort direction
+				} else {
+					$order = 'asc';
+					$column_classes[] = 'desc';
+					$column_classes[] = 'sortable';
+				}
+
+				$heading = sprintf(
+					'<a href="%s"><span>%s</span><span class="sorting-indicator"></span></a>',
+					add_query_arg(array(
+						'orderby' => $orderby,
+						'order' => $order,
+					)),
+					$heading
+				);
+			}
+
 			printf(
 				'<th scope="col" class="%s"%s>%s</th>',
 				implode(' ', $column_classes),
 				isset($column['id']) ? ' id="' . $column['id'] . '"' : '',
-				$column['heading']
+				$heading
 			);
 		}
 		echo '</tr></thead>';
@@ -121,7 +147,8 @@ class blcTablePrinter {
 	
 	/**
 	 * Print the "Bulk Actions" dropdown and navigation links
-	 * 
+	 *
+	 * @param bool $table_compact Whether to use the full or compact view.
 	 * @param string $suffix Optional. Appended to ID and name attributes of the bulk action dropdown. 
 	 * @return void
 	 */
@@ -172,6 +199,8 @@ class blcTablePrinter {
 			'new-url' => array(
 		 		'heading' => __('URL', 'broken-link-checker'),
 		 		'content' => array(&$this, 'column_new_url'),
+				'sortable' => true,
+				'orderby' => 'url',
 			),
 			
 			'used-in' => array(

@@ -327,8 +327,8 @@ class wsBrokenLinkChecker {
         //Make the Settings page link to the link list, and vice versa
         add_screen_meta_link(
         	'blc-settings-link',
-			__('Go to Settings', 'broken-link-checker'),
-			admin_url('options-general.php?page=link-checker-settings'),
+			__('More plugins by Janis Elsts', 'broken-link-checker'),
+			'http://w-shadow.com/MoreWpPlugins/',
 			$links_page_hook,
 			array('style' => 'font-weight: bold;')
 		);
@@ -1125,7 +1125,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '0.9.6' );
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '0.9.7' );
     	wp_enqueue_style('dashboard');
 	}
 	
@@ -1236,12 +1236,14 @@ class wsBrokenLinkChecker {
 			$selected_filter_id,
 			isset($_GET['paged']) ? intval($_GET['paged']) : 1,
 			$this->conf->options['table_links_per_page'], 
-			'broken'
+			'broken',
+			isset($_GET['orderby']) ? $_GET['orderby'] : '',
+			isset($_GET['order']) ? $_GET['order'] : ''
 		);
 		
 		//exec_filter() returns an array with filter data, including the actual filter ID that was used.
 		$filter_id = $current_filter['filter_id'];
-		
+
 		//Error?		
 		if ( empty($current_filter['links']) && !empty($wpdb->last_error) ){
 			printf( __('Database error : %s', 'broken-link-checker'), $wpdb->last_error);
