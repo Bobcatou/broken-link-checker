@@ -416,7 +416,25 @@ class blcLinkQuery {
 				$pieces[] = implode(' OR ', $piece);
 			}
 			
-		}			
+		}
+
+		//Optionally sorting is also possible
+		$order_exprs = array();
+		if ( !empty($params['orderby']) ) {
+			$allowed_columns = array(
+				'url' => 'links.url',
+			);
+			$column = $params['orderby'];
+
+			$direction = !empty($params['order']) ? strtolower($params['order']) : 'asc';
+			if ( !in_array($direction, array('asc', 'desc')) ) {
+				$direction = 'asc';
+			}
+
+			if ( array_key_exists($column, $allowed_columns) ) {
+				$order_exprs[] = $allowed_columns[$column] . ' ' . $direction;
+			}
+		}
 			
 		//Custom filters can optionally call one of the native filters
 		//to narrow down the result set. 
@@ -431,6 +449,7 @@ class blcLinkQuery {
 		return array(
 			'where_exprs' => $pieces,
 			'join_instances' => $join_instances,
+			'order_exprs' => $order_exprs,
 		);
 	}
 	
@@ -440,7 +459,6 @@ class blcLinkQuery {
    * @see blc_get_links()
    *
    * @param array $params
-   * @param string $purpose
    * @return array|int
    */
 	function get_links($params = null){
@@ -459,6 +477,8 @@ class blcLinkQuery {
 			'count_only' => false,
 			'purpose' => '',
 			'include_invalid' => false,
+			'orderby' => '',
+			'order' => '',
 		);
 		
 		$params = array_merge($defaults, $params);
@@ -477,6 +497,13 @@ class blcLinkQuery {
 		$joins = "";
 		if ( $criteria['join_instances'] ){
 			$joins = "JOIN {$wpdb->prefix}blc_instances AS instances ON links.link_id = instances.link_id";
+		}
+
+		//Optional sorting
+		if ( !empty($criteria['order_exprs']) ) {
+			$order_clause = 'ORDER BY ' . implode(', ', $criteria['order_exprs']);
+		} else {
+			$order_clause = '';
 		}
 		
 		if ( $params['count_only'] ){
@@ -506,10 +533,12 @@ class blcLinkQuery {
 				 {$wpdb->prefix}blc_links AS links
 				 $joins
 				
-			   WHERE
+			  WHERE
 				 $where_expr
-				
-			   GROUP BY links.link_id"; //Note: would be a lot faster without GROUP BY 
+				 
+			   GROUP BY links.link_id
+
+			   {$order_clause}"; //Note: would be a lot faster without GROUP BY
 			   
 		//Add the LIMIT clause
 		if ( $params['max_results'] || $params['offset'] ){
@@ -659,9 +688,11 @@ class blcLinkQuery {
 	 * @param int $page Optional. Which page of results to retrieve. Defaults to returning the first page of results.
 	 * @param int $per_page Optional. The number of results per page. Defaults to 30.
 	 * @param string $fallback Optional. Which filter to use if none match the specified $filter_id. Defaults to the native broken link filter.
+	 * @param string $orderby Optional. Sort results by this column.
+	 * @param string $order Optional. Sort direction ('asc' or 'desc').
 	 * @return array Associative array of filter data and the results of its execution.
 	 */
-	function exec_filter($filter_id, $page = 1, $per_page = 30, $fallback = 'broken'){
+	function exec_filter($filter_id, $page = 1, $per_page = 30, $fallback = 'broken', $orderby = '', $order = 'asc'){
 		
 		//Get the selected filter (defaults to displaying broken links)
 		$current_filter = $this->get_filter($filter_id);
@@ -688,6 +719,8 @@ class blcLinkQuery {
 			'offset' => ( ($page-1) * $per_page ),
 			'max_results' => $per_page,
 			'purpose' => BLC_FOR_DISPLAY,
+			'orderby' => $orderby,
+			'order' => $order,
 		);
 		$links = $this->get_filter_links($current_filter, $extra_params);
 		
