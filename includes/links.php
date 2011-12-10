@@ -128,7 +128,7 @@ class blcLink {
 		 	'status_code' => '%s',
 		);
 		
-		if (is_int($arg)){
+		if (is_numeric($arg)){
 			//Load a link with ID = $arg from the DB.
 			$q = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}blc_links WHERE link_id=%d LIMIT 1", $arg);
 			$arr = $wpdb->get_row( $q, ARRAY_A );
