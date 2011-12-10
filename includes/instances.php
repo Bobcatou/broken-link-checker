@@ -518,8 +518,7 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
 				array( $result['container_type'], intval($result['container_id']) ) 
 			);
 		}
-		
-		$containers = blcContainerHelper::get_containers($container_ids, $purpose, $load_wrapped_objects);
+		$containers = blcContainerHelper::get_containers($container_ids, $purpose, '', $load_wrapped_objects);
 	}
 	
 	//Create an object for each instance and group them by link ID
