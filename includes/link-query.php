@@ -571,6 +571,9 @@ class blcLinkQuery {
 			$all_instances = blc_get_instances($link_ids, $purpose, $params['load_containers'], $params['load_wrapped_objects']);
 			//Assign each batch of instances to the right link
 			foreach($all_instances as $link_id => $instances){
+				foreach($instances as $instance) { /** @var blcLinkInstance $instance */
+					$instance->_link = $links[$link_id];
+				}
 				$links[$link_id]->_instances = $instances;
 			}
 		}
