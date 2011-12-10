@@ -89,6 +89,17 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.4 =
+* Added an option to send post authors notifications about broken links in their posts.
+* Added the ability to sort links by URL (click the column header).
+* Added YouTube API throttling to avoid going over the request quota, which could result in false positives on blogs with lots of YouTube videos.
+* Added a Bulgarian translation.
+* Updated Italian, German and Persian translations.
+* Fixed a bug where the "Feedback" and other screen meta links wouldn't show up in WP 3.3.
+* Fixed the tab CSS for the plugin settings page. Now they should be the right size and look the same in all modern browsers (tested in IE, Firefox, Chrome and Opera).
+* Fixed drop-down arrows showing up on meta links that don't actually have dropdowns.
+* Tested on WP 3.3 (RC2).
+
 = 1.3.1 =
 * Added support for the new YouTube embed code style. It needs to be explicitly enabled in options.
 * Added credits link for the Persian language translator.
@@ -547,6 +558,9 @@ To upgrade your installation
 * *There are no release notes for this version*
 
 == Upgrade Notice ==
+
+= 1.4 =
+Adds an option to send post authors notifications about broken links in their posts and the the ability to sort links by URL, as well as a number of other updates and fixes.
 
 = 0.9.4.2 =
 Fixes a major PHP4 compatibility problem introduced in version 0.9.4 and adds a notification bubble with the current broken link count to the "Broken Links" menu.
