@@ -1069,7 +1069,7 @@ msgstr "Falso postivo"
 #: modules/extras/youtube.php:105
 #: modules/extras/youtube.php:132
 msgid "OK"
-msgstr "Aceitar"
+msgstr "OK"
 
 #@ broken-link-checker
 #: includes/parsers.php:109
@@ -1906,7 +1906,7 @@ msgstr "Desconhecido"
 #: modules/extras/rapidshare.php:181
 msgctxt "link status"
 msgid "OK"
-msgstr "Aceitar"
+msgstr "OK"
 
 #@ broken-link-checker
 #: includes/module-manager.php:123
