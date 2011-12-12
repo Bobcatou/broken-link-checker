@@ -67,8 +67,8 @@ class blcMediaFireChecker extends blcChecker {
 			
 			//An unexpected error.
 			$result['broken'] = true; 
-			$result['log'] .= "Error : " . $info->get_error_message();
-			if ( $data = $info->get_error_data() ){
+			$result['log'] .= "Error : " . $rez->get_error_message();
+			if ( $data = $rez->get_error_data() ){
 				$result['log'] .= "\n\nError data : " . print_r($data, true);
 			}
 			
