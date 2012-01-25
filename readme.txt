@@ -62,6 +62,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Romanian - [Ovidiu](http://www.jibo.ro)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
+* Turkish - [Murat Durgun](http://www.lanwifi.net/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
 
 *Note: Some translations are not entirely up to date with the latest release, so parts of the interface may appear untranslated.*
