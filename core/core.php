@@ -326,7 +326,7 @@ class wsBrokenLinkChecker {
 		
         //Make the Settings page link to the link list, and vice versa
         add_screen_meta_link(
-        	'blc-settings-link',
+        	'blc-more-plugins-link',
 			__('More plugins by Janis Elsts', 'broken-link-checker'),
 			'http://w-shadow.com/MoreWpPlugins/',
 			$links_page_hook,
