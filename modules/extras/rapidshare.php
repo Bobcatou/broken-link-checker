@@ -48,7 +48,7 @@ class blcRapidShareChecker extends blcChecker {
 			'redirect_count' => 0,
 			'timeout' => false,
 			'broken' => false,
-			'log' => "<em>(Using RapidShare API)</em>\n\n",
+			'log' => sprintf("<em>(%s)</em>\n\n", __('Using RapidShare API', 'broken-link-checker')),
 			'result_hash' => '',
 			'status_code' => '',
 			'status_text' => '',
