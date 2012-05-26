@@ -71,19 +71,43 @@ endif;
 	</div>					
 </div>
 
-<?php if ( !$configuration->get('user_has_donated') ): ?>
-<style type="text/css">
-#managewp-ad .inside {
-	padding: 2px 0 0 0;
-	margin: 0;
-	text-align: center;
-}
-</style>
-<div id="managewp-ad" class="postbox">
-	<div class="inside">
-		<a href="http://managewp.com/?utm_source=broken_link_checker&utm_medium=Banner&utm_content=mwp250_2&utm_campaign=Plugins" title="ManageWP">
-			<img src="<?php echo plugins_url('images/mwp250_2.png', BLC_PLUGIN_FILE) ?>" width="250" height="250" alt="ManageWP">
-		</a>
-	</div>
-</div>
-<?php endif; ?>
+<?php
+if ( !$configuration->get('user_has_donated') ):
+	$ad_switch_time = strtotime('2012-06-05 12:00');
+	if ( time() < $ad_switch_time ):
+?>
+		<style type="text/css">
+		#themefuse-ad .inside {
+			padding: 2px 0 0 0;
+			margin: 0;
+			text-align: center;
+		}
+		</style>
+		<div id="themefuse-ad" class="postbox">
+			<!--<h3 class="hndle">ThemeFuse</h3> -->
+			<div class="inside">
+				<a href="http://themefuse.com/wp-themes-shop/?plugin=broken-link-checker" title="ThemeFuse themes">
+					<img src="<?php echo plugins_url('images/themefuse-250x250.jpg', BLC_PLUGIN_FILE) ?>" width="250" height="250" alt="ThemeFuse">
+				</a>
+			</div>
+		</div>
+<?php
+	else:
+?>
+		<style type="text/css">
+		#managewp-ad .inside {
+			padding: 2px 0 0 0;
+			margin: 0;
+			text-align: center;
+		}
+		</style>
+		<div id="managewp-ad" class="postbox">
+			<div class="inside">
+				<a href="http://managewp.com/?utm_source=broken_link_checker&utm_medium=Banner&utm_content=mwp250_2&utm_campaign=Plugins" title="ManageWP">
+					<img src="<?php echo plugins_url('images/mwp250_2.png', BLC_PLUGIN_FILE) ?>" width="250" height="250" alt="ManageWP">
+				</a>
+			</div>
+		</div>
+<?php
+	endif;
+endif; ?>
