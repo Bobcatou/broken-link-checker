@@ -90,6 +90,12 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.5.2 =
+* A few minor comment fixes.
+* Move certain styles to a separate CSS file, which is where they belong.
+* Replace the ThemeFuse banner with one from ManageWP (will go live on June 5).
+* Instead of displaying several plugins in the "More plugins by Janis Elsts" box, sometimes display just one plugin (AME).
+
 = 1.5.1 =
 * Updated Portuguese translation.
 * Updated German translation.
