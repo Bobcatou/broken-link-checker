@@ -384,6 +384,18 @@ class wsBrokenLinkChecker {
 			);
 			echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
 		}
+
+	    //Prior to 1.5.2 (released 2012-05-27), there was a bug that would cause the donation flag to be
+	    //set incorrectly. So we'll unset the flag in that case.
+	    $reset_donation_flag =
+	    	($this->conf->get('first_installation_timestamp', 0) < strtotime('2012-05-27 00:00')) &&
+	    	!$this->conf->get('donation_flag_fixed', false);
+
+	    if ( $reset_donation_flag) {
+		    $this->conf->set('user_has_donated', false);
+		    $this->conf->set('donation_flag_fixed', true);
+		    $this->conf->save_options();
+	    }
     	
         if (isset($_POST['recheck']) && !empty($_POST['recheck']) ){
             $this->initiate_recheck();
