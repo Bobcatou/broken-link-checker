@@ -541,6 +541,7 @@ class wsBrokenLinkChecker {
         if ( !empty($_GET['donated']) ){
         	echo '<div id="message" class="updated fade"><p><strong>',__('Thank you for your donation!', 'broken-link-checker'), '</strong></p></div>';
         	$this->conf->set('user_has_donated', true);
+	        $this->conf->save_options();
         }
         
         //Show one when recheck is started, too. 
