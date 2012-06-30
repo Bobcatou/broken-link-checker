@@ -786,7 +786,7 @@ class blcLinkQuery {
  * @uses blcLinkQuery::get_links();
  *
  * @param array $params
- * @return int|array Either an array of blcLink objects, or the number of results for the query.
+ * @return int|blcLink[] Either an array of blcLink objects, or the number of results for the query.
  */
 function blc_get_links($params = null){
 	$instance = blcLinkQuery::getInstance();

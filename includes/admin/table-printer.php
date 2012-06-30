@@ -457,10 +457,10 @@ class blcTablePrinter {
 	/**
 	 * Print the contents of the details row for a specific link.
 	 * 
-	 * @param object $link
+	 * @param blcLink $link
 	 * @return void
 	 */
-	function details_row_contents(&$link){
+	public static function details_row_contents(&$link){
 		?>
 		<div class="blc-detail-container">
 			<div class="blc-detail-block" style="float: left; width: 49%;">

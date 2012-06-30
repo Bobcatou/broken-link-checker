@@ -164,7 +164,7 @@ class wsBrokenLinkChecker {
 								if ( !blc_was_autoexpanded && ( data.status.broken_links > 0 ) ){
 									$('#blc_dashboard_widget.postbox').removeClass('closed');
 									blc_was_autoexpanded = true;
-								};
+								}
 								<?php } ?>
 							} else {
 								$('#wsblc_activity_box').html('<?php _e('[ Network error ]', 'broken-link-checker'); ?>');
@@ -181,8 +181,10 @@ class wsBrokenLinkChecker {
         </script>
         <?php
     }
-    
-    function dashboard_widget_control( $widget_id, $form_inputs = array() ){
+
+    function dashboard_widget_control(
+		/** @noinspection PhpUnusedParameterInspection */ $widget_id, $form_inputs = array()
+	){
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] && 'blc_dashboard_widget' == $_POST['widget_id'] ) {
 			//It appears $form_inputs isn't used in the current WP version, so lets just use $_POST
 			$this->conf->options['autoexpand_widget'] = !empty($_POST['blc-autoexpand']);
@@ -222,8 +224,8 @@ class wsBrokenLinkChecker {
    * @return void
    */
     function initiate_recheck(){
-    	global $wpdb;
-    	
+    	global $wpdb; /** @var wpdb $wpdb */
+
     	//Delete all discovered instances
     	$wpdb->query("TRUNCATE {$wpdb->prefix}blc_instances");
     	
@@ -705,7 +707,7 @@ class wsBrokenLinkChecker {
         <tr valign="top">
         <th scope="row"><?php _e('E-mail notifications', 'broken-link-checker'); ?></th>
         <td>
-        	<p style="margin-top: 0px;">
+        	<p style="margin-top: 0;">
         	<label for='send_email_notifications'>
         		<input type="checkbox" name="send_email_notifications" id="send_email_notifications"
             	<?php if ($this->conf->options['send_email_notifications']) echo ' checked="checked"'; ?>/>
@@ -744,8 +746,9 @@ class wsBrokenLinkChecker {
 				} 
 			?>>
 		        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
-		            if( isset($this->conf->options['broken_link_css']) )
-		                echo $this->conf->options['broken_link_css'];
+		            if( isset($this->conf->options['broken_link_css']) ) {
+						echo $this->conf->options['broken_link_css'];
+					}
 		        ?></textarea>
 		        <p class="description"><?php
 					printf(
@@ -1247,7 +1250,8 @@ class wsBrokenLinkChecker {
 			case 'delete-custom-filter':
 				list($message, $msg_class) = $this->do_delete_custom_filter();
 				break;
-			
+
+			/** @noinspection PhpMissingBreakStatementInspection Deliberate fall-through. */
 			case 'bulk-delete-sources':
 				$force_delete = true;
 			case 'bulk-trash-sources':
@@ -2198,7 +2202,7 @@ class wsBrokenLinkChecker {
    *
    * @param integer $max_results The maximum number of links to return. Defaults to 0 = no limit.
    * @param bool $count_only If true, only the number of found links will be returned, not the links themselves. 
-   * @return int|array
+   * @return int|blcLink[]
    */
 	function get_links_to_check($max_results = 0, $count_only = false){
 		global $wpdb; /* @var wpdb $wpdb */
@@ -2507,7 +2511,7 @@ class wsBrokenLinkChecker {
 					'cnt_error' => $rez['cnt_error'],
 					'errors' => array(),
 				);
-				foreach($rez['errors'] as $error){
+				foreach($rez['errors'] as $error){ /** @var $error WP_Error */
 					array_push( $response['errors'], implode(', ', $error->get_error_messages()) );
 				}
 				
