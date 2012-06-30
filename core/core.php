@@ -323,12 +323,33 @@ class wsBrokenLinkChecker {
         	'http://whiteshadow.uservoice.com/forums/58400-broken-link-checker',
         	array($options_page_hook, $links_page_hook)
 		);
-		
+
+		//Add a link to the Admin Menu Editor site to the "Broken Links" page.
         if ( !$this->conf->get('user_has_donated') ) {
+			//Choose anchor text randomly.
+	        $possible_anchor_texts = array(
+				'Organize WordPress admin menu',
+				'Simplify WordPress Admin Menu',
+				'Customize WP Admin Menu',
+				'Organize WP Admin: use Admin Menu Editor',
+				'Web Developer? Check out Admin Menu Editor',
+				'Admin Menu Editor for WP',
+				'Organize, Hide And Customize Admin Menus',
+	        );
+			$index = $this->conf->get('view-broken-links-meta-ad', null);
+			if ( $index === null ) {
+				$index = rand(0, count($possible_anchor_texts) - 1);
+				$this->conf->set('view-broken-links-meta-ad', $index);
+				$this->conf->save_options();
+			}
+
 	        add_screen_meta_link(
 	            'blc-more-plugins-link',
-				__('More plugins by Janis Elsts', 'broken-link-checker'),
-				'http://w-shadow.com/MoreWpPlugins/',
+				$possible_anchor_texts[$index],
+				sprintf(
+					'http://w-shadow.com/admin-menu-editor-pro/?utm_source=broken_link_checker&utm_medium=Broken_Links_top_link&utm_campaign=Plugins&utm_content=copy-a%s',
+					urlencode($index)
+				),
 				$links_page_hook,
 				array('style' => 'font-weight: bold;')
 			);
