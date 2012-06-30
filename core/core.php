@@ -347,7 +347,7 @@ class wsBrokenLinkChecker {
 	            'blc-more-plugins-link',
 				$possible_anchor_texts[$index],
 				sprintf(
-					'http://w-shadow.com/admin-menu-editor-pro/?utm_source=broken_link_checker&utm_medium=Broken_Links_top_link&utm_campaign=Plugins&utm_content=copy-a%s',
+					'http://w-shadow.com/admin-menu-editor-pro/?utm_source=broken_link_checker&utm_medium=Broken_Links_meta_link&utm_campaign=Plugins&utm_content=copy-a%s',
 					urlencode($index)
 				),
 				$links_page_hook,
