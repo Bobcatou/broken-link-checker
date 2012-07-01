@@ -20,7 +20,8 @@ class blcLinkQuery {
 		$this->native_filters = array(
 			'broken' => array(
 				'params' => array(
-					'where_expr' => '( (broken = 1) AND (dismissed = 0) )',
+					'where_expr' => '( broken = 1 )',
+					's_include_dismissed' => false,
 				),
 				'name' => __('Broken', 'broken-link-checker'),
 				'heading' => __('Broken Links', 'broken-link-checker'),
@@ -29,7 +30,8 @@ class blcLinkQuery {
 			 ), 
 			 'redirects' => array(
 			 	'params' => array(
-					'where_expr' => '( (redirect_count > 0) AND (dismissed = 0) )',
+					'where_expr' => '( redirect_count > 0 )',
+					 's_include_dismissed' => false,
 				),
 				'name' => __('Redirects', 'broken-link-checker'),
 				'heading' => __('Redirected Links', 'broken-link-checker'),
@@ -428,6 +430,13 @@ class blcLinkQuery {
 			
 		}
 
+		//Dismissed links are included by default, but can explicitly included
+		//or filtered out by passing a special param.
+		if ( isset($params['s_include_dismissed']) ) {
+			$s_include_dismissed = !empty($params['s_include_dismissed']);
+			$pieces['filter_dismissed'] = $s_include_dismissed ? '1' : '(dismissed = 0)';
+		}
+
 		//Optionally sorting is also possible
 		$order_exprs = array();
 		if ( !empty($params['orderby']) ) {
@@ -452,7 +461,7 @@ class blcLinkQuery {
 			$the_filter = $this->native_filters[$params['s_filter']];
 			$extra_criteria = $this->compile_search_params($the_filter['params']);
 			
-			$pieces = array_merge($pieces, $extra_criteria['where_exprs']);
+			$pieces = array_merge($extra_criteria['where_exprs'], $pieces);
 			$join_instances = $join_instances || $extra_criteria['join_instances'];			
 		}
 		
@@ -659,7 +668,7 @@ class blcLinkQuery {
 				$number_class = 'current-link-count';	
 			}
 			
-			$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' $class>
+			$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' {$class}>
 				{$data['name']}</a> <span class='count'>(<span class='$number_class'>{$data['count']}</span>)</span>";
 		}
 		echo implode(' |</li>', $items);
@@ -745,7 +754,6 @@ class blcLinkQuery {
 			$search_params = $this->get_search_params($current_filter);
 		}
 		
-		//TODO: Simplify this. Maybe overhaul the filter system to let us query the effective filter.
 		$base_filter = '';
 		if ( array_key_exists($filter_id, $this->native_filters) ) {
 			$base_filter = $filter_id;
