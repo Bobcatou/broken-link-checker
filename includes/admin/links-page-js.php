@@ -104,17 +104,113 @@ jQuery(function($){
 		
 		return false;
     });
-    
-   /**
+
+	//The "Dismiss" button - hide the link from the "Broken" and "Redirects" filters, but still apply link tweaks and so on.
+	$(".blc-dismiss-button").click(function () {
+		var me = $(this);
+		var oldButtonHtml = me.html();
+		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
+
+		var master = me.closest('.blc-row');
+		var link_id = master.attr('id').split('-')[2];
+		var should_hide_link = (blc_current_base_filter == 'broken') || (blc_current_base_filter == 'redirects');
+
+		$.post(
+			"<?php echo admin_url('admin-ajax.php'); ?>",
+			{
+				'action' : 'blc_dismiss',
+				'link_id' : link_id,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_dismiss'));  ?>'
+			},
+			function (data, textStatus){
+				if (data == 'OK'){
+					var details = $('#link-details-'+link_id);
+
+					//Remove the "Dismiss" action
+					me.parent().hide();
+
+					//Flash the main row green to indicate success, then remove it if necessary.
+					var oldColor = master.css('background-color');
+					master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){
+						if ( should_hide_link ){
+							details.remove();
+							master.remove();
+						}
+					});
+
+					//Update the elements displaying the number of results for the current filter.
+					if( should_hide_link ){
+						alterLinkCounter(-1);
+					}
+				} else {
+					me.html(oldButtonHtml);
+					alert(data);
+				}
+			}
+		);
+
+		return false;
+	});
+
+	//The "Undismiss" button.
+	$(".blc-undismiss-button").click(function () {
+		var me = $(this);
+		var oldButtonHtml = me.html();
+		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
+
+		var master = me.closest('.blc-row');
+		var link_id = master.attr('id').split('-')[2];
+		var should_hide_link = (blc_current_base_filter == 'dismissed');
+
+		$.post(
+			"<?php echo admin_url('admin-ajax.php'); ?>",
+			{
+				'action' : 'blc_undismiss',
+				'link_id' : link_id,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_undismiss'));  ?>'
+			},
+			function (data, textStatus){
+				if (data == 'OK'){
+					var details = $('#link-details-'+link_id);
+
+					//Remove the action.
+					me.parent().hide();
+
+					//Flash the main row green to indicate success, then remove it if necessary.
+					var oldColor = master.css('background-color');
+					master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){
+						if ( should_hide_link ){
+							details.remove();
+							master.remove();
+						}
+					});
+
+					//Update the elements displaying the number of results for the current filter.
+					if( should_hide_link ){
+						alterLinkCounter(-1);
+					}
+				} else {
+					me.html(oldButtonHtml);
+					alert(data);
+				}
+			}
+		);
+
+		return false;
+	});
+
+
+	/**
     * Display the inline URL editor for a particular link (that's present in the current view).
     *
     * @param link_id Either a link ID (int), or a jQuery object representing the link row.
     */
     function showUrlEditor(link_id){
+	   var master;
     	if ( isNaN(link_id) ){
-    		var master = link_id;
+    		master = link_id;
     	} else {
-    		var master = $('#blc-row-' + link_id);
+    		master = $('#blc-row-' + link_id);
     	}
     	
     	var url_el = master.find('a.blc-link-url').hide();
@@ -131,10 +227,11 @@ jQuery(function($){
     * @param link_id Either a link ID (int), or a jQuery object representing the link row.
     */
     function hideUrlEditor(link_id){
+	   var master;
     	if ( isNaN(link_id) ){
-    		var master = link_id;
+    		master = link_id;
     	} else {
-    		var master = $('#blc-row-' + link_id);
+    		master = $('#blc-row-' + link_id);
     	}
     	
     	master.find('div.blc-url-editor-buttons').hide();
@@ -152,11 +249,12 @@ jQuery(function($){
     * @param new_url The new URL for the link.
     */
     function updateLinkUrl(link_id, new_url){
+	   var master;
     	if ( isNaN(link_id) ){
-    		var master = link_id;
+    		master = link_id;
     		link_id = master.attr('id').split("-")[2]; //id="blc-row-$linkid"
     	} else {
-    		var master = $('#blc-row-' + link_id);
+    		master = $('#blc-row-' + link_id);
     	}
     	var url_el = master.find('a.blc-link-url');
     	var orig_url = url_el.attr('href');

@@ -20,7 +20,7 @@ class blcLinkQuery {
 		$this->native_filters = array(
 			'broken' => array(
 				'params' => array(
-					'where_expr' => '( broken = 1 )',
+					'where_expr' => '( (broken = 1) AND (dismissed = 0) )',
 				),
 				'name' => __('Broken', 'broken-link-checker'),
 				'heading' => __('Broken Links', 'broken-link-checker'),
@@ -29,13 +29,23 @@ class blcLinkQuery {
 			 ), 
 			 'redirects' => array(
 			 	'params' => array(
-					'where_expr' => '( redirect_count > 0 )',
+					'where_expr' => '( (redirect_count > 0) AND (dismissed = 0) )',
 				),
 				'name' => __('Redirects', 'broken-link-checker'),
 				'heading' => __('Redirected Links', 'broken-link-checker'),
 				'heading_zero' => __('No redirects found', 'broken-link-checker'),
 				'native' => true,
-			 ), 
+			 ),
+
+			'dismissed' => array(
+				'params' => array(
+					'where_expr' => '( dismissed = 1 )',
+				),
+				'name' => __('Dismissed', 'broken-link-checker'),
+				'heading' => __('Dismissed Links', 'broken-link-checker'),
+				'heading_zero' => __('No dismissed links found', 'broken-link-checker'),
+				'native' => true,
+			),
 			 
 			'all' => array(
 				'params' => array(
@@ -736,11 +746,17 @@ class blcLinkQuery {
 		}
 		
 		//TODO: Simplify this. Maybe overhaul the filter system to let us query the effective filter.
-		$is_broken_filter = 
-			($filter_id == 'broken') 
-			|| ( isset($current_filter['params']['s_filter']) && ($current_filter['params']['s_filter'] == 'broken') )
-			|| ( isset($_GET['s_filter']) && ($_GET['s_filter'] == 'broken') );
-		
+		$base_filter = '';
+		if ( array_key_exists($filter_id, $this->native_filters) ) {
+			$base_filter = $filter_id;
+		} else if ( isset($current_filter['params']['s_filter']) && !empty($current_filter['params']['s_filter']) ) {
+			$base_filter = $current_filter['params']['s_filter'];
+		} else if ( isset($_GET['s_filter']) && !empty($_GET['s_filter']) ) {
+			$base_filter = $_GET['s_filter'];
+		}
+
+		$is_broken_filter = ($base_filter == 'broken');
+
 		//Save the effective filter data in the filter array. 
 		//It can be used later to print the link table.
 		$current_filter = array_merge(array(
@@ -751,6 +767,7 @@ class blcLinkQuery {
 			'links' => $links,
 			'search_params' => $search_params,
 			'is_broken_filter' => $is_broken_filter,
+			'base_filter' => $base_filter,
 		), $current_filter);
 		
 		return $current_filter;

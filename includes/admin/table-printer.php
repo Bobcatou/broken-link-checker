@@ -75,6 +75,7 @@ class blcTablePrinter {
 		if ( $this->core->conf->options['table_color_code_status'] ) { 
 			$table_classes[] = 'color-code-link-status'; 
 		};
+		$table_classes[] = 'base-filter-' . $current_filter['base_filter'];
 		printf(
 			'<table class="%s" id="blc-links"><thead><tr>',
 			implode(' ', $table_classes)
@@ -601,8 +602,11 @@ class blcTablePrinter {
 		
 		echo '</table>';
 	}
-	
-	
+
+
+	/**
+	 * @param blcLink $link
+	 */
 	function column_new_url($link){
 		?>
         <a href="<?php print esc_attr($link->url); ?>" target='_blank' class='blc-link-url' title="<?php echo esc_attr($link->url); ?>">
@@ -626,7 +630,21 @@ class blcTablePrinter {
 				__('Not broken', 'broken-link-checker')
 			);
 		}
-      	
+
+		if ( !$link->dismissed && ($link->broken || ($link->redirect_count > 0)) ) {
+			$actions['dismiss'] = sprintf(
+				'<span><a href="#" title="%s" class="blc-dismiss-button">%s</a>',
+				esc_attr(__('Hide this link and do not report it again unless its status changes' , 'broken-link-checker')),
+				__('Dismiss', 'broken-link-checker')
+			);
+		} else if ( $link->dismissed ) {
+			$actions['undismiss'] = sprintf(
+				'<span><a href="#" title="%s" class="blc-undismiss-button">%s</a>',
+				esc_attr(__('Undismiss this link', 'broken-link-checker')),
+				__('Undismiss', 'broken-link-checker')
+			);
+		}
+
 		echo '<div class="row-actions">';
 		echo implode(' | </span>', $actions) .'</span>';
 		

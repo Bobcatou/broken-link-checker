@@ -353,6 +353,19 @@ div.search-box{
 	margin-left: 1em;
 }
 
+/* Filter-related styles */
+.blc-undismiss-button {
+    display: none;
+}
+
+.base-filter-dismissed .blc-undismiss-button {
+    display: inline;
+}
+
+.base-filter-all .blc-dismiss-button {
+    display: none;
+}
+
 /* Miscellaneous styles */
 
 #blc-more-plugins-link-wrap {

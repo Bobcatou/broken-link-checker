@@ -23,7 +23,7 @@ class wsBrokenLinkChecker {
 	var $loader;
     var $my_basename = '';	
     
-    var $db_version = 5; 		//The required version of the plugin's DB schema.
+    var $db_version; 		//The required version of the plugin's DB schema.
     
     var $execution_start_time; 	//Used for a simple internal execution timer in start_timer()/execution_time()
     
@@ -37,6 +37,8 @@ class wsBrokenLinkChecker {
    */
     function wsBrokenLinkChecker ( $loader, &$conf ) {
         global $wpdb;
+
+		$this->db_version = BLC_DATABASE_VERSION;
         
         $this->conf = &$conf;
         $this->loader = $loader;
@@ -66,6 +68,9 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
         add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
+
+	    add_action( 'wp_ajax_blc_dismiss', array($this, 'ajax_dismiss') );
+	    add_action( 'wp_ajax_blc_undismiss', array($this, 'ajax_undismiss') );
         
         //Add/remove Cron events
         $this->setup_cron_events();
@@ -1302,7 +1307,7 @@ class wsBrokenLinkChecker {
 			isset($_GET['orderby']) ? $_GET['orderby'] : '',
 			isset($_GET['order']) ? $_GET['order'] : ''
 		);
-		
+
 		//exec_filter() returns an array with filter data, including the actual filter ID that was used.
 		$filter_id = $current_filter['filter_id'];
 
@@ -1315,6 +1320,7 @@ class wsBrokenLinkChecker {
 <script type='text/javascript'>
 	var blc_current_filter = '<?php echo $filter_id; ?>';
 	var blc_is_broken_filter = <?php echo $current_filter['is_broken_filter'] ? 'true' : 'false'; ?>;
+	var blc_current_base_filter = '<?php echo esc_js($current_filter['base_filter']); ?>';
 </script>
         
 <div class="wrap"><?php screen_icon(); ?>
@@ -2452,6 +2458,43 @@ class wsBrokenLinkChecker {
 			$link->last_check_attempt = time();
 			$link->log = __("This link was manually marked as working by the user.", 'broken-link-checker');
 			
+			//Save the changes
+			if ( $link->save() ){
+				die( "OK" );
+			} else {
+				die( __("Oops, couldn't modify the link!", 'broken-link-checker') ) ;
+			}
+		} else {
+			die( __("Error : link_id not specified", 'broken-link-checker') );
+		}
+	}
+
+	public function ajax_dismiss(){
+		$this->ajax_set_link_dismissed(true);
+	}
+
+	public function ajax_undismiss(){
+		$this->ajax_set_link_dismissed(false);
+	}
+
+	private function ajax_set_link_dismissed($dismiss){
+		$action = $dismiss ? 'blc_dismiss' : 'blc_undismiss';
+
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer($action, false, false)){
+			die( __("You're not allowed to do that!", 'broken-link-checker') );
+		}
+
+		if ( isset($_POST['link_id']) ){
+			//Load the link
+			$link = new blcLink( intval($_POST['link_id']) );
+
+			if ( !$link->valid() ){
+				printf( __("Oops, I can't find the link %d", 'broken-link-checker'), intval($_POST['link_id']) );
+				die();
+			}
+
+			$link->dismissed = $dismiss;
+
 			//Save the changes
 			if ( $link->save() ){
 				die( "OK" );
