@@ -21,5 +21,3 @@ if ( !defined('BLC_DIRECTORY') ){
 
 //Load the actual plugin
 require 'core/init.php';
-
-?>
