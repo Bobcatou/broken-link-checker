@@ -213,6 +213,11 @@ class blcTablePrinter {
 				'heading' => __('Link Text', 'broken-link-checker'),
 				'content' => array(&$this, 'column_new_link_text'),
 			),
+
+			'redirect-url' => array(
+				'heading' => __('Redirect URL', 'broken-link-checker'),
+				'content' => array($this, 'column_redirect_url'),
+			),
 		);
 	}
 	
@@ -224,7 +229,7 @@ class blcTablePrinter {
 	function setup_layouts(){
 		$this->layouts = array(
 			'classic' =>  array('used-in', 'new-link-text', 'new-url'),
-			'flexible' => array('new-url', 'status', 'new-link-text', 'used-in',),
+			'flexible' => array('new-url', 'status', 'new-link-text', 'redirect-url', 'used-in', ),
 		);
 	}
 	
@@ -352,7 +357,7 @@ class blcTablePrinter {
 	/**
 	 * Print the link row.
 	 * 
-	 * @param object $link The link to display.
+	 * @param blcLink $link The link to display.
 	 * @param array $layout List of columns to output.
 	 * @param array $visible_columns List of visible columns.
 	 * @param integer $rownum Table row number.
@@ -660,6 +665,16 @@ class blcTablePrinter {
 		} else {
 			$instance = reset($instances);
 			echo $instance->ui_get_link_text();
+		}
+	}
+
+	function column_redirect_url($link, $instances) {
+		if ( $link->redirect_count > 0 ) {
+			printf(
+				'<a href="%1$s" target="_blank" class="blc-redirect-url" title="%1$s">%2$s</a>',
+				esc_attr($link->final_url),
+				esc_html($link->final_url)
+			);
 		}
 	}
 	
