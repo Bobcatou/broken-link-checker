@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
-Tested up to: 3.4-beta4
+Tested up to: 3.4.1
 Stable tag: 1.5.5
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
@@ -37,6 +37,7 @@ There are several actions associated with each link. They show up when you move 
 * "Edit URL" lets you change the URL of that link. If the link is present in more than one place (e.g. both in a post and in the blogroll), all occurrences of that URL will be changed.
 * "Unlink" removes the link but leaves the link text intact.
 * "Not broken" lets you manually mark a "broken" link as working. This is useful if you know it was incorrectly detected as broken due to a network glitch or a bug. The marked link will still be checked periodically, but the plugin won't consider it broken unless it gets a new result.
+* "Dismiss" hides the link from the "Broken Links" and "Redirects" views. Dismissed broken links will keep the strike-through effect and be checked as usual, but they won't be reported again unless their status changes. Useful if you want to acknowledge a link as broken/redirected and just leave as it is.
 
 You can also click on the contents of the "Status" or "Link Text" columns to get more info about the status of each link.
 
