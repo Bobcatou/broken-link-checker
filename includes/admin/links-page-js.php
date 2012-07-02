@@ -332,7 +332,7 @@ jQuery(function($){
 						
 						alert(msg);
 					}
-				};
+				}
 				
 				url_el.text(display_url);
 				
@@ -513,15 +513,12 @@ jQuery(function($){
 	
 	//Display a confirmation dialog when the user clicks the "Delete This Filter" button 
 	$('#blc-delete-filter').click(function(){
-		if ( confirm('<?php 
-			echo esc_js(  
-					__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
-				); 
-		?>') ){
-			return true;
-		} else {
-			return false;
-		}
+		var message = '<?php
+		echo esc_js(
+			__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
+		);
+		?>';
+		return confirm(message);
 	});
 	
 	//--------------------------------------------
@@ -529,14 +526,14 @@ jQuery(function($){
     //--------------------------------------------
     
     $('#blc-bulk-action-form').submit(function(){
-    	var action = $('#blc-bulk-action').val();
+    	var action = $('#blc-bulk-action').val(), message;
     	if ( action ==  '-1' ){
-			var action = $('#blc-bulk-action2').val(); 
+			action = $('#blc-bulk-action2').val();
 		}
     	
     	if ( action == 'bulk-delete-sources' ){
     		//Convey the gravitas of deleting link sources.
-    		var message = '<?php 
+    		message = '<?php
 				echo esc_js(  
 					__("Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
 				); 
@@ -546,7 +543,7 @@ jQuery(function($){
 			}
 		} else if ( action == 'bulk-unlink' ){
 			//Likewise for unlinking.
-			var message = '<?php 
+			message = '<?php
 				echo esc_js(  
 					__("Are you sure you want to remove the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to remove", 'broken-link-checker')
 				); 
@@ -644,7 +641,7 @@ jQuery(function($){
 			//Any links selected?
 			if ($('tbody th.check-column input:checked').length > 0){
 				$('#bulk-edit').show();
-			};
+			}
 		}
 	});
 	
@@ -666,7 +663,7 @@ jQuery(function($){
 		if ($('tbody th.check-column input:checked').length == 0){
 			alert('<?php echo esc_js(__('Select one or more links to edit.', 'broken-link-checker')); ?>');
 			e.preventDefault();
-		};
+		}
 	});
 });
 
