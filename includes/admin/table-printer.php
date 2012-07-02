@@ -406,7 +406,7 @@ class blcTablePrinter {
 		}
 		
 		printf(
-			'<tr id="blc-row-%s" class="blc-row %s" days_broken="%d">',
+			'<tr id="blc-row-%s" class="blc-row %s" data-days-broken="%d">',
 			 $link->link_id,
 			 $rowclass,
 			 $days_broken

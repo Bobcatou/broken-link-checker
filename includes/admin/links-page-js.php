@@ -582,7 +582,7 @@ jQuery(function($){
 		highlight_permanent_failures = highlight_permanent_failures_checkbox.is(':checked');
 		
 		$('#blc-links tr.blc-row').each(function(index){
-			var days_broken = $(this).attr('days_broken');
+			var days_broken = $(this).attr('data-days-broken');
 			if ( days_broken >= new_threshold ){
 				$(this).addClass('blc-permanently-broken');
 				if ( highlight_permanent_failures ){
