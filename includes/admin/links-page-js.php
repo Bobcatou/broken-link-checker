@@ -51,11 +51,13 @@ jQuery(function($){
     	var link_id = master.attr('id').split('-')[2];
 		$('#link-details-'+link_id).toggle();
     });
+
+	var ajaxInProgressHtml = '<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>';
 	
 	//The "Not broken" button - manually mark the link as valid. The link will be checked again later.
 	$(".blc-discard-button").click(function () {
 		var me = $(this);
-		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
+		me.html(ajaxInProgressHtml);
 		
 		var master = me.parents('.blc-row');
     	var link_id = master.attr('id').split('-')[2];
@@ -81,8 +83,7 @@ jQuery(function($){
 					
 					//Flash the main row green to indicate success, then remove it if the current view
 					//is supposed to show only broken links.
-					var oldColor = master.css('background-color');
-					master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){
+					flashElementGreen(master, function(){
 						if ( blc_is_broken_filter ){
 							details.remove();
 							master.remove();
@@ -109,7 +110,7 @@ jQuery(function($){
 	$(".blc-dismiss-button").click(function () {
 		var me = $(this);
 		var oldButtonHtml = me.html();
-		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
+		me.html(ajaxInProgressHtml);
 
 		var master = me.closest('.blc-row');
 		var link_id = master.attr('id').split('-')[2];
@@ -130,8 +131,7 @@ jQuery(function($){
 					me.parent().hide();
 
 					//Flash the main row green to indicate success, then remove it if necessary.
-					var oldColor = master.css('background-color');
-					master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){
+					flashElementGreen(master, function(){
 						if ( should_hide_link ){
 							details.remove();
 							master.remove();
@@ -156,7 +156,7 @@ jQuery(function($){
 	$(".blc-undismiss-button").click(function () {
 		var me = $(this);
 		var oldButtonHtml = me.html();
-		me.html('<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>');
+		me.html(ajaxInProgressHtml);
 
 		var master = me.closest('.blc-row');
 		var link_id = master.attr('id').split('-')[2];
@@ -177,8 +177,7 @@ jQuery(function($){
 					me.parent().hide();
 
 					//Flash the main row green to indicate success, then remove it if necessary.
-					var oldColor = master.css('background-color');
-					master.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, function(){
+					flashElementGreen(master, function(){
 						if ( should_hide_link ){
 							details.remove();
 							master.remove();
@@ -198,6 +197,11 @@ jQuery(function($){
 
 		return false;
 	});
+
+	function flashElementGreen(element, callback) {
+		var oldColor = element.css('background-color');
+		element.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, callback);
+	}
 
 
 	/**
