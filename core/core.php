@@ -402,16 +402,8 @@ class wsBrokenLinkChecker {
     	global $blclog;
 
     	$moduleManager = blcModuleManager::getInstance();
-    	
-    	//Sanity check : make sure the DB is all set up 
-    	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
-        	printf(
-				__("Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)", 'broken-link-checker'),
-				$this->conf->options['current_db_version'],
-				$this->db_version
-			);
-			echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
-		}
+
+		$this->ensure_database_validity();
 
 	    //Prior to 1.5.2 (released 2012-05-27), there was a bug that would cause the donation flag to be
 	    //set incorrectly. So we'll unset the flag in that case.
@@ -1205,17 +1197,9 @@ class wsBrokenLinkChecker {
         global $wpdb, $blclog; /* @var wpdb $wpdb */
         
         $blc_link_query = blcLinkQuery::getInstance();
-        
-        //Sanity check : Make sure the plugin's tables are all set up.
-        if ( $this->db_version != $this->conf->options['current_db_version'] ) {
-        	printf(
-				__("Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)", 'broken-link-checker'),
-				$this->conf->options['current_db_version'],
-				$this->db_version
-			);
-			echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
-		}
-		
+
+		$this->ensure_database_validity();
+
 		//Cull invalid and missing modules so that we don't get dummy links/instances showing up.
         $moduleManager = blcModuleManager::getInstance();
         $moduleManager->validate_active_modules();
@@ -1358,7 +1342,34 @@ class wsBrokenLinkChecker {
 		include dirname($this->loader) . '/includes/admin/links-page-js.php';
 		
 		?></div><?php
-    } 
+    }
+
+	/**
+	 * Ensure that the plugin's database is at the required version.
+	 *
+	 * @param bool $upgradeOnFailure If true, will attempt to upgrade the DB is out of date.
+	 * @param bool $silent Output nothing
+	 * @return bool
+	 */
+	private function ensure_database_validity($upgradeOnFailure = true, $silent = false) {
+		//Sanity check : Make sure the plugin's tables are all set up.
+		if ( $this->db_version != $this->conf->options['current_db_version'] ) {
+			if ( $upgradeOnFailure ) {
+				require_once BLC_DIRECTORY . '/includes/admin/db-upgrade.php';
+				blcDatabaseUpgrader::upgrade_database();
+				return $this->ensure_database_validity(false, $silent);
+			} else if ( !$silent ) {
+				printf(
+					__("Error: The plugin's database tables are not up to date! (Current version : %d, expected : %d)", 'broken-link-checker'),
+					$this->conf->options['current_db_version'],
+					$this->db_version
+				);
+				echo '<br>', __('Try deactivating and then reactivating the plugin.', 'broken-link-checker');
+			}
+			return false;
+		}
+		return true;
+	}
     
   /**
    * Create a custom link filter using params passed in $_POST.
@@ -2018,7 +2029,7 @@ class wsBrokenLinkChecker {
 		global $wpdb;
 		
 		//Sanity check : make sure the DB is all set up 
-    	if ( $this->db_version != $this->conf->options['current_db_version'] ) {
+    	if ( !$this->ensure_database_validity(true, false) ) {
     		//FB::error("The plugin's database tables are not up to date! Stop.");
 			return;
 		}
