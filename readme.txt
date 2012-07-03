@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
 Tested up to: 3.4.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -90,6 +90,9 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.6.1 =
+* Fixed the "database not up to date" bug. Now the plugin should properly upgrade the DB.
 
 = 1.6 =
 * Added a way to dismiss links. Dismissed links don't show up in the "Broken" and "Redirects" lists, but are still checked as normal and get the normal link styles (e.g. strike-through for broken links). Useful if you want to, for example, acknowledge that a link is broken and leave it be.
@@ -324,7 +327,7 @@ To upgrade your installation
 * "Discard" gone, replaced by "Not broken".
 * "Exclude" gone from action links.
 * Better handling of false positives.
-* FTP, mailto:, javascript: and other links with unsupported protocols now show up in the “All links” list.
+* FTP, mailto:, javascript: and other links with unsupported protocols now show up in the ï¿½All linksï¿½ list.
 
 = 0.8.1 =
 * Updated Italian translation.
@@ -471,7 +474,7 @@ To upgrade your installation
 
 = 0.5 =
 * This is a near-complete rewrite with a lot of new features. 
-* See  http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
+* See ï¿½http://w-shadow.com/blog/2009/05/22/broken-link-checker-05/ for details.
 
 = 0.4.14 =
 * Fix false positives when the URL contains an #anchor
