@@ -427,7 +427,7 @@ class blcPostMetaManager extends blcContainerManager {
    * @return void
    */
 	function resynch($forced = false){
-		global $wpdb;
+		global $wpdb; /** @var wpdb $wpdb */
 		global $blclog;
 		
 		if ( $forced ){
