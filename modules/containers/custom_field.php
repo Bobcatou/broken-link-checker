@@ -350,7 +350,7 @@ class blcPostMetaManager extends blcContainerManager {
 		add_action( "updated_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "deleted_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		//Also intercept the equivalent actions used in /wp-admin/includes/post.php. 
-		//(WP is bloody inconsitent. The action names differ by a single character
+		//(WP is bloody inconsistent. The action names differ by a single character
 		//but have different argument counts)
 		add_action( "added_{$this->meta_type}meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "deleted_{$this->meta_type}meta", array(&$this, 'meta_modified'), 10, 1 );//NB : 1 argument!
