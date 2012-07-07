@@ -286,7 +286,7 @@ class blcPostMeta extends blcContainer {
 						$this->container_id
 					)
 				);
-			};
+			}
 		}
 	}
 	
@@ -324,7 +324,7 @@ class blcPostMeta extends blcContainer {
 					$this->container_id
 				)
 			);
-		};
+		}
 	}
 	
 	function current_user_can_delete(){
@@ -492,7 +492,7 @@ class blcPostMetaManager extends blcContainerManager {
    * @return void
    */
 	function meta_modified($meta_id, $object_id = 0, $meta_key= '', $meta_value = ''){
-		global $wpdb;
+		global $wpdb; /** @var wpdb $wpdb */
 		
 		//If object_id isn't specified then the hook was probably called from the 
 		//stupidly inconsistent delete_meta() function in /wp-admin/includes/post.php.
