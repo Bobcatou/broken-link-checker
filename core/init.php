@@ -267,6 +267,12 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		}
 		$init_done = true;
 		
+		//Ensure the database is up to date
+		if ($blc_config_manager->options['current_db_version'] != BLC_DATABASE_VERSION) {
+			require_once BLC_DIRECTORY . '/includes/admin/db-upgrade.php';
+			blcDatabaseUpgrader::upgrade_database(); //Also updates the DB ver. in options['current_db_version'].
+		}
+		
 		//Load the base classes and utilities
 		require_once BLC_DIRECTORY . '/includes/links.php';
 		require_once BLC_DIRECTORY . '/includes/link-query.php';
