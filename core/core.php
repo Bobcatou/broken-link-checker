@@ -2318,16 +2318,27 @@ class wsBrokenLinkChecker {
 		
 		$text .= "<br/>";
 		if ( $status['known_links'] > 0 ){
-			$text .= sprintf( 
-				_n('Detected %d unique URL', 'Detected %d unique URLs', $status['known_links'], 'broken-link-checker') .
-					' ' . _n('in %d link', 'in %d links', $status['known_instances'], 'broken-link-checker'),
-				$status['known_links'],
+			$url_count = sprintf(
+				_nx('%d unique URL', '%d unique URLs', $status['known_links'], 'for the "Detected X unique URLs in Y links" message', 'broken-link-checker'),
+				$status['known_links']
+			);
+			$link_count = sprintf(
+				_nx('%d link', '%d links', $status['known_instances'], 'for the "Detected X unique URLs in Y links" message', 'broken-link-checker'),
 				$status['known_instances']
-			 );
+			);
+
 			if ($this->conf->options['need_resynch']){
-				$text .= ' ' . __('and still searching...', 'broken-link-checker');
+				$text .= sprintf(
+					__('Detected %1$s in %2$s and still searching...', 'broken-link-checker'),
+					$url_count,
+					$link_count
+				);
 			} else {
-				$text .= '.';
+				$text .= sprintf(
+					__('Detected %1$s in %2$s.', 'broken-link-checker'),
+					$url_count,
+					$link_count
+				);
 			}
 		} else {
 			if ($this->conf->options['need_resynch']){
