@@ -45,7 +45,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 
 * Belorussian - [M. Comfi](http://www.comfi.com/)
 * Bulgarian - [Ajoft Technologes](http://www.ajoft.com/)
-* Chinese Simplified - [Hank Yang](http://wenzhu.org/)
+* Chinese Simplified - Kaijia Feng
 * Chinese Traditional - [YILIN](http://sh2153.com)
 * Czech - [Lelkoun](http://lelkoun.cz/)
 * Danish - [Georg S. Adamsen](http://wordpress.blogos.dk/)
