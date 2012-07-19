@@ -50,7 +50,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Czech - [Lelkoun](http://lelkoun.cz/)
 * Danish - [Georg S. Adamsen](http://wordpress.blogos.dk/)
 * Dutch - [Gideon van Melle](http://www.gvmelle.com/)
-* French - [Whiler](http://blogs.wittwer.fr/whiler/), Luc Capronnier
+* French - [Whiler](http://blogs.wittwer.fr/whiler/), Luc Capronnier, [Guillaume Boda](http://www.michtoblog.com/)
 * German - [Ivan Graf](http://blog.bildergallery.com/)
 * Hindi - [Outshine Solutions](http://outshinesolutions.com/)
 * Irish - [Ray Gren](http://letsbefamous.com/)
