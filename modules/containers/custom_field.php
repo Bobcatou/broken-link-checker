@@ -346,16 +346,16 @@ class blcPostMetaManager extends blcContainerManager {
 		parent::init();
 		
 		//Intercept 2.9+ style metadata modification actions
-		add_action( "added_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
-		add_action( "updated_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
-		add_action( "deleted_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
+		add_action( "added_{$this->meta_type}_meta", array($this, 'meta_modified'), 10, 4 );
+		add_action( "updated_{$this->meta_type}_meta", array($this, 'meta_modified'), 10, 4 );
+		add_action( "deleted_{$this->meta_type}_meta", array($this, 'meta_modified'), 10, 4 );
 
 		//When a post is deleted, also delete the custom field container associated with it.
-		add_action('delete_post', array(&$this,'post_deleted'));
-        add_action('trash_post', array(&$this,'post_deleted'));
+		add_action('delete_post', array($this,'post_deleted'));
+        add_action('trash_post', array($this,'post_deleted'));
         
         //Re-parse custom fields when a post is restored from trash
-        add_action('untrashed_post', array(&$this,'post_untrashed'));
+        add_action('untrashed_post', array($this,'post_untrashed'));
 	}
 
 	
