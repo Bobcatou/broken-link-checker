@@ -349,12 +349,7 @@ class blcPostMetaManager extends blcContainerManager {
 		add_action( "added_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "updated_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
 		add_action( "deleted_{$this->meta_type}_meta", array(&$this, 'meta_modified'), 10, 4 );
-		//Also intercept the equivalent actions used in /wp-admin/includes/post.php. 
-		//(WP is bloody inconsistent. The action names differ by a single character
-		//but have different argument counts)
-		add_action( "added_{$this->meta_type}meta", array(&$this, 'meta_modified'), 10, 4 );
-		add_action( "deleted_{$this->meta_type}meta", array(&$this, 'meta_modified'), 10, 1 );//NB : 1 argument!
-		
+
 		//When a post is deleted, also delete the custom field container associated with it.
 		add_action('delete_post', array(&$this,'post_deleted'));
         add_action('trash_post', array(&$this,'post_deleted'));
