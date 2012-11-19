@@ -89,16 +89,16 @@ class blcPostMeta extends blcContainer {
 			);
 		}
 	}
-	
-  /**
-   * "Unlink"-ing a custom fields removes all metadata fields that contain the specified URL.
-   *
-   * @param string $field_name
-   * @param blcParser $parser_type
-   * @param string $url
-   * @param string $raw_url
-   * @return bool|WP_Error True on success, or an error object if something went wrong.
-   */
+
+	/**
+	 * "Unlink"-ing a custom fields removes all metadata fields that contain the specified URL.
+	 *
+	 * @param string $field_name
+	 * @param blcParser $parser
+	 * @param string $url
+	 * @param string $raw_url
+	 * @return bool|WP_Error True on success, or an error object if something went wrong.
+	 */
 	function unlink($field_name, $parser, $url, $raw_url =''){
 		$rez = delete_metadata($this->meta_type, $this->container_id, $field_name, $raw_url);
 		if ( $rez ){
@@ -310,7 +310,7 @@ class blcPostMeta extends blcContainer {
 		$post = &get_post($this->container_id);
 		if ( $post->post_status == 'trash' ){
 			//Prevent conflicts between post and custom field containers trying to trash the same post.
-			return true; 
+			return true;
 		}
 		
 		if ( wp_trash_post($this->container_id) ){
