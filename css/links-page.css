@@ -368,16 +368,20 @@ div.search-box{
 
 /* Miscellaneous styles */
 
-#blc-more-plugins-link-wrap {
+#blc-more-plugins-link-wrap,
+#blc-plugin-news-link-wrap {
 	background: #00C31F none;
 }
 
-#screen-meta-links #blc-more-plugins-link {
+#screen-meta-links #blc-more-plugins-link,
+#screen-meta-links #blc-plugin-news-link {
 	font-weight: bold;
 	color: #DEFFD8;
 	text-shadow: none;
 }
 
-#screen-meta-links #blc-more-plugins-link-wrap a.show-settings:hover {
+#screen-meta-links #blc-more-plugins-link-wrap a.show-settings:hover,
+#screen-meta-links #blc-plugin-news-link-wrap a.show-settings:hover
+{
 	color: white;
 }
