@@ -1150,7 +1150,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '20120527' );
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '20121206' );
     	wp_enqueue_style('dashboard');
 	}
 	
@@ -1838,7 +1838,7 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20120702');
+		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20121106');
 	}
 	
 	/**
