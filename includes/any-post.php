@@ -566,7 +566,7 @@ class blcAnyPostContainer extends blcContainer {
 						$this->container_id
 					)
 				);
-			};
+			}
 		}
 	}
 	
@@ -605,7 +605,7 @@ class blcAnyPostContainer extends blcContainer {
 					$this->container_id
 				)
 			);
-		};
+		}
 	}
 	
 	/**

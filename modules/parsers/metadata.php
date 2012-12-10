@@ -108,6 +108,7 @@ class blcMetadataParser extends blcParser {
    * Get the link text for printing in the "Broken Links" table.
    *
    * @param blcLinkInstance $instance
+   * @param string $context
    * @return string HTML 
    */
 	function ui_get_link_text($instance, $context = 'display'){
