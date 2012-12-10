@@ -894,5 +894,3 @@ class blcContainerHelper {
 		}
 	}
 }
-
-?>

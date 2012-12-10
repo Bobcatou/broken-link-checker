@@ -341,5 +341,3 @@ class blcHTMLLink extends blcParser {
 		return $link;
 	}	
 }
-
-?>

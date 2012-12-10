@@ -171,5 +171,3 @@ class blcHTMLImage extends blcParser {
 		return $text;
 	}
 }
-
-?>

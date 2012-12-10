@@ -129,5 +129,3 @@ class blcMetadataParser extends blcParser {
 		return $field_html;
 	}
 }
-
-?>

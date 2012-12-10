@@ -175,5 +175,3 @@ class blcYouTubeChecker extends blcChecker {
 	}
 
 }
-
-?>

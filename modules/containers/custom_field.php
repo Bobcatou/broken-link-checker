@@ -571,5 +571,3 @@ class blcPostMetaManager extends blcContainerManager {
 		return blcAnyPostContainerManager::ui_bulk_trash_message($n);
 	}
 }
-
-?>

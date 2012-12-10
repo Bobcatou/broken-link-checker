@@ -305,5 +305,3 @@ class blcBookmarkManager extends blcContainerManager{
 		);
 	}
 }
-
-?>

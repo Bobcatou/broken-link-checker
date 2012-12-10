@@ -741,5 +741,3 @@ class blcAnyPostContainerManager extends blcContainerManager {
 		return sprintf($delete_msg, $n, $type_name);
 	}
 }
-
-?>
