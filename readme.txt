@@ -43,6 +43,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 
 **Translations**
 
+* Arabic - [Yaser Maadan](http://englize.com/)
 * Belorussian - [M. Comfi](http://www.comfi.com/)
 * Bulgarian - [Ajoft Technologes](http://www.ajoft.com/)
 * Chinese Simplified - Kaijia Feng
