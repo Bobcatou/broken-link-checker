@@ -5,7 +5,7 @@ Plugin URI: http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpres
 Description: Checks your blog for broken links and missing images and notifies you on the dashboard if any are found.
 Version: 1.7
 Author: Janis Elsts
-Author URI: http://w-shadow.com/blog/
+Author URI: http://w-shadow.com/
 Text Domain: broken-link-checker
 */
 
