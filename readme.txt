@@ -93,6 +93,14 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.7.1 =
+* Added an Arabic translation.
+* Updated Portuguese translation.
+* Updated French translation.
+* Fixed MySQL errors caused by the plugin converting table names to lowercase.
+* Fixed a bug where the plugin would sometimes report broken Twitter links as working.
+* Fixed the plugin author URL.
+
 = 1.7 =
 * Added support for youtu.be shortlinks.
 * Added a Finnish translation.
