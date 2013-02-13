@@ -62,6 +62,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Persian - [Omid Sheerkavand](http://qanal.ir/)
 * Polish - [http://positionmaker.pl](http://positionmaker.pl/)
 * Portuguese - [mowster](http://wordpress.mowster.net/)
+* Brazilian Portuguese - [Paulino Michelazzo](http://www.michelazzo.com.br/)
 * Romanian - [Ovidiu](http://www.jibo.ro)
 * Russian - [Anna Ozeritskaya](http://hweia.ru/)
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
