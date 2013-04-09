@@ -126,7 +126,7 @@ class blcPlaintextURL extends blcParser {
 	
 	
   /**
-   * Remove all occurences of a specific plaintext URL.
+   * Remove all occurrences of a specific plaintext URL.
    *
    * @param string $content	Look for URLs in this string.
    * @param string $url The URL to look for.
