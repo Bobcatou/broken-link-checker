@@ -90,7 +90,7 @@ class blcPlaintextURL extends blcParser {
 	}	
 	
   /**
-   * Change all occurences of a given plaintext URLs to a new URL. 
+   * Change all occurrences of a given plaintext URLs to a new URL.
    *
    * @param string $content Look for URLs in this string.
    * @param string $new_url Change them to this URL.
