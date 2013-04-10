@@ -3,7 +3,7 @@
 /**
  * A base class for parsers.
  *
- * In the context of this plugin, a "parser" is a class that knows how to extract or modfify 
+ * In the context of this plugin, a "parser" is a class that knows how to extract or modify
  * a specific type of links from a given piece of text. For example, there could be a "HTML Link"
  * parser that knows how to find and modify standard HTML links such as this one : 
  * <a href="http://example.com/">Example</a>
