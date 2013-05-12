@@ -323,4 +323,3 @@ if ( $blc_config_manager->options['installation_complete'] ){
 }
 
 }
-?>
