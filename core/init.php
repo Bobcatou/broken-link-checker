@@ -110,6 +110,9 @@ $blc_config_manager = new blcConfigurationManager(
 												//recovered after this many days.
 												
 		'installation_complete' => false,
+		'installation_flag_cleared_on' => 0,
+		'installation_flag_set_on'   => 0,
+
 		'user_has_donated' => false,   //Whether the user has donated to the plugin.
 		'donation_flag_fixed' => false,
    )
@@ -314,7 +317,14 @@ if ( $blc_config_manager->options['installation_complete'] ){
         }
 		$logger = new blcCachedOptionLogger('blc_installation_log');
 		$messages = array_merge(
-			array('<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>', '', '<em>Installation log follows :</em>'),
+			array(
+				'<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>',
+				'installation_complete = ' . (isset($blc_config_manager->options['installation_complete']) ? intval($blc_config_manager->options['installation_complete']) : 'no value'),
+				'installation_flag_cleared_on = ' . $blc_config_manager->options['installation_flag_cleared_on'],
+				'installation_flag_set_on = ' . $blc_config_manager->options['installation_flag_set_on'],
+				'',
+				'<em>Installation log follows :</em>'
+			),
 			$logger->get_messages()
 		);
 		echo "<div class='error'><p>", implode("<br>\n", $messages), "</p></div>";
