@@ -311,7 +311,7 @@ if ( $blc_config_manager->options['installation_complete'] ){
 } else {
 	//Display installation errors (if any) on the Dashboard.
 	function blc_print_installation_errors(){
-		global $blc_config_manager;
+		global $blc_config_manager, $wpdb; /** @var wpdb $wpdb */
         if ( $blc_config_manager->options['installation_complete'] ) {
             return;
         }
@@ -325,6 +325,24 @@ if ( $blc_config_manager->options['installation_complete'] ){
 				'<strong>Failed to load plugin settings from the "%s" option.</strong>',
 				$blc_config_manager->option_name
 			);
+			$messages[] = '';
+
+			$serialized_config = $wpdb->get_var(
+				sprintf(
+					'SELECT option_value FROM `%s` WHERE option_name = "%s"',
+					$wpdb->options,
+					$blc_config_manager->option_name
+				)
+			);
+
+			if ( $serialized_config === null ) {
+				$messages[] = "Option doesn't exist in the {$wpdb->options} table.";
+			} else {
+				$messages[] = "Option exists in the {$wpdb->options} table and has the following value:";
+				$messages[] = '';
+				$messages[] = '<textarea cols="120" rows="20">' . htmlentities($serialized_config) . '</textarea>';
+			}
+
 		} else {
 			$logger = new blcCachedOptionLogger('blc_installation_log');
 			$messages = array_merge(
