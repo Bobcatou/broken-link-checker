@@ -315,18 +315,31 @@ if ( $blc_config_manager->options['installation_complete'] ){
         if ( $blc_config_manager->options['installation_complete'] ) {
             return;
         }
-		$logger = new blcCachedOptionLogger('blc_installation_log');
-		$messages = array_merge(
-			array(
-				'<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>',
-				'installation_complete = ' . (isset($blc_config_manager->options['installation_complete']) ? intval($blc_config_manager->options['installation_complete']) : 'no value'),
-				'installation_flag_cleared_on = ' . $blc_config_manager->options['installation_flag_cleared_on'],
-				'installation_flag_set_on = ' . $blc_config_manager->options['installation_flag_set_on'],
-				'',
-				'<em>Installation log follows :</em>'
-			),
-			$logger->get_messages()
+
+		$messages = array(
+			'<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>',
 		);
+
+		if ( ! $blc_config_manager->db_option_loaded ) {
+			$messages[] = sprintf(
+				'<strong>Failed to load plugin settings from the "%s" option.</strong>',
+				$blc_config_manager->option_name
+			);
+		} else {
+			$logger = new blcCachedOptionLogger('blc_installation_log');
+			$messages = array_merge(
+				$messages,
+				array(
+					'installation_complete = ' . (isset($blc_config_manager->options['installation_complete']) ? intval($blc_config_manager->options['installation_complete']) : 'no value'),
+					'installation_flag_cleared_on = ' . $blc_config_manager->options['installation_flag_cleared_on'],
+					'installation_flag_set_on = ' . $blc_config_manager->options['installation_flag_set_on'],
+					'',
+					'<em>Installation log follows :</em>'
+				),
+				$logger->get_messages()
+			);
+		}
+
 		echo "<div class='error'><p>", implode("<br>\n", $messages), "</p></div>";
 	}
 	add_action('admin_notices', 'blc_print_installation_errors');

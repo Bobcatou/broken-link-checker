@@ -14,6 +14,11 @@ class blcConfigurationManager {
 	var $options;
 	var $defaults;
 	var $loaded_values;
+
+	/**
+	 * @var bool Whether options have been successfully loaded from the database.
+	 */
+	public $db_option_loaded = false;
 	
 	function blcConfigurationManager( $option_name = '', $default_settings = null ){
 		$this->option_name = $option_name;
@@ -27,8 +32,9 @@ class blcConfigurationManager {
 		
 		$this->options = $this->defaults;
 		
-		if ( !empty( $this->option_name ) )
-			$this->load_options();		
+		if ( !empty( $this->option_name ) ) {
+			$this->load_options();
+		}
 	}
 	
 	function set_defaults( $default_settings = null ){
@@ -49,6 +55,8 @@ class blcConfigurationManager {
    * @return bool True if options were loaded, false otherwise. 
    */
 	function load_options( $option_name = '' ){
+		$this->db_option_loaded = false;
+
 		if ( !empty($option_name) ){
 			$this->option_name = $option_name;
 		}
@@ -61,6 +69,7 @@ class blcConfigurationManager {
         } else {
         	$this->loaded_values = $new_options;
             $this->options = array_merge( $this->defaults, $this->loaded_values );
+			$this->db_option_loaded = true;
             return true;
         }
 	}
