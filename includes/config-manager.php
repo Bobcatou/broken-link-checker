@@ -64,6 +64,10 @@ class blcConfigurationManager {
 		if ( empty($this->option_name) ) return false;
 		
 		$new_options = get_option($this->option_name);
+		if ( !is_array($new_options) ) {
+			$new_options = get_option($this->option_name . '_backup');
+		}
+
         if( !is_array( $new_options ) ){
             return false;
         } else {
@@ -87,7 +91,8 @@ class blcConfigurationManager {
 		}
 		
 		if ( empty($this->option_name) ) return false;
-        
+
+		update_option($this->option_name . '_backup', $this->options);
 		return update_option( $this->option_name, $this->options );		
 	}
 	

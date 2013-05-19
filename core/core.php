@@ -383,7 +383,7 @@ class wsBrokenLinkChecker {
 		    $this->conf->set('donation_flag_fixed', true);
 		    $this->conf->save_options();
 	    }
-    	
+
         if (isset($_POST['recheck']) && !empty($_POST['recheck']) ){
             $this->initiate_recheck();
             
