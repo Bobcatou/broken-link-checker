@@ -162,6 +162,12 @@ class blcParser extends blcModule {
 		}
 	
 	    $parts=(parse_url($base_url));
+
+        //Protocol-relative URLs start with "//". We just need to prepend the right protocol.
+        if ( substr($url, 0, 2) === '//' ) {
+            $scheme = isset($parts['scheme']) ? $parts['scheme'] : 'http';
+            return $scheme . ':'. $url;
+        }
 	    
 	    if(substr($url,0,1)=='/') {
 	    	//Relative URL starts with a slash => ignore the base path and jump straight to the root. 
