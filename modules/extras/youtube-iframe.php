@@ -81,8 +81,13 @@ class blcYouTubeIframe extends blcEmbedParserBase {
 				return null;
 			}
 
+			$playlist_id = $query['list'];
+			if ( substr($playlist_id, 0, 2) === 'PL' ) {
+				$playlist_id = substr($playlist_id, 2);
+			}
+
 			//Reconstruct the playlist URL.
-			$url = 'http://www.youtube.com/playlist?list=' . $query['list'];
+			$url = 'http://www.youtube.com/playlist?list=' . $playlist_id;
 
 		} else {
 			//Extract video ID from the SRC. The ID is always 11 characters.
