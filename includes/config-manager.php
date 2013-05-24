@@ -64,9 +64,6 @@ class blcConfigurationManager {
 		if ( empty($this->option_name) ) return false;
 		
 		$new_options = get_option($this->option_name);
-		if ( empty($new_options) ) {
-			$new_options = get_option($this->option_name . '_backup');
-		}
 
 		//Decode JSON (if applicable).
 		if ( is_string($new_options) && !empty($new_options) ) {
@@ -97,7 +94,6 @@ class blcConfigurationManager {
 		
 		if ( empty($this->option_name) ) return false;
 
-		update_option($this->option_name . '_backup', $this->options);
 		return update_option( $this->option_name, json_encode($this->options) );
 	}
 	
