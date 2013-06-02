@@ -240,11 +240,25 @@ class blcYouTubeChecker extends blcChecker {
 				//Check for <yt:state> tags.
 				$video_states = blcUtility::extract_tags($response['body'], 'yt:state', false);
 				if ( empty($video_states) ){
-					//No restrictions.
-					$result['log'] .= __("Playlist OK", 'broken-link-checker');
-					$result['status_text'] = __('OK', 'link status', 'broken-link-checker');
-					$result['status_code'] = BLC_LINK_STATUS_OK;
-					$result['http_code'] = 0;
+
+					//No restrictions. Does the playlist have any entries?
+					$entries = blcUtility::extract_tags($response['body'], 'entry', false);
+					if ( !empty($entries) ) {
+						//All is well.
+						$result['log'] .= __("Playlist OK", 'broken-link-checker');
+						$result['status_text'] = __('OK', 'link status', 'broken-link-checker');
+						$result['status_code'] = BLC_LINK_STATUS_OK;
+						$result['http_code'] = 0;
+					} else {
+						//An empty playlist. It is possible that all of the videos
+						//have been deleted. Treat it as a warning.
+						$result['log'] .= __("This playlist has no entries or all entries have been deleted.", 'broken-link-checker');
+						$result['status_text'] = __('Empty Playlist', 'link status', 'broken-link-checker');
+						$result['status_code'] = BLC_LINK_STATUS_WARNING;
+						$result['http_code'] = 0;
+						$result['broken'] = true;
+					}
+
 				} else {
 
 					//Treat the playlist as broken if at least one video is inaccessible.
