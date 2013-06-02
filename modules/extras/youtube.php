@@ -317,7 +317,16 @@ class blcYouTubeChecker extends blcChecker {
 		if ( strpos($playlist_id, 'PL') === 0 ) {
 			$playlist_id = substr($playlist_id, 2);
 		}
-		return 'http://gdata.youtube.com/feeds/api/playlists/' . $playlist_id . '?key=' . urlencode($this->youtube_developer_key);
+		$query = http_build_query(
+			array(
+				'key' => $this->youtube_developer_key,
+				'v' => 2,
+				'safeSearch' => 'none'
+			),
+			'', '&'
+		);
+
+		return 'http://gdata.youtube.com/feeds/api/playlists/' . $playlist_id . '?' . $query;
 	}
 
 	/**
