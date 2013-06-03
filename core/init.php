@@ -93,6 +93,7 @@ $blc_config_manager = new blcConfigurationManager(
         'enabled_post_statuses' => array('publish'), //Only check posts that match one of these statuses
         
         'autoexpand_widget' => true, 	//Autoexpand the Dashboard widget if broken links are detected
+		'dashboard_widget_capability' => 'edit_others_posts', //Only display the widget to users who have this capability
 		'show_link_count_bubble' => true, //Display a notification bubble in the menu when broken links are found
 		
 		'table_layout' => 'flexible',   //The layout of the link table. Possible values : 'classic', 'flexible'

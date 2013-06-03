@@ -500,6 +500,11 @@ class wsBrokenLinkChecker {
 				$this->conf->options['notification_email_address'] = '';
 			}
 
+	        $widget_cap = strval($_POST['dashboard_widget_capability']);
+	        if ( !empty($widget_cap) ) {
+		        $this->conf->options['dashboard_widget_capability'] = $widget_cap;
+	        }
+
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
 			
@@ -939,6 +944,29 @@ class wsBrokenLinkChecker {
 			</p>		
 
         </td>
+        </tr>
+
+        <tr valign="top">
+	        <th scope="row"><?php _e('Show the dashboard widget for', 'broken-link-checker'); ?></th>
+	        <td>
+
+		        <?php
+				$widget_caps = array(
+					_x('Administrator', 'dashboard widget visibility', 'broken-link-checker') => 'manage_options',
+					_x('Editor and above', 'dashboard widget visibility', 'broken-link-checker') => 'edit_others_posts',
+					_x('Nobody (disables the widget)', 'dashboard widget visibility', 'broken-link-checker') => 'do_not_allow',
+				);
+
+		        foreach($widget_caps as $title => $capability) {
+			        printf(
+				        '<label><input type="radio" name="dashboard_widget_capability" value="%s"%s> %s</label><br>',
+				        esc_attr($capability),
+				        checked($capability, $this->conf->get('dashboard_widget_capability'), false),
+				        $title
+			        );
+		        }
+		        ?>
+	        </td>
         </tr>
         
         <tr valign="top">
@@ -2677,7 +2705,8 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function hook_wp_dashboard_setup(){
-		if ( function_exists( 'wp_add_dashboard_widget' ) && current_user_can('edit_others_posts') ) {
+		$show_widget = current_user_can($this->conf->get('dashboard_widget_capability', 'edit_others_posts'));
+		if ( function_exists( 'wp_add_dashboard_widget' ) && $show_widget ) {
 			wp_add_dashboard_widget(
 				'blc_dashboard_widget', 
 				__('Broken Link Checker', 'broken-link-checker'), 
