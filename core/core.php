@@ -495,6 +495,11 @@ class wsBrokenLinkChecker {
             $this->conf->options['send_email_notifications'] = $email_notifications;
 	        $this->conf->options['send_authors_email_notifications'] = $send_authors_email_notifications;
 
+			$this->conf->options['notification_email_address'] = strval($_POST['notification_email_address']);
+			if ( !filter_var($this->conf->options['notification_email_address'], FILTER_VALIDATE_EMAIL)) {
+				$this->conf->options['notification_email_address'] = '';
+			}
+
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
 			
@@ -678,7 +683,7 @@ class wsBrokenLinkChecker {
             	<?php _e('Send me e-mail notifications about newly detected broken links', 'broken-link-checker'); ?>
 			</label><br />
 			</p>
-	        
+
 	        <p>
         	<label for='send_authors_email_notifications'>
         		<input type="checkbox" name="send_authors_email_notifications" id="send_authors_email_notifications"
@@ -688,6 +693,25 @@ class wsBrokenLinkChecker {
 			</p>
         </td>
         </tr>
+
+		<tr valign="top">
+			<th scope="row"><?php echo __('Notification e-mail address', 'broken-link-checker'); ?></th>
+			<td>
+				<p>
+				<label>
+					<input
+						type="text"
+						name="notification_email_address"
+						id="notification_email_address"
+						value="<?php echo esc_attr($this->conf->get('notification_email_address', '')); ?>"
+						class="regular-text ltr">
+				</label><br>
+				<span class="description">
+					<?php echo __('Leave empty to use the e-mail address specified in Settings &rarr; General.', 'broken-link-checker'); ?>
+				</span>
+				</p>
+			</td>
+		</tr>
 
         <tr valign="top">
         <th scope="row"><?php _e('Link tweaks','broken-link-checker'); ?></th>
@@ -2857,10 +2881,14 @@ class wsBrokenLinkChecker {
 			return;
 		}
 
-		//Send the admin notification
-		$admin_email = get_option('admin_email');
-		if ( $this->conf->options['send_email_notifications'] && !empty($admin_email) ) {
-			$this->send_admin_notification($links, $admin_email);
+		//Send the admin/maintainer an email notification.
+		$email = $this->conf->get('notification_email_address');
+		if ( empty($email) ) {
+			//Default to the admin email.
+			$email = get_option('admin_email');
+		}
+		if ( $this->conf->options['send_email_notifications'] && !empty($email) ) {
+			$this->send_admin_notification($links, $email);
 		}
 
 		//Send notifications to post authors

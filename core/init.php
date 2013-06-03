@@ -81,6 +81,7 @@ $blc_config_manager = new blcConfigurationManager(
 		
 		'send_email_notifications' => true, //Whether to send the admin email notifications about broken links
 		'send_authors_email_notifications' => false, //Whether to send post authors notifications about broken links in their posts.
+		'notification_email_address' => '', //If set, send email notifications to this address instead of the admin.
 		'notification_schedule' => 'daily', //How often (at most) notifications will be sent. Possible values : 'daily', 'weekly'
 		'last_notification_sent' => 0,		//When the last email notification was sent (Unix timestamp)
 		
