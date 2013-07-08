@@ -73,7 +73,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 
 **Other Credits**
 
-This plugin uses one or more icons from the beautiful ["Silk" icon set](http://www.famfamfam.com/lab/icons/silk/).
+This plugin uses some icons from the [Font Awesome icon font](http://fortawesome.github.io/Font-Awesome/). Font Awesome is licensed under SIL OFL 1.1.
 
 == Installation ==
 
