@@ -50,7 +50,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Chinese Traditional - [YILIN](http://sh2153.com)
 * Czech - [Lelkoun](http://lelkoun.cz/)
 * Danish - [Georg S. Adamsen](http://wordpress.blogos.dk/)
-* Dutch - [Gideon van Melle](http://www.gvmelle.com/)
+* Dutch - [Robin Roelofsen](http://www.dreamdesignsolutions.nl/)
 * Finnish - [Jani Alha](http://www.wysiwyg.fi)
 * French - [Whiler](http://blogs.wittwer.fr/whiler/), Luc Capronnier, [Guillaume Boda](http://www.michtoblog.com/)
 * German - [Ivan Graf](http://blog.bildergallery.com/)
