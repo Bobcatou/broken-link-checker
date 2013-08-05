@@ -818,4 +818,3 @@ function blc_get_links($params = null){
 	return $instance->get_links($params);
 }
 
-?>
