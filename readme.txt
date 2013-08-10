@@ -55,6 +55,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * French - [Whiler](http://blogs.wittwer.fr/whiler/), Luc Capronnier, [Guillaume Boda](http://www.michtoblog.com/)
 * German - [Ivan Graf](http://blog.bildergallery.com/)
 * Hindi - [Outshine Solutions](http://outshinesolutions.com/)
+* Hungarian - [Language Connect](http://www.languageconnect.net/)
 * Irish - [Ray Gren](http://letsbefamous.com/)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
 * Japanese - [ningendesu](http://ningendesu.com/)
