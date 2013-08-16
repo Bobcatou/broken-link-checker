@@ -3,8 +3,8 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
-Tested up to: 3.5.2
-Stable tag: 1.8.2
+Tested up to: 3.6
+Stable tag: 1.8.3
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -94,6 +94,13 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.8.3 =
+* Added a Hungarian translation.
+* Fixed a bunch of "deprecated function" notices that showed up due to wpdb::escape() becoming deprecated in WP 3.6.
+* Fixed a vulnerability that would allow users with the ability to bulk-edit links to execute arbitrary PHP code by using a specially crafted regex as the search string.
+* Updated German translation.
+* Replaced the old Dutch translation with a new and more complete translation by Robin Roelofsen.
 
 = 1.8.2 =
 * Removed one of the translator credits links because Google flagged it as "suspicious".
