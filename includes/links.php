@@ -204,7 +204,7 @@ class blcLink {
 		$this->last_check_attempt = time();
 		
 		/*
-		If the link is stil marked as in the process of being checked, that probably means
+		If the link is still marked as in the process of being checked, that probably means
 		that the last time the plugin tried to check it the script got terminated by PHP for 
 		running over the execution time limit or causing a fatal error.
 		
@@ -812,7 +812,7 @@ class blcLink {
    *
    * @param bool $ignore_cache Don't use the internally cached instance list.
    * @param string $purpose 
-   * @return array An array of instance objects or FALSE on failure.
+   * @return blcLinkInstance[] An array of instance objects or FALSE on failure.
    */
 	function get_instances( $ignore_cache = false, $purpose = '' ){
 		global $wpdb;
