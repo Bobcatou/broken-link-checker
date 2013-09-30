@@ -2586,7 +2586,7 @@ class wsBrokenLinkChecker {
 			
 			if ( $rez === false ){
 				die( json_encode( array(
-					'error' => __("An unexpected error occured!", 'broken-link-checker')
+					'error' => __("An unexpected error occurred!", 'broken-link-checker')
 				 )));
 			} else {
 				$response = array(
