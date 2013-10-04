@@ -286,7 +286,7 @@ jQuery(function($){
 	function findReplacementSuggestions(url, suggestionList) {
 		var searchingText     = '<?php echo esc_js(_x('Searching...', 'link suggestions', 'broken-link-checker')) ?>';
 		var noSuggestionsText = '<?php echo esc_js(_x('No suggestions available.', 'link suggestions', 'broken-link-checker')) ?>';
-		var iaSuggestionName  = '<?php echo esc_js(_x('Archived page from %s (Internet Archive)', 'link suggestions', 'broken-link-checker')); ?>';
+		var iaSuggestionName  = '<?php echo esc_js(_x('Archived page from %s (via the Wayback Machine)', 'link suggestions', 'broken-link-checker')); ?>';
 
 		suggestionList.empty().append('<li>' + searchingText + '</li>');
 

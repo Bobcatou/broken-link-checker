@@ -439,6 +439,8 @@ class wsBrokenLinkChecker {
             $this->conf->options['removed_link_css'] = $new_removed_link_css;
             
             $this->conf->options['nofollow_broken_links'] = !empty($_POST['nofollow_broken_links']);
+			
+            $this->conf->options['suggestions_enabled'] = !empty($_POST['suggestions_enabled']);
 
             $this->conf->options['exclusion_list'] = array_filter( 
 				preg_split( 
@@ -803,7 +805,7 @@ class wsBrokenLinkChecker {
 				<th scope="row"><?php echo _x('Suggestions', 'settings page', 'broken-link-checker'); ?></th>
 				<td>
 					<p>
-						<label for='send_email_notifications'>
+						<label>
 							<input type="checkbox" name="suggestions_enabled" id="suggestions_enabled"
 								<?php checked($this->conf->options['suggestions_enabled']); ?>/>
 							<?php _e('Suggest alternatives to broken links', 'broken-link-checker'); ?>
