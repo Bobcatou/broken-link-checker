@@ -35,7 +35,6 @@ class blcLinkInstance {
    * Class constructor
    *
    * @param int|array $arg Either the instance ID or an associate array repreenting the instance's DB record. Should be NULL for new instances.
-   * @return void
    */
 	function __construct($arg = null){
 		global $wpdb; /** @var wpdb $wpdb */
@@ -85,16 +84,17 @@ class blcLinkInstance {
 			$this->$key = $value;
 		}
 	}
-	
-  /**
-   * Replace this instance's URL with a new one.
-   * Warning : this shouldn't be called directly. Use blcLink->edit() instead.  
-   *
-   * @param string $new_url
-   * @param string $old_url
-   * @return bool|WP_Error True on success, or an instance of WP_Error if something went wrong.
-   */
-	function edit($new_url, $old_url = ''){
+
+	/**
+	 * Replace this instance's URL with a new one.
+	 * Warning : this shouldn't be called directly. Use blcLink->edit() instead.
+	 *
+	 * @param string $new_url
+	 * @param string $old_url
+	 * @param string $new_text
+	 * @return bool|WP_Error True on success, or an instance of WP_Error if something went wrong.
+	 */
+	function edit($new_url, $old_url = '', $new_text = null){
 		
 		//Get the container that contains this link
 		$container = $this->get_container();
@@ -120,7 +120,7 @@ class blcLinkInstance {
 		}
 		
 		//Attempt to modify the link(s)
-		$result = $container->edit_link($this->container_field, $parser, $new_url, $old_url, $this->raw_url);
+		$result = $container->edit_link($this->container_field, $parser, $new_url, $old_url, $this->raw_url, $new_text);
 		if ( is_string($result) ){
 			//If the modification was successful, the container will return 
 			//the new raw_url for the instance. Save the URL and return true,
@@ -468,7 +468,21 @@ class blcLinkInstance {
 			//No valid container = generate some bare-bones debug output.
 			return sprintf('%s[%d] : %s', $this->container_type, $this->container_id, $this->container_field);
 		}
-	}	
+	}
+
+	/**
+	 * Check if the link text associated with this instance can be edited.
+	 *
+	 * @return bool
+	 */
+	public function is_link_text_editable() {
+		$parser = $this->get_parser();
+		if ( $parser === null ) {
+			return false;
+		}
+		return $parser->is_link_text_editable();
+	}
+
 }
 
 /**

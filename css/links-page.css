@@ -246,6 +246,91 @@ td.column-link-text, td.column-new-link-text {
 	vertical-align: middle;
 }
 
+
+/* Inline editor */
+
+.blc-inline-editor label {
+    display: block;
+    margin: 0.2em 0;
+}
+
+.blc-inline-editor .blc-input-text-wrap {
+    display: block;
+    margin-left: 5em;
+}
+
+.blc-inline-editor .blc-input-text-wrap input[type="text"] {
+    width: 100%;
+}
+
+.blc-inline-editor .blc-input-text-wrap textarea {
+    width: 100%;
+}
+
+
+.blc-inline-editor label span.title {
+    display: block;
+    float: left;
+    width: 5em;
+}
+
+.blc-inline-editor span.title {
+    line-height: 1.8em;
+}
+
+.blc-inline-editor-content > h4:first-child {
+    margin-top: 0.4em;
+}
+
+/* Inline editor: suggestion list */
+ul.blc-suggestion-list {
+    list-style: disc;
+}
+
+ul.blc-suggestion-list li {
+    margin-left: 1.5em;
+}
+
+ul.blc-suggestion-list li:hover {
+    background-color: white;
+}
+
+.blc-suggestion-details {
+    margin-right: 9em;
+    display: block;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.blc-inline-editor input.blc-use-url-button {
+    float: right;
+    max-width: 8em;
+
+    margin-left: 1em;
+    margin-top: 8px;
+}
+
+.blc-inline-editor code.blc-suggestion-url {
+    white-space: nowrap;
+}
+
+.blc-inline-editor .blc-suggestion-name {
+    display: block;
+}
+
+
+.blc-inline-editor-buttons {
+    clear: both;
+    margin: 0.5em 0 0;
+    padding: 0.5em;
+}
+
+.blc-inline-editor-content {
+    max-width: 600px;
+}
+
+
 /* Bulk edit form */
 #bulk-edit {
 	display: none;

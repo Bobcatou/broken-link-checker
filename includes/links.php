@@ -557,6 +557,7 @@ class blcLink {
    * if all instances were edited successfully.   
    *
    * @param string $new_url
+   * @param string $new_text Optional.
    * @return array An associative array with these keys : 
    *   new_link_id - the database ID of the new link.
    *   new_link - the new link (an instance of blcLink).
@@ -564,7 +565,7 @@ class blcLink {
    *   cnt_error - the number of instances that caused problems.
    *   errors - an array of WP_Error objects corresponding to the failed edits.  
    */
-	function edit($new_url){
+	function edit($new_url, $new_text = null){
 		if ( !$this->valid() ){
 			return new WP_Error(
 				'link_invalid',
@@ -623,7 +624,7 @@ class blcLink {
 		//Edit each instance.
 		//FB::info('Editing ' . count($instances) . ' instances');
 		foreach ( $instances as $instance ){
-			$rez = $instance->edit( $new_url, $this->url ); 			
+			$rez = $instance->edit( $new_url, $this->url, $new_text );
 			if ( is_wp_error($rez) ){
 				$cnt_error++;
 				array_push($errors, $rez);
