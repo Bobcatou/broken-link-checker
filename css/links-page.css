@@ -451,14 +451,6 @@ div.search-box{
 }
 
 /* Filter-related styles */
-.blc-undismiss-button {
-    display: none;
-}
-
-.base-filter-dismissed .blc-undismiss-button {
-    display: inline;
-}
-
 .base-filter-all .blc-dismiss-button {
     display: none;
 }
