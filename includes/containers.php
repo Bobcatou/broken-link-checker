@@ -835,9 +835,10 @@ class blcContainerHelper {
 		
 		$q .= implode(' OR ', $pieces);
 		$blclog->log('...... Executing query: ' . $q);
-		
+
+		$start_time = microtime(true);
 		$rez = ($wpdb->query($q) !== false);
-		$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));
+		$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start_time));
 		
 		blc_got_unsynched_items();
 		

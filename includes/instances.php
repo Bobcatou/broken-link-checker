@@ -24,7 +24,8 @@ class blcLinkInstance {
 	var $link_text = '';
 	var $link_context = '';
 	var $raw_url = '';
-	
+
+	/** @var blcContainer */
 	var $_container = null;
 	var $_parser = null;
 	/** @var blcLink|null */
@@ -34,7 +35,7 @@ class blcLinkInstance {
    * blcLinkInstance::__construct()
    * Class constructor
    *
-   * @param int|array $arg Either the instance ID or an associate array repreenting the instance's DB record. Should be NULL for new instances.
+   * @param int|array $arg Either the instance ID or an associate array representing the instance's DB record. Should be NULL for new instances.
    */
 	function __construct($arg = null){
 		global $wpdb; /** @var wpdb $wpdb */
@@ -566,7 +567,7 @@ function blc_get_instances( $link_ids, $purpose = '', $load_containers = false, 
  * @return int
  */
 function blc_get_usable_instance_count(){
-	global $wpdb;
+	global $wpdb; /** @var wpdb $wpdb */
 	
 	$q = "SELECT COUNT(instance_id) FROM {$wpdb->prefix}blc_instances WHERE 1";
 	
@@ -587,7 +588,7 @@ function blc_get_usable_instance_count(){
  * @return bool
  */
 function blc_cleanup_instances(){
-	global $wpdb;
+	global $wpdb; /** @var wpdb $wpdb */
 	global $blclog;
 	
 	//Delete all instances that reference non-existent containers
