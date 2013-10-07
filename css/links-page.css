@@ -291,10 +291,6 @@ ul.blc-suggestion-list li {
     margin-left: 1.5em;
 }
 
-ul.blc-suggestion-list li:hover {
-    background-color: white;
-}
-
 .blc-suggestion-details {
     margin-right: 9em;
     display: block;
