@@ -156,8 +156,12 @@ class blcHTMLLink extends blcParser {
 	public function is_link_text_editable() {
 		return true;
 	}
-	
-  /**
+
+	public function is_url_editable() {
+		return true;
+	}
+
+	/**
    * Remove all links that have a certain URL, leaving anchor text intact.
    *
    * @param string $content	Look for links in this string.

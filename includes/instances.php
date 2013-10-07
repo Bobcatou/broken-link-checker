@@ -484,6 +484,19 @@ class blcLinkInstance {
 		return $parser->is_link_text_editable();
 	}
 
+	/**
+	 * Check if the URL of this instance can be edited.
+	 *
+	 * @return bool
+	 */
+	public function is_url_editable() {
+		$parser = $this->get_parser();
+		if ( $parser === null ) {
+			return false;
+		}
+		return $parser->is_url_editable();
+	}
+
 }
 
 /**

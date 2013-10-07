@@ -410,6 +410,7 @@ class blcTablePrinter {
 
 		//For inline editing, we'll need to know if any instances have editable link text, and what it is.
 		$can_edit_text = false;
+		$can_edit_url = false;
 		$editable_link_texts = $non_editable_link_texts = array();
 		foreach($instances as $instance) {
 			if ( $instance->is_link_text_editable() ) {
@@ -417,6 +418,10 @@ class blcTablePrinter {
 				$editable_link_texts[$instance->link_text] = true;
 			} else {
 				$non_editable_link_texts[$instance->link_text] = true;
+			}
+
+			if ( $instance->is_url_editable() ) {
+				$can_edit_url = true;
 			}
 		}
 
@@ -429,10 +434,11 @@ class blcTablePrinter {
 		}
 
 		printf(
-			'<tr id="blc-row-%s" class="blc-row %s" data-days-broken="%d" data-can-edit-text="%d"%s>',
+			'<tr id="blc-row-%s" class="blc-row %s" data-days-broken="%d" data-can-edit-url="%d" data-can-edit-text="%d"%s>',
 			 $link->link_id,
 			 $rowclass,
 			 $days_broken,
+			 $can_edit_url ? 1 : 0,
 			 $can_edit_text ? 1 : 0,
 			 $data_link_text
 		);

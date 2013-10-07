@@ -231,10 +231,12 @@ jQuery(function($){
 		var titleInput = editRow.find('.blc-link-text-field');
 		var linkText = master.data('link-text'),
 			canEditText = master.data('can-edit-text') == 1, //jQuery will convert a '1' to 1 (number) when reading a data attribute.
+			canEditUrl = master.data('can-edit-url') == 1,
 			noneText = '<?php echo esc_js(_x('(None)', 'link text', 'broken-link-checker')); ?>',
 			multipleLinksText = '<?php echo esc_js(_x('(Multiple links)', 'link text', 'broken-link-checker')); ?>';
 
 		titleInput.prop('readonly', !canEditText);
+		urlInput.prop('readonly', !canEditUrl);
 
 		if ( (typeof linkText !== 'undefined') && (linkText !== null) ) {
 			if (linkText === '') {
@@ -252,18 +254,23 @@ jQuery(function($){
 		}
 
 		//Populate the list of URL replacement suggestions.
-		if (blc_suggestions_enabled && (master.hasClass('link-status-error') || master.hasClass('link-status-warning'))) {
+		if (canEditUrl && blc_suggestions_enabled && (master.hasClass('link-status-error') || master.hasClass('link-status-warning'))) {
 			editRow.find('.blc-url-replacement-suggestions').show();
 			var suggestionList = editRow.find('.blc-suggestion-list');
 			findReplacementSuggestions(urlElement.attr('href'), suggestionList);
 		}
+
+		editRow.find('.blc-update-link-button').prop('disabled', !(canEditUrl || canEditText));
 
 		//Make the editor span the entire width of the table.
 		editRow.find('td.blc-colspan-change').attr('colspan', master.closest('table').find('thead th:visible').length);
 
 		master.hide();
 		editRow.show();
-		urlInput.focus().select();
+		urlInput.focus();
+		if (canEditUrl) {
+			urlInput.select();
+		}
 	}
 
     /**

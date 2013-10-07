@@ -145,6 +145,15 @@ class blcParser extends blcModule {
 	public function is_link_text_editable() {
 		return false;
 	}
+
+	/**
+	 * Check if the parser supports editing the link URL.
+	 *
+	 * @return bool
+	 */
+	public function is_url_editable() {
+		return true;
+	}
 	
   /**
    * Turn a relative URL into an absolute one.
