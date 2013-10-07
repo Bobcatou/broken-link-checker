@@ -2945,7 +2945,35 @@ class wsBrokenLinkChecker {
 				'value' => sprintf('%d (%d)', $all_links, $all_instances),
 			);
 		}		
-		
+
+		//Email notifications.
+		if ( $this->conf->options['last_notification_sent'] ) {
+			$notificationDebug = array(
+				'value' => date('Y-m-d H:i:s T', $this->conf->options['last_notification_sent']),
+				'state' => 'ok',
+			);
+		} else {
+			$notificationDebug = array(
+				'value' => 'Never',
+				'state' => $this->conf->options['send_email_notifications'] ? 'ok' : 'warning',
+			);
+		}
+		$debug['Last email notification'] = $notificationDebug;
+
+		if ( isset($this->conf->options['last_email']) ) {
+			$email = $this->conf->options['last_email'];
+			$debug['Last email sent'] = array(
+				'state' => 'ok',
+				'value' => sprintf(
+					'"%s" on %s (%s)',
+					htmlentities($email['subject']),
+					date('Y-m-d H:i:s T', $email['timestamp']),
+					$email['success'] ? 'success' : 'failure'
+				)
+			);
+		}
+
+
 		//Installation log
 		$logger = new blcCachedOptionLogger('blc_installation_log');
 		$installation_log = $logger->get_messages();
@@ -3096,7 +3124,14 @@ class wsBrokenLinkChecker {
 		//Remove the override so that it doesn't interfere with other plugins that might
 		//want to send normal plaintext emails.
 		remove_filter('wp_mail_content_type', array(&$this, 'override_mail_content_type'));
-		
+
+		$this->conf->options['last_email'] = array(
+			'subject' => $subject,
+			'timestamp' => time(),
+			'success'    => $success,
+		);
+		$this->conf->save_options();
+
 		return $success;
 	}
 
