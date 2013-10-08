@@ -675,10 +675,6 @@ class blcTablePrinter {
 
 		echo '<div class="row-actions">';
 		echo implode(' | </span>', $actions) .'</span>';
-		
-		echo "<span style='display:none' class='blc-cancel-button-container'> " .
-			 "| <a href='javascript:void(0)' class='blc-cancel-button' title='". esc_attr(__('Cancel URL editing' , 'broken-link-checker')) ."'>". __('Cancel' , 'broken-link-checker') ."</a></span>";
-
 		echo '</div>';
 		
 		?>
