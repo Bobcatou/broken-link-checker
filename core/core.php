@@ -1204,7 +1204,10 @@ class wsBrokenLinkChecker {
      */
     function make_custom_field_input($html, $current_settings){
     	$html .= '<span class="description">' . 
-					__('Check URLs entered in these custom fields (one per line) :', 'broken-link-checker') .
+					__(
+						'Enter the names of custom fields you want to check (one per line). If a field contains HTML code, prefix its name with <code>html:</code>. For example, <code>html:field_name</code>.',
+						'broken-link-checker'
+					) .
 				 '</span>';
     	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4" />';
         if( isset($current_settings['custom_fields']) )
@@ -1944,7 +1947,7 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20130710');
+		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20131008');
 	}
 	
 	/**

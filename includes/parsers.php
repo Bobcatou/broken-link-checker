@@ -326,7 +326,7 @@ class blcParserHelper {
    *
    * @param string $format
    * @param string $container_type
-   * @return array of blcParser
+   * @return blcParser[]
    */
 	static function get_parsers( $format, $container_type ){
 		$found = array();
