@@ -297,6 +297,7 @@ ul.blc-suggestion-list li {
 
     overflow: hidden;
     text-overflow: ellipsis;
+    word-wrap: normal;
 }
 
 .blc-inline-editor input.blc-use-url-button {
@@ -309,6 +310,7 @@ ul.blc-suggestion-list li {
 
 .blc-inline-editor code.blc-suggestion-url {
     white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .blc-inline-editor .blc-suggestion-name {
