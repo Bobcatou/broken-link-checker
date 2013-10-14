@@ -325,7 +325,7 @@ class blcTablePrinter {
 		<tr id="bulk-edit" class="inline-edit-rows"><td colspan="<?php echo count($visible_columns)+1; ?>">
 		<div id="bulk-edit-wrap">
 		<fieldset>
-			<h4><?php _e('Bulk Edit URLs'); ?></h4>
+			<h4><?php _e('Bulk Edit URLs', 'broken-link-checker'); ?></h4>
 			<label>
 				<span class="title"><?php _e('Find', 'broken-link-checker'); ?></span>
 				<input type="text" name="search" class="text">
