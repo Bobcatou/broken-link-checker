@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
-Tested up to: 3.6
+Tested up to: 3.7-beta2
 Stable tag: 1.8.3
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
@@ -95,6 +95,18 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.9 =
+* Added the ability to edit link text from inside the plugin, for certain types of links.
+* Added a "suggestions" feature. When you go to edit a broken link, the plugin will now suggest replacing it with an archived page from the Wayback Machine (if available). You can disable suggestions in Settings -> Link Checker -> General.
+* Added a Hebrew translation.
+* Added support for HTML code in custom fields. To make the plugin treat a field as HTML, prefix its name with "html:" in BLC settings. For example, if you have a custom field named "foo" that contains HTML, enter it as "html:foo".
+* Fixed: The "Status" column is now properly updated when editing a link.
+* Fixed: Visual feedback when a link is successfully edited. Basically, it briefly changes the row background to green.
+* Fixed: Email notifications will only include the "see all broken links here" link if the recipient can actually access that link.
+* Fixed some UI labels not being localizable.
+* The "Undismiss" action is now displayed in all views instead of only the "Dismissed" view. This way you can tell if a broken link has been dismissed without having to search the "Dismissed" list.
+* Added information about the last email notification sent to debug info. It's accessible by clicking "show debug info" on the plugin settings page.
 
 = 1.8.3 =
 * Added a Hungarian translation.
