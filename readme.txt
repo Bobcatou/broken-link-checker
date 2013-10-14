@@ -54,6 +54,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Finnish - [Jani Alha](http://www.wysiwyg.fi)
 * French - [Whiler](http://blogs.wittwer.fr/whiler/), Luc Capronnier, [Guillaume Boda](http://www.michtoblog.com/)
 * German - [Ivan Graf](http://blog.bildergallery.com/)
+* Hebrew - [Eitan Caspi](http://caspi.org.il/)
 * Hindi - [Outshine Solutions](http://outshinesolutions.com/)
 * Hungarian - [Language Connect](http://www.languageconnect.net/)
 * Irish - [Ray Gren](http://letsbefamous.com/)

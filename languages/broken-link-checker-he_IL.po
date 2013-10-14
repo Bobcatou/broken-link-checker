@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Broken Link Checker v1.8.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-10-05 13:37:00-0500\n"
+"PO-Revision-Date: 2013-10-12 08:26:17-0500\n"
 "Last-Translator: admin <eitan@caspi.org.il>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -149,7 +149,7 @@ msgstr "תבוצע בדיקה כל %s שעות"
 #: core/core.php:675
 #@ broken-link-checker
 msgid "Existing links will be checked this often. New links will usually be checked ASAP."
-msgstr "קישורים קיימים יבדקו בתכיפות הזו. קישורים חדשים בדרך כלל יבדקו בהקדם האפשרי.<br>(ערך ברירת מחדל: 72. אפס (0) אינו ערך מותר. ערך מינימום: 1. ערך מקסימום: 99999)"
+msgstr "קישורים קיימים יבדקו בתכיפות הזו. קישורים חדשים בדרך כלל יבדקו בהקדם האפשרי.<br>(ערך ברירת מחדל: 72. ערך מינימום: 1. ערך מקסימום: 99999. אפס (0) אינו ערך מותר)"
 
 #: core/core.php:682
 #@ broken-link-checker
@@ -179,7 +179,7 @@ msgstr "השאירו שדה זה ריק אם ברצונכם שההתראות י�
 #: core/core.php:722
 #@ broken-link-checker
 msgid "Link tweaks"
-msgstr "עיצוב טקסט הקישור<br>(כאן ניתן לציין עיצוב מבוסס CSS לטקסט של קישורים על פי הסטטוס שלהם)"
+msgstr "עיצוב טקסט הקישור<br>(כאן ניתן לציין עיצוב מבוסס CSS לטקסט של קישורים על פי הסטטוס שלהם. למשל קו חוצה/מוחק על טקסט של קישור שבור, כך שהקוראים יבינו שהקישור שבור מבלי שיצטרכו להקליק על הקישור)"
 
 #: core/core.php:728
 #@ broken-link-checker
@@ -218,7 +218,7 @@ msgstr "דוגמה: \"גנן גידל דגן בגן, <span %s>קישור להס�
 #: core/core.php:792
 #@ broken-link-checker
 msgid "Stop search engines from following broken links"
-msgstr "חסימת מנועי חיפוש מלהמשיך אל קישורים שבורים"
+msgstr "חסימת מנועי חיפוש מלהמשיך אל עמוד היעד של קישור שבור"
 
 #: core/core.php:809
 #@ broken-link-checker
@@ -273,7 +273,7 @@ msgstr "%s שניות"
 #: core/core.php:919
 #@ broken-link-checker
 msgid "Links that take longer than this to load will be marked as broken."
-msgstr "קישורים שזמן הטעינה שלהם ארוך מערך זה יסומנו כשבורים.<br>(ערך ברירת מחדל: 30. אפס (0) אינו ערך מותר. ערך מינימום: 1. ערך מקסימום: 999)"
+msgstr "קישורים שזמן הטעינה שלהם ארוך מערך זה יסומנו כשבורים.<br>(ערך ברירת מחדל: 30. ערך מינימום: 1. ערך מקסימום: 999. אפס (0) אינו ערך מותר)"
 
 #: core/core.php:926
 #@ broken-link-checker
@@ -321,7 +321,7 @@ msgstr "משך זמן מקסימלי לניטור כלל הקישורים"
 #: core/core.php:990
 #@ broken-link-checker
 msgid "The plugin works by periodically launching a background job that parses your posts for links, checks the discovered URLs, and performs other time-consuming tasks. Here you can set for how long, at most, the link monitor may run each time before stopping."
-msgstr "התוסף פועל על ידי משימה של בדיקת קישורים אשר בוחנת את סוגי התכנים השונים באתר למציאת קישורים, בודקת את הקישורים שנמצאו, ומבצעת פעילויות אחרות שגוזלות זמן ומשאבי מערכת. בשדה זה אתם יכולים לכוונן את כמות זמן הניטור המקסימלית המותרת. לאחר משך זמן זה תופסק פעילות הניטור באופן יזום על ידי התוסף.<br>(ערך ברירת מחדל: 300. אפס (0) אינו ערך מותר. ערך מינימום: 1. ערך מקסימום: 99999)"
+msgstr "התוסף פועל על ידי משימה של בדיקת קישורים אשר בוחנת את סוגי התכנים השונים באתר ומנסה למצוא בהם קישורים. אם נמצאו קישורים המשימה  בודקת את תקינותם ומבצעת פעילויות אחרות שגוזלות זמן ומשאבי מערכת. בשדה זה אתם יכולים לכוונן את כמות זמן הניטור המקסימלית המותרת. לאחר משך זמן זה תופסק פעילות הניטור באופן יזום על ידי התוסף.<br>(ערך ברירת מחדל: 300. ערך מינימום: 1. ערך מקסימום: 99999. אפס (0) אינו ערך מותר)"
 
 #: core/core.php:999
 #@ broken-link-checker
@@ -338,7 +338,7 @@ msgstr "העומס הנוכחי על השרת: %s"
 #, php-format
 #@ broken-link-checker
 msgid "Link checking will be suspended if the average <a href=\"%s\">server load</a> rises above this number. Leave this field blank to disable load limiting."
-msgstr "בדיקת הקישורים תושעה במידה והממוצע של <a href=\"%s\" target=\\\"_blank\\\">העומס על השרת</a> יעלה מעל מספר זה. ניתן להשאיר שדה זה ריק בכדי לכבות אפשרות זו של הגבלת עומס משאבים על השרת בעת בדיקת קישורים - אולם מומלץ מאוד שלא לעשות זאת, בכדי למנוע את השבתת האתר שלכם על ידי ספק האירוח במידה ופעולת בדיקת הקישורים באתר שלכם תגרום לעומס אשר יפריע לפעולת השרת המארח."
+msgstr "משימת בדיקת הקישורים תושעה במידה והממוצע של <a href=\"%s\" target=\\\"_blank\\\">העומס על השרת</a> יעלה מעל מספר זה. ניתן להשאיר שדה זה ריק בכדי לכבות אפשרות זו - אולם מומלץ מאוד שלא לעשות זאת, בכדי למנוע את השבתת האתר שלכם על ידי ספק האירוח במידה ופעולת בדיקת הקישורים באתר שלכם תגרום לעומס אשר יפריע לפעולת השרת המארח."
 
 #: core/core.php:1028
 #@ broken-link-checker
