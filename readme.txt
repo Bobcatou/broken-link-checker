@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
 Tested up to: 3.7-beta2
-Stable tag: 1.8.3
+Stable tag: 1.9
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
