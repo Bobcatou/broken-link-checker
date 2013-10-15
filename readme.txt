@@ -97,7 +97,7 @@ To upgrade your installation
 == Changelog ==
 
 = 1.9 =
-* Added the ability to edit link text from inside the plugin, for certain types of links.
+* Added the ability to edit link text from inside the plugin. This features is only available for certain types of links.
 * Added a "suggestions" feature. When you go to edit a broken link, the plugin will now suggest replacing it with an archived page from the Wayback Machine (if available). You can disable suggestions in Settings -> Link Checker -> General.
 * Added a Hebrew translation.
 * Added support for HTML code in custom fields. To make the plugin treat a field as HTML, prefix its name with "html:" in BLC settings. For example, if you have a custom field named "foo" that contains HTML, enter it as "html:foo".
