@@ -284,7 +284,7 @@ td.column-link-text, td.column-new-link-text {
 
 /* Inline editor: suggestion list */
 ul.blc-suggestion-list {
-    list-style: disc;
+    list-style: disc outside;
 }
 
 ul.blc-suggestion-list li {
@@ -292,28 +292,34 @@ ul.blc-suggestion-list li {
 }
 
 .blc-suggestion-details {
-    margin-right: 9em;
+    display: inline-block;
+    width: 465px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-wrap: normal;
+
+    vertical-align: top;
+}
+
+.blc-suggestion-list input.blc-use-url-button {
+    float: right;
+    max-width: 110px;
+    margin-top: 10px;
+}
+
+.blc-suggestion-list code.blc-suggestion-url {
     display: block;
 
     overflow: hidden;
     text-overflow: ellipsis;
+
+    white-space: nowrap;
     word-wrap: normal;
 }
 
-.blc-inline-editor input.blc-use-url-button {
-    float: right;
-    max-width: 8em;
-
-    margin-left: 1em;
-    margin-top: 8px;
-}
-
-.blc-inline-editor code.blc-suggestion-url {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.blc-inline-editor .blc-suggestion-name {
+.blc-suggestion-list .blc-suggestion-name {
     display: block;
 }
 
