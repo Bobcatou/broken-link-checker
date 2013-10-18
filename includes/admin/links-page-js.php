@@ -301,7 +301,7 @@ jQuery(function($){
 
 		//Check the Wayback Machine for an archived version of the page.
 		$.getJSON(
-			'http://archive.org/wayback/available?callback=?',
+			'//archive.org/wayback/available?callback=?',
 			{ url: url },
 
 			function(data) {
