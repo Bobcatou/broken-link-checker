@@ -504,12 +504,12 @@ class blcTablePrinter {
 			<div class="blc-detail-block" style="float: left; width: 49%;">
 		    	<ol style='list-style-type: none;'>
 		    	<?php if ( !empty($link->post_date) ) { ?>
-		    	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Post published on', 'broken-link-checker'); ?>:</strong>
 		    	<span class='post_date'><?php
 					echo date_i18n(get_option('date_format'),strtotime($link->post_date));
 		    	?></span></li>
 		    	<?php } ?>
-		    	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Link last checked', 'broken-link-checker'); ?>:</strong>
 		    	<span class='check_date'><?php
 					$last_check = $link->last_check;
 		    		if ( $last_check < strtotime('-10 years') ){
@@ -519,27 +519,27 @@ class blcTablePrinter {
 		    		}
 		    	?></span></li>
 		    	
-		    	<li><strong><?php _e('HTTP code', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('HTTP code', 'broken-link-checker'); ?>:</strong>
 		    	<span class='http_code'><?php 
 		    		print $link->http_code; 
 		    	?></span></li>
 		    	
-		    	<li><strong><?php _e('Response time', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Response time', 'broken-link-checker'); ?>:</strong>
 		    	<span class='request_duration'><?php 
 		    		printf( __('%2.3f seconds', 'broken-link-checker'), $link->request_duration); 
 		    	?></span></li>
 		    	
-		    	<li><strong><?php _e('Final URL', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Final URL', 'broken-link-checker'); ?>:</strong>
 		    	<span class='final_url'><?php 
 		    		print $link->final_url; 
 		    	?></span></li>
 		    	
-		    	<li><strong><?php _e('Redirect count', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Redirect count', 'broken-link-checker'); ?>:</strong>
 		    	<span class='redirect_count'><?php 
 		    		print $link->redirect_count; 
 		    	?></span></li>
 		    	
-		    	<li><strong><?php _e('Instance count', 'broken-link-checker'); ?> :</strong>
+		    	<li><strong><?php _e('Instance count', 'broken-link-checker'); ?>:</strong>
 		    	<span class='instance_count'><?php 
 		    		print count($link->get_instances()); 
 		    	?></span></li>
@@ -567,7 +567,7 @@ class blcTablePrinter {
 			
 			<div class="blc-detail-block" style="float: right; width: 50%;">
 		    	<ol style='list-style-type: none;'>
-		    		<li><strong><?php _e('Log', 'broken-link-checker'); ?> :</strong>
+		    		<li><strong><?php _e('Log', 'broken-link-checker'); ?>:</strong>
 		    	<span class='blc_log'><?php 
 		    		print nl2br($link->log); 
 		    	?></span></li>
