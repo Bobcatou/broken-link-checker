@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: broken-link-checker v1.9.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2013-11-03 17:23+0100\n"
+"POT-Creation-Date: 2013-11-03 22:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Luc Capronnier <lcapronnier@yahoo.com>\n"
 "Language-Team: Whiler, Luc Capronnier <webmaster@blogs.wittwer.fr, "
@@ -14,7 +14,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;_x:1,2c;"
-"_ngettext_noop:1,2;_n_noop:1,2\n"
+"_ngettext_noop:1,2;_n_noop:1,2;esc_html;esc_html__;esc_html_e;esc_attr__;"
+"esc_attr_e\n"
 "X-Poedit-Basepath: ../\n"
 "X-Generator: Poedit 1.5.7\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1040,7 +1041,7 @@ msgstr "Liens d&eacute;tect&eacute;s"
 msgid "No links found (yet)"
 msgstr "(Encore) aucun lien trouv&eacute;"
 
-#: includes/link-query.php:65
+#: includes/link-query.php:65 includes/admin/search-form.php:32
 msgid "Search"
 msgstr "Rechercher"
 
@@ -1340,6 +1341,14 @@ msgstr "S&eacute;lectionner un ou plusieurs liens &agrave; &eacute;diter"
 msgid "Hide debug info"
 msgstr "Cacher les informations de débogage"
 
+#: includes/admin/search-form.php:16
+msgid "Save This Search As a Filter"
+msgstr "Enregistrer cette recherche comme un filtre"
+
+#: includes/admin/search-form.php:26
+msgid "Delete This Filter"
+msgstr "Supprimer ce filtre"
+
 #: includes/admin/search-form.php:42
 msgid "Link text"
 msgstr "Texte du lien"
@@ -1367,6 +1376,15 @@ msgstr "Tous"
 #: includes/admin/search-form.php:74
 msgid "Links used in"
 msgstr "Liens utilis&eacute;s dans"
+
+#: includes/admin/search-form.php:112
+msgid "Search Links"
+msgstr "Liens de recherche"
+
+#: includes/admin/search-form.php:113 includes/admin/table-printer.php:352
+#: includes/admin/table-printer.php:682 includes/admin/table-printer.php:807
+msgid "Cancel"
+msgstr "Annuler"
 
 #: includes/admin/sidebar.php:24
 msgid "More plugins by Janis Elsts"
@@ -1468,11 +1486,6 @@ msgstr "Respecter la case"
 #: includes/admin/table-printer.php:346
 msgid "Regular expression"
 msgstr "Expression r&eacute;guli&egrave;re"
-
-#: includes/admin/table-printer.php:352 includes/admin/table-printer.php:682
-#: includes/admin/table-printer.php:807
-msgid "Cancel"
-msgstr "Annuler"
 
 #: includes/admin/table-printer.php:354 includes/admin/table-printer.php:808
 msgid "Update"
@@ -1681,9 +1694,21 @@ msgstr "Impossible de supprimer le commentaire %d"
 msgid "Can't move comment %d to the trash"
 msgstr "Impossible de d&eacute;placer le commentaire %d dans la poubelle"
 
+#: modules/containers/comment.php:153 modules/containers/comment.php:195
+msgid "Edit comment"
+msgstr "Modifier le commentaire"
+
+#: modules/containers/comment.php:155
+msgid "_wpnonce="
+msgstr ""
+
 #: modules/containers/comment.php:160
 msgid "Delete Permanently"
 msgstr "Supprimer de mani&egrave;re permanente"
+
+#: modules/containers/comment.php:162
+msgid "Move this comment to the trash"
+msgstr "D&eacute;placer ce commentaire dans la poubelle"
 
 #: modules/containers/comment.php:162
 msgctxt "verb"
@@ -1935,21 +1960,6 @@ msgstr "Champ personnalis&eacute;"
 #~ msgid_plural "in %d links"
 #~ msgstr[0] "dans le lien %d"
 #~ msgstr[1] "dans les liens %d"
-
-#~ msgid "Save This Search As a Filter"
-#~ msgstr "Enregistrer cette recherche comme un filtre"
-
-#~ msgid "Delete This Filter"
-#~ msgstr "Supprimer ce filtre"
-
-#~ msgid "Search Links"
-#~ msgstr "Liens de recherche"
-
-#~ msgid "Edit comment"
-#~ msgstr "Modifier le commentaire"
-
-#~ msgid "Move this comment to the trash"
-#~ msgstr "D&eacute;placer ce commentaire dans la poubelle"
 
 #~ msgid ""
 #~ "http://w-shadow.com/blog/2007/08/05/broken-link-checker-for-wordpress/"
