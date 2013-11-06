@@ -1,9 +1,16 @@
 <script type='text/javascript'>
 
-function alterLinkCounter(factor){
-    var cnt = parseInt(jQuery('.current-link-count').eq(0).html());
+function alterLinkCounter(factor, filterId){
+	var counter;
+	if (filterId) {
+		counter = jQuery('.filter-' + filterId + '-link-count');
+	} else {
+		counter = jQuery('.current-link-count');
+	}
+
+    var cnt = parseInt(counter.eq(0).html(), 10);
     cnt = cnt + factor;
-    jQuery('.current-link-count').html(cnt);
+    counter.html(cnt);
     
 	if ( blc_is_broken_filter ){
 		//Update the broken link count displayed beside the "Broken Links" menu
@@ -141,6 +148,7 @@ jQuery(function($){
 					//Update the elements displaying the number of results for the current filter.
 					if( should_hide_link ){
 						alterLinkCounter(-1);
+						alterLinkCounter(1, 'dismissed');
 					}
 				} else {
 					me.html(oldButtonHtml);

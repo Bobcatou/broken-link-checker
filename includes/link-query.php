@@ -661,11 +661,12 @@ class blcLinkQuery {
 		foreach ($filters as $filter => $data){
 			if ( !empty($data['hidden']) ) continue; //skip hidden filters
 															
-			$class = $number_class = '';
+			$class = '';
+			$number_class = 'filter-' . $filter . '-link-count';
 			
 			if ( $current == $filter ) {
 				$class = 'class="current"';
-				$number_class = 'current-link-count';	
+				$number_class .= ' current-link-count';
 			}
 			
 			$items[] = "<li><a href='tools.php?page=view-broken-links&filter_id=$filter' {$class}>
