@@ -60,7 +60,7 @@ class blcTablePrinter {
 		//Only allow columns actually present in this layout
 		$visible_columns = array_intersect($visible_columns, $current_layout);
 		
-		echo '<form id="blc-bulk-action-form" action="', $this->neutral_current_url, '" method="post">';
+		echo '<form id="blc-bulk-action-form" action="', esc_attr($this->neutral_current_url), '" method="post">';
 		wp_nonce_field('bulk-action');
 		
 		//Top navigation
@@ -101,6 +101,9 @@ class blcTablePrinter {
 				$orderby = $column['orderby'];
 				$current_orderby = isset($_GET['orderby']) ? $_GET['orderby'] : '';
 				$current_order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+				if ( !in_array($current_order, array('asc', 'desc')) ) {
+					$current_order = 'asc';
+				}
 
 				if ( $orderby == $current_orderby ) {
 					$column_classes[] = 'sorted';
@@ -114,10 +117,10 @@ class blcTablePrinter {
 
 				$heading = sprintf(
 					'<a href="%s"><span>%s</span><span class="sorting-indicator"></span></a>',
-					add_query_arg(array(
+					esc_attr(add_query_arg(array(
 						'orderby' => $orderby,
 						'order' => $order,
-					)),
+					))),
 					$heading
 				);
 			}

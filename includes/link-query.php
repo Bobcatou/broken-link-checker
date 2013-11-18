@@ -716,6 +716,10 @@ class blcLinkQuery {
 	 * @return array Associative array of filter data and the results of its execution.
 	 */
 	function exec_filter($filter_id, $page = 1, $per_page = 30, $fallback = 'broken', $orderby = '', $order = 'asc'){
+		//The only valid sort directions are 'asc' and 'desc'.
+		if ( !in_array($order, array('asc', 'desc')) ) {
+			$order = 'asc';
+		}
 		
 		//Get the selected filter (defaults to displaying broken links)
 		$current_filter = $this->get_filter($filter_id);
