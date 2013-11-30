@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Broken Link Checker v1.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-11-09 07:25:11-0600\n"
+"PO-Revision-Date: 2013-11-29 06:43:30-0600\n"
 "Last-Translator: admin <eitan@caspi.org.il>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -487,7 +487,7 @@ msgstr[1] "%d קישורים תוזמנו לבדיקה חוזרת"
 #: core/core.php:2522
 #@ broken-link-checker
 msgid "This link was manually marked as working by the user."
-msgstr "הקישור סומן ידנית כתקין על ידי משתמש."
+msgstr "הקישור סומן ידנית כ'לא שבור' על ידי משתמש."
 
 #: core/core.php:1920
 #, php-format
@@ -1073,7 +1073,7 @@ msgstr "החלפת הקישור המקורי בקישור ההפניה"
 #: includes/admin/table-printer.php:275
 #@ broken-link-checker
 msgid "Mark as not broken"
-msgstr "סימון כתקין"
+msgstr "סימון כ'לא שבור'"
 
 #: includes/admin/table-printer.php:279
 #@ broken-link-checker
