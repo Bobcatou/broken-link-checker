@@ -637,7 +637,11 @@ jQuery(function($){
 	$('#blc-delete-filter').click(function(){
 		var message = '<?php
 		echo esc_js(
-			__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
+			html_entity_decode(
+				__("You are about to delete the current filter.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker'),
+				ENT_QUOTES | ENT_HTML401,
+				get_bloginfo('charset')
+			)
 		);
 		?>';
 		return confirm(message);
@@ -657,7 +661,11 @@ jQuery(function($){
     		//Convey the gravitas of deleting link sources.
     		message = '<?php
 				echo esc_js(  
-					__("Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker')
+					html_entity_decode(
+						__("Are you sure you want to delete all posts, bookmarks or other items that contain any of the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to delete", 'broken-link-checker'),
+						ENT_QUOTES | ENT_HTML401,
+						get_bloginfo('charset')
+					)
 				); 
 			?>'; 
 			if ( !confirm(message) ){
@@ -667,7 +675,11 @@ jQuery(function($){
 			//Likewise for unlinking.
 			message = '<?php
 				echo esc_js(  
-					__("Are you sure you want to remove the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to remove", 'broken-link-checker')
+					html_entity_decode(
+						__("Are you sure you want to remove the selected links? This action can't be undone.\n'Cancel' to stop, 'OK' to remove", 'broken-link-checker'),
+						ENT_QUOTES | ENT_HTML401,
+						get_bloginfo('charset')
+					)
 				); 
 			?>'; 
 			if ( !confirm(message) ){
