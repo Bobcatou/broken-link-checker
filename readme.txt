@@ -689,6 +689,9 @@ To upgrade your installation
 
 == Upgrade Notice ==
 
+= 1.9.2 =
+Fixes UI issues related to the new WP 3.8 admin style and a few security vulnerabilities.
+
 = 1.6.2 =
 Attempts to fix the "database not up to date" bug that some users are still experiencing with 1.6.1. If you have not encountered this bug, you can skip this update.
 
