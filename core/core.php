@@ -3122,7 +3122,11 @@ class wsBrokenLinkChecker {
 		//Need to override the default 'text/plain' content type to send a HTML email.
 		add_filter('wp_mail_content_type', array(&$this, 'override_mail_content_type'));
 
-		$success = wp_mail($email_address, $subject, $body);
+		//Let auto-responders and similar software know this is an auto-generated email
+		//that they shouldn't respond to.
+		$headers = array('Auto-Submitted: auto-generated');
+
+		$success = wp_mail($email_address, $subject, $body, $headers);
 
 		//Remove the override so that it doesn't interfere with other plugins that might
 		//want to send normal plaintext emails.
