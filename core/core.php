@@ -510,6 +510,40 @@ class wsBrokenLinkChecker {
 		        $this->conf->options['dashboard_widget_capability'] = $widget_cap;
 	        }
 
+			//Logging. The plugin can log various events and results for debugging purposes.
+			$this->conf->options['logging_enabled'] = !empty($_POST['logging_enabled']);
+			$this->conf->options['custom_log_file_enabled'] = !empty($_POST['custom_log_file_enabled']);
+
+			if ( $this->conf->options['logging_enabled'] ) {
+				if ( $this->conf->options['custom_log_file_enabled'] ) {
+					$log_file = strval($_POST['log_file']);
+				} else {
+					//Default log file is /wp-content/uploads/broken-link-checker/blc-log.txt
+					$log_directory = self::get_default_log_directory();
+					$log_file = $log_directory . '/' . self::get_default_log_basename();
+
+					//Attempt to create the log directory.
+					if ( !is_dir($log_directory) ) {
+						if ( mkdir($log_directory, 0750) ) {
+							//Add a .htaccess to hide the log file from site visitors.
+							file_put_contents($log_directory . '/.htaccess', 'Deny from all');
+						}
+					}
+				}
+
+				$this->conf->options['log_file'] = $log_file;
+
+				//Attempt to create the log file if not already there.
+				if ( !is_file($log_file) ) {
+					file_put_contents($log_file, '');
+				}
+
+				//The log file must be writable.
+				if ( !is_writable($log_file) || !is_file($log_file) ) {
+					$this->conf->options['logging_enabled'] = false;
+				}
+			}
+
 			//Make settings that affect our Cron events take effect immediately
 			$this->setup_cron_events();
 			
@@ -1051,6 +1085,54 @@ class wsBrokenLinkChecker {
 		?> 
         </td>
         </tr>
+
+		<tr valign="top">
+			<th scope="row"><?php _e('Logging', 'broken-link-checker'); ?></th>
+			<td>
+				<p>
+					<label for='logging_enabled'>
+						<input type="checkbox" name="logging_enabled" id="logging_enabled"
+							<?php checked($this->conf->options['logging_enabled']); ?>/>
+						<?php _e('Enable logging', 'broken-link-checker'); ?>
+					</label>
+				</p>
+			</td>
+		</tr>
+
+		<tr valign="top">
+			<th scope="row"><?php _e('Log file location', 'broken-link-checker'); ?></th>
+			<td>
+
+				<div id="blc-logging-options">
+
+				<p>
+				<label>
+					<input type="radio" name="custom_log_file_enabled" value=""
+						<?php checked(!$this->conf->options['custom_log_file_enabled']); ?>>
+					<?php echo _x('Default', 'log file location', 'broken-link-checker'); ?>
+				</label>
+				<br>
+					<span class="description">
+						<code><?php
+							echo self::get_default_log_directory(), '/', self::get_default_log_basename();
+						?></code>
+					</span>
+				</p>
+
+				<p>
+				<label>
+					<input type="radio" name="custom_log_file_enabled" value="1"
+						<?php checked($this->conf->options['custom_log_file_enabled']); ?>>
+					<?php echo _x('Custom', 'log file location', 'broken-link-checker'); ?>
+				</label>
+				<br><input type="text" name="log_file" id="log_file" size="90"
+						   value="<?php echo esc_attr($this->conf->options['log_file']); ?>">
+				</p>
+
+				</div>
+			</td>
+		</tr>
+
         
         <tr valign="top">
         <th scope="row"><?php _e('Forced recheck', 'broken-link-checker'); ?></th>
@@ -3263,9 +3345,16 @@ class wsBrokenLinkChecker {
 			$this->conf->save_options();
 		}		
 	}
-	
+
+	protected static function get_default_log_directory() {
+		$uploads = wp_upload_dir();
+		return $uploads['basedir'] . '/broken-link-checker';
+	}
+
+	protected static function get_default_log_basename() {
+		return 'blc-log.txt';
+	}
+
 }//class ends here
 
 } // if class_exists...
-
-?>

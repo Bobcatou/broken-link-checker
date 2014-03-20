@@ -132,9 +132,13 @@ class blcCurlHttp extends blcHttpCheckerBase {
 	var $last_headers = '';
 	
 	function check($url, $use_get = false){
+		global $blclog;
+		$blclog->info(__CLASS__ . ' Checking link', $url);
+
 		$this->last_headers = '';
-		
+
 		$url = $this->clean_url($url);
+		$blclog->debug(__CLASS__ . ' Clean URL:', $url);
 
 		$result = array(
 			'broken' => false,
@@ -219,7 +223,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
         $result['final_url'] = $info['url'];
         $result['request_duration'] = $info['total_time'];
         $result['redirect_count'] = $info['redirect_count'];
-        
+
         //CURL doesn't return a request duration when a timeout happens, so we measure it ourselves.
         //It is useful to see how long the plugin waited for the server to respond before assuming it timed out.        
         if( empty($result['request_duration']) ){

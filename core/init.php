@@ -46,7 +46,7 @@ define('BLC_FOR_EDITING', 'edit');
 define('BLC_FOR_PARSING', 'parse');
 define('BLC_FOR_DISPLAY', 'display');
 
-define('BLC_DATABASE_VERSION', 6);
+define('BLC_DATABASE_VERSION', 7);
 
 /***********************************************
 				Configuration
@@ -112,7 +112,10 @@ $blc_config_manager = new blcConfigurationManager(
 		'highlight_permanent_failures' => false,//Highlight links that have appear to be permanently broken (in Tools -> Broken Links).
 		'failure_duration_threshold' => 3, 		//(days) Assume a link is permanently broken if it still hasn't 
 												//recovered after this many days.
-												
+		'logging_enabled' => false,
+		'log_file' => '',
+		'custom_log_file_enabled' => false,
+
 		'installation_complete' => false,
 		'installation_flag_cleared_on' => 0,
 		'installation_flag_set_on'   => 0,
@@ -129,7 +132,11 @@ $blc_config_manager = new blcConfigurationManager(
 include BLC_DIRECTORY . '/includes/logger.php';
 
 global $blclog;
-$blclog = new blcDummyLogger;
+if ($blc_config_manager->get('logging_enabled', false) && is_writable($blc_config_manager->get('log_file'))) {
+	$blclog = new blcFileLogger($blc_config_manager->get('log_file'));
+} else {
+	$blclog = new blcDummyLogger;
+}
 
 /*
 if ( defined('BLC_DEBUG') && constant('BLC_DEBUG') ){
