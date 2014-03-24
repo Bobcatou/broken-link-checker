@@ -2354,6 +2354,7 @@ class wsBrokenLinkChecker {
 		//FB::log('No links need to be checked right now.');
 		
 		$this->release_lock();
+		$blclog->info('work(): All done.');
 		//FB::log('All done.');
 	}
 	
