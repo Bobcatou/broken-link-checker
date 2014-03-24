@@ -292,7 +292,8 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		require_once BLC_DIRECTORY . '/includes/link-query.php';
 		require_once BLC_DIRECTORY . '/includes/instances.php';
 		require_once BLC_DIRECTORY . '/includes/utility-class.php';
-		
+		require_once BLC_DIRECTORY . '/includes/token-bucket.php';
+
 		//Load the module subsystem
 		require_once BLC_DIRECTORY . '/includes/modules.php';
 		

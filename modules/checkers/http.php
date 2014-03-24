@@ -18,9 +18,19 @@ ModulePriority: -1
 class blcHttpChecker extends blcChecker {
 	/* @var blcChecker */
 	var $implementation = null;
+
+	/** @var  blcTokenBucketList */
+	private $token_bucket_list;
 	
 	function init(){
 		parent::init();
+
+		$conf = blc_get_configuration();
+		$this->token_bucket_list = new blcTokenBucketList(
+			$conf->get('http_throttle_rate', 3),
+			$conf->get('http_throttle_period', 15),
+			$conf->get('http_throttle_min_interval', 2)
+		);
 		
 		if ( function_exists('curl_init') || is_callable('curl_init') ) {
 			$this->implementation = new blcCurlHttp(
@@ -59,6 +69,15 @@ class blcHttpChecker extends blcChecker {
 	}
 	
 	function check($url, $use_get = false){
+		global $blclog;
+
+		//Throttle requests based on the domain name.
+		$domain = @parse_url($url, PHP_URL_HOST);
+		if ( $domain ) {
+			$this->token_bucket_list->takeToken($domain);
+		}
+
+		$blclog->info('HTTP module checking "' . $url . '"');
 		return $this->implementation->check($url, $use_get);
 	}
 }
@@ -318,7 +337,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
         return $result;
 	}
 	
-	function read_header($ch, $header){
+	function read_header(/** @noinspection PhpUnusedParameterInspection */ $ch, $header){
 		$this->last_headers .= $header;
 		return strlen($header);
 	}
