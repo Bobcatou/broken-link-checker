@@ -234,6 +234,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		$start_time = microtime_float();
         curl_exec($ch);
         $measured_request_duration = microtime_float() - $start_time;
+		$blclog->debug(sprintf('HTTP request took %.3f seconds', $measured_request_duration));
         
 		$info = curl_getinfo($ch);
 		
