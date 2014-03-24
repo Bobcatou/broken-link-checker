@@ -2155,7 +2155,7 @@ class wsBrokenLinkChecker {
    * @return void
    */
 	function work(){
-		global $wpdb;
+		global $wpdb, $blclog;
 		
 		if ( !$this->acquire_lock() ){
 			//FB::warn("Another instance of BLC is already working. Stop.");
@@ -2216,15 +2216,29 @@ class wsBrokenLinkChecker {
 		$still_need_resynch = $this->conf->options['need_resynch'];
 		
 		if ( $still_need_resynch ) {
-			
+
+			$target_usage_fraction = $this->conf->get('synch_target_resource_usage', 0.60);
+			//Target usage must be between 1% and 100%.
+			$target_usage_fraction = max(min($target_usage_fraction, 1), 0.01);
+
 			//FB::log("Looking for containers that need parsing...");
 			
 			while( $containers = blcContainerHelper::get_unsynched_containers(50) ){
 				//FB::log($containers, 'Found containers');
 				
 				foreach($containers as $container){
+					$synch_start_time = microtime(true);
+
 					//FB::log($container, "Parsing container");
 					$container->synch();
+
+					$synch_elapsed_time = microtime(true) - $synch_start_time;
+					$blclog->debug(sprintf(
+						'Parsed container %s[%s] in %.2f ms',
+						$container->container_type,
+						$container->container_id,
+						$synch_elapsed_time * 1000
+					));
 					
 					//Check if we still have some execution time left
 					if( $this->execution_time() > $max_execution_time ){
@@ -2240,6 +2254,13 @@ class wsBrokenLinkChecker {
 						blc_cleanup_links();
 						$this->release_lock();
 						return;
+					}
+
+					//Intentionally slow down parsing to reduce the load on the server. Basically,
+					//we work $target_usage_fraction of the time and sleep the rest of the time.
+					$sleep_time = $synch_elapsed_time * (1 / $target_usage_fraction - 1);
+					if ($sleep_time > 0.0001) {
+						usleep($sleep_time * 1000000);
 					}
 				}
 				$orphans_possible = true;
