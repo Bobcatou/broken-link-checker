@@ -2159,16 +2159,19 @@ class wsBrokenLinkChecker {
 		
 		if ( !$this->acquire_lock() ){
 			//FB::warn("Another instance of BLC is already working. Stop.");
+			$blclog->info('Another instance of BLC is already working. Stop.');
 			return;
 		}
 		
 		if ( $this->server_too_busy() ){
 			//FB::warn("Server is too busy. Stop.");
+			$blclog->warn('Server load is too high, stopping.');
 			return;
 		}
 		
 		$this->start_timer();
-		
+		$blclog->info('work() starts');
+
 		$max_execution_time = $this->conf->options['max_execution_time'];
 	
 		/*****************************************
@@ -2293,12 +2296,14 @@ class wsBrokenLinkChecker {
 		//Check if we still have some execution time left
 		if( $this->execution_time() > $max_execution_time ){
 			//FB::log('The allotted execution time has run out');
+			$blclog->info('The allotted execution time has run out.');
 			$this->release_lock();
 			return;
 		}
 		
 		if ( $this->server_too_busy() ){
 			//FB::log('Server overloaded, bailing out.');
+			$blclog->info('Server load too high, stopping.');
 			$this->release_lock();
 			return;
 		}
@@ -2310,6 +2315,7 @@ class wsBrokenLinkChecker {
 		
 			//Some unchecked links found
 			//FB::log("Checking ".count($links)." link(s)");
+			$blclog->info("Checking ".count($links)." link(s)");
 
 			//Randomizing the array reduces the chances that we'll get several links to the same domain in a row.
 			shuffle($links);
@@ -2330,6 +2336,7 @@ class wsBrokenLinkChecker {
 				//Check if we still have some execution time left
 				if( $this->execution_time() > $max_execution_time ){
 					//FB::log('The allotted execution time has run out');
+					$blclog->info('The allotted execution time has run out.');
 					$this->release_lock();
 					return;
 				}
@@ -2337,6 +2344,7 @@ class wsBrokenLinkChecker {
 				//Check if the server isn't overloaded
 				if ( $this->server_too_busy() ){
 					//FB::log('Server overloaded, bailing out.');
+					$blclog->info('Server load too high, stopping.');
 					$this->release_lock();
 					return;
 				}
