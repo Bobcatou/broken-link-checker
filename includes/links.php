@@ -151,7 +151,7 @@ class blcLink {
 			$arr = $wpdb->get_row( $q, ARRAY_A );
 			
 			if ( is_array($arr) ){ //Loaded successfully
-				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Success! Link data:', $arr);
+				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Success!');
 				$this->set_values($arr);
 			} else { //Link not found, treat as new
 				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Link not found.');
