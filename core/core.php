@@ -2242,7 +2242,7 @@ class wsBrokenLinkChecker {
 					
 					//Check if we still have some execution time left
 					if( $this->execution_time() > $max_execution_time ){
-						//FB::log('The alloted execution time has run out');
+						//FB::log('The allotted execution time has run out');
 						blc_cleanup_links();
 						$this->release_lock();
 						return;
