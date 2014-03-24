@@ -61,7 +61,7 @@ $blc_config_manager = new blcConfigurationManager(
 	'wsblc_options', 
 	//Initialize default settings
 	array(
-        'max_execution_time' => 5*60, 	//(in seconds) How long the worker instance may run, at most. 
+        'max_execution_time' => 10*60, 	//(in seconds) How long the worker instance may run, at most.
         'check_threshold' => 72, 		//(in hours) Check each link every 72 hours.
         
         'recheck_count' => 3, 			//How many times a broken link should be re-checked. 
