@@ -33,7 +33,7 @@ class blcTokenBucketList {
 	 * @param string $bucketName
 	 */
 	public function takeToken($bucketName) {
-		$this->cleanup();
+		$this->createIfNotExists($bucketName);
 		$this->waitForToken($bucketName);
 
 		$this->buckets[$bucketName]['tokens']--;
@@ -64,6 +64,23 @@ class blcTokenBucketList {
 	}
 
 	/**
+	 * Create a bucket if it doesn't exist yet.
+	 *
+	 * @param $name
+	 */
+	private function createIfNotExists($name) {
+		if ( !isset($this->buckets[$name]) ) {
+			$this->buckets[$name] = array(
+				'tokens' => $this->capacity,
+				'lastRefill' => microtime(true),
+				'lastTokenTakenAt' => 0
+			);
+		}
+		//Make sure we don't exceed $maxBuckets.
+		$this->cleanup();
+	}
+
+	/**
 	 * Calculate how quickly each bucket should be refilled.
 	 *
 	 * @return float Fill rate in tokens per second.
@@ -79,14 +96,6 @@ class blcTokenBucketList {
 	 */
 	private function refillBucket($name) {
 		$now = microtime(true);
-
-		if ( !isset($this->buckets[$name]) ) {
-			$this->buckets[$name] = array(
-				'tokens' => $this->capacity,
-				'lastRefill' => $now,
-				'lastTokenTakenAt' => 0
-			);
-		}
 
 		$timeSinceRefill = $now - $this->buckets[$name]['lastRefill'];
 		$this->buckets[$name]['tokens'] += $timeSinceRefill * $this->getFillRate();
