@@ -2289,6 +2289,9 @@ class wsBrokenLinkChecker {
 		
 			//Some unchecked links found
 			//FB::log("Checking ".count($links)." link(s)");
+
+			//Randomizing the array reduces the chances that we'll get several links to the same domain in a row.
+			shuffle($links);
 			
 			foreach ($links as $link) {
 				//Does this link need to be checked? Excluded links aren't checked, but their URLs are still
@@ -2305,7 +2308,7 @@ class wsBrokenLinkChecker {
 				
 				//Check if we still have some execution time left
 				if( $this->execution_time() > $max_execution_time ){
-					//FB::log('The alloted execution time has run out');
+					//FB::log('The allotted execution time has run out');
 					$this->release_lock();
 					return;
 				}
