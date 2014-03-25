@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Broken Link Checker package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Broken Link Checker 1.9.2\n"
+"Project-Id-Version: Broken Link Checker 1.9.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/broken-link-checker\n"
-"POT-Creation-Date: 2014-03-20 11:59:19+00:00\n"
+"POT-Creation-Date: 2014-03-25 12:29:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -209,7 +209,7 @@ msgstr ""
 msgid "Timeout"
 msgstr ""
 
-#: core/core.php:962 core/core.php:1031 core/core.php:2986
+#: core/core.php:962 core/core.php:1031 core/core.php:3019
 msgid "%s seconds"
 msgstr ""
 
@@ -419,7 +419,7 @@ msgid_plural "%d links scheduled for rechecking"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:1995 core/core.php:2604
+#: core/core.php:1995 core/core.php:2637
 msgid "This link was manually marked as working by the user."
 msgstr ""
 
@@ -461,209 +461,209 @@ msgstr ""
 msgid "Color-code status codes"
 msgstr ""
 
-#: core/core.php:2124 core/core.php:2589 core/core.php:2629 core/core.php:2662
-#: core/core.php:2749
+#: core/core.php:2124 core/core.php:2622 core/core.php:2662 core/core.php:2695
+#: core/core.php:2782
 msgid "You're not allowed to do that!"
 msgstr ""
 
-#: core/core.php:2459
+#: core/core.php:2492
 msgid "View broken links"
 msgstr ""
 
-#: core/core.php:2460
+#: core/core.php:2493
 msgid "Found %d broken link"
 msgid_plural "Found %d broken links"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:2466
+#: core/core.php:2499
 msgid "No broken links found."
 msgstr ""
 
-#: core/core.php:2473
+#: core/core.php:2506
 msgid "%d URL in the work queue"
 msgid_plural "%d URLs in the work queue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:2476
+#: core/core.php:2509
 msgid "No URLs in the work queue."
 msgstr ""
 
-#: core/core.php:2482
+#: core/core.php:2515
 msgctxt "for the \"Detected X unique URLs in Y links\" message"
 msgid "%d unique URL"
 msgid_plural "%d unique URLs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:2486
+#: core/core.php:2519
 msgctxt "for the \"Detected X unique URLs in Y links\" message"
 msgid "%d link"
 msgid_plural "%d links"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:2492
+#: core/core.php:2525
 msgid "Detected %1$s in %2$s and still searching..."
 msgstr ""
 
-#: core/core.php:2498
+#: core/core.php:2531
 msgid "Detected %1$s in %2$s."
 msgstr ""
 
-#: core/core.php:2505
+#: core/core.php:2538
 msgid "Searching your blog for links..."
 msgstr ""
 
-#: core/core.php:2507
+#: core/core.php:2540
 msgid "No links detected."
 msgstr ""
 
-#: core/core.php:2533
+#: core/core.php:2566
 msgctxt "current load"
 msgid "Unknown"
 msgstr ""
 
-#: core/core.php:2597 core/core.php:2637 core/core.php:2677 core/core.php:2759
+#: core/core.php:2630 core/core.php:2670 core/core.php:2710 core/core.php:2792
 msgid "Oops, I can't find the link %d"
 msgstr ""
 
-#: core/core.php:2610 core/core.php:2647
+#: core/core.php:2643 core/core.php:2680
 msgid "Oops, couldn't modify the link!"
 msgstr ""
 
-#: core/core.php:2613 core/core.php:2650 core/core.php:2785
+#: core/core.php:2646 core/core.php:2683 core/core.php:2818
 msgid "Error : link_id not specified"
 msgstr ""
 
-#: core/core.php:2668
+#: core/core.php:2701
 msgid "Error : link_id or new_url not specified"
 msgstr ""
 
-#: core/core.php:2686
+#: core/core.php:2719
 msgid "Oops, the new URL is invalid!"
 msgstr ""
 
-#: core/core.php:2701
+#: core/core.php:2734
 msgid "An unexpected error occurred!"
 msgstr ""
 
-#: core/core.php:2768
+#: core/core.php:2801
 msgid "An unexpected error occured!"
 msgstr ""
 
-#: core/core.php:2794
+#: core/core.php:2827
 msgid "You don't have sufficient privileges to access this information!"
 msgstr ""
 
-#: core/core.php:2807
+#: core/core.php:2840
 msgid "Error : link ID not specified"
 msgstr ""
 
-#: core/core.php:2821
+#: core/core.php:2854
 msgid "Failed to load link details (%s)"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.9.2)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Broken Link Checker 1.9.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: core/core.php:2875
+#: core/core.php:2908
 msgid "Broken Link Checker"
 msgstr ""
 
-#: core/core.php:2895
+#: core/core.php:2928
 msgid "PHP version"
 msgstr ""
 
-#: core/core.php:2901
+#: core/core.php:2934
 msgid "MySQL version"
 msgstr ""
 
-#: core/core.php:2914
+#: core/core.php:2947
 msgid ""
 "You have an old version of CURL. Redirect detection may not work properly."
 msgstr ""
 
-#: core/core.php:2926 core/core.php:2942 core/core.php:2947
+#: core/core.php:2959 core/core.php:2975 core/core.php:2980
 msgid "Not installed"
 msgstr ""
 
-#: core/core.php:2929
+#: core/core.php:2962
 msgid "CURL version"
 msgstr ""
 
-#: core/core.php:2935
+#: core/core.php:2968
 msgid "Installed"
 msgstr ""
 
-#: core/core.php:2948
+#: core/core.php:2981
 msgid "You must have either CURL or Snoopy installed for the plugin to work!"
 msgstr ""
 
-#: core/core.php:2959
+#: core/core.php:2992
 msgid "On"
 msgstr ""
 
-#: core/core.php:2960
+#: core/core.php:2993
 msgid "Redirects may be detected as broken links when safe_mode is on."
 msgstr ""
 
-#: core/core.php:2965 core/core.php:2979
+#: core/core.php:2998 core/core.php:3012
 msgid "Off"
 msgstr ""
 
-#: core/core.php:2973
+#: core/core.php:3006
 msgid "On ( %s )"
 msgstr ""
 
-#: core/core.php:2974
+#: core/core.php:3007
 msgid "Redirects may be detected as broken links when open_basedir is on."
 msgstr ""
 
-#: core/core.php:3003
+#: core/core.php:3036
 msgid ""
 "If this value is zero even after several page reloads you have probably "
 "encountered a bug."
 msgstr ""
 
-#: core/core.php:3126 core/core.php:3245
+#: core/core.php:3159 core/core.php:3278
 msgid "[%s] Broken links detected"
 msgstr ""
 
-#: core/core.php:3131
+#: core/core.php:3164
 msgid "Broken Link Checker has detected %d new broken link on your site."
 msgid_plural ""
 "Broken Link Checker has detected %d new broken links on your site."
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:3162
+#: core/core.php:3195
 msgid "Here's a list of the first %d broken links:"
 msgid_plural "Here's a list of the first %d broken links:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/core.php:3171
+#: core/core.php:3204
 msgid "Here's a list of the new broken links: "
 msgstr ""
 
-#: core/core.php:3180
+#: core/core.php:3213
 msgid "Link text : %s"
 msgstr ""
 
-#: core/core.php:3181
+#: core/core.php:3214
 msgid "Link URL : <a href=\"%s\">%s</a>"
 msgstr ""
 
-#: core/core.php:3182
+#: core/core.php:3215
 msgid "Source : %s"
 msgstr ""
 
-#: core/core.php:3196
+#: core/core.php:3229
 msgid "You can see all broken links here:"
 msgstr ""
 
-#: core/core.php:3250
+#: core/core.php:3283
 msgid "Broken Link Checker has detected %d new broken link in your posts."
 msgid_plural ""
 "Broken Link Checker has detected %d new broken links in your posts."
@@ -684,6 +684,12 @@ msgid ""
 "reactivating the plugin."
 msgstr ""
 
+#: core/init.php:335
+msgid ""
+"Please activate the plugin separately on each site. Network activation is "
+"not supported."
+msgstr ""
+
 #: includes/admin/db-upgrade.php:95
 msgid "Failed to delete old DB tables. Database error : %s"
 msgstr ""
@@ -692,7 +698,7 @@ msgstr ""
 msgid "Wait..."
 msgstr ""
 
-#: includes/admin/links-page-js.php:107 includes/admin/table-printer.php:661
+#: includes/admin/links-page-js.php:107 includes/admin/table-printer.php:663
 msgid "Not broken"
 msgstr ""
 
@@ -758,8 +764,8 @@ msgstr ""
 msgid "The following error(s) occured :"
 msgstr ""
 
-#: includes/admin/links-page-js.php:585 includes/admin/table-printer.php:279
-#: includes/admin/table-printer.php:655
+#: includes/admin/links-page-js.php:585 includes/admin/table-printer.php:281
+#: includes/admin/table-printer.php:657
 msgid "Unlink"
 msgstr ""
 
@@ -819,7 +825,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-#: includes/admin/search-form.php:48 includes/admin/table-printer.php:525
+#: includes/admin/search-form.php:48 includes/admin/table-printer.php:527
 msgid "HTTP code"
 msgstr ""
 
@@ -843,8 +849,8 @@ msgstr ""
 msgid "Search Links"
 msgstr ""
 
-#: includes/admin/search-form.php:113 includes/admin/table-printer.php:355
-#: includes/admin/table-printer.php:685 includes/admin/table-printer.php:810
+#: includes/admin/search-form.php:113 includes/admin/table-printer.php:357
+#: includes/admin/table-printer.php:687 includes/admin/table-printer.php:812
 msgid "Cancel"
 msgstr ""
 
@@ -882,190 +888,190 @@ msgstr ""
 msgid "Link Text"
 msgstr ""
 
-#: includes/admin/table-printer.php:226
+#: includes/admin/table-printer.php:228
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/admin/table-printer.php:274
+#: includes/admin/table-printer.php:276
 msgid "Bulk Actions"
 msgstr ""
 
-#: includes/admin/table-printer.php:275 includes/admin/table-printer.php:652
+#: includes/admin/table-printer.php:277 includes/admin/table-printer.php:654
 msgid "Edit URL"
 msgstr ""
 
-#: includes/admin/table-printer.php:276
+#: includes/admin/table-printer.php:278
 msgid "Recheck"
 msgstr ""
 
-#: includes/admin/table-printer.php:277
+#: includes/admin/table-printer.php:279
 msgid "Fix redirects"
 msgstr ""
 
-#: includes/admin/table-printer.php:278
+#: includes/admin/table-printer.php:280
 msgid "Mark as not broken"
 msgstr ""
 
-#: includes/admin/table-printer.php:282
+#: includes/admin/table-printer.php:284
 msgid "Move sources to Trash"
 msgstr ""
 
-#: includes/admin/table-printer.php:284
+#: includes/admin/table-printer.php:286
 msgid "Delete sources"
 msgstr ""
 
-#: includes/admin/table-printer.php:299
+#: includes/admin/table-printer.php:301
 msgid "&laquo;"
 msgstr ""
 
-#: includes/admin/table-printer.php:300
+#: includes/admin/table-printer.php:302
 msgid "&raquo;"
 msgstr ""
 
-#: includes/admin/table-printer.php:308
+#: includes/admin/table-printer.php:310
 msgid "Displaying %s&#8211;%s of <span class=\"current-link-count\">%s</span>"
 msgstr ""
 
-#: includes/admin/table-printer.php:331
+#: includes/admin/table-printer.php:333
 msgid "Bulk Edit URLs"
 msgstr ""
 
-#: includes/admin/table-printer.php:333
+#: includes/admin/table-printer.php:335
 msgid "Find"
 msgstr ""
 
-#: includes/admin/table-printer.php:337
+#: includes/admin/table-printer.php:339
 msgid "Replace with"
 msgstr ""
 
-#: includes/admin/table-printer.php:345
+#: includes/admin/table-printer.php:347
 msgid "Case sensitive"
 msgstr ""
 
-#: includes/admin/table-printer.php:349
+#: includes/admin/table-printer.php:351
 msgid "Regular expression"
 msgstr ""
 
-#: includes/admin/table-printer.php:357 includes/admin/table-printer.php:811
+#: includes/admin/table-printer.php:359 includes/admin/table-printer.php:813
 msgid "Update"
 msgstr ""
 
-#: includes/admin/table-printer.php:510
+#: includes/admin/table-printer.php:512
 msgid "Post published on"
 msgstr ""
 
-#: includes/admin/table-printer.php:515
+#: includes/admin/table-printer.php:517
 msgid "Link last checked"
 msgstr ""
 
-#: includes/admin/table-printer.php:519
+#: includes/admin/table-printer.php:521
 msgid "Never"
 msgstr ""
 
-#: includes/admin/table-printer.php:530
+#: includes/admin/table-printer.php:532
 msgid "Response time"
 msgstr ""
 
-#: includes/admin/table-printer.php:532
+#: includes/admin/table-printer.php:534
 msgid "%2.3f seconds"
 msgstr ""
 
-#: includes/admin/table-printer.php:535
+#: includes/admin/table-printer.php:537
 msgid "Final URL"
 msgstr ""
 
-#: includes/admin/table-printer.php:540
+#: includes/admin/table-printer.php:542
 msgid "Redirect count"
 msgstr ""
 
-#: includes/admin/table-printer.php:545
+#: includes/admin/table-printer.php:547
 msgid "Instance count"
 msgstr ""
 
-#: includes/admin/table-printer.php:554
+#: includes/admin/table-printer.php:556
 msgid "This link has failed %d time."
 msgid_plural "This link has failed %d times."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/table-printer.php:562
+#: includes/admin/table-printer.php:564
 msgid "This link has been broken for %s."
 msgstr ""
 
-#: includes/admin/table-printer.php:573
+#: includes/admin/table-printer.php:575
 msgid "Log"
 msgstr ""
 
-#: includes/admin/table-printer.php:598
+#: includes/admin/table-printer.php:600
 msgid "Show more info about this link"
 msgstr ""
 
-#: includes/admin/table-printer.php:616
+#: includes/admin/table-printer.php:618
 msgctxt "checked how long ago"
 msgid "Checked"
 msgstr ""
 
-#: includes/admin/table-printer.php:632
+#: includes/admin/table-printer.php:634
 msgid "Broken for"
 msgstr ""
 
-#: includes/admin/table-printer.php:652
+#: includes/admin/table-printer.php:654
 msgid "Edit this link"
 msgstr ""
 
-#: includes/admin/table-printer.php:654
+#: includes/admin/table-printer.php:656
 msgid "Remove this link from all posts"
 msgstr ""
 
-#: includes/admin/table-printer.php:660
+#: includes/admin/table-printer.php:662
 msgid "Remove this link from the list of broken links and mark it as valid"
 msgstr ""
 
-#: includes/admin/table-printer.php:668
+#: includes/admin/table-printer.php:670
 msgid "Hide this link and do not report it again unless its status changes"
 msgstr ""
 
-#: includes/admin/table-printer.php:669
+#: includes/admin/table-printer.php:671
 msgid "Dismiss"
 msgstr ""
 
-#: includes/admin/table-printer.php:674
+#: includes/admin/table-printer.php:676
 msgid "Undismiss this link"
 msgstr ""
 
-#: includes/admin/table-printer.php:675
+#: includes/admin/table-printer.php:677
 msgid "Undismiss"
 msgstr ""
 
-#: includes/admin/table-printer.php:686
+#: includes/admin/table-printer.php:688
 msgid "Update URL"
 msgstr ""
 
-#: includes/admin/table-printer.php:713
+#: includes/admin/table-printer.php:715
 msgid "[An orphaned link! This is a bug.]"
 msgstr ""
 
-#: includes/admin/table-printer.php:790
+#: includes/admin/table-printer.php:792
 msgctxt "inline editor title"
 msgid "Edit Link"
 msgstr ""
 
-#: includes/admin/table-printer.php:793
+#: includes/admin/table-printer.php:795
 msgctxt "inline link editor"
 msgid "Text"
 msgstr ""
 
-#: includes/admin/table-printer.php:798
+#: includes/admin/table-printer.php:800
 msgctxt "inline link editor"
 msgid "URL"
 msgstr ""
 
-#: includes/admin/table-printer.php:803
+#: includes/admin/table-printer.php:805
 msgctxt "inline link editor"
 msgid "Suggestions"
 msgstr ""
 
-#: includes/admin/table-printer.php:823
+#: includes/admin/table-printer.php:825
 msgid "Use this URL"
 msgstr ""
 
@@ -1393,7 +1399,7 @@ msgctxt "link status"
 msgid "Unknown"
 msgstr ""
 
-#: includes/links.php:863 modules/checkers/http.php:267
+#: includes/links.php:863 modules/checkers/http.php:289
 #: modules/extras/mediafire.php:101
 msgid "Unknown Error"
 msgstr ""
@@ -1481,31 +1487,31 @@ msgid_plural "%d months ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: modules/checkers/http.php:246
+#: modules/checkers/http.php:268
 msgid "Server Not Found"
 msgstr ""
 
-#: modules/checkers/http.php:261
+#: modules/checkers/http.php:283
 msgid "Connection Failed"
 msgstr ""
 
-#: modules/checkers/http.php:296 modules/checkers/http.php:366
+#: modules/checkers/http.php:318 modules/checkers/http.php:388
 msgid "HTTP code : %d"
 msgstr ""
 
-#: modules/checkers/http.php:298 modules/checkers/http.php:368
+#: modules/checkers/http.php:320 modules/checkers/http.php:390
 msgid "(No response)"
 msgstr ""
 
-#: modules/checkers/http.php:304
+#: modules/checkers/http.php:326
 msgid "Most likely the connection timed out or the domain doesn't exist."
 msgstr ""
 
-#: modules/checkers/http.php:375
+#: modules/checkers/http.php:397
 msgid "Request timed out."
 msgstr ""
 
-#: modules/checkers/http.php:393
+#: modules/checkers/http.php:415
 msgid "Using Snoopy"
 msgstr ""
 
