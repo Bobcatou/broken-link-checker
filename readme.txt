@@ -97,6 +97,18 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.9.3 =
+* Tested on WP 3.8.1 and WP 3.9-beta2.
+* Added an option to sort links by link text. May produce unexpected results for links that have multiple copies with different anchor text.
+* Added a Vietnamese translation.
+* Added file-based logging for debugging purposes. Logging can be enabled in the "Advanced" section of the plugin settings page.
+* Added a "Auto-Submitted: auto-generated" header to notification emails sent by the plugin. This should prevent "out-of-office" auto-responders and similar software from responding to these emails.
+* Added domain-based rate limiting to the HTTP checker module.
+* Throttled background parsing by about 40% to reduce overall resource usage.
+* Fixed (probably) a long-standing bug related to encoding international characters in link URLs.
+* Fixed a typo in the Polish translation.
+* Made the error message that's displayed when trying to network-activate the plugin more useful.
+
 = 1.9.2 =
 * Fixed several UI/layout issues related to the new WP 3.8 admin style.
 * Fixed HTML entity codes showing up in confirmation messages in when running a localized version of WP (only affects some languages).
