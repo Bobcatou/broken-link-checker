@@ -292,7 +292,6 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		require_once BLC_DIRECTORY . '/includes/link-query.php';
 		require_once BLC_DIRECTORY . '/includes/instances.php';
 		require_once BLC_DIRECTORY . '/includes/utility-class.php';
-		require_once BLC_DIRECTORY . '/includes/token-bucket.php';
 
 		//Load the module subsystem
 		require_once BLC_DIRECTORY . '/includes/modules.php';
@@ -331,6 +330,11 @@ if ( $blc_config_manager->options['installation_complete'] ){
 		$messages = array(
 			'<strong>' . __('Broken Link Checker installation failed. Try deactivating and then reactivating the plugin.', 'broken-link-checker') . '</strong>',
 		);
+
+		if ( is_multisite() && is_plugin_active_for_network(plugin_basename(BLC_PLUGIN_FILE)) ) {
+			$messages[] = __('Please activate the plugin separately on each site. Network activation is not supported.', 'broken-link-checker');
+			$messages[] = '';
+		}
 
 		if ( ! $blc_config_manager->db_option_loaded ) {
 			$messages[] = sprintf(

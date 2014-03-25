@@ -14,6 +14,8 @@ ModuleClassName: blcHttpChecker
 ModulePriority: -1
 */
 
+require_once BLC_DIRECTORY . '/includes/token-bucket.php';
+
 //TODO: Rewrite sub-classes as transports, not stand-alone checkers
 class blcHttpChecker extends blcChecker {
 	/* @var blcChecker */
