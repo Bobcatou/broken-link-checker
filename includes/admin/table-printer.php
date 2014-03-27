@@ -1,6 +1,6 @@
 <?php
 
-if ( !class_exists('blcTablePrinter') ) {
+if (!class_exists('blcTablePrinter')) {
 
 /**
  * Utility class for printing the link listing table.
