@@ -1,7 +1,6 @@
 <?php
 
 global $blclog, $blc_config_manager, $wpdb;
-$activation_start = microtime(true);
 $queryCnt = $wpdb->num_queries;
 
 //Completing the installation/upgrade is required for the plugin to work, so make sure 
@@ -15,6 +14,7 @@ register_shutdown_function(array(&$blclog, 'save')); //Make sure the log is save
 
 $blclog->clear();
 $blclog->info( sprintf('Plugin activated at %s.', date_i18n('Y-m-d H:i:s')) );
+$activation_start = microtime(true);
 
 //Reset the "installation_complete" flag
 $blc_config_manager->options['installation_complete'] = false;
@@ -76,8 +76,10 @@ if ( empty($load) ){
 }
 
 //And optimize my DB tables, too (for good measure)
-$blclog->info('Optimizing the database...'); 
+$blclog->info('Optimizing the database...');
+$optimize_start = microtime(true);
 blcUtility::optimize_database();
+$blclog->info(sprintf('--- Total: %.3f seconds', microtime(true) - $optimize_start));
 
 $blclog->info('Completing installation...');
 $blc_config_manager->options['installation_complete'] = true;
