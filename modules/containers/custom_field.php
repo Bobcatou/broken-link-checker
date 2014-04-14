@@ -447,17 +447,19 @@ class blcPostMetaManager extends blcContainerManager {
 		if ( $forced ){
 			//Create new synchronization records for all posts. 
 			$blclog->log('...... Creating synch records for all custom fields');
-	    	$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
+			$start = microtime(true);
+			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT id, '{$this->container_type}', 0
 				  FROM {$wpdb->posts}
 				  WHERE
 				  	{$wpdb->posts}.post_status = 'publish'
 	 				AND {$wpdb->posts}.post_type IN ('post', 'page')";
 	 		$wpdb->query( $q );
-	 		$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));
+	 		$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  		} else {
  			//Delete synch records corresponding to posts that no longer exist.
  			$blclog->log('...... Deleting custom field synch records corresponding to deleted posts');
+			$start = microtime(true);
  			$q = "DELETE synch.*
 				  FROM 
 					 {$wpdb->prefix}blc_synch AS synch LEFT JOIN {$wpdb->posts} AS posts
@@ -465,12 +467,13 @@ class blcPostMetaManager extends blcContainerManager {
 				  WHERE 
 					 synch.container_type = '{$this->container_type}' AND posts.ID IS NULL";
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));
+			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.
 			$blclog->log('...... Marking custom fields on changed post as unsynched');
-			$q = "UPDATE 
+			$start = microtime(true);
+			$q = "UPDATE
 					{$wpdb->prefix}blc_synch AS synch
 					JOIN {$wpdb->posts} AS posts ON (synch.container_id = posts.ID and synch.container_type='{$this->container_type}')
 				  SET 
@@ -478,10 +481,11 @@ class blcPostMetaManager extends blcContainerManager {
 				  WHERE
 					synch.last_synch < posts.post_modified";
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));
+			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
 			
 			//Create synch. records for posts that don't have them.
 			$blclog->log('...... Creating custom field synch records for new posts');
+			$start = microtime(true);
 			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT id, '{$this->container_type}', 0
 				  FROM 
@@ -492,7 +496,7 @@ class blcPostMetaManager extends blcContainerManager {
 	 				AND posts.post_type IN ('post', 'page')
 					AND synch.container_id IS NULL";
 			$wpdb->query($q);
-			$blclog->log(sprintf('...... %d rows affected', $wpdb->rows_affected));	 				
+			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
 		}
 	}
 	

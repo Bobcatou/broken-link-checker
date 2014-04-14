@@ -483,7 +483,9 @@ class blcModuleManager {
 		
 		//Ensure all active modules have the latest headers
 		$blclog->log('... Updating module cache');
+		$start = microtime(true);
 		$this->refresh_active_module_cache();
+		$blclog->info(sprintf('... Cache refresh took %.3f seconds', microtime(true) - $start));
 		
 		//Notify them that we've been activated
 		$active = $this->get_active_modules();
@@ -491,7 +493,7 @@ class blcModuleManager {
 			$blclog->log( sprintf('... Notifying module "%s"', $module_id) );
 			$module = $this->get_module($module_id);
 			if ( $module ){
-				$module->activated();
+				$module->plugin_activated();
 			} else {
 				$blclog->warn(sprintf('... Module "%s" failed to load!', $module_id));
 			}

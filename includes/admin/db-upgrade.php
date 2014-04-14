@@ -59,7 +59,7 @@ class blcDatabaseUpgrader {
 		$have_errors = false;
 		foreach($query_log as $item){
 			if ( $item['success'] ){
-				$blclog->info(' [OK] ' . $item['query']);
+				$blclog->info(' [OK] ' . $item['query'] . sprintf(' (%.3f seconds)', $item['query_time']));
 			} else {
 				$blclog->error(' [  ] ' . $item['query']);
 				$blclog->error(' Database error : ' . $item['error_message']);
@@ -272,8 +272,10 @@ class blcTableDelta {
 					//echo 'Detected indexes : <br>'; print_r($indices);
 					
 					// Fetch the table index structure from the database
+					$start = microtime(true);
 					$tableindices = $wpdb->get_results("SHOW INDEX FROM `{$table}`;");
-	
+					$blclog->info(sprintf('... SHOW INDEX FROM %s %.3f seconds', $table, microtime(true) - $start));
+
 					if ($tableindices) {
 						// Clear the index array
 						$index_ary = array();
@@ -340,8 +342,10 @@ class blcTableDelta {
 		foreach ($cqueries as $query) {
 			$log_item = array('query' => $query,);
 			if ( $execute ) {
+				$start = microtime(true);
 				$log_item['success'] = ($wpdb->query($query) !== false);
 				$log_item['error_message'] = $wpdb->last_error;
+				$log_item['query_time'] = microtime(true) - $start;
 			}
 			$query_log[] = $log_item;
 		}
