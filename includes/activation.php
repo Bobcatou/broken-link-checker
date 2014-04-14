@@ -1,6 +1,7 @@
 <?php
 
 global $blclog, $blc_config_manager, $wpdb;
+$activation_start = microtime(true);
 $queryCnt = $wpdb->num_queries;
 
 //Completing the installation/upgrade is required for the plugin to work, so make sure 
@@ -48,18 +49,24 @@ if ( empty($blc_config_manager->options['custom_fields']) ){
 
 //Prepare the database.
 $blclog->info('Upgrading the database...');
+$upgrade_start = microtime(true);
 require_once BLC_DIRECTORY . '/includes/admin/db-upgrade.php';
 blcDatabaseUpgrader::upgrade_database();
+$blclog->info(sprintf('--- Total: %.3f seconds', microtime(true) - $upgrade_start));
 
 //Remove invalid DB entries
 $blclog->info('Cleaning up the database...');
+$cleanup_start = microtime(true);
 blc_cleanup_database();
+$blclog->info(sprintf('--- Total: %.3f seconds', microtime(true) - $cleanup_start));
 
 //Notify modules that the plugin has been activated. This will cause container
 //modules to create and update synch. records for all new/modified posts and other items.
-$blclog->info('Notifying modules...'); 
+$blclog->info('Notifying modules...');
+$notification_start = microtime(true);
 $moduleManager->plugin_activated();
 blc_got_unsynched_items();
+$blclog->info(sprintf('--- Total: %.3f seconds', microtime(true) - $notification_start));
 
 //Turn off load limiting if it's not available on this server.
 $blclog->info('Updating server load limit settings...');
@@ -86,5 +93,6 @@ $blclog->info(sprintf(
 	date_i18n('Y-m-d H:i:s'),
 	$wpdb->num_queries - $queryCnt
 ));
+$blclog->info(sprintf('Total time: %.3f seconds', microtime(true) - $activation_start));
 $blclog->save();
 

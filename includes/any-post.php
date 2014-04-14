@@ -208,7 +208,8 @@ class blcPostTypeOverlord {
  		} else {
  			//Delete synch records corresponding to posts that no longer exist.
  			$blclog->log('...... Deleting synch records for removed posts');
- 			$q = "DELETE synch.*
+			$start = microtime(true);
+			$q = "DELETE synch.*
 				  FROM 
 					 {$wpdb->prefix}blc_synch AS synch LEFT JOIN {$wpdb->posts} AS posts
 					 ON posts.ID = synch.container_id
@@ -219,12 +220,14 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows deleted', $wpdb->rows_affected));
+			$elapsed = microtime(true) - $start;
+			$blclog->log(sprintf('...... %d rows deleted in %.3f seconds', $wpdb->rows_affected, $elapsed));
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.
 			$blclog->log('...... Marking changed posts as unsynched');
-			$q = "UPDATE 
+			$start = microtime(true);
+			$q = "UPDATE
 					{$wpdb->prefix}blc_synch AS synch
 					JOIN {$wpdb->posts} AS posts ON (synch.container_id = posts.ID and synch.container_type=posts.post_type)
 				  SET 
@@ -232,10 +235,12 @@ class blcPostTypeOverlord {
 				  WHERE
 					synch.last_synch < posts.post_modified";
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows updated', $wpdb->rows_affected));
+			$elapsed = microtime(true) - $start;
+			$blclog->log(sprintf('...... %d rows updated in %.3f seconds', $wpdb->rows_affected, $elapsed));
 			
 			//Create synch. records for posts that don't have them.
 			$blclog->log('...... Creating synch records for new posts');
+			$start = microtime(true);
 			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT posts.id, posts.post_type, 0
 				  FROM 
@@ -251,7 +256,8 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 			$wpdb->query($q);
-			$blclog->log(sprintf('...... %d rows inserted', $wpdb->rows_affected)); 				
+			$elapsed = microtime(true) - $start;
+			$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, $elapsed));
 		}
 		
 		$this->resynch_already_done = true;
