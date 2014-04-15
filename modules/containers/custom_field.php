@@ -455,7 +455,7 @@ class blcPostMetaManager extends blcContainerManager {
 				  	{$wpdb->posts}.post_status = 'publish'
 	 				AND {$wpdb->posts}.post_type IN ('post', 'page')";
 	 		$wpdb->query( $q );
-	 		$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
+	 		$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  		} else {
  			//Delete synch records corresponding to posts that no longer exist.
  			$blclog->log('...... Deleting custom field synch records corresponding to deleted posts');
@@ -467,7 +467,7 @@ class blcPostMetaManager extends blcContainerManager {
 				  WHERE 
 					 synch.container_type = '{$this->container_type}' AND posts.ID IS NULL";
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
+			$blclog->log(sprintf('...... %d rows deleted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.
@@ -481,7 +481,7 @@ class blcPostMetaManager extends blcContainerManager {
 				  WHERE
 					synch.last_synch < posts.post_modified";
 			$wpdb->query( $q );
-			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
+			$blclog->log(sprintf('...... %d rows updated in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
 			
 			//Create synch. records for posts that don't have them.
 			$blclog->log('...... Creating custom field synch records for new posts');
@@ -496,7 +496,7 @@ class blcPostMetaManager extends blcContainerManager {
 	 				AND posts.post_type IN ('post', 'page')
 					AND synch.container_id IS NULL";
 			$wpdb->query($q);
-			$blclog->log(sprintf('...... %d rows affected, %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
+			$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
 		}
 	}
 	

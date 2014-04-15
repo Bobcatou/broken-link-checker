@@ -192,6 +192,7 @@ class blcPostTypeOverlord {
 		if ( $forced ){
 			//Create new synchronization records for all posts. 
 			$blclog->log('...... Creating synch records for these post types: '.implode(', ', $escaped_post_types) . ' that have one of these statuses: ' . implode(', ', $escaped_post_statuses));
+			$start = microtime(true);
 	    	$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT posts.id, posts.post_type, 0
 				  FROM {$wpdb->posts} AS posts
@@ -204,7 +205,7 @@ class blcPostTypeOverlord {
 				"'" . implode("', '", $escaped_post_types) . "'"
 			);
 	 		$wpdb->query( $q );
-	 		$blclog->log(sprintf('...... %d rows inserted', $wpdb->rows_affected));
+	 		$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  		} else {
  			//Delete synch records corresponding to posts that no longer exist.
  			$blclog->log('...... Deleting synch records for removed posts');
@@ -221,6 +222,7 @@ class blcPostTypeOverlord {
 			);
 			$wpdb->query( $q );
 			$elapsed = microtime(true) - $start;
+			$blclog->debug($q);
 			$blclog->log(sprintf('...... %d rows deleted in %.3f seconds', $wpdb->rows_affected, $elapsed));
  			
 			//Remove the 'synched' flag from all posts that have been updated
@@ -236,6 +238,7 @@ class blcPostTypeOverlord {
 					synch.last_synch < posts.post_modified";
 			$wpdb->query( $q );
 			$elapsed = microtime(true) - $start;
+			$blclog->debug($q);
 			$blclog->log(sprintf('...... %d rows updated in %.3f seconds', $wpdb->rows_affected, $elapsed));
 			
 			//Create synch. records for posts that don't have them.
@@ -257,6 +260,7 @@ class blcPostTypeOverlord {
 			);
 			$wpdb->query($q);
 			$elapsed = microtime(true) - $start;
+			$blclog->debug($q);
 			$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, $elapsed));
 		}
 		
@@ -647,7 +651,7 @@ class blcAnyPostContainerManager extends blcContainerManager {
 	
 	function init(){
 		parent::init();
-		
+
 		//Notify the overlord that the post/container type that this instance is 
 		//responsible for is enabled.
 		$overlord = blcPostTypeOverlord::getInstance();

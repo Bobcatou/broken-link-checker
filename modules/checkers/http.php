@@ -79,7 +79,7 @@ class blcHttpChecker extends blcChecker {
 			$this->token_bucket_list->takeToken($domain);
 		}
 
-		$blclog->info('HTTP module checking "' . $url . '"');
+		$blclog->debug('HTTP module checking "' . $url . '"');
 		return $this->implementation->check($url, $use_get);
 	}
 }
@@ -293,6 +293,13 @@ class blcCurlHttp extends blcHttpCheckerBase {
         	$result['broken'] = $this->is_error_code($result['http_code']);
         }
         curl_close($ch);
+
+		$blclog->info(sprintf(
+			'HTTP response: %d, duration: %.2f seconds, status text: "%s"',
+			$result['http_code'],
+			$result['request_duration'],
+			$result['status_text']
+		));
         
         if ( $nobody && $result['broken'] ){
 			//The site in question might be expecting GET instead of HEAD, so lets retry the request 

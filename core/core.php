@@ -2236,7 +2236,7 @@ class wsBrokenLinkChecker {
 					$container->synch();
 
 					$synch_elapsed_time = microtime(true) - $synch_start_time;
-					$blclog->debug(sprintf(
+					$blclog->info(sprintf(
 						'Parsed container %s[%s] in %.2f ms',
 						$container->container_type,
 						$container->container_id,
@@ -2289,7 +2289,7 @@ class wsBrokenLinkChecker {
 		*******************************************/
 		
 		if ( $orphans_possible ) {
-			//FB::log('Cleaning up the link table.');
+			$blclog->info('Removing orphaned links.');
 			blc_cleanup_links();
 		}
 		

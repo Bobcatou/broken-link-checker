@@ -146,15 +146,15 @@ class blcLink {
 			
 		} else if (is_string($arg)){
 			//Load a link with URL = $arg from the DB. Create a new one if the record isn't found.
-			$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Trying to load a link by URL:', $arg);
+//			$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Trying to load a link by URL:', $arg);
 			$q = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}blc_links WHERE url=%s LIMIT 1", $arg);
 			$arr = $wpdb->get_row( $q, ARRAY_A );
 			
 			if ( is_array($arr) ){ //Loaded successfully
-				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Success!');
+//				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Success!');
 				$this->set_values($arr);
 			} else { //Link not found, treat as new
-				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Link not found.');
+//				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Link not found.');
 				$this->url = $arg;
 				$this->is_new = true;
 			}			
@@ -417,7 +417,7 @@ class blcLink {
 			
 			if ($rez){
 				$this->link_id = $wpdb->insert_id;
-				$blclog->info(__CLASS__ .':' . __FUNCTION__ . ' Database record created. ID = ' . $this->link_id);
+				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Database record created. ID = ' . $this->link_id);
 				//FB::info($this->link_id, "Link added");
 				//If the link was successfully saved then it's no longer "new"
 				$this->is_new = false;
@@ -449,7 +449,7 @@ class blcLink {
 			$rez = $wpdb->query($q) !== false;
 			if ( $rez ){
 				//FB::log($this->link_id, "Link updated");
-				$blclog->info(__CLASS__ .':' . __FUNCTION__ . ' Link updated.');
+				$blclog->debug(__CLASS__ .':' . __FUNCTION__ . ' Link updated.');
 			} else {
 				$blclog->error(__CLASS__ .':' . __FUNCTION__ . ' Error updating link', $this->url);
 				//FB::error($wpdb->last_error, "Error updating link {$this->url}");
