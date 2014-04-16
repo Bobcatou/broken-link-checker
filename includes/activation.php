@@ -73,6 +73,17 @@ $blclog->info('Updating server load limit settings...');
 $load = blcUtility::get_server_load();
 if ( empty($load) ){
 	$blc_config_manager->options['enable_load_limit'] = false;
+	$blclog->info('Disable load limit. Cannot retrieve current load average.');
+} elseif ( $blc_config_manager->options['enable_load_limit'] && !isset($blc_config_manager->options['server_load_limit']) ) {
+	$fifteen_minutes = floatval(end($load));
+	$default_load_limit = round(max(min($fifteen_minutes * 2, $fifteen_minutes + 2), 4));
+	$blc_config_manager->options['server_load_limit'] = $default_load_limit;
+
+	$blclog->info(sprintf(
+		'Set server load limit to %.2f. Current load average is %.2f',
+		$default_load_limit,
+		$fifteen_minutes
+	));
 }
 
 //And optimize my DB tables, too (for good measure)

@@ -2386,7 +2386,7 @@ class wsBrokenLinkChecker {
 	 * Total runtime = 1 + 3 = 4, ratio = 1 / 4 = 0.25.
 	 *
 	 * @param float $elapsed_time
-	 * @param float $ratio 
+	 * @param float $ratio
 	 */
 	private function sleep_to_maintain_ratio($elapsed_time, $ratio) {
 		if ( ($ratio <= 0) || ($ratio > 1) ) {
@@ -2394,8 +2394,12 @@ class wsBrokenLinkChecker {
 		}
 		$sleep_time = $elapsed_time * ((1 / $ratio) - 1);
 		if ($sleep_time > 0.0001) {
-			global $blclog;
-			$blclog->info(sprintf('Task took %.2f ms, sleeping for %.2f ms', $elapsed_time * 1000, $sleep_time * 1000));
+			/*global $blclog;
+			$blclog->debug(sprintf(
+				'Task took %.2f ms, sleeping for %.2f ms',
+				$elapsed_time * 1000,
+				$sleep_time * 1000
+			));*/
 			usleep($sleep_time * 1000000);
 		}
 	}
@@ -2481,7 +2485,7 @@ class wsBrokenLinkChecker {
 			$recheck_threshold
 		);
 		//FB::log($link_q, "Find links to check");
-		$blclog->debug("Find links to check: \n" . $link_q);
+		//$blclog->debug("Find links to check: \n" . $link_q);
 	
 		//If we just need the number of links, retrieve it and return
 		if ( $count_only ){
@@ -2925,7 +2929,7 @@ class wsBrokenLinkChecker {
    * @return bool
    */
 	function server_too_busy(){
-		if ( !$this->conf->options['enable_load_limit'] ){
+		if ( !$this->conf->options['enable_load_limit'] || !isset($this->conf->options['server_load_limit']) ){
 			return false;
 		}
 		
