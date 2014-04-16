@@ -2192,8 +2192,7 @@ class wsBrokenLinkChecker {
 		ignore_user_abort( true );
 		
 		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
-		//This reduces resource usage and may solve the mysterious slowdowns certain users have 
-		//encountered when activating the plugin.
+		//This reduces resource usage.
 		//(Disable when debugging or you won't get the FirePHP output)
 		if ( !headers_sent() && (!defined('BLC_DEBUG') || !constant('BLC_DEBUG')) ){
 			@ob_end_clean(); //Discard the existing buffer, if any
@@ -2209,6 +2208,10 @@ class wsBrokenLinkChecker {
  		//Load modules for this context
  		$moduleManager = blcModuleManager::getInstance();
  		$moduleManager->load_modules('work');
+
+		$target_usage_fraction = $this->conf->get('target_resource_usage', 0.25);
+		//Target usage must be between 1% and 100%.
+		$target_usage_fraction = max(min($target_usage_fraction, 1), 0.01);
  		
  		
 		/*****************************************
@@ -2220,14 +2223,16 @@ class wsBrokenLinkChecker {
 		
 		if ( $still_need_resynch ) {
 
-			$target_usage_fraction = $this->conf->get('synch_target_resource_usage', 0.60);
-			//Target usage must be between 1% and 100%.
-			$target_usage_fraction = max(min($target_usage_fraction, 1), 0.01);
-
 			//FB::log("Looking for containers that need parsing...");
-			
-			while( $containers = blcContainerHelper::get_unsynched_containers(50) ){
+			$max_containers_per_query = 50;
+
+			$start = microtime(true);
+			$containers = blcContainerHelper::get_unsynched_containers($max_containers_per_query);
+			$get_containers_time = microtime(true) - $start;
+
+			while( !empty($containers) ){
 				//FB::log($containers, 'Found containers');
+				$this->sleep_to_maintain_ratio($get_containers_time, $target_usage_fraction);
 				
 				foreach($containers as $container){
 					$synch_start_time = microtime(true);
@@ -2261,12 +2266,13 @@ class wsBrokenLinkChecker {
 
 					//Intentionally slow down parsing to reduce the load on the server. Basically,
 					//we work $target_usage_fraction of the time and sleep the rest of the time.
-					$sleep_time = $synch_elapsed_time * (1 / $target_usage_fraction - 1);
-					if ($sleep_time > 0.0001) {
-						usleep($sleep_time * 1000000);
-					}
+					$this->sleep_to_maintain_ratio($synch_elapsed_time, $target_usage_fraction);
 				}
 				$orphans_possible = true;
+
+				$start = microtime(true);
+				$containers = blcContainerHelper::get_unsynched_containers($max_containers_per_query);
+				$get_containers_time = microtime(true) - $start;
 			}
 			
 			//FB::log('No unparsed items found.');
@@ -2289,8 +2295,13 @@ class wsBrokenLinkChecker {
 		*******************************************/
 		
 		if ( $orphans_possible ) {
+			$start = microtime(true);
+
 			$blclog->info('Removing orphaned links.');
 			blc_cleanup_links();
+
+			$get_links_time = microtime(true) - $start;
+			$this->sleep_to_maintain_ratio($get_links_time, $target_usage_fraction);
 		}
 		
 		//Check if we still have some execution time left
@@ -2311,7 +2322,14 @@ class wsBrokenLinkChecker {
 		/*****************************************
 						Check links
 		******************************************/
-		while ( $links = $this->get_links_to_check(30) ){
+		$max_links_per_query = 30;
+
+		$start = microtime(true);
+		$links = $this->get_links_to_check($max_links_per_query);
+		$get_links_time = microtime(true) - $start;
+
+		while ( $links ){
+			$this->sleep_to_maintain_ratio($get_links_time, $target_usage_fraction);
 		
 			//Some unchecked links found
 			//FB::log("Checking ".count($links)." link(s)");
@@ -2349,13 +2367,37 @@ class wsBrokenLinkChecker {
 					return;
 				}
 			}
-			
+
+			$start = microtime(true);
+			$links = $this->get_links_to_check($max_links_per_query);
+			$get_links_time = microtime(true) - $start;
 		}
 		//FB::log('No links need to be checked right now.');
 		
 		$this->release_lock();
 		$blclog->info('work(): All done.');
 		//FB::log('All done.');
+	}
+
+	/**
+	 * Sleep long enough to maintain the required $ratio between $elapsed_time and total runtime.
+	 *
+	 * For example, if $ratio is 0.25 and $elapsed_time is 1 second, this method will sleep for 3 seconds.
+	 * Total runtime = 1 + 3 = 4, ratio = 1 / 4 = 0.25.
+	 *
+	 * @param float $elapsed_time
+	 * @param float $ratio 
+	 */
+	private function sleep_to_maintain_ratio($elapsed_time, $ratio) {
+		if ( ($ratio <= 0) || ($ratio > 1) ) {
+			return;
+		}
+		$sleep_time = $elapsed_time * ((1 / $ratio) - 1);
+		if ($sleep_time > 0.0001) {
+			global $blclog;
+			$blclog->info(sprintf('Task took %.2f ms, sleeping for %.2f ms', $elapsed_time * 1000, $sleep_time * 1000));
+			usleep($sleep_time * 1000000);
+		}
 	}
 	
   /**
@@ -2378,7 +2420,7 @@ class wsBrokenLinkChecker {
    * @return int|blcLink[]
    */
 	function get_links_to_check($max_results = 0, $count_only = false){
-		global $wpdb; /* @var wpdb $wpdb */
+		global $wpdb, $blclog; /* @var wpdb $wpdb */
 		
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
@@ -2439,6 +2481,7 @@ class wsBrokenLinkChecker {
 			$recheck_threshold
 		);
 		//FB::log($link_q, "Find links to check");
+		$blclog->debug("Find links to check: \n" . $link_q);
 	
 		//If we just need the number of links, retrieve it and return
 		if ( $count_only ){
