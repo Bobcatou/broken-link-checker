@@ -476,6 +476,13 @@ class wsBrokenLinkChecker {
 				
 				$this->conf->options['enable_load_limit'] = $this->conf->options['server_load_limit'] > 0;
             }
+
+			//Target resource usage (1% to 100%)
+			if ( isset($_POST['target_resource_usage']) ) {
+				$usage = floatval($_POST['target_resource_usage']);
+				$usage = max(min($usage / 100, 1), 0.01);
+				$this->conf->options['target_resource_usage'] = $usage;
+			}
             
             //When to run the checker
             $this->conf->options['run_in_dashboard'] = !empty($_POST['run_in_dashboard']);
@@ -1054,7 +1061,7 @@ class wsBrokenLinkChecker {
 		
 		$load = blcUtility::get_server_load();
 		$available = !empty($load);
-		
+
 		if ( $available ){
 			$value = !empty($this->conf->options['server_load_limit'])?sprintf('%.2f', $this->conf->options['server_load_limit']):'';
 			printf(
@@ -1085,6 +1092,24 @@ class wsBrokenLinkChecker {
 		?> 
         </td>
         </tr>
+
+		<tr valign="top">
+			<th scope="row"><?php _e('Target resource usage', 'broken-link-checker'); ?></th>
+			<td>
+				<?php
+				$target_resource_usage = $this->conf->get('target_resource_usage', 0.25);
+				printf(
+					'<input name="target_resource_usage" value="%d"
+						type="range" min="1" max="100" id="target_resource_usage">',
+					$target_resource_usage * 100
+				);
+				?>
+
+				<span id="target_resource_usage_percent"><?php
+					echo sprintf('%.0f%%', $target_resource_usage * 100);
+				?></span>
+			</td>
+		</tr>
 
 		<tr valign="top">
 			<th scope="row"><?php _e('Logging', 'broken-link-checker'); ?></th>
