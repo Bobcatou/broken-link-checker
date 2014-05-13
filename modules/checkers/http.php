@@ -171,13 +171,20 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		
 		//Init curl.
 	 	$ch = curl_init();
+		$request_headers = array();
         curl_setopt($ch, CURLOPT_URL, $this->urlencodefix($url));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         
         //Masquerade as Internet Explorer
 		$ua = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)';
+		//$ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';
         curl_setopt($ch, CURLOPT_USERAGENT, $ua);
-        
+
+		//Close the connection after the request (disables keep-alive). The plugin rate-limits requests,
+		//so it's likely we'd overrun the keep-alive timeout anyway.
+		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+		$request_headers[] = 'Connection: close';
+
         //Add a semi-plausible referer header to avoid tripping up some bot traps 
         curl_setopt($ch, CURLOPT_REFERER, home_url());
         
@@ -225,9 +232,14 @@ class blcCurlHttp extends blcHttpCheckerBase {
 			curl_setopt($ch, CURLOPT_NOBODY, true);  
 		} else {
 			//If we must use GET at least limit the amount of downloaded data.
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Range: bytes=0-2048')); //2 KB
+			$request_headers[] = 'Range: bytes=0-2048'; //2 KB
 		}
-        
+
+		//Set request headers.
+		if ( !empty($request_headers) ) {
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+		}
+
         //Register a callback function which will process the HTTP header(s).
 		//It can be called multiple times if the remote server performs a redirect. 
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'read_header'));
