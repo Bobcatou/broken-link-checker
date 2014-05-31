@@ -539,6 +539,12 @@ class blcPostMetaManager extends blcContainerManager {
 			return;
 		}
 
+		//Skip revisions. We only care about custom fields on the main post.
+		$post = get_post($object_id);
+		if ( empty($post) || !isset($post->post_type) || ($post->post_type === 'revision') ) {
+			return;
+		}
+
 		$container = blcContainerHelper::get_container( array($this->container_type, intval($object_id)) );
 		$container->mark_as_unsynched();
 	}
