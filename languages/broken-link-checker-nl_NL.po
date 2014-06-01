@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_c\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ..\n"
 
@@ -316,7 +316,7 @@ msgstr "Foutopsporing"
 
 #: core/core.php:1096
 msgid "Enable logging"
-msgstr "Loggen aanzetten (opslaan foutopsporingsinformatie)"
+msgstr "Foutopsporing aanzetten (opslaan in logbestand)"
 
 #: core/core.php:1103
 msgid "Log file location"
@@ -345,8 +345,8 @@ msgid ""
 "The \"Nuclear Option\". Click this button to make the plugin empty its link "
 "database and recheck the entire site from scratch."
 msgstr ""
-"De \"Nucleaire Optie\". Wanneer je op deze knop klikt maakt de plugin zijn "
-"link database leeg, en wordt de volledige site opnieuw gecontroleerd."
+"De \"Totale Optie\". Wanneer je op deze knop klikt maakt de plugin zijn link "
+"database leeg, en wordt de volledige site opnieuw gecontroleerd."
 
 #: core/core.php:1156
 msgid "Save Changes"
@@ -644,8 +644,8 @@ msgstr "Aan"
 #: core/core.php:2993
 msgid "Redirects may be detected as broken links when safe_mode is on."
 msgstr ""
-"Omgeleide links (redirects) worden misschien gezien als verbroken links "
-"wanneer safe_mode aan staat."
+"Omgeleide links worden misschien gezien als verbroken links wanneer "
+"safe_mode aan staat."
 
 #: core/core.php:2998 core/core.php:3012
 msgid "Off"
@@ -725,7 +725,7 @@ msgstr "Wekelijks"
 
 #: core/init.php:255
 msgid "Twice a Month"
-msgstr "Tweewekelijks"
+msgstr "Twee Keer per Maand"
 
 #: core/init.php:331
 msgid ""
