@@ -59,7 +59,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Hungarian - [Language Connect](http://www.languageconnect.net/)
 * Irish - [Ray Gren](http://letsbefamous.com/)
 * Italian - [Gianni Diurno](http://gidibao.net/index.php/portfolio/) and [Giacomo Ross](http://www.luxemozione.com/) (alternative)
-* Japanese - [ningendesu](http://ningendesu.com/)
+* Japanese - [Shohei Tanak](http://artisanworkshop.biz/)
 * Korean - [MinHyeong Lim](http://ssamture.net/)
 * Persian - [Omid Sheerkavand](http://qanal.ir/)
 * Polish - [http://positionmaker.pl](http://positionmaker.pl/)
