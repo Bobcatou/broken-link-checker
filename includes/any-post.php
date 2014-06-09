@@ -12,8 +12,8 @@
  * @access private
  */
 class blcPostTypeOverlord {
-	var $enabled_post_types = array();  //Post types currently selected for link checking
-	var $enabled_post_statuses = array('publish'); //Only posts that have one of these statuses shall be checked
+	public $enabled_post_types = array();  //Post types currently selected for link checking
+	public $enabled_post_statuses = array('publish'); //Only posts that have one of these statuses shall be checked
 	 
 	var $plugin_conf;  
 	var $resynch_already_done = false;

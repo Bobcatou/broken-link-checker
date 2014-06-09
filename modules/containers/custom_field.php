@@ -443,17 +443,27 @@ class blcPostMetaManager extends blcContainerManager {
 	function resynch($forced = false){
 		global $wpdb; /** @var wpdb $wpdb */
 		global $blclog;
-		
+
+		//Only check custom fields on selected post types. By default, that's "post" and "page".
+		$post_types = array('post', 'page');
+		if ( class_exists('blcPostTypeOverlord') ) {
+			$overlord = blcPostTypeOverlord::getInstance();
+			$post_types = array_merge($post_types, $overlord->enabled_post_types);
+			$post_types = array_unique($post_types);
+		}
+
+		$escaped_post_types = "'" . implode("', '", array_map('esc_sql', $post_types)) . "'";
+
 		if ( $forced ){
 			//Create new synchronization records for all posts. 
-			$blclog->log('...... Creating synch records for all custom fields');
+			$blclog->log('...... Creating synch records for all custom fields on ' . $escaped_post_types);
 			$start = microtime(true);
 			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT id, '{$this->container_type}', 0
 				  FROM {$wpdb->posts}
 				  WHERE
 				  	{$wpdb->posts}.post_status = 'publish'
-	 				AND {$wpdb->posts}.post_type IN ('post', 'page')";
+	 				AND {$wpdb->posts}.post_type IN ({$escaped_post_types})";
 	 		$wpdb->query( $q );
 	 		$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
  		} else {
@@ -471,7 +481,7 @@ class blcPostMetaManager extends blcContainerManager {
  			
 			//Remove the 'synched' flag from all posts that have been updated
 			//since the last time they were parsed/synchronized.
-			$blclog->log('...... Marking custom fields on changed post as unsynched');
+			$blclog->log('...... Marking custom fields on changed posts as unsynched');
 			$start = microtime(true);
 			$q = "UPDATE
 					{$wpdb->prefix}blc_synch AS synch
@@ -493,7 +503,7 @@ class blcPostMetaManager extends blcContainerManager {
 					ON (synch.container_id = posts.ID and synch.container_type='{$this->container_type}')  
 				  WHERE
 				  	posts.post_status = 'publish'
-	 				AND posts.post_type IN ('post', 'page')
+	 				AND posts.post_type IN ({$escaped_post_types})
 					AND synch.container_id IS NULL";
 			$wpdb->query($q);
 			$blclog->log(sprintf('...... %d rows inserted in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
