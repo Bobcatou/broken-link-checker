@@ -494,7 +494,7 @@ class blcPostMetaManager extends blcContainerManager {
 			$blclog->log(sprintf('...... %d rows updated in %.3f seconds', $wpdb->rows_affected, microtime(true) - $start));
 			
 			//Create synch. records for posts that don't have them.
-			$blclog->log('...... Creating custom field synch records for new posts');
+			$blclog->log('...... Creating custom field synch records for new ' . $escaped_post_types);
 			$start = microtime(true);
 			$q = "INSERT INTO {$wpdb->prefix}blc_synch(container_id, container_type, synched)
 				  SELECT id, '{$this->container_type}', 0
