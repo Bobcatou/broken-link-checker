@@ -398,6 +398,11 @@ class wsBrokenLinkChecker {
         
         if(isset($_POST['submit'])) {
 			check_admin_referer('link-checker-options');
+
+			$cleanPost = $_POST;
+			if ( function_exists('wp_magic_quotes') ){
+				$cleanPost = stripslashes_deep($cleanPost); //Ceterum censeo, WP shouldn't mangle superglobals.
+			}
 			
 			//Activate/deactivate modules
 			if ( !empty($_POST['module']) ){
@@ -431,11 +436,11 @@ class wsBrokenLinkChecker {
             }
             
             $this->conf->options['mark_broken_links'] = !empty($_POST['mark_broken_links']);
-            $new_broken_link_css = trim($_POST['broken_link_css']);
+            $new_broken_link_css = trim($cleanPost['broken_link_css']);
             $this->conf->options['broken_link_css'] = $new_broken_link_css;
             
             $this->conf->options['mark_removed_links'] = !empty($_POST['mark_removed_links']);
-            $new_removed_link_css = trim($_POST['removed_link_css']);
+            $new_removed_link_css = trim($cleanPost['removed_link_css']);
             $this->conf->options['removed_link_css'] = $new_removed_link_css;
             
             $this->conf->options['nofollow_broken_links'] = !empty($_POST['nofollow_broken_links']);
@@ -523,7 +528,7 @@ class wsBrokenLinkChecker {
 
 			if ( $this->conf->options['logging_enabled'] ) {
 				if ( $this->conf->options['custom_log_file_enabled'] ) {
-					$log_file = strval($_POST['log_file']);
+					$log_file = strval($cleanPost['log_file']);
 				} else {
 					//Default log file is /wp-content/uploads/broken-link-checker/blc-log.txt
 					$log_directory = self::get_default_log_directory();
