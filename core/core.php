@@ -422,6 +422,7 @@ class wsBrokenLinkChecker {
 				$enabled_post_statuses = array('publish');
 			}
 			$this->conf->options['enabled_post_statuses'] = $enabled_post_statuses;
+			//TODO: Resynch enabled post types when enabled statuses change.
 			
 			//The execution time limit must be above zero
             $new_execution_time = intval($_POST['max_execution_time']);
