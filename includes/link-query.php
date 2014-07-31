@@ -158,9 +158,12 @@ class blcLinkQuery {
    */
 	function delete_custom_filter($filter_id){
 		global $wpdb; /** @var wpdb $wpdb */
-		
+
+		if ( !isset($filter_id) ) {
+			$filter_id = $_POST['filter_id'];
+		}
 		//Remove the "f" character from the filter ID to get its database key
-		$filter_id = intval(ltrim($_POST['filter_id'], 'f'));
+		$filter_id = intval(ltrim($filter_id, 'f'));
 		
 		//Try to delete the filter
 		$q = $wpdb->prepare("DELETE FROM {$wpdb->prefix}blc_filters WHERE id = %d", $filter_id);
