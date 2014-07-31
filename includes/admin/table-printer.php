@@ -490,7 +490,7 @@ class blcTablePrinter {
 	 * 
 	 * @uses blcTablePrinter::details_row_contents() 
 	 * 
-	 * @param object $link The link to display.
+	 * @param blcLink $link The link to display.
 	 * @param array $visible_columns List of visible columns.
 	 * @param integer $rownum Table row number.
 	 * @return void
