@@ -182,8 +182,16 @@ class blcTablePrinter {
 		?>
 		
 		<div class="view-switch">
-			<a href="<?php echo esc_url(add_query_arg('compact', '1', $_SERVER['REQUEST_URI'])) ?>"><img <?php if ( $table_compact ) echo 'class="current"'; ?> id="view-switch-list" src="<?php echo esc_url( includes_url( 'images/blank.gif' ) ); ?>" width="20" height="20" title="<?php _e('Compact View', 'broken-link-checker') ?>" alt="<?php _e('Compact View', 'broken-link-checker') ?>" /></a>
-			<a href="<?php echo esc_url(add_query_arg('compact', '0', $_SERVER['REQUEST_URI'])) ?>"><img <?php if ( !$table_compact ) echo 'class="current"'; ?> id="view-switch-excerpt" src="<?php echo esc_url( includes_url( 'images/blank.gif' ) ); ?>" width="20" height="20" title="<?php _e('Detailed View', 'broken-link-checker') ?>" alt="<?php _e('Detailed View', 'broken-link-checker') ?>" /></a>
+			<a
+				href="<?php echo esc_url(add_query_arg('compact', '1', $_SERVER['REQUEST_URI'])) ?>"
+				class="view-list <?php if ( $table_compact ) echo 'current'; ?>"
+				title="<?php echo esc_attr(__('Compact View', 'broken-link-checker')); ?>">
+			</a>
+			<a
+				href="<?php echo esc_url(add_query_arg('compact', '0', $_SERVER['REQUEST_URI'])) ?>"
+				class="view-excerpt <?php if ( !$table_compact ) echo 'current'; ?>"
+				title="<?php echo esc_attr(__('Detailed View', 'broken-link-checker')); ?>">
+			</a>
 		</div>
 		
 		<?php
