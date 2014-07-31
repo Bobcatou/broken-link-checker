@@ -346,7 +346,7 @@ class blcLinkQuery {
 		
 		//Anchor text - use LIKE search
 		if ( !empty($params['s_link_text']) ){
-			$s_link_text = like_escape(esc_sql($params['s_link_text']));
+			$s_link_text = esc_sql($this->esc_like($params['s_link_text']));
 			$s_link_text  = str_replace('*', '%', $s_link_text);
 			
 			$pieces[] = '(instances.link_text LIKE "%' . $s_link_text . '%")';
@@ -357,7 +357,7 @@ class blcLinkQuery {
 		//There is limited wildcard support, e.g. "google.*/search" will match both 
 		//"google.com/search" and "google.lv/search" 
 		if ( !empty($params['s_link_url']) ){
-			$s_link_url = like_escape(esc_sql($params['s_link_url']));
+			$s_link_url = esc_sql($this->esc_like($params['s_link_url']));
 			$s_link_url = str_replace('*', '%', $s_link_url);
 			
 			$pieces[] = '(links.url LIKE "%'. $s_link_url .'%") OR '.
@@ -471,6 +471,15 @@ class blcLinkQuery {
 			'join_instances' => $join_instances,
 			'order_exprs' => $order_exprs,
 		);
+	}
+
+	private function esc_like($input) {
+		global $wpdb; /** @var wpdb $wpdb */
+		if ( method_exists($wpdb, 'esc_like') ) {
+			return $wpdb->esc_like($input);
+		} else {
+			return like_escape($input);
+		}
 	}
 	
   /**
