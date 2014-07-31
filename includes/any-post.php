@@ -44,8 +44,7 @@ class blcPostTypeOverlord {
 		
 		$post_types = get_post_types(array(), 'objects');
 		$exceptions = array('revision', 'nav_menu_item', 'attachment');
-		$built_in = array('post', 'page');
-		
+
 		foreach($post_types as $data){
 			$post_type = $data->name;
 			
