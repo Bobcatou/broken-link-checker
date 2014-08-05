@@ -27,8 +27,6 @@ class blcHTMLLink extends blcParser {
    * @return array An array of new blcLinkInstance objects. The objects will include info about the links found, but not about the corresponding container entity. 
    */
 	function parse($content, $base_url = '', $default_link_text = ''){
-		$instances = array();
-		
 		//remove all <code></code> blocks first
 		$content = preg_replace('/<code[^>]*>.+?<\/code>/si', ' ', $content);
 		
