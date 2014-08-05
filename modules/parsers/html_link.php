@@ -84,12 +84,16 @@ class blcHTMLLink extends blcParser {
 			$url = $this->relative2absolute($url, $base_url); //$base_url comes from $params
 			$blclog->info(__CLASS__ .':' . __FUNCTION__ . ' Convert relative URL to absolute. Absolute URL = "' . $url . '"');
 		}
-		
+
 		//Skip invalid links (again)
 		if ( !$url || (strlen($url)<6) ) {
 			$blclog->info(__CLASS__ .':' . __FUNCTION__ . ' Skipping the link (invalid/short URL)', $url);
 			return null;
 		}
+
+		//Remove left-to-right marks. See: https://en.wikipedia.org/wiki/Left-to-right_mark
+		$ltrm = json_decode('"\u200E"');
+		$url = str_replace($ltrm, '', $url);
 		
 		$text = $link['#link_text'];
 	    
