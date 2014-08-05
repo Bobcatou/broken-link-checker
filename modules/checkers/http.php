@@ -95,14 +95,18 @@ class blcHttpCheckerBase extends blcChecker {
 	
 	function clean_url($url){
 		$url = html_entity_decode($url);
-	    $url = preg_replace(
+
+		$ltrm = preg_quote(json_decode('"\u200E"'), '/');
+		$url .= '?ltrm=' . $ltrm;
+		$url = preg_replace(
 	        array(
 				'/([\?&]PHPSESSID=\w+)$/i',	//remove session ID
 	            '/(#[^\/]*)$/',				//and anchors/fragments
 	            '/&amp;/',					//convert improper HTML entities
-	            '/([\?&]sid=\w+)$/i'		//remove another flavour of session ID
+	            '/([\?&]sid=\w+)$/i',		//remove another flavour of session ID
+				'/' . $ltrm . '/',			//remove Left-to-Right marks that can show up when copying from Word.
 	        ),
-	        array('','','&',''),
+	        array('', '', '&', '', ''),
 	        $url
 		);
 	    $url = trim($url);
