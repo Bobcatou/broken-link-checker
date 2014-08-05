@@ -97,7 +97,6 @@ class blcHttpCheckerBase extends blcChecker {
 		$url = html_entity_decode($url);
 
 		$ltrm = preg_quote(json_decode('"\u200E"'), '/');
-		$url .= '?ltrm=' . $ltrm;
 		$url = preg_replace(
 	        array(
 				'/([\?&]PHPSESSID=\w+)$/i',	//remove session ID
