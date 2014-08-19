@@ -3,7 +3,7 @@ Contributors: whiteshadow
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A6P9S6CE3SRSW
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
-Tested up to: 3.9
+Tested up to: 4.0-beta4
 Stable tag: 1.9.3
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
@@ -98,6 +98,26 @@ To upgrade your installation
 1. Reactivate the plugin. Your settings will be retained from the previous version.
 
 == Changelog ==
+
+= 1.9.4 =
+* Tested on WP 4.0 beta.
+* Added a Serbo-Croatian translation.
+* Added a Slovakian translation.
+* Replaced the old Japanese translation with a new and more up-to-date version from a different translator.
+* Updated Dutch, German, Polish, Hebrew and other translations.
+* Fixed a notice about undefined index "status_text".
+* Fixed a "doing it wrong" warning related to screen options.
+* Fixed spurious false positives on links copied from Word or similar editors.
+* Fixed view switcher appearance in WP 4.0.
+* Replaced the deprecated like_esc() function with $wpdb->esc_like() where available.
+* Fixed plaintext URLs not being detected if they're the very first thing in a post.
+* Fixed a bug that caused quotes and other special characters in the broken link CSS and removed link CSS fields to be auto-escaped with a slash, potentially breaking the CSS.
+* Fixed a bug that caused the "check custom fields" feature work inconsistently or not at all on custom post types.
+* Fixed duplicate custom field links showing up when the user creates a revision with different field values.
+* Fixed a specific type of false positive where some links would get flagged as "Unknown Error" and the log message would be "Empty reply from server".
+* Fixed a bug where only the first enabled post type would be resynchronized during plugin activation.
+* Added more logging.
+* Removed Megavideo and MegaUpload modules. These sites no longer exist.
 
 = 1.9.3 =
 * Tested on WP 3.8.1 and WP 3.9-beta2.
