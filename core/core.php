@@ -90,9 +90,9 @@ class wsBrokenLinkChecker {
 		add_screen_options_panel(
 			'blc-screen-options',
 			'',
-			array(&$this, 'screen_options_html'),
+			array($this, 'screen_options_html'),
 			'tools_page_view-broken-links',
-			array(&$this, 'ajax_save_screen_options'),
+			array($this, 'ajax_save_screen_options'),
 			true
 		);
     }
