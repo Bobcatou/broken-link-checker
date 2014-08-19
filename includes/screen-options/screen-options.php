@@ -8,11 +8,11 @@ if ( !class_exists('wsScreenOptions12') ):
  * Do not access this class directly. Instead, use the add_screen_options_panel() function. 
  * 
  * @author Janis Elsts
- * @copyright 2010
- * @version 1.2
+ * @copyright 2014
+ * @version 1.3
  * @access public
  */
-class wsScreenOptions12 {
+class wsScreenOptions13 {
 	var $registered_panels; //List of custom "Screen Options" panels
 	var $page_panels;       //Index of panels registered for each page ($page => array of panel ids).
 	
@@ -259,7 +259,7 @@ global $ws_screen_options_versions;
 if ( !isset($ws_screen_options_versions) ){
 	$ws_screen_options_versions = array();
 }
-$ws_screen_options_versions['1.2'] = 'wsScreenOptions12';
+$ws_screen_options_versions['1.3'] = 'wsScreenOptions13';
 
 endif;
 
