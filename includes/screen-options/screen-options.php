@@ -281,7 +281,7 @@ if ( !function_exists('add_screen_options_panel') ){
 	function add_screen_options_panel($id, $title, $callback, $page, $save_callback = null, $autosave = false){
 		global $ws_screen_options_versions;
 		
-		static $instance = null;
+		static $instance = null; /** @var wsScreenOptions13 $instance */
 		if ( is_null($instance) ){
 			//Instantiate the latest version of the wsScreenOptions class
 			uksort($ws_screen_options_versions, 'version_compare');
@@ -290,7 +290,7 @@ if ( !function_exists('add_screen_options_panel') ){
 			$instance->init();
 		}
 		
-		return $instance->add_screen_options_panel($id, $title, $callback, $page, $save_callback, $autosave);
+		$instance->add_screen_options_panel($id, $title, $callback, $page, $save_callback, $autosave);
 	}
 	
 }    
