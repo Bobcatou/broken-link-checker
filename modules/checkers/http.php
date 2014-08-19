@@ -313,7 +313,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
 			'HTTP response: %d, duration: %.2f seconds, status text: "%s"',
 			$result['http_code'],
 			$result['request_duration'],
-			$result['status_text']
+			isset($result['status_text']) ? $result['status_text'] : 'N/A'
 		));
         
         if ( $nobody && $result['broken'] ){
