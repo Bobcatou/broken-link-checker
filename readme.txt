@@ -99,6 +99,10 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.9.4.1 =
+* Updated Dutch translation.
+* Updated POT file.
+
 = 1.9.4 =
 * Tested on WP 4.0 beta.
 * Added a Serbo-Croatian translation.
