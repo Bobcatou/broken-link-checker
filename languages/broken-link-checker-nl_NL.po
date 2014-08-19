@@ -312,11 +312,11 @@ msgstr ""
 
 #: core/core.php:1090
 msgid "Logging"
-msgstr "Foutopsporing"
+msgstr "Foutopsporing (loggen)"
 
 #: core/core.php:1096
 msgid "Enable logging"
-msgstr "Foutopsporing aanzetten (opslaan in logbestand)"
+msgstr "Foutopsporing (loggen) aanzetten"
 
 #: core/core.php:1103
 msgid "Log file location"
@@ -325,12 +325,12 @@ msgstr "Locatie logbestand"
 #: core/core.php:1112
 msgctxt "log file location"
 msgid "Default"
-msgstr "Standaard (locatie logbestand)"
+msgstr "Standaard locatie"
 
 #: core/core.php:1126
 msgctxt "log file location"
 msgid "Custom"
-msgstr "Aangepast (locatie logbestand)"
+msgstr "Aangepaste locatie"
 
 #: core/core.php:1138
 msgid "Forced recheck"
@@ -345,8 +345,8 @@ msgid ""
 "The \"Nuclear Option\". Click this button to make the plugin empty its link "
 "database and recheck the entire site from scratch."
 msgstr ""
-"De \"Totale Optie\". Wanneer je op deze knop klikt maakt de plugin zijn link "
-"database leeg, en wordt de volledige site opnieuw gecontroleerd."
+"De \"Nucleaire Optie\". Wanneer je op deze knop klikt maakt de plugin zijn "
+"link database leeg, en wordt de volledige site opnieuw gecontroleerd."
 
 #: core/core.php:1156
 msgid "Save Changes"
