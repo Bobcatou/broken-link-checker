@@ -98,6 +98,10 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.9.4.2 =
+* Updated Dutch translation again.
+* Removed Bulgarian translation because it was poor quality and outdated.
+
 = 1.9.4.1 =
 * Updated Dutch translation.
 * Updated POT file.
