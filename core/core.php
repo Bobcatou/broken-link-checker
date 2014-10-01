@@ -2225,7 +2225,11 @@ class wsBrokenLinkChecker {
 		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
 		//This reduces resource usage.
 		//(Disable when debugging or you won't get the FirePHP output)
-		if ( !headers_sent() && (!defined('BLC_DEBUG') || !constant('BLC_DEBUG')) ){
+		if (
+			!headers_sent()
+			&& (defined('DOING_AJAX') && constant('DOING_AJAX'))
+			&& (!defined('BLC_DEBUG') || !constant('BLC_DEBUG'))
+		){
 			@ob_end_clean(); //Discard the existing buffer, if any
 	 		header("Connection: close");
 			ob_start();
