@@ -2187,6 +2187,15 @@ class wsBrokenLinkChecker {
    */
 	function work(){
 		global $wpdb, $blclog;
+
+		//Close the session to prevent lock-ups.
+		//PHP sessions are blocking. session_start() will wait until all other scripts that are using the same session
+		//are finished. As a result, a long-running script that unintentionally keeps the session open can cause
+		//the entire site to "lock up" for the current user/browser. WordPress itself doesn't use sessions, but some
+		//plugins do, so we should explicitly close the session (if any) before starting the worker.
+		if ( session_id() != '' ) {
+			session_write_close();
+		}
 		
 		if ( !$this->acquire_lock() ){
 			//FB::warn("Another instance of BLC is already working. Stop.");
@@ -2221,7 +2230,7 @@ class wsBrokenLinkChecker {
 		
 		//Don't stop the script when the connection is closed
 		ignore_user_abort( true );
-		
+
 		//Close the connection as per http://www.php.net/manual/en/features.connection-handling.php#71172
 		//This reduces resource usage.
 		//(Disable when debugging or you won't get the FirePHP output)
