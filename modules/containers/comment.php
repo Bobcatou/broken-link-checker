@@ -261,7 +261,7 @@ class blcCommentManager extends blcContainerManager {
 		}
 	}
 	
-	function hook_trashed_post_comments($post_id, $statuses){
+	function hook_trashed_post_comments(/** @noinspection PhpUnusedParameterInspection */$post_id, $statuses){
 		foreach($statuses as $comment_id => $comment_status){
 			if ( $comment_status == '1' ){
 				$container = blcContainerHelper::get_container(array($this->container_type, $comment_id));
