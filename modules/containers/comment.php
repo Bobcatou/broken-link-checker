@@ -24,7 +24,7 @@ class blcComment extends blcContainer{
    */
 	function get_wrapped_object($ensure_consistency = false){
 		if( $ensure_consistency || is_null($this->wrapped_object) ){
-			$this->wrapped_object = &get_comment($this->container_id);
+			$this->wrapped_object = get_comment($this->container_id);
 		}		
 		return $this->wrapped_object;
 	}	
@@ -106,7 +106,7 @@ class blcComment extends blcContainer{
 	 */
 	function current_user_can_delete(){
 		//TODO: Fix for custom post types? WP itself doesn't care, at least in 3.0.
-		$comment = &$this->get_wrapped_object();
+		$comment = $this->get_wrapped_object();
 		return current_user_can('edit_post', $comment->comment_post_ID); 
 	}
 	
@@ -226,12 +226,12 @@ class blcCommentManager extends blcContainerManager {
 	function init(){
 		parent::init();
 		
-		add_action('post_comment', array(&$this, 'hook_post_comment'), 10, 2);
-		add_action('edit_comment', array(&$this, 'hook_edit_comment'));
-		add_action('transition_comment_status', array(&$this, 'hook_comment_status'), 10, 3);
+		add_action('post_comment', array($this, 'hook_post_comment'), 10, 2);
+		add_action('edit_comment', array($this, 'hook_edit_comment'));
+		add_action('transition_comment_status', array($this, 'hook_comment_status'), 10, 3);
 		
-		add_action('trashed_post_comments', array(&$this, 'hook_trashed_post_comments'), 10, 2);
-		add_action('untrash_post_comments', array(&$this, 'hook_untrash_post_comments'));
+		add_action('trashed_post_comments', array($this, 'hook_trashed_post_comments'), 10, 2);
+		add_action('untrash_post_comments', array($this, 'hook_untrash_post_comments'));
 	}
 
 	function hook_post_comment($comment_id, $comment_status){
