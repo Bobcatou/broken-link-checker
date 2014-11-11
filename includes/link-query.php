@@ -18,6 +18,16 @@ class blcLinkQuery {
 	function __construct(){
 		//Init. the available native filters.
 		$this->native_filters = array(
+			'all' => array(
+				'params' => array(
+					'where_expr' => '1',
+				),
+				'name' => __('All', 'broken-link-checker'),
+				'heading' => __('Detected Links', 'broken-link-checker'),
+				'heading_zero' => __('No links found (yet)', 'broken-link-checker'),
+				'native' => true,
+			),
+
 			'broken' => array(
 				'params' => array(
 					'where_expr' => '( broken = 1 )',
@@ -27,17 +37,27 @@ class blcLinkQuery {
 				'heading' => __('Broken Links', 'broken-link-checker'),
 				'heading_zero' => __('No broken links found', 'broken-link-checker'),
 				'native' => true,
-			 ), 
-			 'redirects' => array(
-			 	'params' => array(
+			),
+			'warnings' => array(
+				'params' => array(
+					'where_expr' => '( warning = 1 )',
+					's_include_dismissed' => false,
+				),
+				'name' => _x('Warnings', 'filter name', 'broken-link-checker'),
+				'heading' => __('Warnings', 'filter heading', 'broken-link-checker'),
+				'heading_zero' => __('No warnings found', 'broken-link-checker'),
+				'native' => true,
+			),
+			'redirects' => array(
+				'params' => array(
 					'where_expr' => '( redirect_count > 0 )',
-					 's_include_dismissed' => false,
+					's_include_dismissed' => false,
 				),
 				'name' => __('Redirects', 'broken-link-checker'),
 				'heading' => __('Redirected Links', 'broken-link-checker'),
 				'heading_zero' => __('No redirects found', 'broken-link-checker'),
 				'native' => true,
-			 ),
+			),
 
 			'dismissed' => array(
 				'params' => array(
@@ -48,17 +68,13 @@ class blcLinkQuery {
 				'heading_zero' => __('No dismissed links found', 'broken-link-checker'),
 				'native' => true,
 			),
-			 
-			'all' => array(
-				'params' => array(
-					'where_expr' => '1',
-				),
-				'name' => __('All', 'broken-link-checker'),
-				'heading' => __('Detected Links', 'broken-link-checker'),
-				'heading_zero' => __('No links found (yet)', 'broken-link-checker'),
-				'native' => true,
-			 ), 
 		);
+
+		//The user can turn off warnings. In that case, all errors will show up in the "broken" filter instead.
+		$conf = blc_get_configuration();
+		if ( !$conf->get('warnings_enabled') ) {
+			unset($this->native_filters['warnings']);
+		}
 		
 		//Create the special "search" filter
 		$this->search_filter = array(

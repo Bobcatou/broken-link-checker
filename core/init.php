@@ -86,7 +86,10 @@ $blc_config_manager = new blcConfigurationManager(
 		'last_notification_sent' => 0,		//When the last email notification was sent (Unix timestamp)
 
 		'suggestions_enabled' => true,  //Whether to suggest alternative URLs for broken links.
-		
+
+		'warnings_enabled' => true,		//Try to automatically detect temporary problems and false positives,
+										//and report them as "Warnings" instead of broken links.
+
 		'server_load_limit' => null,	//Stop parsing stuff & checking links if the 1-minute load average
 										//goes over this value. Only works on Linux servers. 0 = no limit.
 		'enable_load_limit' => true,	//Enable/disable load monitoring. 

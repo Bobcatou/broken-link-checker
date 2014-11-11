@@ -455,7 +455,7 @@ div.search-box{
 }
 
 /* Filter-related styles */
-.base-filter-all .blc-dismiss-button {
+.base-filter-all .blc-dismiss-action {
     display: none;
 }
 

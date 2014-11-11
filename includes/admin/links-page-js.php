@@ -89,9 +89,11 @@ jQuery(function($){
 					master.attr('class', classNames);
 					
 					//Flash the main row green to indicate success, then remove it if the current view
-					//is supposed to show only broken links.
+					//is supposed to show only broken links or warnings.
+					var should_hide_link = blc_is_broken_filter || (blc_current_base_filter == 'warnings');
+
 					flashElementGreen(master, function(){
-						if ( blc_is_broken_filter ){
+						if ( should_hide_link ){
 							details.remove();
 							master.remove();
 						} else {
@@ -100,7 +102,7 @@ jQuery(function($){
 					});
 					
 					//Update the elements displaying the number of results for the current filter.
-					if( blc_is_broken_filter ){
+					if( should_hide_link ){
                     	alterLinkCounter(-1);
                     }
 				} else {
@@ -121,7 +123,7 @@ jQuery(function($){
 
 		var master = me.closest('.blc-row');
 		var link_id = master.attr('id').split('-')[2];
-		var should_hide_link = (blc_current_base_filter == 'broken') || (blc_current_base_filter == 'redirects');
+		var should_hide_link = $.inArray(blc_current_base_filter, ['broken', 'redirects', 'warnings']) > -1;
 
 		$.post(
 			"<?php echo admin_url('admin-ajax.php'); ?>",

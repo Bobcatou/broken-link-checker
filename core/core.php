@@ -95,6 +95,9 @@ class wsBrokenLinkChecker {
 			array($this, 'ajax_save_screen_options'),
 			true
 		);
+
+		//Display an explanatory note on the "Tools -> Broken Links -> Warnings" page.
+		add_action('admin_notices', array($this, 'show_warnings_section_notice'));
     }
 
   /**
@@ -466,8 +469,15 @@ class wsBrokenLinkChecker {
             $diff1 = array_diff( $new_custom_fields, $this->conf->options['custom_fields'] );
             $diff2 = array_diff( $this->conf->options['custom_fields'], $new_custom_fields );
             $this->conf->options['custom_fields'] = $new_custom_fields;
-            
-            //HTTP timeout
+
+			//Turning off warnings turns existing warnings into "broken" links.
+			$warnings_enabled = !empty($_POST['warnings_enabled']);
+			if ( $this->conf->get('warnings_enabled') && !$warnings_enabled ) {
+				$this->promote_warnings_to_broken();
+			}
+			$this->conf->options['warnings_enabled'] = $warnings_enabled;
+
+			//HTTP timeout
             $new_timeout = intval($_POST['timeout']);
             if( $new_timeout > 0 ){
                 $this->conf->options['timeout'] = $new_timeout ;
@@ -851,13 +861,25 @@ class wsBrokenLinkChecker {
 			<tr valign="top">
 				<th scope="row"><?php echo _x('Suggestions', 'settings page', 'broken-link-checker'); ?></th>
 				<td>
-					<p>
-						<label>
-							<input type="checkbox" name="suggestions_enabled" id="suggestions_enabled"
-								<?php checked($this->conf->options['suggestions_enabled']); ?>/>
-							<?php _e('Suggest alternatives to broken links', 'broken-link-checker'); ?>
-						</label>
-					</p>
+					<label>
+						<input type="checkbox" name="suggestions_enabled" id="suggestions_enabled"
+							<?php checked($this->conf->options['suggestions_enabled']); ?>/>
+						<?php _e('Suggest alternatives to broken links', 'broken-link-checker'); ?>
+					</label>
+				</td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><?php echo _x('Warnings', 'settings page', 'broken-link-checker'); ?></th>
+				<td>
+					<label>
+						<input type="checkbox" name="warnings_enabled" id="blc_warnings_enabled"
+							<?php checked($this->conf->options['warnings_enabled']); ?>/>
+						<?php _e('Show uncertain or minor problems as "warnings" instead of "broken"', 'broken-link-checker'); ?>
+					</label>
+					<p class="description"><?php
+						_e('Turning off this option will make the plugin report all problems as broken links.', 'broken-link-checker');
+					?></p>
 				</td>
 			</tr>
         
@@ -1459,7 +1481,7 @@ class wsBrokenLinkChecker {
 	var blc_suggestions_enabled = <?php echo $this->conf->options['suggestions_enabled'] ? 'true' : 'false'; ?>;
 </script>
         
-<div class="wrap"><?php screen_icon(); ?>
+<div class="wrap">
 	<?php
 		$blc_link_query->print_filter_heading($current_filter);
 		$blc_link_query->print_filter_menu($filter_id);
@@ -2015,12 +2037,13 @@ class wsBrokenLinkChecker {
 				}
 				
 				//Skip links that weren't actually detected as broken
-				if ( !$link->broken ){
+				if ( !$link->broken && !$link->warning ){
 					continue;
 				}
 				
 				//Make it appear "not broken"
-				$link->broken = false;  
+				$link->broken = false;
+				$link->warning = false;
 				$link->false_positive = true;
 				$link->last_check_attempt = time();
 				$link->log = __("This link was manually marked as working by the user.", 'broken-link-checker');
@@ -2060,7 +2083,60 @@ class wsBrokenLinkChecker {
 	 * @return void
 	 */
 	function links_page_css(){
-		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20131008');
+		wp_enqueue_style('blc-links-page', plugins_url('css/links-page.css', $this->loader), array(), '20141107');
+	}
+
+	/**
+	 * Show an admin notice that explains what the "Warnings" section under "Tools -> Broken Links" does.
+	 * The user can hide the notice.
+	 */
+	public function show_warnings_section_notice() {
+		$is_warnings_section = isset($_GET['filter_id'])
+			&& ($_GET['filter_id'] === 'warnings')
+			&& isset($_GET['page'])
+			&& ($_GET['page'] === 'view-broken-links');
+
+		if ( !($is_warnings_section && current_user_can('edit_others_posts')) ) {
+			return;
+		}
+
+		//Let the user hide the notice.
+		$conf = blc_get_configuration();
+		$notice_name = 'show_warnings_section_hint';
+
+		if ( isset($_GET[$notice_name]) && is_numeric($_GET[$notice_name]) ) {
+			$conf->set($notice_name, (bool)$_GET[$notice_name]);
+			$conf->save_options();
+		}
+		if ( !$conf->get($notice_name, true) ) {
+			return;
+		}
+
+		printf(
+			'<div class="updated">
+					<p>%1$s</p>
+					<p>
+						<a href="%2$s">%3$s</a> |
+						<a href="%4$s">%5$s</a>
+					<p>
+				</div>',
+			__(
+				'The "Warnings" page lists problems that are probably temporary or suspected to be false positives.<br> Warnings that persist for a long time will usually be reclassified as broken links.',
+				'broken-link-checker'
+			),
+			add_query_arg($notice_name, '0'),
+			_x(
+				'Hide notice',
+				'admin notice under Tools - Broken links - Warnings',
+				'broken-link-checker'
+			),
+			admin_url('options-general.php?page=link-checker-settings#blc_warnings_enabled'),
+			_x(
+				'Change warning settings',
+				'a link from the admin notice under Tools - Broken links - Warnings',
+				'broken-link-checker'
+			)
+		);
 	}
 	
 	/**
@@ -2723,6 +2799,7 @@ class wsBrokenLinkChecker {
 			}
 			//Make it appear "not broken"
 			$link->broken = false;  
+			$link->warning = false;
 			$link->false_positive = true;
 			$link->last_check_attempt = time();
 			$link->log = __("This link was manually marked as working by the user.", 'broken-link-checker');
@@ -3394,6 +3471,24 @@ class wsBrokenLinkChecker {
 	
 	function override_mail_content_type($content_type){
 		return 'text/html';
+	}
+
+	/**
+	 * Promote all links with the "warning" status to "broken".
+	 */
+	private function promote_warnings_to_broken() {
+		global $wpdb; /** @var wpdb $wpdb */
+		$wpdb->update(
+			$wpdb->prefix . 'blc_links',
+			array(
+				'broken'  => 1,
+				'warning' => 0,
+			),
+			array(
+				'warning' => 1,
+			),
+			'%d'
+		);
 	}
 	
   /**
