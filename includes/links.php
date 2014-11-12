@@ -331,6 +331,7 @@ class blcLink {
 			return $check_results;
 		}
 
+		$warning_reason = null;
 		$failure_count = $this->check_count;
 		$failure_duration = ($this->first_failure != 0) ? (time() - $this->first_failure) : 0;
 		//These could be configurable, but lets put that off until someone actually asks for it.
@@ -345,11 +346,13 @@ class blcLink {
 		//----------------------------------------------------------------------
 		if ( $check_results['timeout'] ) {
 			$maybe_temporary_error = true;
+			$warning_reason = 'Timeouts are sometimes caused by high server load or other temporary issues.';
 		}
 
 		$error_code = isset($check_results['error_code']) ? $check_results['error_code'] : '';
 		if ( $error_code === 'connection_failed' ) {
 			$maybe_temporary_error = true;
+			$warning_reason = 'Connection failures are sometimes caused by high server load or other temporary issues.';
 		}
 
 		$http_code = intval($check_results['http_code']);
@@ -358,14 +361,25 @@ class blcLink {
 			420, //Custom Twitter code returned when the client gets rate-limited.
 			429, //Client has sent too many requests in a given amount of time.
 			502, //Bad Gateway. Often a sign of a temporarily overloaded or misconfigured server.
-			502, //Service Unavailable.
+			503, //Service Unavailable.
 			504, //Gateway Timeout.
+			509, //Bandwidth Limit Exceeded.
 			520, //CloudFlare-specific "Origin Error" code.
 			522, //CloudFlare-specific "Connection timed out" code.
 			524, //Another CloudFlare-specific timeout code.
 		);
 		if ( in_array($http_code, $temporary_http_errors) ) {
 			$maybe_temporary_error = true;
+
+			if ( in_array($http_code, array(502, 503, 504, 509)) ) {
+				$warning_reason = sprintf(
+					'HTTP error %d usually means that the site is down due to high server load or a configuration problem. '
+					. 'This error is often temporary and will go away after while.',
+					$http_code
+				);
+			} else {
+				$warning_reason = 'This HTTP error is often temporary.';
+			}
 		}
 
 		//----------------------------------------------------------------------
@@ -378,11 +392,21 @@ class blcLink {
 		$is_internal_link = $this->is_internal_to_domain();
 		if ( $is_internal_link && ($http_code == 403) ) {
 			$suspected_false_positive = true;
+			$warning_reason = 'This might be a false positive. Make sure the link is not password-protected, '
+				. 'and that your server is not set up to block automated requests.';
 		}
 
 		//Some hosting providers turn off loopback connections. This causes all internal links to be reported as broken.
 		if ( $is_internal_link && in_array($error_code, array('connection_failed', 'couldnt_resolve_host')) ) {
 			$suspected_false_positive = true;
+			$warning_reason = 'This is probably a false positive. ';
+			if ( $error_code === 'connection_failed' ) {
+				$warning_reason .= 'The plugin could not connect to your site. That usually means that your '
+					. 'hosting provider has disabled loopback connections.';
+			} elseif ( $error_code === 'couldnt_resolve_host' ) {
+				$warning_reason .= 'The plugin could not connect to your site because DNS resolution failed. '
+					. 'This could mean DNS is configured incorrectly on your server.';
+			}
 		}
 
 		//----------------------------------------------------------------------
@@ -401,6 +425,15 @@ class blcLink {
 				$check_results['warning'] = false;
 				$check_results['broken'] = true;
 			}
+		}
+
+		if ( !empty($warning_reason) && $check_results['warning'] ) {
+			$formatted_reason = "\n==========\n"
+				. 'Severity: Warning' . "\n"
+				. 'Reason: ' . trim($warning_reason)
+				. "\n==========\n";
+
+			$check_results['log'] .= $formatted_reason;
 		}
 
 		return $check_results;
