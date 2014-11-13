@@ -871,9 +871,9 @@ class wsBrokenLinkChecker {
 
 			<tr valign="top">
 				<th scope="row"><?php echo _x('Warnings', 'settings page', 'broken-link-checker'); ?></th>
-				<td>
+				<td id="blc_warning_settings">
 					<label>
-						<input type="checkbox" name="warnings_enabled" id="blc_warnings_enabled"
+						<input type="checkbox" name="warnings_enabled" id="warnings_enabled"
 							<?php checked($this->conf->options['warnings_enabled']); ?>/>
 						<?php _e('Show uncertain or minor problems as "warnings" instead of "broken"', 'broken-link-checker'); ?>
 					</label>
@@ -1358,7 +1358,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function options_page_css(){
-    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '20140818');
+    	wp_enqueue_style('blc-options-page', plugins_url('css/options-page.css', BLC_PLUGIN_FILE), array(), '20141113');
     	wp_enqueue_style('dashboard');
 	}
 	
@@ -2130,7 +2130,7 @@ class wsBrokenLinkChecker {
 				'admin notice under Tools - Broken links - Warnings',
 				'broken-link-checker'
 			),
-			admin_url('options-general.php?page=link-checker-settings#blc_warnings_enabled'),
+			admin_url('options-general.php?page=link-checker-settings#blc_warning_settings'),
 			_x(
 				'Change warning settings',
 				'a link from the admin notice under Tools - Broken links - Warnings',
