@@ -600,25 +600,19 @@ jQuery(function($){
 		dialogClass : 'blc-search-container',
 		resizable: false
 	});
-    
+
     $('#blc-open-search-box').click(function(){
     	if ( searchForm.dialog('isOpen') ){
 			searchForm.dialog('close');
 		} else {
-			//Display the search form under the "Search" button
-	    	var button_position = $('#blc-open-search-box').offset();
-	    	var button_height = $('#blc-open-search-box').outerHeight(true);
-	    	var button_width = $('#blc-open-search-box').outerWidth(true);
-	    	
-			var dialog_width = searchForm.dialog('option', 'width');
-						
-	    	searchForm.dialog('option', 'position', 
-				[ 
-					button_position.left - dialog_width + button_width/2, 
-					button_position.top + button_height + 1 - $(document).scrollTop()
-				]
-			);
-			searchForm.dialog('open');
+			searchForm
+				.dialog('open')
+				.dialog('widget')
+				.position({
+					my: 'right top',
+					at: 'right bottom',
+					of: $('#blc-open-search-box')
+				});
 		}
 	});
 	
