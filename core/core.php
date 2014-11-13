@@ -51,25 +51,25 @@ class wsBrokenLinkChecker {
         //Unlike the activation hook, the deactivation callback *can* be registered in this file
         //because deactivation happens after this class has already been instantiated (durinng the 
 		//'init' action). 
-        register_deactivation_hook($loader, array(&$this, 'deactivation'));
+        register_deactivation_hook($loader, array($this, 'deactivation'));
         
-        add_action('admin_menu', array(&$this,'admin_menu'));
+        add_action('admin_menu', array($this,'admin_menu'));
 
 		//Load jQuery on Dashboard pages (probably redundant as WP already does that)
-        add_action('admin_print_scripts', array(&$this,'admin_print_scripts'));
+        add_action('admin_print_scripts', array($this,'admin_print_scripts'));
         
         //The dashboard widget
-        add_action('wp_dashboard_setup', array(&$this, 'hook_wp_dashboard_setup'));
+        add_action('wp_dashboard_setup', array($this, 'hook_wp_dashboard_setup'));
 		
         //AJAXy hooks
-        add_action( 'wp_ajax_blc_full_status', array(&$this,'ajax_full_status') );
-        add_action( 'wp_ajax_blc_dashboard_status', array(&$this,'ajax_dashboard_status') );
-        add_action( 'wp_ajax_blc_work', array(&$this,'ajax_work') );
-        add_action( 'wp_ajax_blc_discard', array(&$this,'ajax_discard') );
-        add_action( 'wp_ajax_blc_edit', array(&$this,'ajax_edit') );
-        add_action( 'wp_ajax_blc_link_details', array(&$this,'ajax_link_details') );
-        add_action( 'wp_ajax_blc_unlink', array(&$this,'ajax_unlink') );
-        add_action( 'wp_ajax_blc_current_load', array(&$this,'ajax_current_load') );
+        add_action( 'wp_ajax_blc_full_status', array($this,'ajax_full_status') );
+        add_action( 'wp_ajax_blc_dashboard_status', array($this,'ajax_dashboard_status') );
+        add_action( 'wp_ajax_blc_work', array($this,'ajax_work') );
+        add_action( 'wp_ajax_blc_discard', array($this,'ajax_discard') );
+        add_action( 'wp_ajax_blc_edit', array($this,'ajax_edit') );
+        add_action( 'wp_ajax_blc_link_details', array($this,'ajax_link_details') );
+        add_action( 'wp_ajax_blc_unlink', array($this,'ajax_unlink') );
+        add_action( 'wp_ajax_blc_current_load', array($this,'ajax_current_load') );
 
 	    add_action( 'wp_ajax_blc_dismiss', array($this, 'ajax_dismiss') );
 	    add_action( 'wp_ajax_blc_undismiss', array($this, 'ajax_undismiss') );
@@ -78,13 +78,13 @@ class wsBrokenLinkChecker {
         $this->setup_cron_events();
         
         //Set hooks that listen for our Cron actions
-    	add_action('blc_cron_email_notifications', array( &$this, 'maybe_send_email_notifications' ));
-		add_action('blc_cron_check_links', array(&$this, 'cron_check_links'));
-		add_action('blc_cron_database_maintenance', array(&$this, 'database_maintenance'));
-		add_action('blc_cron_check_news', array(&$this, 'check_news'));
+    	add_action('blc_cron_email_notifications', array( $this, 'maybe_send_email_notifications' ));
+		add_action('blc_cron_check_links', array($this, 'cron_check_links'));
+		add_action('blc_cron_database_maintenance', array($this, 'database_maintenance'));
+		add_action('blc_cron_check_news', array($this, 'check_news'));
 		
         //Set the footer hook that will call the worker function via AJAX.
-        add_action('admin_footer', array(&$this,'admin_footer'));
+        add_action('admin_footer', array($this,'admin_footer'));
 		
 		//Add a "Screen Options" panel to the "Broken Links" page
 		add_screen_options_panel(
@@ -292,13 +292,13 @@ class wsBrokenLinkChecker {
      */
     function admin_menu(){
     	if (current_user_can('manage_options'))
-          add_filter('plugin_action_links', array(&$this, 'plugin_action_links'), 10, 2);
+          add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
     	
         $options_page_hook = add_options_page( 
 			__('Link Checker Settings', 'broken-link-checker'), 
 			__('Link Checker', 'broken-link-checker'), 
 			'manage_options',
-            'link-checker-settings',array(&$this, 'options_page')
+            'link-checker-settings',array($this, 'options_page')
 		);
 		
 		$menu_title = __('Broken Links', 'broken-link-checker');
@@ -320,14 +320,14 @@ class wsBrokenLinkChecker {
 			__('View Broken Links', 'broken-link-checker'), 
 			$menu_title, 
 			'edit_others_posts',
-            'view-broken-links',array(&$this, 'links_page')
+            'view-broken-links',array($this, 'links_page')
 		);
 		 
 		//Add plugin-specific scripts and CSS only to the it's own pages
-		add_action( 'admin_print_styles-' . $options_page_hook, array(&$this, 'options_page_css') );
-        add_action( 'admin_print_styles-' . $links_page_hook, array(&$this, 'links_page_css') );
-		add_action( 'admin_print_scripts-' . $options_page_hook, array(&$this, 'enqueue_settings_scripts') );
-        add_action( 'admin_print_scripts-' . $links_page_hook, array(&$this, 'enqueue_link_page_scripts') );
+		add_action( 'admin_print_styles-' . $options_page_hook, array($this, 'options_page_css') );
+        add_action( 'admin_print_styles-' . $links_page_hook, array($this, 'links_page_css') );
+		add_action( 'admin_print_scripts-' . $options_page_hook, array($this, 'enqueue_settings_scripts') );
+        add_action( 'admin_print_scripts-' . $links_page_hook, array($this, 'enqueue_link_page_scripts') );
         
         //Add a "Feedback" button that links to the plugin's UserVoice forum
         add_screen_meta_link(
@@ -616,7 +616,7 @@ class wsBrokenLinkChecker {
 		$debug = $this->get_debug_info();
 		
 		$details_text = __('Details', 'broken-link-checker');
-		add_filter('blc-module-settings-custom_field', array(&$this, 'make_custom_field_input'), 10, 2);
+		add_filter('blc-module-settings-custom_field', array($this, 'make_custom_field_input'), 10, 2);
 		
 		//Translate and markup-ify module headers for display
 		$modules = $moduleManager->get_modules_by_category('', true, true);
@@ -3073,8 +3073,8 @@ class wsBrokenLinkChecker {
 			wp_add_dashboard_widget(
 				'blc_dashboard_widget', 
 				__('Broken Link Checker', 'broken-link-checker'), 
-				array( &$this, 'dashboard_widget' ),
-				array( &$this, 'dashboard_widget_control' )
+				array( $this, 'dashboard_widget' ),
+				array( $this, 'dashboard_widget_control' )
 			 );
 		}
 	}
@@ -3402,7 +3402,7 @@ class wsBrokenLinkChecker {
 
 	function send_html_email($email_address, $subject, $body) {
 		//Need to override the default 'text/plain' content type to send a HTML email.
-		add_filter('wp_mail_content_type', array(&$this, 'override_mail_content_type'));
+		add_filter('wp_mail_content_type', array($this, 'override_mail_content_type'));
 
 		//Let auto-responders and similar software know this is an auto-generated email
 		//that they shouldn't respond to.
@@ -3412,7 +3412,7 @@ class wsBrokenLinkChecker {
 
 		//Remove the override so that it doesn't interfere with other plugins that might
 		//want to send normal plaintext emails.
-		remove_filter('wp_mail_content_type', array(&$this, 'override_mail_content_type'));
+		remove_filter('wp_mail_content_type', array($this, 'override_mail_content_type'));
 
 		$this->conf->options['last_email'] = array(
 			'subject' => $subject,
