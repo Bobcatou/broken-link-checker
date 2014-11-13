@@ -649,6 +649,15 @@ class blcTablePrinter {
 		}
 		
 		echo '</table>';
+
+		//"Details" link.
+		echo '<div class="row-actions">';
+		printf(
+			'<span><a href="#" class="blc-details-button" title="%s">%s</a></span>',
+			esc_attr(__('Show more info about this link', 'broken-link-checker')),
+			_x('Details', 'link in the "Status" column', 'broken-link-checker')
+		);
+		echo '</div>';
 	}
 
 

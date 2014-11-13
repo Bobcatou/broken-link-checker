@@ -200,6 +200,15 @@ td.column-status {
 	display: none;
 }
 
+
+/* Only show the "Details" link in the compact view. */
+#blc-links .column-status .row-actions {
+	display: none;
+}
+#blc-links.compact .column-status .row-actions {
+	display: block;
+}
+
 /* Misc table styles */
 
 .blc-link-url {

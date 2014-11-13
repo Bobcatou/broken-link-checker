@@ -57,6 +57,7 @@ jQuery(function($){
     	var master = $(this).parents('.blc-row');
     	var link_id = master.attr('id').split('-')[2];
 		$('#link-details-'+link_id).toggle();
+		return false;
     });
 
 	var ajaxInProgressHtml = '<?php echo esc_js(__('Wait...', 'broken-link-checker')); ?>';
