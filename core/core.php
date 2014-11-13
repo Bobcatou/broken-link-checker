@@ -800,7 +800,7 @@ class wsBrokenLinkChecker {
 					echo ' class="hidden"';
 				} 
 			?>>
-		        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'/><?php
+		        <textarea name="broken_link_css" id="broken_link_css" cols='45' rows='4'><?php
 		            if( isset($this->conf->options['broken_link_css']) ) {
 						echo $this->conf->options['broken_link_css'];
 					}
@@ -831,7 +831,7 @@ class wsBrokenLinkChecker {
 					echo ' class="hidden"';
 				} 
 			?>>
-		        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'/><?php
+		        <textarea name="removed_link_css" id="removed_link_css" cols='45' rows='4'><?php
 		            if( isset($this->conf->options['removed_link_css']) )
 		                echo $this->conf->options['removed_link_css'];
 		        ?></textarea>
@@ -952,7 +952,7 @@ class wsBrokenLinkChecker {
     	<tr valign="top">
         <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
         <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
-        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'/><?php
+        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'><?php
             if( isset($this->conf->options['exclusion_list']) )
                 echo implode("\n", $this->conf->options['exclusion_list']);
         ?></textarea>
@@ -1344,7 +1344,7 @@ class wsBrokenLinkChecker {
 						'broken-link-checker'
 					) .
 				 '</span>';
-    	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4" />';
+    	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4">';
         if( isset($current_settings['custom_fields']) )
             $html .= implode("\n", $current_settings['custom_fields']);
         $html .= '</textarea>';
