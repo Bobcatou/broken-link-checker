@@ -2262,7 +2262,7 @@ class wsBrokenLinkChecker {
    * @return void
    */
 	function work(){
-		global $wpdb, $blclog;
+		global $blclog;
 
 		//Close the session to prevent lock-ups.
 		//PHP sessions are blocking. session_start() will wait until all other scripts that are using the same session
@@ -2750,7 +2750,6 @@ class wsBrokenLinkChecker {
    * @return array
    */
 	function get_status(){
-		global $wpdb;
 		$blc_link_query = blcLinkQuery::getInstance();
 		
 		$check_threshold=date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
