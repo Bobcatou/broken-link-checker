@@ -146,9 +146,15 @@ class blcComment extends blcContainer{
 		
 		$comment = $this->get_wrapped_object();
 		$post = get_post($comment->comment_post_ID); /* @var StdClass $post */
-		
+
+		//If the post type no longer exists, we can't really do anything with this comment.
+		//WordPress will just throw errors if we try.
+		if ( !post_type_exists(get_post_type($post)) ) {
+			return $actions;
+		}
+
 		//Display Edit & Delete/Trash links only if the user has the right caps.
-		$user_can = current_user_can('edit_post', $comment->comment_post_ID);  
+		$user_can = current_user_can('edit_post', $comment->comment_post_ID);
 		if ( $user_can ){
 			$actions['edit'] = "<a href='". $this->get_edit_url() ."' title='" . esc_attr__('Edit comment') . "'>". __('Edit') . '</a>';
 		
