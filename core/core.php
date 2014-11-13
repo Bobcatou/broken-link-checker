@@ -2544,7 +2544,7 @@ class wsBrokenLinkChecker {
    * @return int|blcLink[]
    */
 	function get_links_to_check($max_results = 0, $count_only = false){
-		global $wpdb, $blclog; /* @var wpdb $wpdb */
+		global $wpdb; /* @var wpdb $wpdb */
 		
 		$check_threshold = date('Y-m-d H:i:s', strtotime('-'.$this->conf->options['check_threshold'].' hours'));
 		$recheck_threshold = date('Y-m-d H:i:s', time() - $this->conf->options['recheck_threshold']);
@@ -3468,7 +3468,7 @@ class wsBrokenLinkChecker {
 		}
 	}
 	
-	function override_mail_content_type($content_type){
+	function override_mail_content_type(/** @noinspection PhpUnusedParameterInspection */ $content_type){
 		return 'text/html';
 	}
 
