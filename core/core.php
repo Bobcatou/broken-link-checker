@@ -648,7 +648,7 @@ class wsBrokenLinkChecker {
 		<![endif]-->
 		
         <div class="wrap" id="blc-settings-wrap">
-		<?php screen_icon(); ?><h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
+		<h2><?php _e('Broken Link Checker Options', 'broken-link-checker'); ?></h2>
 		
 		
         <div id="blc-sidebar">
