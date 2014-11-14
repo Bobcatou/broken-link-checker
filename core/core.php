@@ -165,7 +165,7 @@ class wsBrokenLinkChecker {
 							'action' : 'blc_dashboard_status',
 							'random' : Math.random()
 						},
-						function (data, textStatus){
+						function (data){
 							if ( data && ( typeof(data.text) != 'undefined' ) ) {
 								$('#wsblc_activity_box').html(data.text); 
 								<?php if ( $this->conf->options['autoexpand_widget'] ) { ?>
