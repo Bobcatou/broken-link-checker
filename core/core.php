@@ -37,12 +37,10 @@ class wsBrokenLinkChecker {
    * @param blcConfigurationManager $conf An instance of the configuration manager
    * @return void
    */
-    function wsBrokenLinkChecker ( $loader, &$conf ) {
-        global $wpdb;
-
+    function wsBrokenLinkChecker ( $loader, $conf ) {
 		$this->db_version = BLC_DATABASE_VERSION;
         
-        $this->conf = &$conf;
+        $this->conf = $conf;
         $this->loader = $loader;
         $this->my_basename = plugin_basename( $this->loader );
 
@@ -374,8 +372,6 @@ class wsBrokenLinkChecker {
     }
 
     function options_page(){
-    	global $blclog;
-
     	$moduleManager = blcModuleManager::getInstance();
 
 	    //Prior to 1.5.2 (released 2012-05-27), there was a bug that would cause the donation flag to be
@@ -631,7 +627,6 @@ class wsBrokenLinkChecker {
         
 		$debug = $this->get_debug_info();
 		
-		$details_text = __('Details', 'broken-link-checker');
 		add_filter('blc-module-settings-custom_field', array($this, 'make_custom_field_input'), 10, 2);
 		
 		//Translate and markup-ify module headers for display
@@ -968,7 +963,7 @@ class wsBrokenLinkChecker {
     	<tr valign="top">
         <th scope="row"><?php _e('Exclusion list', 'broken-link-checker'); ?></th>
         <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
-        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4' wrap='off'><?php
+        <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4'><?php
             if( isset($this->conf->options['exclusion_list']) )
                 echo implode("\n", $this->conf->options['exclusion_list']);
         ?></textarea>
@@ -1385,7 +1380,7 @@ class wsBrokenLinkChecker {
      * @return void
      */
     function links_page(){
-        global $wpdb, $blclog; /* @var wpdb $wpdb */
+        global $wpdb; /* @var wpdb $wpdb */
         
         $blc_link_query = blcLinkQuery::getInstance();
 
