@@ -286,6 +286,7 @@ class blcTablePrinter {
 			"bulk-recheck" => __('Recheck', 'broken-link-checker'),
 			"bulk-deredirect" => __('Fix redirects', 'broken-link-checker'),
 			"bulk-not-broken" => __('Mark as not broken', 'broken-link-checker'),
+			"bulk-dismiss" => __('Dismiss', 'broken-link-checker'),
 			"bulk-unlink" => __('Unlink', 'broken-link-checker'),
 		);
 		if ( EMPTY_TRASH_DAYS ){

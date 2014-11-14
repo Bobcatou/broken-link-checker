@@ -1447,6 +1447,10 @@ class wsBrokenLinkChecker {
 				list($message, $msg_class) = $this->do_bulk_discard($selected_links);
 				break;
 
+			case 'bulk-dismiss':
+				list($message, $msg_class) = $this->do_bulk_dismiss($selected_links);
+				break;
+
 			case 'bulk-edit':
 				list($message, $msg_class) = $this->do_bulk_edit($selected_links);
 				break;
@@ -2084,6 +2088,64 @@ class wsBrokenLinkChecker {
 			);
 		}
 		
+		return array(implode('<br>', $messages), $msg_class);
+	}
+
+	/**
+	 * Dismiss multiple links.
+	 *
+	 * @param array $selected_links An array of link IDs
+	 * @return array Confirmation message and the CSS class to use with that message.
+	 */
+	function do_bulk_dismiss($selected_links){
+		check_admin_referer( 'bulk-action' );
+
+		$messages = array();
+		$msg_class = 'updated';
+		$processed_links = 0;
+
+		if ( count($selected_links) > 0 ){
+			foreach($selected_links as $link_id){
+				//Load the link
+				$link = new blcLink( intval($link_id) );
+
+				//Skip links that don't actually exist
+				if ( !$link->valid() ){
+					continue;
+				}
+
+				//We can only dismiss broken links and redirects.
+				if ( !($link->broken || $link->warning || ($link->redirect_count > 0)) ){
+					continue;
+				}
+
+				$link->dismissed = true;
+
+				//Save the changes
+				if ( $link->save() ){
+					$processed_links++;
+				} else {
+					$messages[] = sprintf(
+						__("Couldn't modify link %d", 'broken-link-checker'),
+						$link_id
+					);
+					$msg_class = 'error';
+				}
+			}
+		}
+
+		if ( $processed_links > 0 ){
+			$messages[] = sprintf(
+				_n(
+					'%d link dismissed',
+					'%d links dismissed',
+					$processed_links,
+					'broken-link-checker'
+				),
+				$processed_links
+			);
+		}
+
 		return array(implode('<br>', $messages), $msg_class);
 	}
 	
