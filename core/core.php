@@ -424,9 +424,14 @@ class wsBrokenLinkChecker {
 			if ( empty($enabled_post_statuses) ){
 				$enabled_post_statuses = array('publish');
 			}
+
+			//Did the user add/remove any post statuses?
+			$same_statuses = array_intersect($enabled_post_statuses, $this->conf->options['enabled_post_statuses']);
+			$post_statuses_changed = (count($same_statuses) != count($enabled_post_statuses))
+				|| (count($same_statuses) !== count($this->conf->options['enabled_post_statuses']));
+
 			$this->conf->options['enabled_post_statuses'] = $enabled_post_statuses;
-			//TODO: Resynch enabled post types when enabled statuses change.
-			
+
 			//The execution time limit must be above zero
             $new_execution_time = intval($_POST['max_execution_time']);
             if( $new_execution_time > 0 ){
@@ -583,6 +588,17 @@ class wsBrokenLinkChecker {
 					$manager->resynch();
 					blc_got_unsynched_items();
 				}
+			}
+
+			//Resynchronize posts when the user enables or disables post statuses.
+			if ( $post_statuses_changed ) {
+				$overlord = blcPostTypeOverlord::getInstance();
+				$overlord->enabled_post_statuses = $this->conf->get('enabled_post_statuses', array());
+				$overlord->resynch('wsh_status_resynch_trigger');
+
+				blc_got_unsynched_items();
+				blc_cleanup_instances();
+				blc_cleanup_links();
 			}
 			
 			//Redirect back to the settings page
