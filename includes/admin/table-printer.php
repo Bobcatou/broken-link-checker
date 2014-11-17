@@ -235,6 +235,8 @@ class blcTablePrinter {
 			'redirect-url' => array(
 				'heading' => __('Redirect URL', 'broken-link-checker'),
 				'content' => array($this, 'column_redirect_url'),
+				'sortable' => true,
+				'orderby' => 'redirect_url',
 			),
 		);
 	}

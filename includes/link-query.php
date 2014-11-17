@@ -462,6 +462,7 @@ class blcLinkQuery {
 			$allowed_columns = array(
 				'url' => 'links.url',
 				'link_text' => 'instances.link_text',
+				'redirect_url' => 'links.final_url',
 			);
 			$column = $params['orderby'];
 
@@ -471,6 +472,11 @@ class blcLinkQuery {
 			}
 
 			if ( array_key_exists($column, $allowed_columns) ) {
+				if ( $column === 'redirect_url' ) {
+					//Sort links that are not redirects last.
+					$order_exprs[] = '(links.redirect_count > 0) DESC';
+				}
+
 				$order_exprs[] = $allowed_columns[$column] . ' ' . $direction;
 			}
 		}
