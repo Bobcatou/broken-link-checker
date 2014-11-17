@@ -209,9 +209,96 @@ jQuery(function($){
 		return false;
 	});
 
+	//The "Recheck" button.
+	$(".blc-recheck-button").click(function () {
+		var me = $(this);
+		var oldButtonHtml = me.html();
+		me.html(ajaxInProgressHtml);
+
+		var master = me.closest('.blc-row');
+		var link_id = master.attr('id').split('-')[2];
+
+		$.post(
+			"<?php echo admin_url('admin-ajax.php'); ?>",
+			{
+				'action' : 'blc_recheck',
+				'link_id' : link_id,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_recheck'));  ?>'
+			},
+			function (response){
+				me.html(oldButtonHtml);
+
+				if (response && (typeof(response['error']) != 'undefined')){
+					//An internal error occurred before the plugin could check the link (e.g. database error).
+					alert(response.error);
+				} else {
+					//Display the new status in the link row.
+					displayLinkStatus(master, response);
+					reloadDetailsRow(link_id);
+
+					//Flash the row green to indicate success
+					flashElementGreen(master);
+				}
+			},
+			'json'
+		);
+
+		return false;
+	});
+
 	function flashElementGreen(element, callback) {
 		var oldColor = element.css('background-color');
 		element.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, callback);
+	}
+
+
+	/**
+	 * Update status indicators for a link. This includes the contents of the "Status" column, CSS classes and so on.
+	 *
+	 * @param {Object} row Table row as a jQuery object.
+	 * @param {Object} status
+	 */
+	function displayLinkStatus(row, status) {
+		//Update the status code and class.
+		var statusColumn = row.find('td.column-status');
+		if (status.status_text) {
+			statusColumn.find('.status-text').text(status.status_text);
+		}
+		statusColumn.find('.http-code').text(status.http_code ? status.http_code : '');
+
+		var oldStatusClass = row.attr('class').match(/(?:^|\s)(link-status-[^\s]+)(?:\s|$)/);
+		oldStatusClass = oldStatusClass ? oldStatusClass[1] : '';
+		var newStatusClass = 'link-status-' + status.status_code;
+
+		statusColumn.find('.link-status-row').removeClass(oldStatusClass).addClass(newStatusClass);
+		row.removeClass(oldStatusClass).addClass(newStatusClass);
+
+		//Last check time and failure duration are complicated to update, so we'll just hide them.
+		//The user can refresh the page to get the new values.
+		statusColumn.find('.link-last-checked td').html('&nbsp;');
+		statusColumn.find('.link-broken-for td').html('&nbsp;');
+
+		//The link may or may not be a redirect now.
+		row.toggleClass('blc-redirect', status.redirect_count > 0);
+
+		if (typeof status['redirect_count'] !== 'undefined') {
+			var redirectColumn = row.find('td.column-redirect-url').empty();
+
+			if (status.redirect_count > 0 && status.final_url) {
+				redirectColumn.append(
+					$(
+						'<a></a>',
+						{
+							href: status.final_url,
+							text: status.final_url,
+							title: status.final_url,
+							'class': 'blc-redirect-url',
+							target: '_blank'
+						}
+					)
+				);
+			}
+		}
 	}
 
 
@@ -426,26 +513,7 @@ jQuery(function($){
 					}
 
 					//Update the status code and class.
-					var statusColumn = master.find('td.column-status');
-					if (response.status_text) {
-						statusColumn.find('.status-text').text(response.status_text);
-					}
-					statusColumn.find('.http-code').text(response.http_code ? response.http_code : '');
-
-					var oldStatusClass = master.attr('class').match(/(?:^|\s)(link-status-[^\s]+)(?:\s|$)/);
-					oldStatusClass = oldStatusClass ? oldStatusClass[1] : '';
-					var newStatusClass = 'link-status-' + response.status_code;
-
-					statusColumn.find('.link-status-row').removeClass(oldStatusClass).addClass(newStatusClass);
-					master.removeClass(oldStatusClass).addClass(newStatusClass);
-
-					//Last check time and failure duration are complicated to update, so we'll just hide them.
-					//The user can refresh the page to get the new values.
-					statusColumn.find('.link-last-checked td').html('&nbsp;');
-					statusColumn.find('.link-broken-for td').html('&nbsp;');
-
-					//We don't know if the link is still a redirect.
-					master.removeClass('blc-redirect');
+					displayLinkStatus(master, response);
 
 					//Flash the row green to indicate success
 					flashElementGreen(master);

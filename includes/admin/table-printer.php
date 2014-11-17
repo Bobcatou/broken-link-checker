@@ -688,6 +688,11 @@ class blcTablePrinter {
 			);
 		}
 
+		$actions['blc-recheck-action'] = sprintf(
+			'<a href="#" class="blc-recheck-button">%s</a>',
+			__('Recheck', 'broken-link-checker')
+		);
+
 		if ( !$link->dismissed && ($link->broken || $link->warning || ($link->redirect_count > 0)) ) {
 			$actions['blc-dismiss-action'] = sprintf(
 				'<a href="#" title="%s" class="blc-dismiss-button">%s</a>',

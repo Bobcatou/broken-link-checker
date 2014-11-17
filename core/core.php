@@ -67,6 +67,7 @@ class wsBrokenLinkChecker {
         add_action( 'wp_ajax_blc_edit', array($this,'ajax_edit') );
         add_action( 'wp_ajax_blc_link_details', array($this,'ajax_link_details') );
         add_action( 'wp_ajax_blc_unlink', array($this,'ajax_unlink') );
+        add_action( 'wp_ajax_blc_recheck', array($this,'ajax_recheck') );
         add_action( 'wp_ajax_blc_current_load', array($this,'ajax_current_load') );
 
 	    add_action( 'wp_ajax_blc_dismiss', array($this, 'ajax_dismiss') );
@@ -2993,8 +2994,10 @@ class wsBrokenLinkChecker {
 				'status_text' => $new_status['text'],
 				'status_code' => $new_status['code'],
 				'http_code'   => empty($new_link->http_code) ? '' : $new_link->http_code,
+				'redirect_count' => $new_link->redirect_count,
 
 				'url' => $new_link->url,
+				'final_url' => $new_link->final_url,
 				'link_text' => isset($new_text) ? $new_text : null,
 				'ui_link_text' => isset($new_text) ? $ui_link_text : null,
 
@@ -3058,6 +3061,50 @@ class wsBrokenLinkChecker {
 					'error' => __("Error : link_id not specified", 'broken-link-checker') 
 				 )));
 		}
+	}
+
+	/**
+	 * AJAX hook for the "Recheck" action.
+	 */
+	public function ajax_recheck() {
+		if (!current_user_can('edit_others_posts') || !check_ajax_referer('blc_recheck', false, false)){
+			die( json_encode( array(
+				'error' => __("You're not allowed to do that!", 'broken-link-checker')
+			)));
+		}
+
+		if ( !isset($_POST['link_id']) || !is_numeric($_POST['link_id']) ) {
+			die( json_encode( array(
+				'error' => __("Error : link_id not specified", 'broken-link-checker')
+			)));
+		}
+
+		$id = intval($_POST['link_id']);
+		$link = new blcLink($id);
+
+		if ( !$link->valid() ){
+			die( json_encode( array(
+				'error' => sprintf(__("Oops, I can't find the link %d", 'broken-link-checker'), $id)
+			)));
+		}
+
+		//In case the immediate check fails, this will ensure the link is checked during the next work() run.
+		$link->last_check_attempt = 0;
+		$link->save();
+
+		//Check the link and save the results.
+		$link->check(true);
+
+		$status = $link->analyse_status();
+		$response = array(
+			'status_text' => $status['text'],
+			'status_code' => $status['code'],
+			'http_code'   => empty($link->http_code) ? '' : $link->http_code,
+			'redirect_count' => $link->redirect_count,
+			'final_url' => $link->final_url,
+		);
+
+		die(json_encode($response));
 	}
 	
 	function ajax_link_details(){
