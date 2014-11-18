@@ -395,6 +395,14 @@ class wsBrokenLinkChecker {
 			wp_redirect( add_query_arg( array( 'recheck-initiated' => true), $base_url ) );
 			die();
         }
+
+		$available_link_actions = array(
+			'edit'               => __('Edit URL' , 'broken-link-checker'),
+			'delete'             => __('Unlink', 'broken-link-checker'),
+			'blc-discard-action' => __('Not broken', 'broken-link-checker'),
+			'blc-dismiss-action' => __('Dismiss', 'broken-link-checker'),
+			'blc-recheck-action' => __('Recheck', 'broken-link-checker'),
+		);
         
         if(isset($_POST['submit'])) {
 			check_admin_referer('link-checker-options');
@@ -534,6 +542,15 @@ class wsBrokenLinkChecker {
 	        if ( !empty($widget_cap) ) {
 		        $this->conf->options['dashboard_widget_capability'] = $widget_cap;
 	        }
+
+			//Link actions. The user can hide some of them to reduce UI clutter.
+			if ( isset($_POST['show_link_actions']) && is_array($_POST['show_link_actions']) ) {
+				$show_link_actions = array();
+				foreach(array_keys($available_link_actions) as $action) {
+					$show_link_actions[$action] = !empty($_POST['show_link_actions'][$action]);
+				}
+				$this->conf->set('show_link_actions', $show_link_actions);
+			}
 
 			//Logging. The plugin can log various events and results for debugging purposes.
 			$this->conf->options['logging_enabled'] = !empty($_POST['logging_enabled']);
@@ -894,7 +911,7 @@ class wsBrokenLinkChecker {
 					?></p>
 				</td>
 			</tr>
-        
+
         </table>
         
         </div>
@@ -1067,6 +1084,24 @@ class wsBrokenLinkChecker {
 		        ?>
 	        </td>
         </tr>
+
+		<tr valign="top">
+			<th scope="row"><?php echo _x('Show link actions', 'settings page', 'broken-link-checker'); ?></th>
+			<td>
+				<?php
+				$show_link_actions = $this->conf->get('show_link_actions', array());
+				foreach($available_link_actions as $action => $text) {
+					$enabled = isset($show_link_actions[$action]) ? (bool)($show_link_actions[$action]) : true;
+					printf(
+						'<p><label><input type="checkbox" name="show_link_actions[%1$s]" %3$s> %2$s</label></p>',
+						$action,
+						$text,
+						checked($enabled, true, false)
+					);
+				}
+				?>
+			</td>
+		</tr>
         
         <tr valign="top">
         <th scope="row"><?php _e('Max. execution time', 'broken-link-checker'); ?></th>

@@ -688,11 +688,6 @@ class blcTablePrinter {
 			);
 		}
 
-		$actions['blc-recheck-action'] = sprintf(
-			'<a href="#" class="blc-recheck-button">%s</a>',
-			__('Recheck', 'broken-link-checker')
-		);
-
 		if ( !$link->dismissed && ($link->broken || $link->warning || ($link->redirect_count > 0)) ) {
 			$actions['blc-dismiss-action'] = sprintf(
 				'<a href="#" title="%s" class="blc-dismiss-button">%s</a>',
@@ -707,13 +702,28 @@ class blcTablePrinter {
 			);
 		}
 
+		$actions['blc-recheck-action'] = sprintf(
+			'<a href="#" class="blc-recheck-button">%s</a>',
+			__('Recheck', 'broken-link-checker')
+		);
+
+		//Only show the enabled actions.
+		$conf = blc_get_configuration();
+		foreach($conf->get('show_link_actions', $actions) as $name => $enabled) {
+			if ( !$enabled ) {
+				unset($actions[$name]);
+			}
+		}
+
+		//Wrap actions with <span></span> and separate them with | characters.
+		//Basically, this emulates the HTML structure that WP uses for post actions under Posts -> All Posts.
 		$spans = array();
 		$is_first_action = true;
 		foreach($actions as $name => $html) {
 			$spans[] = sprintf(
 				'<span class="%s">%s%s</span>',
 				esc_attr($name),
-				$is_first_action ? '' : ' | ', //Separate actions with | characters.
+				$is_first_action ? '' : ' | ',
 				$html
 			);
 			$is_first_action = false;
