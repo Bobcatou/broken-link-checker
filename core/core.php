@@ -544,13 +544,12 @@ class wsBrokenLinkChecker {
 	        }
 
 			//Link actions. The user can hide some of them to reduce UI clutter.
-			if ( isset($_POST['show_link_actions']) && is_array($_POST['show_link_actions']) ) {
-				$show_link_actions = array();
-				foreach(array_keys($available_link_actions) as $action) {
-					$show_link_actions[$action] = !empty($_POST['show_link_actions'][$action]);
-				}
-				$this->conf->set('show_link_actions', $show_link_actions);
+			$show_link_actions = array();
+			foreach(array_keys($available_link_actions) as $action) {
+				$show_link_actions[$action] = isset($_POST['show_link_actions']) &&
+					!empty($_POST['show_link_actions'][$action]);
 			}
+			$this->conf->set('show_link_actions', $show_link_actions);
 
 			//Logging. The plugin can log various events and results for debugging purposes.
 			$this->conf->options['logging_enabled'] = !empty($_POST['logging_enabled']);
