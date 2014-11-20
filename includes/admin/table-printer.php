@@ -707,6 +707,15 @@ class blcTablePrinter {
 			__('Recheck', 'broken-link-checker')
 		);
 
+		if ( $link->redirect_count > 0 && !empty($link->final_url) && ($link->url != $link->final_url) ) {
+			//TODO: Check if at least one instance has an editable URL. Otherwise this won't work.
+			$actions['blc-deredirect-action'] = sprintf(
+				'<a href="#" class="blc-deredirect-button" title="%s">%s</a>',
+				__('Replace this redirect with a direct link', 'broken-link-checker'),
+				_x('Fix redirect', 'link action; replace one redirect with a direct link', 'broken-link-checker')
+			);
+		}
+
 		//Only show the enabled actions.
 		$conf = blc_get_configuration();
 		foreach($conf->get('show_link_actions', $actions) as $name => $enabled) {

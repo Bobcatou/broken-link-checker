@@ -246,6 +246,41 @@ jQuery(function($){
 		return false;
 	});
 
+	//The "Fix redirect" action.
+	$('.blc-deredirect-button').click(function() {
+		//This action can only be used once. If it succeeds, it will no longer be applicable to the current link.
+		//If it fails, something is broken and trying again probably won't help.
+		var me = $(this);
+		me.text(ajaxInProgressHtml);
+
+		var master = me.closest('.blc-row');
+		var linkId = master.attr('id').split('-')[2];
+		var shouldHideLink = blc_current_base_filter == 'redirects';
+		var details = $('#link-details-' + linkId);
+
+		$.post(
+			"<?php echo admin_url('admin-ajax.php'); ?>",
+			{
+				'action' : 'blc_deredirect',
+				'link_id' : linkId,
+				'_ajax_nonce' : '<?php echo esc_js(wp_create_nonce('blc_deredirect'));  ?>'
+			},
+			function (response){
+				me.closest('span').hide();
+
+				if (handleEditResponse(response, master, linkId, null)) {
+					if (shouldHideLink) {
+						details.remove();
+						master.remove();
+					}
+				}
+			},
+			'json'
+		);
+
+		return false;
+	});
+
 	function flashElementGreen(element, callback) {
 		var oldColor = element.css('background-color');
 		element.animate({ backgroundColor: "#E0FFB3" }, 200).animate({ backgroundColor: oldColor }, 300, callback);
@@ -465,65 +500,73 @@ jQuery(function($){
 				progressIndicator.hide();
 				updateButton.prop('disabled', false);
 
-				if (response && (typeof(response['error']) != 'undefined')){
-					//An internal error occurred before the link could be edited.
-					alert(response.error);
-				} else if (response.errors.length > 0) {
-					//Build and display an error message.
-					var msg = '';
-
-					if ( response.cnt_okay > 0 ){
-						var fragment = sprintf(
-							'<?php echo esc_js(__('%d instances of the link were successfully modified.', 'broken-link-checker')); ?>',
-							response.cnt_okay
-						);
-						msg = msg + fragment + '\n';
-						if ( response.cnt_error > 0 ){
-							fragment = sprintf(
-								'<?php echo esc_js(__("However, %d instances couldn't be edited and still point to the old URL.", 'broken-link-checker')); ?>',
-								response.cnt_error
-							);
-							msg = msg + fragment + "\n";
-						}
-					} else {
-						msg = msg + '<?php echo esc_js(__('The link could not be modified.', 'broken-link-checker')); ?>\n';
-					}
-
-					msg = msg + '\n<?php echo esc_js(__("The following error(s) occurred :", 'broken-link-checker')); ?>\n* ';
-					msg = msg + response.errors.join('\n* ');
-
-					alert(msg);
-				} else {
-					//Everything went well. Update the link row with the new values.
-
-					//Replace the displayed link URL with the new one.
-					urlElement.attr('href', response.url).text(response.url);
-
-					//Save the new ID
-					replaceLinkId(linkId, response.new_link_id);
-					//Load up the new link info
-					reloadDetailsRow(response.new_link_id);
-
-					//Update the link text if it was edited.
-					if ((newText !== null) && (response.link_text !== null)) {
-						master.data('link-text', response.link_text);
-						if (response.ui_link_text !== null) {
-							master.find('.column-new-link-text').html(response.ui_link_text);
-						}
-					}
-
-					//Update the status code and class.
-					displayLinkStatus(master, response);
-
-					//Flash the row green to indicate success
-					flashElementGreen(master);
-				}
+				handleEditResponse(response, master, linkId, newText);
 
 				hideLinkEditor(editRow);
 			},
 			'json'
 		);
 
+	}
+
+	function handleEditResponse(response, master, linkId, newText) {
+		if (response && (typeof(response['error']) != 'undefined')){
+			//An internal error occurred before the link could be edited.
+			alert(response.error);
+			return false;
+		} else if (response.errors.length > 0) {
+			//Build and display an error message.
+			var msg = '';
+
+			if ( response.cnt_okay > 0 ){
+				var fragment = sprintf(
+					'<?php echo esc_js(__('%d instances of the link were successfully modified.', 'broken-link-checker')); ?>',
+					response.cnt_okay
+				);
+				msg = msg + fragment + '\n';
+				if ( response.cnt_error > 0 ){
+					fragment = sprintf(
+						'<?php echo esc_js(__("However, %d instances couldn't be edited and still point to the old URL.", 'broken-link-checker')); ?>',
+						response.cnt_error
+					);
+					msg = msg + fragment + "\n";
+				}
+			} else {
+				msg = msg + '<?php echo esc_js(__('The link could not be modified.', 'broken-link-checker')); ?>\n';
+			}
+
+			msg = msg + '\n<?php echo esc_js(__("The following error(s) occurred :", 'broken-link-checker')); ?>\n* ';
+			msg = msg + response.errors.join('\n* ');
+
+			alert(msg);
+			return false;
+		} else {
+			//Everything went well. Update the link row with the new values.
+
+			//Replace the displayed link URL with the new one.
+			master.find('a.blc-link-url').attr('href', response.url).text(response.url);
+
+			//Save the new ID
+			replaceLinkId(linkId, response.new_link_id);
+			//Load up the new link info
+			reloadDetailsRow(response.new_link_id);
+
+			//Update the link text if it was edited.
+			if ((newText !== null) && (response.link_text !== null)) {
+				master.data('link-text', response.link_text);
+				if (response.ui_link_text !== null) {
+					master.find('.column-new-link-text').html(response.ui_link_text);
+				}
+			}
+
+			//Update the status code and class.
+			displayLinkStatus(master, response);
+
+			//Flash the row green to indicate success
+			flashElementGreen(master);
+
+			return true;
+		}
 	}
 
     //The "Edit URL" button - displays the inline editor

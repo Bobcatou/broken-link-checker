@@ -125,6 +125,9 @@ $blc_config_manager = new blcConfigurationManager(
 
 		'user_has_donated' => false,   //Whether the user has donated to the plugin.
 		'donation_flag_fixed' => false,
+
+		                              //Visible link actions.
+		'show_link_actions' => array('blc-deredirect-action' => false),
    )
 );
 
