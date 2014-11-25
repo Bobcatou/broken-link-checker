@@ -822,7 +822,7 @@ class wsBrokenLinkChecker {
 			|
 			<a id="toggle-broken-link-css-editor" href="#" class="blc-toggle-link"><?php
 				_e('Edit CSS', 'broken-link-checker');
-			?></a>			
+			?></a>
 			</p>
 			
 			<div id="broken-link-css-wrap"<?php 
@@ -885,6 +885,15 @@ class wsBrokenLinkChecker {
 			</label>
 			</p>
 
+			<p class="description">
+				<?php
+				echo _x(
+					'These settings only apply to the content of posts, not comments or custom fields.',
+					'"Link tweaks" settings',
+					'broken-link-checker'
+				);
+				?>
+			</p>
         </td>
         </tr>
 
