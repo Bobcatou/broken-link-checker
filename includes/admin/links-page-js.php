@@ -795,6 +795,24 @@ jQuery(function($){
 			}
 		}
 	});
+
+	//Automatically disable bulk actions that don't apply to the currently selected links.
+	$('#blc-bulk-action').focus(function() {
+		var redirectsSelected = false, brokenLinksSelected = false;
+		$('tr th.check-column input:checked', '#blc-links').each(function() {
+			var row = $(this).closest('tr');
+			if (row.hasClass('blc-redirect')) {
+				redirectsSelected = true
+			}
+			if (row.hasClass('link-status-error') || row.hasClass('link-status-warning')) {
+				brokenLinksSelected = true;
+			}
+		});
+
+		var bulkAction = $(this);
+		bulkAction.find('option[value="bulk-deredirect"]').prop('disabled', !redirectsSelected);
+		bulkAction.find('option[value="bulk-not-broken"]').prop('disabled', !brokenLinksSelected);
+	});
 	
 	//------------------------------------------------------------
     // Manipulate highlight settings for permanently broken links
@@ -907,6 +925,8 @@ jQuery(function($){
 			e.preventDefault();
 		}
 	});
+
+
 });
 
 </script>
