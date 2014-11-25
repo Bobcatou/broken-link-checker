@@ -299,7 +299,7 @@ class blcPostTypeOverlord {
         	return $content;
        	}
         
-        //Retrieve info about all occurences of broken links in the current post 
+        //Retrieve info about all occurrences of broken links in the current post
         $q = "
 			SELECT instances.raw_url
 			FROM {$wpdb->prefix}blc_instances AS instances JOIN {$wpdb->prefix}blc_links AS links 
