@@ -101,7 +101,7 @@ msgstr "Erneut überprüfen"
 #: core/core.php:406 includes/admin/table-printer.php:715
 msgctxt "link action; replace one redirect with a direct link"
 msgid "Fix redirect"
-msgstr "Feste Umleitung"
+msgstr "Umleitung übernehmen"
 
 # @ broken-link-checker
 #: core/core.php:626
@@ -535,8 +535,8 @@ msgstr[1] "Ersetze %d Umleitungen mit direkten Links"
 #: core/core.php:1704
 msgid "Failed to fix %d redirect"
 msgid_plural "Failed to fix %d redirects"
-msgstr[0] "Löschen der festen Umleitung %d schlug fehl"
-msgstr[1] "Löschen der festen Umleitungen %d schlug fehl"
+msgstr[0] "Übernehmen der Umleitung %d schlug fehl"
+msgstr[1] "Übernehmen der Umleitungen %d schlug fehl"
 
 # @ broken-link-checker
 #: core/core.php:1715
@@ -1224,7 +1224,7 @@ msgstr "Massenänderung"
 # @ broken-link-checker
 #: includes/admin/table-printer.php:289
 msgid "Fix redirects"
-msgstr "Feste Umleitungen"
+msgstr "Umleitungen übernehmen"
 
 # @ broken-link-checker
 #: includes/admin/table-printer.php:290
