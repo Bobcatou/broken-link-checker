@@ -98,6 +98,16 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.10.2 =
+* Fixed an XSS vulnerability on the link checker settings page.
+* Fixed old YouTube embed code parsing - now it should pick up self-closing embed tags without an `<object>` wrapper.
+* Updated German translation.
+* Updated Simplified Chinese translation.
+* Link actions will now wrap properly on small screens.
+
+= 1.10.1 =
+* Fixed a database versioning issue that would cause multiple errors when upgrading from 1.9.5 to 1.10.
+
 = 1.10 =
 * Added a way to hide individual link actions like "Dismiss" and "Unlink".
 * Added a "Fix redirect" link action. It replaces a redirect with a direct link. It is hidden by default and can be enabled through the settings page.
