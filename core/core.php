@@ -463,10 +463,10 @@ class wsBrokenLinkChecker {
 			
             $this->conf->options['suggestions_enabled'] = !empty($_POST['suggestions_enabled']);
 
-            $this->conf->options['exclusion_list'] = array_filter( 
+            $this->conf->options['exclusion_list'] = array_filter(
 				preg_split( 
 					'/[\s\r\n]+/',				//split on newlines and whitespace 
-					$_POST['exclusion_list'], 
+					$cleanPost['exclusion_list'],
 					-1,
 					PREG_SPLIT_NO_EMPTY			//skip empty values
 				) 
@@ -474,7 +474,7 @@ class wsBrokenLinkChecker {
                 
             //Parse the custom field list
             $new_custom_fields = array_filter( 
-				preg_split( '/[\r\n]+/', $_POST['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY )
+				preg_split( '/[\r\n]+/', $cleanPost['blc_custom_fields'], -1, PREG_SPLIT_NO_EMPTY )
 			);
             
 			//Calculate the difference between the old custom field list and the new one (used later)
@@ -993,7 +993,7 @@ class wsBrokenLinkChecker {
         <td><?php _e("Don't check links where the URL contains any of these words (one per line) :", 'broken-link-checker'); ?><br/>
         <textarea name="exclusion_list" id="exclusion_list" cols='45' rows='4'><?php
             if( isset($this->conf->options['exclusion_list']) )
-                echo implode("\n", $this->conf->options['exclusion_list']);
+                echo esc_textarea(implode("\n", $this->conf->options['exclusion_list']));
         ?></textarea>
 
         </td>
@@ -1403,7 +1403,7 @@ class wsBrokenLinkChecker {
 				 '</span>';
     	$html .= '<br><textarea name="blc_custom_fields" id="blc_custom_fields" cols="45" rows="4">';
         if( isset($current_settings['custom_fields']) )
-            $html .= implode("\n", $current_settings['custom_fields']);
+            $html .= esc_textarea(implode("\n", $current_settings['custom_fields']));
         $html .= '</textarea>';
         
         return $html;
