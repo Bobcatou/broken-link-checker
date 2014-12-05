@@ -98,6 +98,10 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.10.3 =
+ * Security: Filter link URLs before displaying them on the "Broken Links" page.
+ * Security: Prevent Editors and Administrators who don't have the "unfiltered_html" capability from creating "javascript:" URLs by editing existing links.
+
 = 1.10.2 =
 * Fixed an XSS vulnerability on the link checker settings page.
 * Fixed old YouTube embed code parsing - now it should pick up self-closing embed tags without an `<object>` wrapper.
