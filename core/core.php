@@ -3006,6 +3006,17 @@ class wsBrokenLinkChecker {
 			)));
 		}
 
+		if ( !current_user_can('unfiltered_html') ) {
+			//Disallow potentially dangerous URLs like "javascript:...".
+			$protocols = wp_allowed_protocols();
+			$good_protocol_url = wp_kses_bad_protocol($new_url, $protocols);
+			if ( $new_url != $good_protocol_url ) {
+				die( json_encode( array(
+					'error' => __("Oops, the new URL is invalid!", 'broken-link-checker')
+				)));
+			}
+		}
+
 		$new_text = (isset($_POST['new_text']) && is_string($_POST['new_text'])) ? stripslashes($_POST['new_text']) : null;
 		if ( $new_text === '' ) {
 			$new_text = null;
@@ -3042,6 +3053,7 @@ class wsBrokenLinkChecker {
 				'redirect_count' => $new_link->redirect_count,
 
 				'url' => $new_link->url,
+				'escaped_url' => esc_url_raw($new_link->url),
 				'final_url' => $new_link->final_url,
 				'link_text' => isset($new_text) ? $new_text : null,
 				'ui_link_text' => isset($new_text) ? $ui_link_text : null,
@@ -3143,6 +3155,7 @@ class wsBrokenLinkChecker {
 		$status = $link->analyse_status();
 		$response = array(
 			'url' => $link->url,
+			'escaped_url' => esc_url_raw($link->url),
 			'new_link_id' => $result['new_link_id'],
 
 			'status_text' => $status['text'],
