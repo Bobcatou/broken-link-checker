@@ -247,7 +247,12 @@ class blcCurlHttp extends blcHttpCheckerBase {
 
         //Register a callback function which will process the HTTP header(s).
 		//It can be called multiple times if the remote server performs a redirect. 
-		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array(&$this,'read_header'));
+		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this,'read_header'));
+
+		//Record request headers.
+		if ( defined('CURLINFO_HEADER_OUT') ) {
+			curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+		}
 
 		//Execute the request
 		$start_time = microtime_float();
@@ -346,12 +351,19 @@ class blcCurlHttp extends blcHttpCheckerBase {
 			$log .= __('(No response)', 'broken-link-checker');
 		}
 		$log .= " ===\n\n";
+
+		$log .= "Response headers\n" . str_repeat('=', 16) . "\n";
         $log .= $this->last_headers;
-        
+
+		if ( isset($info['request_header']) ) {
+			$log .= "Request headers\n" . str_repeat('=', 16) . "\n";
+			$log .= htmlentities($info['request_header']);
+		}
+
         if ( !empty($result['broken']) && !empty($result['timeout']) ) {
 			$log .= "\n(" . __("Most likely the connection timed out or the domain doesn't exist.", 'broken-link-checker') . ')';
 		}
-        
+
         $result['log'] = $log;
         
         //The hash should contain info about all pieces of data that pertain to determining if the 
