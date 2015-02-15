@@ -256,7 +256,7 @@ class blcCurlHttp extends blcHttpCheckerBase {
 
 		//Execute the request
 		$start_time = microtime_float();
-        curl_exec($ch);
+        $content = curl_exec($ch);
         $measured_request_duration = microtime_float() - $start_time;
 		$blclog->debug(sprintf('HTTP request took %.3f seconds', $measured_request_duration));
         
@@ -358,6 +358,11 @@ class blcCurlHttp extends blcHttpCheckerBase {
 		if ( isset($info['request_header']) ) {
 			$log .= "Request headers\n" . str_repeat('=', 16) . "\n";
 			$log .= htmlentities($info['request_header']);
+		}
+
+		if ( !$nobody && ($content !== false) && $result['broken'] ) {
+			$log .= "Response HTML\n" . str_repeat('=', 16) . "\n";
+			$log .= htmlentities($content);
 		}
 
         if ( !empty($result['broken']) && !empty($result['timeout']) ) {
