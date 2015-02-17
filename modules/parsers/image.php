@@ -35,6 +35,11 @@ class blcHTMLImage extends blcParser {
    * @return array An array of new blcLinkInstance objects. The objects will include info about the links found, but not about the corresponding container entity. 
    */
 	function parse($content, $base_url = '', $default_link_text = ''){
+		$charset = get_bloginfo('charset');
+		if ( strtoupper($charset) === 'UTF8' ) {
+			$charset = 'UTF-8';
+		}
+
 		$instances = array();
 		
 		//remove all <code></code> blocks first
@@ -47,7 +52,7 @@ class blcHTMLImage extends blcParser {
 				//FB::log($url, "Found image");
 				
 				//Decode &amp; and other entities
-				$url = html_entity_decode($url);
+				$url = html_entity_decode($url, ENT_QUOTES, $charset);
 				$url = trim($url);
 				
 				//Allow shortcodes in image URLs.
@@ -67,7 +72,7 @@ class blcHTMLImage extends blcParser {
 				//Skip invalid URLs (again)
 				if ( !$url || (strlen($url)<6) ) {
 					continue;
-				} 
+				}
 			    
 			    //The URL is okay, create and populate a new link instance.
 			    $instance = new blcLinkInstance();
