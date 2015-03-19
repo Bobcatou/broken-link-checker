@@ -30,7 +30,7 @@ class blcHTMLImage extends blcParser {
    * Parse a string for HTML images - <img src="URL">
    *
    * @param string $content The text to parse.
-   * @param string $base_url The base URL to use for normalizing relative URLs. If ommitted, the blog's root URL will be used. 
+   * @param string $base_url The base URL to use for normalizing relative URLs. If omitted, the blog's root URL will be used.
    * @param string $default_link_text 
    * @return array An array of new blcLinkInstance objects. The objects will include info about the links found, but not about the corresponding container entity. 
    */
