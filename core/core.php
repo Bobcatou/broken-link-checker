@@ -109,6 +109,7 @@ class wsBrokenLinkChecker {
     	if ( !$this->conf->options['run_in_dashboard'] ){
 			return;
 		}
+		$nonce = wp_create_nonce('blc_work');
         ?>
         <!-- wsblc admin footer -->
         <script type='text/javascript'>
@@ -119,7 +120,8 @@ class wsBrokenLinkChecker {
 				$.post(
 					"<?php echo admin_url('admin-ajax.php'); ?>",
 					{
-						'action' : 'blc_work'
+						'action' : 'blc_work',
+						'_ajax_nonce' : '<?php echo esc_js($nonce); ?>'
 					}
 				);
 			}
@@ -2894,6 +2896,8 @@ class wsBrokenLinkChecker {
 	}
 	
 	function ajax_work(){
+		check_ajax_referer('blc_work');
+
 		//Run the worker function 
 		$this->work();
 		die();
