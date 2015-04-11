@@ -2052,6 +2052,8 @@ class wsBrokenLinkChecker {
 		
 		$message = '';
 		$msg_class = 'updated';
+
+		check_admin_referer('bulk-action');
 		
 		if ( count($selected_links) > 0 ){
 			$q = "UPDATE {$wpdb->prefix}blc_links 
