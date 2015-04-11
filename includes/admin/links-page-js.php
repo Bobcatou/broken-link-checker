@@ -662,7 +662,7 @@ jQuery(function($){
 				eval('data = ' + data);
 				 
 				if ( data && (typeof(data['error']) != 'undefined') ){
-					//An internal error occured before the link could be edited.
+					//An internal error occurred before the link could be edited.
 					//data.error is an error message.
 					alert(data.error);
 				} else {
