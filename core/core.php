@@ -3428,7 +3428,15 @@ class wsBrokenLinkChecker {
 	 		'state' => 'ok',
 	 		'value' => sprintf(__('%s seconds'), ini_get('max_execution_time')),
 		);
-		
+
+		//Database character set. Usually it's UTF-8. Setting it to something else can cause problems
+		//unless the site owner really knows what they're doing.
+		$charset = $wpdb->get_charset_collate();
+		$debug[ __('Database character set', 'broken-link-checker') ] = array(
+			'state' => 'ok',
+			'value' => !empty($charset) ? $charset : '-',
+		);
+
 		//Resynch flag.
 		$debug['Resynch. flag'] = array(
 	 		'state' => 'ok',
