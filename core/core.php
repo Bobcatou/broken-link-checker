@@ -1595,7 +1595,7 @@ class wsBrokenLinkChecker {
 		//Create a custom filter!
     	check_admin_referer( 'create-custom-filter' );
     	$msg_class = 'updated';
-    	
+
     	//Filter name must be set
 		if ( empty($_POST['name']) ){
 			$message = __("You must enter a filter name!", 'broken-link-checker');
@@ -1606,12 +1606,13 @@ class wsBrokenLinkChecker {
 			$msg_class = 'error';
 		} else {
 			//Save the new filter
+			$name = strip_tags(strval($_POST['name']));
 			$blc_link_query = blcLinkQuery::getInstance();
-			$filter_id = $blc_link_query->create_custom_filter($_POST['name'], $_POST['params']);
+			$filter_id = $blc_link_query->create_custom_filter($name, $_POST['params']);
 			
 			if ( $filter_id ){
 				//Saved
-				$message = sprintf( __('Filter "%s" created', 'broken-link-checker'), $_POST['name']);
+				$message = sprintf( __('Filter "%s" created', 'broken-link-checker'), $name);
 				//A little hack to make the filter active immediately
 				$_GET['filter_id'] = $filter_id;			
 			} else {
