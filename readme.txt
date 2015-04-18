@@ -98,6 +98,12 @@ To upgrade your installation
 
 == Changelog ==
 
+= 1.10.6 =
+* Switched to YouTube API v3. The old API version will be shut down on April 20, so the plugin needs to be updated to continue checking links to YouTube videos.
+* Fixed long URLs overflowing into adjacent table columns.
+* Fixed a few minor PHP strict-mode notices.
+* Added database character set to the "Show debug info" table.
+
 = 1.10.5 =
 * Security: Fixed an XSS vulnerability that could be used by Editors and Administrators to inject arbitrary HTML/JS code in the "Tools -> Broken Links" page.
 * Other minor security fixes.
