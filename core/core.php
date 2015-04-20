@@ -1315,7 +1315,7 @@ class wsBrokenLinkChecker {
 				
 				printf(
 					' | <a class="blc-toggle-link toggle-module-settings" id="toggle-module-settings-%s" href="#">%s</a>',
-					$module_id,
+					esc_attr($module_id),
 					__('Configure', 'broken-link-checker')
 				);
 				
@@ -2248,13 +2248,13 @@ class wsBrokenLinkChecker {
 				'The "Warnings" page lists problems that are probably temporary or suspected to be false positives.<br> Warnings that persist for a long time will usually be reclassified as broken links.',
 				'broken-link-checker'
 			),
-			add_query_arg($notice_name, '0'),
+			esc_attr(add_query_arg($notice_name, '0')),
 			_x(
 				'Hide notice',
 				'admin notice under Tools - Broken links - Warnings',
 				'broken-link-checker'
 			),
-			admin_url('options-general.php?page=link-checker-settings#blc_warning_settings'),
+			esc_attr(admin_url('options-general.php?page=link-checker-settings#blc_warning_settings')),
 			_x(
 				'Change warning settings',
 				'a link from the admin notice under Tools - Broken links - Warnings',
@@ -2783,7 +2783,7 @@ class wsBrokenLinkChecker {
 				"<a href='%s' title='" . __('View broken links', 'broken-link-checker') . "'><strong>". 
 					_n('Found %d broken link', 'Found %d broken links', $status['broken_links'], 'broken-link-checker') .
 				"</strong></a>",
-			  	admin_url('tools.php?page=view-broken-links'), 
+			  	esc_attr(admin_url('tools.php?page=view-broken-links')),
 				$status['broken_links']
 			);
 		} else {

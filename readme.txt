@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: links, broken, maintenance, blogroll, custom fields, admin, comments, posts
 Requires at least: 3.2
 Tested up to: 4.2-beta
-Stable tag: 1.10.5
+Stable tag: 1.10.6
 
 This plugin will check your posts, comments and other content for broken links and missing images, and notify you if any are found. 
 
@@ -99,6 +99,7 @@ To upgrade your installation
 == Changelog ==
 
 = 1.10.6 =
+* Fixed a serious CSRF/XSS vulnerability.
 * Switched to YouTube API v3. The old API version will be shut down on April 20, so the plugin needs to be updated to continue checking links to YouTube videos.
 * Fixed long URLs overflowing into adjacent table columns.
 * Fixed a few minor PHP strict-mode notices.
