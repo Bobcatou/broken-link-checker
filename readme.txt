@@ -69,6 +69,7 @@ You can also click on the contents of the "Status" or "Link Text" columns to get
 * Serbo-Croatian - [Borisa Djuraskovic](http://www.webhostinghub.com)
 * Slovakian - [Patrik Žec](http://patwist.com/)
 * Spanish - [Neoshinji](http://blog.tuayudainformatica.com/traducciones-de-plugins-wordpress/)
+* Swedish - mepmepmep
 * Turkish - [Murat Durgun](http://www.lanwifi.net/)
 * Ukrainian - [Stas Mykhajlyuk](http://www.kosivart.com/)
 * Vietnamese - [Biz.O](http://bizover.net/)
