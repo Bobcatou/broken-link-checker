@@ -81,8 +81,7 @@ class wsBrokenLinkChecker {
     	add_action('blc_cron_email_notifications', array( $this, 'maybe_send_email_notifications' ));
 		add_action('blc_cron_check_links', array($this, 'cron_check_links'));
 		add_action('blc_cron_database_maintenance', array($this, 'database_maintenance'));
-		add_action('blc_cron_check_news', array($this, 'check_news'));
-		
+
         //Set the footer hook that will call the worker function via AJAX.
         add_action('admin_footer', array($this,'admin_footer'));
 		
@@ -259,7 +258,7 @@ class wsBrokenLinkChecker {
 		wp_clear_scheduled_hook('blc_cron_check_links');
 		wp_clear_scheduled_hook('blc_cron_email_notifications');
 		wp_clear_scheduled_hook('blc_cron_database_maintenance');
-		wp_clear_scheduled_hook('blc_cron_check_news');
+		wp_clear_scheduled_hook('blc_cron_check_news'); //Unused event.
 		//Note the deactivation time for each module. This will help them 
 		//synch up propely if/when the plugin is reactivated.
 		$moduleManager = blcModuleManager::getInstance();
@@ -347,17 +346,6 @@ class wsBrokenLinkChecker {
 			$options_page_hook,
 			array('style' => 'font-weight: bold;')
 		);
-		
-		//Add a link to the latest blog post/whatever about this plugin, if any.
-		if ( !$this->conf->get('user_has_donated') && isset($this->conf->options['plugin_news']) && !empty($this->conf->options['plugin_news']) ){
-			$news = $this->conf->options['plugin_news'];
-	        add_screen_meta_link(
-	        	'blc-plugin-news-link',
-	        	$news[0],
-	        	$news[1],
-	        	array($options_page_hook, $links_page_hook)
-			);
-		}
     }
     
   /**
@@ -3771,12 +3759,7 @@ class wsBrokenLinkChecker {
 		if ( !wp_next_scheduled('blc_cron_database_maintenance') ){
 			wp_schedule_event(time(), 'bimonthly', 'blc_cron_database_maintenance');
 		}
-		
-		//Check for news notices related to this plugin
-		if ( !wp_next_scheduled('blc_cron_check_news') ){
-			wp_schedule_event(time(), 'daily', 'blc_cron_check_news');
-		}
-	} 
+	}
 	
   /**
    * Load the plugin's textdomain.
@@ -3787,34 +3770,6 @@ class wsBrokenLinkChecker {
 		$this->is_textdomain_loaded = load_plugin_textdomain( 'broken-link-checker', false, basename(dirname($this->loader)) . '/languages' );
 	}
 	
-	/**
-	 * Check if there's a "news" link to display on the plugin's pages.
-	 * 
-	 * @return void
-	 */
-	function check_news(){
-		$url = 'http://w-shadow.com/plugin-news/broken-link-checker-news.txt';
-		
-		//Retrieve the appropriate "news" file
-		$res = wp_remote_get($url);
-		if ( is_wp_error($res) ){
-			return;
-		}
-		
-		//Anything there?
-		if ( isset($res['response']['code']) && ($res['response']['code'] == 200) && isset($res['body']) ) {
-			//The file should contain two lines - a title and an URL
-			$news = explode("\n", trim($res['body']));
-			if ( count($news) == 2 ){
-				//Save for later. 
-				$this->conf->options['plugin_news'] = $news;
-			} else {
-				$this->conf->options['plugin_news'] = null;
-			}
-			$this->conf->save_options();
-		}		
-	}
-
 	protected static function get_default_log_directory() {
 		$uploads = wp_upload_dir();
 		return $uploads['basedir'] . '/broken-link-checker';
