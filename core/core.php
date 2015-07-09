@@ -330,14 +330,6 @@ class wsBrokenLinkChecker {
 		add_action( 'admin_print_scripts-' . $options_page_hook, array($this, 'enqueue_settings_scripts') );
         add_action( 'admin_print_scripts-' . $links_page_hook, array($this, 'enqueue_link_page_scripts') );
         
-        //Add a "Feedback" button that links to the plugin's UserVoice forum
-        add_screen_meta_link(
-        	'blc-feedback-widget',
-        	__('Feedback', 'broken-link-checker'),
-        	'http://whiteshadow.uservoice.com/forums/58400-broken-link-checker',
-        	array($options_page_hook, $links_page_hook)
-		);
-
 	    //Make the Settings page link to the link list
 		add_screen_meta_link(
         	'blc-links-page-link',

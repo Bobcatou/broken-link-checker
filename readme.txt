@@ -22,8 +22,6 @@ This plugin will monitor your blog looking for broken links and let you know if 
 * Links can be edited directly from the plugin's page, without manually updating each post.
 * Highly configurable.
 
-[Suggest new features and improvements here](http://feedback.w-shadow.com/forums/58400-broken-link-checker)
-
 **Basic Usage**
 
 Once installed, the plugin will begin parsing your posts, bookmarks (AKA blogroll) and other content and looking for links. Depending on the size of your site this can take from a few minutes up to an hour or more. When parsing is complete, the plugin will start checking each link to see if it works. Again, how long this takes depends on how big your site is and how many links there are. You can monitor the progress and tweak various link checking options in *Settings -> Link Checker*.
